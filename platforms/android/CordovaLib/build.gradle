@@ -47,10 +47,10 @@ android {
     buildToolsVersion cdvBuildToolsVersion
     publishNonDefault true
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_6
-        targetCompatibility JavaVersion.VERSION_1_6
-    }
+//    compileOptions {
+//        sourceCompatibility JavaVersion.VERSION_1_8
+//        targetCompatibility JavaVersion.VERSION_1_8
+//    }
 
     sourceSets {
         main {
