@@ -12,3 +12,10 @@ gen
 out
 # Gradle builds
 /build
+
+*.iml
+.gradle
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/captures
