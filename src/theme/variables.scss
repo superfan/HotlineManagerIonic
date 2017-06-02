@@ -76,3 +76,7 @@ $colors: (
 
 @import "roboto";
 @import "noto-sans";
+
+ion-page {
+  display: flex;
+}

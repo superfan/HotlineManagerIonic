@@ -1,3 +1,4 @@
+@charset "UTF-8";
 .ion-ios-add:before {
   content: "\f102";
 }
@@ -3823,6 +3824,12 @@ ion-icon::before {
   font-style: normal;
   font-weight: 700;
   src: local("Noto Sans Bold"), local("Noto-Sans-Bold"), url("../assets/fonts/noto-sans-bold.woff") format("woff"), url("../assets/fonts/noto-sans-bold.ttf") format("truetype");
+}
+
+ion-page {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
 }
 
 ion-action-sheet {
@@ -27453,4 +27460,46 @@ ion-navbar.toolbar {
   .wp .modal-wrapper > .ion-page > ion-header > ion-content.statusbar-padding:first-child[padding-top] .scroll-content {
     padding-top: calc(16px + 20px);
   }
+}
+
+.page-main ion-col {
+  border: 1px solid #e6e9ee;
+  text-align: center;
+}
+
+.page-main ion-col:active {
+  background-color: #e6e9ee;
+}
+
+.page-main ion-img {
+  background-color: transparent;
+  margin-top: 5px;
+}
+
+.page-main ion-label {
+  margin-top: 5px;
+  color: black;
+  font-family: "Microsoft YaHei", "微软雅黑";
+}
+
+.page-main .list-item {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.page-main ion-item:active {
+  background-color: #e6e9ee;
+}
+
+.page-main .item-name {
+  margin-left: 10px;
+  color: black;
+  font-family: "Microsoft YaHei", "微软雅黑";
 }
