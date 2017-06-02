@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>
+      {{title}}
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only color="royal">
+        <ion-icon name="settings"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="page-main">
+
+  <ion-grid>
+    <ion-row *ngFor="let item of items">
+      <ion-col col-4 (click)="onSelect(item.id[0])" *ngIf="item.active[0]">
+        <ion-img [width]="imgWidth" [height]="imgHeight" src="{{item.src[0]}}"></ion-img>
+        <ion-label>{{item.name[0]}}</ion-label>
+      </ion-col>
+      <ion-col col-4 (click)="onSelect(item.id[1])" *ngIf="item.active[1]">
+        <ion-img [width]="imgWidth" [height]="imgHeight" src="{{item.src[1]}}"></ion-img>
+        <ion-label>{{item.name[1]}}</ion-label>
+      </ion-col>
+      <ion-col col-4 (click)="onSelect(item.id[2])" *ngIf="item.active[2]">
+        <ion-img [width]="imgWidth" [height]="imgHeight" src="{{item.src[2]}}"></ion-img>
+        <ion-label>{{item.name[2]}}</ion-label>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>
