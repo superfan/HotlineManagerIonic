@@ -55739,31 +55739,70 @@ var MainPage = (function () {
     function MainPage(navCtrl) {
         this.navCtrl = navCtrl;
         this.title = '主界面';
-        this.imgWidth = 80;
-        this.imgHeight = 80;
-        this.items = [
+        this.imgWidth = 64;
+        this.imgHeight = 64;
+        this.gridStyle = false;
+        this.gridItems = [];
+        this.listItems = [
             {
-                id: [1, 2, 3],
-                src: ['assets/img/ic_task.png', 'assets/img/ic_map.png', 'assets/img/ic_searching.png'],
-                name: ['我的任务', '地图', '查询'],
-                active: [true, true, true]
+                id: 1,
+                src: 'assets/img/ic_task.png',
+                name: '我的任务',
+                active: true
             },
             {
-                id: [4, 5, 6],
-                src: ['assets/img/ic_news.png', 'assets/img/ic_help.png', 'assets/img/ic_setting.png'],
-                name: ['公告', '帮助', '设置'],
-                active: [true, true, false]
+                id: 2,
+                src: 'assets/img/ic_map.png',
+                name: '地图',
+                active: true
+            },
+            {
+                id: 3,
+                src: 'assets/img/ic_searching.png',
+                name: '查询',
+                active: true
+            },
+            {
+                id: 4,
+                src: 'assets/img/ic_news.png',
+                name: '公告',
+                active: true
+            },
+            {
+                id: 5,
+                src: 'assets/img/ic_help.png',
+                name: '帮助',
+                active: true
+            },
+            {
+                id: 6,
+                src: 'assets/img/ic_setting.png',
+                name: '设置',
+                active: false
             }
         ];
+        var rowData = [];
+        for (var _i = 0, _a = this.listItems; _i < _a.length; _i++) {
+            var item = _a[_i];
+            if (rowData.length == 3) {
+                this.gridItems.push(rowData);
+                rowData = [];
+            }
+            rowData.push(item);
+        }
+        this.gridItems.push(rowData);
     }
-    MainPage.prototype.onSelect = function (id) {
+    MainPage.prototype.itemSelected = function (id) {
         console.log(id);
+    };
+    MainPage.prototype.selectSettings = function (event) {
+        this.gridStyle = !this.gridStyle;
     };
     return MainPage;
 }());
 MainPage = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_5" /* Component */])({
-        selector: 'page-main',template:/*ion-inline-start:"D:\work\git_internal\HotlineManagerIonic\src\pages\main\main.html"*/'<ion-header>\n  <ion-navbar color="primary">\n    <ion-title>\n      {{title}}\n    </ion-title>\n    <ion-buttons end>\n      <button ion-button icon-only color="royal">\n        <ion-icon name="settings"></ion-icon>\n      </button>\n    </ion-buttons>\n  </ion-navbar>\n</ion-header>\n\n<ion-content class="page-main">\n\n  <ion-grid>\n    <ion-row *ngFor="let item of items">\n      <ion-col col-4 (click)="onSelect(item.id[0])" *ngIf="item.active[0]">\n        <ion-img [width]="imgWidth" [height]="imgHeight" src="{{item.src[0]}}"></ion-img>\n        <ion-label>{{item.name[0]}}</ion-label>\n      </ion-col>\n      <ion-col col-4 (click)="onSelect(item.id[1])" *ngIf="item.active[1]">\n        <ion-img [width]="imgWidth" [height]="imgHeight" src="{{item.src[1]}}"></ion-img>\n        <ion-label>{{item.name[1]}}</ion-label>\n      </ion-col>\n      <ion-col col-4 (click)="onSelect(item.id[2])" *ngIf="item.active[2]">\n        <ion-img [width]="imgWidth" [height]="imgHeight" src="{{item.src[2]}}"></ion-img>\n        <ion-label>{{item.name[2]}}</ion-label>\n      </ion-col>\n    </ion-row>\n  </ion-grid>\n\n</ion-content>\n'/*ion-inline-end:"D:\work\git_internal\HotlineManagerIonic\src\pages\main\main.html"*/
+        selector: 'page-main',template:/*ion-inline-start:"D:\work\git_internal\HotlineManagerIonic\src\pages\main\main.html"*/'<ion-header>\n  <ion-navbar color="primary">\n    <ion-title>\n      {{title}}\n    </ion-title>\n    <ion-buttons end>\n      <button ion-button icon-only color="royal" (click)="selectSettings($event)">\n        <ion-icon name="settings"></ion-icon>\n      </button>\n    </ion-buttons>\n  </ion-navbar>\n</ion-header>\n\n<ion-content class="page-main">\n\n  <ion-grid *ngIf="gridStyle">\n    <ion-row *ngFor="let item of gridItems">\n      <ion-col col-4 (click)="itemSelected(item[0].id)" *ngIf="item[0].active">\n        <img src="{{item[0].src}}" width="{{imgWidth}}" height="imgHeight"/>\n        <ion-label>{{item[0].name}}</ion-label>\n      </ion-col>\n      <ion-col col-4 (click)="itemSelected(item[1].id)" *ngIf="item[1].active">\n        <img src="{{item[1].src}}" width="{{imgWidth}}" height="imgHeight"/>\n        <ion-label>{{item[1].name}}</ion-label>\n      </ion-col>\n      <ion-col col-4 (click)="itemSelected(item[2].id)" *ngIf="item[2].active">\n        <img src="{{item[2].src}}" width="{{imgWidth}}" height="imgHeight"/>\n        <ion-label>{{item[2].name}}</ion-label>\n      </ion-col>\n    </ion-row>\n  </ion-grid>\n\n  <ion-list *ngIf="!gridStyle">\n    <ion-item *ngFor="let item of listItems">\n      <div class="list-item">\n        <img src="{{item.src}}" width="{{imgWidth}}" height="imgHeight"/>\n        <p class="item-name">{{item.name}}</p>\n      </div>\n    </ion-item>\n  </ion-list>\n\n</ion-content>\n'/*ion-inline-end:"D:\work\git_internal\HotlineManagerIonic\src\pages\main\main.html"*/
     }),
     __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* NavController */]) === "function" && _a || Object])
 ], MainPage);

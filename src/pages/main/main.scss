@@ -21,14 +21,21 @@
     font-family: "Microsoft YaHei", "微软雅黑";
   }
 
-  //.btn-item {
-  //  display: flex;
-  //  justify-content: center;
-  //  align-items: center;
-  //  color:red;
-  //
-  //}
+  .list-item {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
 
+  ion-item:active {
+    background-color: #e6e9ee;
+  }
+
+  .item-name {
+    margin-left: 10px;
+    color: black;
+    font-family: "Microsoft YaHei", "微软雅黑";
+  }
 }
 
 

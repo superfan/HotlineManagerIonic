@@ -27481,3 +27481,25 @@ ion-navbar.toolbar {
   color: black;
   font-family: "Microsoft YaHei", "微软雅黑";
 }
+
+.page-main .list-item {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.page-main ion-item:active {
+  background-color: #e6e9ee;
+}
+
+.page-main .item-name {
+  margin-left: 10px;
+  color: black;
+  font-family: "Microsoft YaHei", "微软雅黑";
+}
