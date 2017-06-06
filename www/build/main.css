@@ -27482,13 +27482,16 @@ ion-navbar.toolbar {
   font-family: "Microsoft YaHei", "微软雅黑";
 }
 
+.page-main .grid-item-badge {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+}
+
 .page-main .list-item {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
   -webkit-align-items: center;
   -ms-flex-align: center;
   align-items: center;
@@ -27498,8 +27501,39 @@ ion-navbar.toolbar {
   background-color: #e6e9ee;
 }
 
+.page-main .item-img {
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+}
+
 .page-main .item-name {
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
   margin-left: 10px;
   color: black;
   font-family: "Microsoft YaHei", "微软雅黑";
+}
+
+.page-main .list-item-badge {
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+}
+
+.page-mywork .card-header-label-hint {
+  display: inline;
+  color: #5d81c1;
+  font-family: "Microsoft YaHei", "微软雅黑";
+}
+
+.page-mywork .card-header-label-content {
+  display: inline;
+  color: black;
+  font-family: "Microsoft YaHei", "微软雅黑";
+}
+
+.page-mywork ion-grid {
+  border: 1px #e6e9ee;
 }

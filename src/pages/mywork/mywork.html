@@ -1,0 +1,95 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>
+      {{title}}
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only color="royal" (click)="toggleToolbar($event)">
+        <ion-icon name="search"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+  <ion-toolbar color="primary" *ngIf="showToolbar">
+    <ion-searchbar (input)="getItems($event)"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="page-mywork">
+
+  <!--refresher on the top-->
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      pullingIcon="arrow-dropdown"
+      pullingText="Pull to refresh"
+      refreshingSpinner="circles"
+      refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <!--list content-->
+  <ion-list>
+    <ion-card *ngFor="let item of items">
+      <ion-item>
+        <ion-avatar item-start>
+          <img src="assets/img/ic_mywork_avatar.png">
+        </ion-avatar>
+        <!--<div><label class="card-header-label-hint">任务编号 </label><label class="card-header-label-content">{{item}}</label></div>-->
+        <!--<div><label class="card-header-label-hint">任务类型 </label><label class="card-header-label-content">{{item}}</label></div>-->
+        <div><h2 class="card-header-label-hint">任务编号 </h2><h2 class="card-header-label-content">{{item}}</h2></div>
+        <div><h2 class="card-header-label-hint">任务类型 </h2><h2 class="card-header-label-content">{{item}}</h2></div>
+      </ion-item>
+
+      <!--<ion-item-divider ></ion-item-divider>-->
+
+      <ion-card-content>
+        <ion-grid *ngFor="let item of gridItems"
+                  [style.border-style]="item.style == 'top' ? 'solid none none none' : 'solid none solid none'">
+          <ion-row>
+            <ion-col col-auto>
+              <div>{{item.name}}</div>
+            </ion-col>
+            <ion-col>
+              <div>123456789</div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+
+      <!--<ion-item-divider></ion-item-divider>-->
+
+      <ion-row>
+        <ion-col>
+          <button ion-button color="primary" clear small icon-left>
+            <ion-icon name='thumbs-up'></ion-icon>
+            12 Likes
+          </button>
+        </ion-col>
+        <ion-col>
+          <button ion-button color="primary" clear small icon-left>
+            <ion-icon name='text'></ion-icon>
+            4 Comments
+          </button>
+        </ion-col>
+        <ion-col align-self-center text-center>
+          <ion-note>
+            11h ago
+          </ion-note>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+  </ion-list>
+
+  <!--infinite scroll-->
+  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+  <!--fab-->
+  <ion-fab right bottom *ngIf="showFab">
+    <button ion-fab color="primary" (click)="doScroll2Top($event)">
+      <ion-icon name="arrow-dropup"></ion-icon>
+    </button>
+  </ion-fab>
+
+</ion-content>

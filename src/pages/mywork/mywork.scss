@@ -1,0 +1,22 @@
+.page-mywork {
+  .card-header-label-hint {
+    display:inline;
+    color:#5d81c1;
+    font-family: "Microsoft YaHei", "微软雅黑";
+  }
+
+  .card-header-label-content {
+    display:inline;
+    color: black;
+    font-family: "Microsoft YaHei", "微软雅黑";
+  }
+
+  ion-grid {
+    border: 1px #e6e9ee;
+  }
+
+  //ion-item-divider {
+  //  height: 1px;
+  //  min-height: 1px;
+  //}
+}

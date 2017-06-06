@@ -21,9 +21,15 @@
     font-family: "Microsoft YaHei", "微软雅黑";
   }
 
+  .grid-item-badge {
+    position:absolute;
+    left: 50%;
+    top: 50%;
+  }
+
   .list-item {
     display: flex;
-    justify-content: flex-start;
+    //justify-content: flex-start;
     align-items: center;
   }
 
@@ -31,10 +37,19 @@
     background-color: #e6e9ee;
   }
 
+  .item-img {
+    flex: 0 0 auto;
+  }
+
   .item-name {
+    flex: 1;
     margin-left: 10px;
     color: black;
     font-family: "Microsoft YaHei", "微软雅黑";
+  }
+
+  .list-item-badge {
+    flex: 0 0 auto;
   }
 }
 
