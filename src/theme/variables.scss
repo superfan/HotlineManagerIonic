@@ -48,7 +48,13 @@ $colors: (
 // App Material Design Variables
 // --------------------------------------------------
 // Material Design only Sass variables can go here
-
+$loading-md-background: none;
+$loading-md-border-radius: 0;
+$loading-md-text-color:#f4f4f4;
+$loading-md-box-shadow-color:rgba(158, 158, 158,0);
+$loading-md-box-shadow:rgba(158, 158, 158,0);
+$loading-md-spinner-circles-color:#f4f4f4;
+$loading-md-spinner-crescent-color:#f4f4f4;
 
 
 
@@ -86,3 +92,5 @@ $colors: (
 ion-page {
   display: flex;
 }
+
+
