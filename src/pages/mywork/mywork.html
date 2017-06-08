@@ -34,49 +34,150 @@
         <ion-avatar item-start>
           <img src="assets/img/ic_mywork_avatar.png">
         </ion-avatar>
-        <!--<div><label class="card-header-label-hint">任务编号 </label><label class="card-header-label-content">{{item}}</label></div>-->
-        <!--<div><label class="card-header-label-hint">任务类型 </label><label class="card-header-label-content">{{item}}</label></div>-->
-        <div><h2 class="card-header-label-hint">任务编号 </h2><h2 class="card-header-label-content">{{item}}</h2></div>
-        <div><h2 class="card-header-label-hint">任务类型 </h2><h2 class="card-header-label-content">{{item}}</h2></div>
+        <div><h2 class="card-header-label-hint">任务编号 </h2><h2 class="card-header-label-content">{{item.id}}</h2></div>
+        <div><h2 class="card-header-label-hint">任务类型 </h2><h2 class="card-header-label-content">{{item.type}}</h2></div>
       </ion-item>
 
-      <!--<ion-item-divider ></ion-item-divider>-->
+      <!--<ion-card-content>-->
+        <!--<ion-grid *ngFor="let item of gridItems"-->
+                  <!--[style.border-style]="item.style == 'top' ? 'solid none none none' : 'solid none solid none'">-->
+          <!--<ion-row>-->
+            <!--<ion-col col-auto class="card-content-col-hint">-->
+              <!--<div>{{item.name}}</div>-->
+            <!--</ion-col>-->
 
-      <ion-card-content>
-        <ion-grid *ngFor="let item of gridItems"
-                  [style.border-style]="item.style == 'top' ? 'solid none none none' : 'solid none solid none'">
-          <ion-row>
-            <ion-col col-auto>
-              <div>{{item.name}}</div>
-            </ion-col>
-            <ion-col>
-              <div>123456789</div>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </ion-card-content>
+            <!--<ion-col class="card-content-col-content">-->
+              <!--<div>123456789</div>-->
+            <!--</ion-col>-->
+          <!--</ion-row>-->
+        <!--</ion-grid>-->
+      <!--</ion-card-content>-->
 
-      <!--<ion-item-divider></ion-item-divider>-->
+        <ion-list>
+          <ion-list-header>
+            <ion-row>
+              <ion-col col-auto>任务描述</ion-col>
+              <ion-col>{{item.describe}}</ion-col>
+            </ion-row>
+          </ion-list-header>
 
-      <ion-row>
-        <ion-col>
-          <button ion-button color="primary" clear small icon-left>
-            <ion-icon name='thumbs-up'></ion-icon>
-            12 Likes
+          <!--创建时间-->
+          <button ion-item [style.color]="item.create.color" *ngIf="item.create.show">
+            <ion-icon name='radio-button-on'item-start></ion-icon>
+            创建时间 {{item.create.time}}
+            <!--<ion-icon name='ios-arrow-forward' item-end></ion-icon>-->
           </button>
-        </ion-col>
-        <ion-col>
-          <button ion-button color="primary" clear small icon-left>
-            <ion-icon name='text'></ion-icon>
-            4 Comments
+
+          <!--派发时间-->
+          <button ion-item [style.color]="item.dispatch.color" *ngIf="item.dispatch.show">
+            <ion-icon name='radio-button-on'item-start></ion-icon>
+            派发时间 {{item.dispatch.time}}
+            <!--<ion-icon name='ios-arrow-forward' item-end></ion-icon>-->
           </button>
-        </ion-col>
-        <ion-col align-self-center text-center>
-          <ion-note>
-            11h ago
-          </ion-note>
-        </ion-col>
-      </ion-row>
+
+          <!--接单时间-->
+          <button ion-item [style.color]="item.accept.color" *ngIf="item.accept.show" (click)="accept(item)">
+            <ion-icon name='radio-button-on'item-start></ion-icon>
+            接单时间 {{item.accept.time | date:'y-MM-dd HH:mm:ss'}}
+            <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.accept.done"></ion-icon>
+          </button>
+
+          <!--出发时间-->
+          <button ion-item [style.color]="item.go.color" *ngIf="item.go.show" (click)="go(item)">
+            <ion-icon name='radio-button-on'item-start></ion-icon>
+            出发时间 {{item.go.time | date:'y-MM-dd HH:mm:ss'}}
+            <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.go.done"></ion-icon>
+          </button>
+
+          <!--到场时间-->
+          <button ion-item [style.color]="item.arrive.color" *ngIf="item.arrive.show" (click)="arrive(item)">
+            <ion-icon name='radio-button-on'item-start></ion-icon>
+            到场时间 {{item.arrive.time | date:'y-MM-dd HH:mm:ss'}}
+            <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.arrive.done"></ion-icon>
+          </button>
+
+          <!--回复时间-->
+          <button ion-item [style.color]="item.reply.color" *ngIf="item.reply.show" (click)="reply(item)">
+            <ion-icon name='radio-button-on'item-start></ion-icon>
+            回复时间 {{item.reply.time | date:'y-MM-dd HH:mm:ss'}}
+            <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.reply.done"></ion-icon>
+          </button>
+
+          <!--退单时间-->
+          <button ion-item [style.color]="item.reject.color" *ngIf="item.reject.show" (click)="reject(item)">
+            <ion-icon name='radio-button-on'item-start></ion-icon>
+            退单时间 {{item.reject.time | date:'y-MM-dd HH:mm:ss'}} {{item.reject.lastOperate}}
+            <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.reject.done"></ion-icon>
+          </button>
+
+          <!--延迟时间-->
+          <button ion-item [style.color]="item.delay.color" *ngIf="item.delay.show" (click)="delay(item)">
+            <ion-icon name='radio-button-on'item-start></ion-icon>
+            延迟时间 {{item.delay.time | date:'y-MM-dd HH:mm:ss'}} {{item.delay.lastOperate}}
+            <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.delay.done"></ion-icon>
+          </button>
+
+          <!--销单时间-->
+          <button ion-item [style.color]="item.cancel.color" *ngIf="item.cancel.show" (click)="cancel(item)">
+            <ion-icon name='radio-button-on'item-start></ion-icon>
+            销单时间 {{item.cancel.time | date:'y-MM-dd HH:mm:ss'}}
+            <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.cancel.done"></ion-icon>
+          </button>
+        </ion-list>
+
+      <!--<ion-row>-->
+        <!--<ion-col col-2 class="card-bottom-btn">-->
+          <!--<img src="assets/img/ic_state_btn_n.png">-->
+        <!--</ion-col>-->
+
+        <!--<ion-col class="card-bottom-btn">-->
+          <!--<img src="assets/img/ic_state_line_n.png" height="2px">-->
+        <!--</ion-col>-->
+
+        <!--<ion-col col-2 class="card-bottom-btn">-->
+          <!--<img src="assets/img/ic_state_btn_n.png">-->
+        <!--</ion-col>-->
+
+        <!--<ion-col class="card-bottom-btn">-->
+          <!--<img src="assets/img/ic_state_line_n.png" height="2px">-->
+        <!--</ion-col>-->
+
+        <!--<ion-col col-2 class="card-bottom-btn">-->
+          <!--<img src="assets/img/ic_state_btn_n.png">-->
+        <!--</ion-col>-->
+
+        <!--<ion-col class="card-bottom-btn">-->
+          <!--<img src="assets/img/ic_state_line_n.png" height="2px">-->
+        <!--</ion-col>-->
+
+        <!--<ion-col col-2 class="card-bottom-btn">-->
+          <!--<img src="assets/img/ic_state_btn_n.png">-->
+        <!--</ion-col>-->
+
+        <!--<ion-col class="card-bottom-btn">-->
+          <!--<img src="assets/img/ic_state_line_n.png" height="2px">-->
+        <!--</ion-col>-->
+
+        <!--<ion-col col-2 class="card-bottom-btn">-->
+          <!--<img src="assets/img/ic_state_btn_n.png">-->
+        <!--</ion-col>-->
+
+        <!--<ion-col class="card-bottom-btn">-->
+          <!--<img src="assets/img/ic_state_line_n.png" height="2px">-->
+        <!--</ion-col>-->
+
+        <!--<ion-col col-2 class="card-bottom-btn">-->
+          <!--<img src="assets/img/ic_state_btn_n.png">-->
+        <!--</ion-col>-->
+
+        <!--<ion-col class="card-bottom-btn">-->
+          <!--<img src="assets/img/ic_state_line_n.png" height="2px">-->
+        <!--</ion-col>-->
+
+        <!--<ion-col col-2 class="card-bottom-btn">-->
+          <!--<img src="assets/img/ic_state_btn_n.png">-->
+        <!--</ion-col>-->
+      <!--</ion-row>-->
     </ion-card>
   </ion-list>
 

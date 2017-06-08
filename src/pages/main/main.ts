@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { MyWorkPage } from "../mywork/mywork";
+import { NewsPage } from "../news/news";
 
 @Component({
   selector: 'page-main',
@@ -85,6 +86,7 @@ export class MainPage {
       case 4:
         break;
       case 5:
+        this.navCtrl.push(NewsPage);
         break;
       case 6:
         break;
