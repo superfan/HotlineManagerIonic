@@ -1,0 +1,43 @@
+<ion-header>
+</ion-header>
+
+<ion-content>
+  <div class="login-logo">
+    <img src="assets/img/login_logo.png">
+  </div>
+
+  <ion-row>
+    <ion-col>
+      <ion-list>
+
+        <ion-item>
+          <ion-icon name="person" item-start></ion-icon>
+          <ion-input type="text" placeholder="账号" [(ngModel)]="user.username" clearInput></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-icon name="lock" item-start></ion-icon>
+          <ion-input type="password" placeHolder="密码" [(ngModel)]="user.password" clearInput></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>选择人员</ion-label>
+          <ion-select okText="确定" cancelText="取消" [(ngModel)]="user.type">
+            <ion-option value="outside">外勤人员</ion-option>
+            <ion-option value="manager">管理人员</ion-option>
+          </ion-select>
+        </ion-item>
+
+      </ion-list>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <div class="login-button">
+        <button ion-button block (click)="loginClick()">登录</button>
+      </div>
+    </ion-col>
+  </ion-row>
+
+</ion-content>

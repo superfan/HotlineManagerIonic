@@ -16532,12 +16532,12 @@ ion-loading {
 }
 
 .loading-md .loading-wrapper {
-  border-radius: 2px;
+  border-radius: 0;
   max-width: 280px;
   max-height: 90%;
-  color: rgba(0, 0, 0, 0.5);
-  background: #fafafa;
-  box-shadow: 0 16px 20px rgba(0, 0, 0, 0.4);
+  color: #f4f4f4;
+  background: none;
+  box-shadow: rgba(158, 158, 158, 0);
   padding: 24px;
 }
 
@@ -16560,11 +16560,11 @@ ion-loading {
 }
 
 .loading-md .spinner-circles circle {
-  fill: #488aff;
+  fill: #f4f4f4;
 }
 
 .loading-md .spinner-crescent circle {
-  stroke: #488aff;
+  stroke: #f4f4f4;
 }
 
 .loading-md .spinner-dots circle {
@@ -27462,6 +27462,43 @@ ion-navbar.toolbar {
   }
 }
 
+page-login .login-logo {
+  width: 150px;
+  margin-top: 120px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+page-login .login-button {
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 30px;
+  text-align: center;
+  border: 1px solid #fff;
+}
+
+page-login ion-row {
+  margin-top: 10px;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  text-align: center;
+}
+
+page-login ion-item {
+  border-radius: 30px;
+  margin-bottom: 10px;
+  background-color: #f6f6f6;
+  opacity: 0.7;
+  font-size: 0.9em;
+}
+
+page-login ion-list {
+  margin: 0;
+}
+
 .page-main ion-col {
   border: 1px solid #e6e9ee;
   text-align: center;
@@ -27502,4 +27539,29 @@ ion-navbar.toolbar {
   margin-left: 10px;
   color: black;
   font-family: "Microsoft YaHei", "微软雅黑";
+}
+
+page-welcome .page-content {
+  background-image: url("../assets/img/bg_splash.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+page-welcome .welcome-logo {
+  width: 200px;
+  height: 94px;
+  margin-top: 145px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+page-welcome .welcome-info {
+  position: absolute;
+  top: 80%;
+  bottom: 20%;
+  left: 10%;
+  right: 10%;
+  height: 50px;
+  text-align: center;
+  color: white;
 }

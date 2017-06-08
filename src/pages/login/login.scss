@@ -1,0 +1,38 @@
+page-login {
+
+  .login-logo {
+    width: 150px;
+    margin-top: 120px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .login-button {
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 30px;
+    text-align: center;
+    border: 1px solid #fff;
+  }
+
+  ion-row {
+    margin-top: 10px;
+    align-items: center;
+    text-align: center;
+  }
+
+  ion-item {
+    border-radius: 30px;
+    margin-bottom: 10px;
+    background-color: #f6f6f6;
+    opacity: 0.7;
+    font-size: 0.9em;
+  }
+
+  ion-list {
+    margin: 0;
+  }
+
+}
