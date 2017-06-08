@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {NavController, ToastController} from 'ionic-angular';
+import {MainPage} from "../main/main";
 
 export class User {
   constructor(public username: string,
@@ -32,5 +33,7 @@ export class LoginPage {
       duration: 2000
     });
     toast.present();
+
+    this.navCtrl.push(MainPage, {})
   }
 }

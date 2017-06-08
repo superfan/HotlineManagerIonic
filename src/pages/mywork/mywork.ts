@@ -11,8 +11,8 @@ export class MyWorkPage {
   title: string = '任务列表';
   showToolbar: boolean = false;
   showFab: boolean = false;
-  private dark: string = 'dark';
-  private gray: string = 'gray';
+  dark: string = 'dark';
+  gray: string = 'gray';
 
   items: any[] = [];
 
