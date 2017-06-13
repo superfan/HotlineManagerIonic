@@ -11,6 +11,9 @@ import { LoginPage } from "../pages/login/login";
 import { MainPage } from '../pages/main/main';
 import { MyWorkPage } from '../pages/mywork/mywork';
 import { NewsPage } from "../pages/news/news";
+import {File} from "@ionic-native/file";
+import {FileSevice} from "../providers/FileSevice";
+import {Transfer} from "@ionic-native/transfer";
 
 @NgModule({
   declarations: [
@@ -39,6 +42,9 @@ import { NewsPage } from "../pages/news/news";
   providers: [
     StatusBar,
     SplashScreen,
+    File,
+    Transfer,
+    FileSevice,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

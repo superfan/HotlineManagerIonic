@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
-import {LoadingController, NavController, ViewController} from 'ionic-angular';
+import {LoadingController, NavController, Platform, ViewController} from 'ionic-angular';
 import {LoginPage} from "../login/login";
+import {FileSevice} from "../../providers/FileSevice";
 
 @Component({
   selector: 'page-welcome',
@@ -13,7 +14,9 @@ export class WelcomePage {
 
   constructor(public navCtrl: NavController,
               public loadingCtrl: LoadingController,
-              private viewCtrl: ViewController) {
+              private viewCtrl: ViewController,
+              public platform: Platform,
+              public fileSevice: FileSevice) {
     viewCtrl.didEnter.subscribe(() => this.onDidEnter());
   }
 
@@ -21,13 +24,25 @@ export class WelcomePage {
    * 进入页面回调
    */
   onDidEnter() {
-    let loading = this.loadingCtrl.create({
-      content: '加载中...',
-      dismissOnPageChange: true
-    })
-    loading.present();
-    setTimeout(() => {
-      this.navCtrl.push(LoginPage, {})
-    }, 3000);
+    //判断是否是安卓平台
+    if (this.platform.is('android')) {
+      let loading = this.loadingCtrl.create({
+        content: '加载中...',
+        dismissOnPageChange: true
+      })
+      loading.present();
+      // this.fileSevice.downloadFile()
+      //   .then(() => console.log("success"))
+      //   .catch(err => console.log("error" + err));
+      this.fileSevice.createDirs()
+        .then(() => {
+          loading.dismiss();
+          this.navCtrl.push(LoginPage, {});
+          console.log('jump success');
+        })
+        .catch(err => console.log(err));
+    } else {
+      this.navCtrl.push(LoginPage, {});
+    }
   }
 }

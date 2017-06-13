@@ -1,0 +1,38 @@
+{
+	"server.outer.baseuri" : "http\://58.247.45.118\:6001/",
+	"server.inner.baseuri": "http\://128.1.3.205\:6001/",
+	"broker.inner.url": "tcp\://128.1.3.150\:1883",
+	"broker.outer.url": "tcp\://128.1.3.150\:1883",
+
+	"sys.is_grid_style" : true,
+	"sys.auto_next_page" : false,
+	"sys.alert_style" : 0,
+	"sys.is_inner_host" : true,
+	"sys.is_debug_mode": false,
+	"sys.list_page_size": 10,
+	"sys.keepalive_interval" : 60000,
+	"sys.connect.outer.network": false,
+	"sys.inner.ip" : "128.1.3.205",
+
+	"net.allow_auto_download_wifi_enabled": false,
+	"net.allow_edge_download": false,
+
+	"cb.gubiaozt": "7,8,9,10,11,12,13,14,15",
+	"cb.auto_calc_jine" : true,
+	"cb.need_lgldyy": true,
+	"cb.auto_upload": false,
+	"cb.isadd_pc_kuaijiejian_prefix": false,
+
+	"kg.show_lajifei": false,
+	"kg.show_lajifeixishu": false,
+	"kg.show_dingejiajia": false,
+	"kg.show_weiyuejin": false,
+	"kg.show_shuibiaobeilv": false,
+
+	"cx.show_lianxugubiaocs" : false,
+	"cx.show_lianxulianggaoldcs": false,
+
+	"jietijb1.renkousl": 8,
+	"jietijb2.renkousl": 12,
+	"jietijb3.renkousl": -1
+}
