@@ -62,66 +62,66 @@
           </ion-list-header>
 
           <!--创建时间-->
-          <button ion-item [style.color]="item.create.color" *ngIf="item.create.show">
+          <button ion-item [style.color]="item.processes[0].color" *ngIf="item.processes[0].show">
             <ion-icon name='radio-button-on'item-start></ion-icon>
-            创建时间 {{item.create.time}}
+            创建时间 {{item.processes[0].time}}
             <!--<ion-icon name='ios-arrow-forward' item-end></ion-icon>-->
           </button>
 
           <!--派发时间-->
-          <button ion-item [style.color]="item.dispatch.color" *ngIf="item.dispatch.show">
+          <button ion-item [style.color]="item.processes[1].color" *ngIf="item.processes[1].show">
             <ion-icon name='radio-button-on'item-start></ion-icon>
-            派发时间 {{item.dispatch.time}}
+            派发时间 {{item.processes[1].time}}
             <!--<ion-icon name='ios-arrow-forward' item-end></ion-icon>-->
           </button>
 
           <!--接单时间-->
-          <button ion-item [style.color]="item.accept.color" *ngIf="item.accept.show" (click)="accept(item)">
+          <button ion-item [style.color]="item.processes[2].color" *ngIf="item.processes[2].show" (click)="accept(item)">
             <ion-icon name='radio-button-on'item-start></ion-icon>
-            接单时间 {{item.accept.time | date:'y-MM-dd HH:mm:ss'}}
-            <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.accept.done"></ion-icon>
+            接单时间 {{item.processes[2].time | date:'y-MM-dd HH:mm:ss'}}
+            <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.processes[2].done"></ion-icon>
           </button>
 
           <!--出发时间-->
-          <button ion-item [style.color]="item.go.color" *ngIf="item.go.show" (click)="go(item)">
+          <button ion-item [style.color]="item.processes[3].color" *ngIf="item.processes[3].show" (click)="go(item)">
             <ion-icon name='radio-button-on'item-start></ion-icon>
-            出发时间 {{item.go.time | date:'y-MM-dd HH:mm:ss'}}
-            <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.go.done"></ion-icon>
+            出发时间 {{item.processes[3].time | date:'y-MM-dd HH:mm:ss'}}
+            <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.processes[3].done"></ion-icon>
           </button>
 
           <!--到场时间-->
-          <button ion-item [style.color]="item.arrive.color" *ngIf="item.arrive.show" (click)="arrive(item)">
+          <button ion-item [style.color]="item.processes[4].color" *ngIf="item.processes[4].show" (click)="arrive(item)">
             <ion-icon name='radio-button-on'item-start></ion-icon>
-            到场时间 {{item.arrive.time | date:'y-MM-dd HH:mm:ss'}}
-            <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.arrive.done"></ion-icon>
+            到场时间 {{item.processes[4].time | date:'y-MM-dd HH:mm:ss'}}
+            <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.processes[4].done"></ion-icon>
           </button>
 
           <!--回复时间-->
-          <button ion-item [style.color]="item.reply.color" *ngIf="item.reply.show" (click)="reply(item)">
+          <button ion-item [style.color]="item.processes[5].color" *ngIf="item.processes[5].show" (click)="reply(item)">
             <ion-icon name='radio-button-on'item-start></ion-icon>
-            回复时间 {{item.reply.time | date:'y-MM-dd HH:mm:ss'}}
-            <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.reply.done"></ion-icon>
+            回复时间 {{item.processes[5].time | date:'y-MM-dd HH:mm:ss'}}
+            <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.processes[5].done"></ion-icon>
           </button>
 
           <!--退单时间-->
-          <button ion-item [style.color]="item.reject.color" *ngIf="item.reject.show" (click)="reject(item)">
+          <button ion-item [style.color]="item.processes[6].color" *ngIf="item.processes[6].show" (click)="reject(item)">
             <ion-icon name='radio-button-on'item-start></ion-icon>
-            退单时间 {{item.reject.time | date:'y-MM-dd HH:mm:ss'}} {{item.reject.lastOperate}}
-            <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.reject.done"></ion-icon>
+            退单时间 {{item.processes[6].time | date:'y-MM-dd HH:mm:ss'}}
+            <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.processes[6].done"></ion-icon>
           </button>
 
           <!--延迟时间-->
-          <button ion-item [style.color]="item.delay.color" *ngIf="item.delay.show" (click)="delay(item)">
+          <button ion-item [style.color]="item.processes[7].color" *ngIf="item.processes[7].show" (click)="delay(item)">
             <ion-icon name='radio-button-on'item-start></ion-icon>
-            延迟时间 {{item.delay.time | date:'y-MM-dd HH:mm:ss'}} {{item.delay.lastOperate}}
-            <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.delay.done"></ion-icon>
+            延迟时间 {{item.processes[7].time | date:'y-MM-dd HH:mm:ss'}}
+            <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.processes[7].done"></ion-icon>
           </button>
 
           <!--销单时间-->
-          <button ion-item [style.color]="item.cancel.color" *ngIf="item.cancel.show" (click)="cancel(item)">
+          <button ion-item [style.color]="item.processes[8].color" *ngIf="item.processes[8].show" (click)="cancel(item)">
             <ion-icon name='radio-button-on'item-start></ion-icon>
-            销单时间 {{item.cancel.time | date:'y-MM-dd HH:mm:ss'}}
-            <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.cancel.done"></ion-icon>
+            销单时间 {{item.processes[8].time | date:'y-MM-dd HH:mm:ss'}}
+            <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.processes[8].done"></ion-icon>
           </button>
         </ion-list>
 
