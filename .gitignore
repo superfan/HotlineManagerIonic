@@ -22,7 +22,7 @@ node_modules/
 tmp/
 temp/
 
-plugins/android.json
+#plugins/android.json
 plugins/ios.json
 $RECYCLE.BIN/
 
