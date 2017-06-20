@@ -11,6 +11,7 @@ import { LoginPage } from "../pages/login/login";
 import { MainPage } from '../pages/main/main';
 import { MyWorkPage } from '../pages/mywork/mywork';
 import { NewsPage } from "../pages/news/news";
+import { WorkDetailPage } from "../pages/workdetail/workdetail";
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { NewsPage } from "../pages/news/news";
     LoginPage,
     MainPage,
     MyWorkPage,
+    WorkDetailPage,
     NewsPage
   ],
   imports: [
@@ -34,6 +36,7 @@ import { NewsPage } from "../pages/news/news";
     LoginPage,
     MainPage,
     MyWorkPage,
+    WorkDetailPage,
     NewsPage
   ],
   providers: [

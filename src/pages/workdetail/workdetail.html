@@ -1,0 +1,171 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>
+      {{title}}
+    </ion-title>
+  </ion-navbar>
+
+  <ion-toolbar no-border-top>
+    <ion-segment [(ngModel)]="segmentName">
+      <ion-segment-button value="detailInfo">
+        基本信息
+      </ion-segment-button>
+      <ion-segment-button value="replyInfo">
+        回填信息
+      </ion-segment-button>
+      <ion-segment-button value="media">
+        多媒体
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="page-workdetail">
+
+  <div [ngSwitch]="segmentName">
+    <!--基本信息-->
+    <ion-list *ngSwitchCase="'detailInfo'">
+      <ion-item *ngFor="let detail of details">
+        <ion-label fixed class="label-name">
+          {{detail.name}}
+        </ion-label>
+        <div item-content>
+          {{detail.value}}
+        </div>
+      </ion-item>
+    </ion-list>
+
+    <!--回填信息-->
+    <ion-list *ngSwitchCase="'replyInfo'">
+      <ion-item *ngFor="let reply of replies" class="reply-item">
+        <ion-label fixed class="label-name">
+          {{reply.name}}
+        </ion-label>
+        <div item-content>
+          {{reply.value}}
+        </div>
+        <ion-icon name="ios-arrow-forward" item-end *ngIf="reply.isActive"></ion-icon>
+      </ion-item>
+
+      <!--<ion-row>-->
+        <!--<ion-col class="col-button">-->
+          <!--<button ion-button icon-left>-->
+            <!--<ion-icon name="camera"></ion-icon>-->
+            <!--拍照-->
+          <!--</button>-->
+        <!--</ion-col>-->
+        <!--<ion-col class="col-button">-->
+          <!--<button ion-button icon-left>-->
+            <!--<ion-icon name="microphone"></ion-icon>-->
+            <!--录音-->
+          <!--</button>-->
+        <!--</ion-col>-->
+        <!--<ion-col class="col-button">-->
+          <!--<button ion-button icon-left>-->
+            <!--<ion-icon name="videocam"></ion-icon>-->
+            <!--视频-->
+          <!--</button>-->
+        <!--</ion-col>-->
+      <!--</ion-row>-->
+    </ion-list>
+
+    <!--多媒体-->
+    <div *ngSwitchCase="'media'">
+      <button ion-item icon-left>
+        <ion-icon name="camera"></ion-icon>
+        拍照
+      </button>
+
+      <ion-grid>
+        <ion-row>
+          <ion-col class="col-img">
+            <img width="80" height="80" src="assets/img/ic_photo_default.png"/>
+          </ion-col>
+
+          <ion-col class="col-img">
+            <img width="80" height="80" src="assets/img/ic_photo_default.png"/>
+          </ion-col>
+
+          <ion-col class="col-img">
+            <img width="80" height="80" src="assets/img/ic_photo_default.png"/>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <button ion-item icon-left>
+        <ion-icon name="microphone"></ion-icon>
+        录音
+      </button>
+
+      <ion-list no-lines>
+        <ion-item>
+          <img width="10" height="20" src="assets/img/ic_audio_default.png"/>
+          <ion-note>10s</ion-note>
+        </ion-item>
+
+        <ion-item>
+          <img width="10" height="20" src="assets/img/ic_audio_default.png"/>
+          <ion-note>15s</ion-note>
+        </ion-item>
+
+        <ion-item>
+          <img width="10" height="20" src="assets/img/ic_audio_default.png"/>
+          <ion-note>20s</ion-note>
+        </ion-item>
+      </ion-list>
+
+      <button ion-item icon-left>
+        <ion-icon name="videocam"></ion-icon>
+        视频
+      </button>
+
+      <ion-row>
+        <ion-col class="col-img">
+          <img width="80" height="80" src="assets/img/ic_video_default.png"/>
+        </ion-col>
+
+        <ion-col class="col-img">
+          <img width="80" height="80" src="assets/img/ic_video_default.png"/>
+        </ion-col>
+
+        <ion-col class="col-img">
+          <img width="80" height="80" src="assets/img/ic_video_default.png"/>
+        </ion-col>
+      </ion-row>
+      <!--<ion-grid>-->
+        <!--<ion-row>-->
+          <!--<ion-col>-->
+            <!--<img width="80" height="80" src="assets/img/ic_mywork.png"/>-->
+          <!--</ion-col>-->
+          <!--&lt;!&ndash;<ion-col>&ndash;&gt;-->
+            <!--&lt;!&ndash;<ion-thumbnail width="80" height="80" src="assets/img/ic_mywork.png"></ion-thumbnail>&ndash;&gt;-->
+          <!--&lt;!&ndash;</ion-col>&ndash;&gt;-->
+          <!--<ion-col>-->
+            <!--<ion-img width="80" height="80" [src]="image"></ion-img>-->
+          <!--</ion-col>-->
+        <!--</ion-row>-->
+      <!--</ion-grid>-->
+
+      <!--<ion-item>-->
+        <!--<ion-img width="80" height="80" [src]="image"></ion-img>-->
+      <!--</ion-item>-->
+
+      <!--<ion-item>-->
+        <!--<ion-thumbnail item-start>-->
+          <!--<img src="assets/img/ic_searching.png">-->
+        <!--</ion-thumbnail>-->
+        <!--<h2>Daffy</h2>-->
+      <!--</ion-item>-->
+
+      <!--<ion-list [virtualScroll]="people" approxItemHeight="50px">-->
+        <!--<ion-item *virtualItem="let person">-->
+          <!--<ion-avatar item-left>-->
+            <!--<ion-img [src]="person.picture" width="48" height="48"></ion-img>-->
+          <!--</ion-avatar>-->
+          <!--<h2>{{person.name}}</h2>-->
+        <!--</ion-item>-->
+      <!--</ion-list>-->
+    </div>
+  </div>
+
+</ion-content>

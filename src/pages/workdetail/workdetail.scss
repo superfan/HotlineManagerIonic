@@ -1,0 +1,22 @@
+.page-workdetail {
+  .label-name {
+    color:#5d81c1;
+  }
+
+  .reply-item:active {
+    background-color: #e6e9ee;
+  }
+
+  .col-button {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+   }
+
+  .col-img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    //border: 1px solid #e6e9ee;
+  }
+}
