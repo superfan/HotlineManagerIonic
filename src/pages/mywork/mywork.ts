@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { Content, NavController } from 'ionic-angular';
+import {WorkDetailPage} from "../workdetail/workdetail";
 
 @Component({
   selector: 'page-mywork',
@@ -11,25 +12,13 @@ export class MyWorkPage {
   title: string = '任务列表';
   showToolbar: boolean = false;
   showFab: boolean = false;
-  dark: string = 'dark';
-  gray: string = 'gray';
+  // dark: string = 'dark';
+  // gray: string = 'gray';
+
+  disableColor: string = 'gray';
+  enableColor: string = 'primary';
 
   items: any[] = [];
-
-  // listItems = {
-  //   header: { name: '任务描述', value: '上海市杨浦区控江路1555号水管维修'},
-  //   content: [
-  //     { name: '创建时间', value: '2017-06-01 12:30:00', show: true, color: 'gray' },
-  //     { name: '派发时间', value: '2017-06-01 13:00:00', show: true, color: 'gray' },
-  //     { name: '接单时间', value: '', show: true, color: 'dark' },
-  //     { name: '出发时间', value: '', show: false, color: 'dark' },
-  //     { name: '到场时间', value: '', show: false, color: 'dark' },
-  //     { name: '回复时间', value: '', show: false, color: 'dark' },
-  //     { name: '退单时间', value: '', show: false, color: 'dark' },
-  //     { name: '延迟时间', value: '', show: false, color: 'dark' },
-  //     { name: '销单时间', value: '', show: false, color: 'dark' }
-  //     // { name: '完工时间', value: ''},
-  // ]};
 
   constructor(public navCtrl: NavController) {
     for (let i = 0; i < 10; i++) {
@@ -38,26 +27,20 @@ export class MyWorkPage {
         type: '热线工单',
         describe: "上海市杨浦区控江路1555号水管维修",
         processes: [
-          { event: 'create', time: '2017-06-01 12:30:00', show: true, color: 'gray' },
-          { event: 'dispatch', time: '2017-06-01 12:30:00', show: true, color: 'gray' },
-          { event: 'accept', time: '', show: true, color: 'dark', done: false },
-          { event: 'go', time: '', show: false, color: 'dark', done: false },
-          { event: 'arrive', time: '', show: false, color: 'dark', done: false },
-          { event: 'reply', time: '', show: false, color: 'dark', done: false },
-          { event: 'reject', time: '', show: false, color: 'dark', done: false },
-          { event: 'delay', time: '', show: false, color: 'dark', done: false },
-          { event: 'cancel', time: '', show: false, color: 'dark', done: false }
+          { event: 'create', name: '创建时间', time: '2017-06-01 12:30:00', show: true, color: this.disableColor },
+          { event: 'dispatch', name: '派发时间', time: '2017-06-01 12:30:00', show: true, color: this.disableColor },
+          { event: 'accept', name: '接单时间', time: '', show: true, color: this.enableColor, done: false },
+          { event: 'go', name: '出发时间', time: '', show: false, color: this.enableColor, done: false },
+          { event: 'arrive', name: '到场时间', time: '', show: false, color: this.enableColor, done: false },
+          { event: 'reply', name: '回复时间', time: '', show: false, color: this.enableColor, done: false },
+          { event: 'reject', name: '退单时间', time: '', show: false, color: this.enableColor, done: false },
+          { event: 'delay', name: '延迟时间', time: '', show: false, color: this.enableColor, done: false },
+          { event: 'cancel', name: '销单时间', time: '', show: false, color: this.enableColor, done: false }
         ],
-        lastProcess: ''
-        // create: { time: '2017-06-01 12:30:00', show: true, color: 'gray' },
-        // dispatch: { time: '2017-06-01 12:30:00', show: true, color: 'gray' },
-        // accept: { time: '', show: true, color: 'dark', done: false },
-        // go: { time: '', show: false, color: 'dark', done: false },
-        // arrive: { time: '', show: false, color: 'dark', done: false },
-        // reply: { time: '', show: false, color: 'dark', done: false },
-        // reject: { time: '', show: false, color: 'dark', done: false, lastOperate: '' },
-        // delay: { time: '', show: false, color: 'dark', done: false, lastOperate:'' },
-        // cancel: { time: '', show: false, color: 'dark', done: false }
+        lastProcess: '',
+        photoCount: 0,
+        audioCount: 0,
+        videoCount: 0
       });
     }
   }
@@ -71,8 +54,31 @@ export class MyWorkPage {
     }, 2000);
   }
 
-  itemSelected(item: string) {
-    console.log("Selected Item", item);
+  itemSelected(work: any, index: number) {
+    console.log("Selected Item", index);
+    switch (work.processes[index].event) {
+      case 'accept':
+        this.accept(work);
+        break;
+      case 'go':
+        this.go(work);
+        break;
+      case 'arrive':
+        this.arrive(work);
+        break;
+      case 'reply':
+        this.reply(work);
+        break;
+      case 'reject':
+        this.reject(work);
+        break;
+      case 'delay':
+        this.delay(work);
+        break;
+      case 'cancel':
+        this.cancel(work);
+        break;
+    }
   }
 
   toggleToolbar(ev: any) {
@@ -93,26 +99,20 @@ export class MyWorkPage {
           id: this.items.length,
           type: '热线工单',
           processes: [
-            { event: 'create', time: '2017-06-01 12:30:00', show: true, color: 'gray' },
-            { event: 'dispatch', time: '2017-06-01 12:30:00', show: true, color: 'gray' },
-            { event: 'accept', time: '', show: true, color: 'dark', done: false },
-            { event: 'go', time: '', show: false, color: 'dark', done: false },
-            { event: 'arrive', time: '', show: false, color: 'dark', done: false },
-            { event: 'reply', time: '', show: false, color: 'dark', done: false },
-            { event: 'reject', time: '', show: false, color: 'dark', done: false },
-            { event: 'delay', time: '', show: false, color: 'dark', done: false },
-            { event: 'cancel', time: '', show: false, color: 'dark', done: false }
+            { event: 'create', name: '创建时间', time: '2017-06-01 12:30:00', show: true, color: this.disableColor },
+            { event: 'dispatch', name: '派发时间', time: '2017-06-01 12:30:00', show: true, color: this.disableColor },
+            { event: 'accept', name: '接单时间', time: '', show: true, color: this.enableColor, done: false },
+            { event: 'go', name: '出发时间', time: '', show: false, color: this.enableColor, done: false },
+            { event: 'arrive', name: '到场时间', time: '', show: false, color: this.enableColor, done: false },
+            { event: 'reply', name: '回复时间', time: '', show: false, color: this.enableColor, done: false },
+            { event: 'reject', name: '退单时间', time: '', show: false, color: this.enableColor, done: false },
+            { event: 'delay', name: '延迟时间', time: '', show: false, color: this.enableColor, done: false },
+            { event: 'cancel', name: '销单时间', time: '', show: false, color: this.enableColor, done: false }
           ],
-          lastProcess: ''
-          // create: { time: '2017-06-01 12:30:00', show: true, color: 'gray' },
-          // dispatch: { time: '2017-06-01 12:30:00', show: true, color: 'gray' },
-          // accept: { time: '', show: true, color: 'dark' },
-          // go: { time: '', show: false, color: 'dark' },
-          // arrive: { time: '', show: false, color: 'dark' },
-          // reply: { time: '', show: false, color: 'dark' },
-          // reject: { time: '', show: false, color: 'dark', lastOperate: '' },
-          // delay: { time: '', show: false, color: 'dark', lastOperate: '' },
-          // cancel: { time: '', show: false, color: 'dark' }
+          lastProcess: '',
+          photoCount: 0,
+          audioCount: 0,
+          videoCount: 0
         });
       }
 
@@ -129,9 +129,18 @@ export class MyWorkPage {
   }
 
   /**
-   *
+   * 预览工单
+   * @param work
    */
-  accept(work: any) {
+  onPreview(work: any) {
+    this.navCtrl.push(WorkDetailPage);
+  }
+
+  /**
+   * 接单
+   * @param work
+   */
+  private accept(work: any) {
     let processes = {};
     if (!this.transformProcesses(work, processes)) {
       return;
@@ -139,17 +148,21 @@ export class MyWorkPage {
 
     if (!processes['accept'].done) {
       processes['accept'].time = new Date();
-      processes['accept'].color = this.gray;
+      processes['accept'].color = this.disableColor;
       processes['accept'].done = true;
       processes['go'].show = true;
       processes['reject'].show = true;
       processes['delay'].show = true;
-      processes['cancel'].show = true;
+      //processes['cancel'].show = true;
       work.lastProcess = 'accept';
     }
   }
 
-  go(work: any) {
+  /**
+   * 出发
+   * @param work
+   */
+  private go(work: any) {
     let processes = {};
     if (!this.transformProcesses(work, processes)) {
       return;
@@ -157,17 +170,21 @@ export class MyWorkPage {
 
     if (!processes['go'].done) {
       processes['go'].time = new Date();
-      processes['go'].color = this.gray;
+      processes['go'].color = this.disableColor;
       processes['go'].done = true;
       processes['arrive'].show = true;
       processes['reject'].show = true;
       processes['delay'].show = true;
-      processes['cancel'].show = true;
+      //processes['cancel'].show = true;
       work.lastProcess = 'go';
     }
   }
 
-  arrive(work: any) {
+  /**
+   * 到场
+   * @param work
+   */
+  private arrive(work: any) {
     let processes = {};
     if (!this.transformProcesses(work, processes)) {
       return;
@@ -175,17 +192,21 @@ export class MyWorkPage {
 
     if (!processes['arrive'].done) {
       processes['arrive'].time = new Date();
-      processes['arrive'].color = this.gray;
+      processes['arrive'].color = this.disableColor;
       processes['arrive'].done = true;
       processes['reply'].show = true;
       processes['reject'].show = true;
       processes['delay'].show = true;
-      processes['cancel'].show = true;
+      //processes['cancel'].show = true;
       work.lastProcess = 'arrive';
     }
   }
 
-  reply(work: any) {
+  /**
+   * 回复
+   * @param work
+   */
+  private reply(work: any) {
     let processes = {};
     if (!this.transformProcesses(work, processes)) {
       return;
@@ -193,7 +214,7 @@ export class MyWorkPage {
 
     if (!processes['reply'].done) {
       processes['reply'].time = new Date();
-      processes['reply'].color = this.gray;
+      processes['reply'].color = this.disableColor;
       processes['reply'].done = true;
       processes['reject'].show = false;
       processes['delay'].show = processes['delay'].done;
@@ -206,7 +227,7 @@ export class MyWorkPage {
    * 退单
    * @param work
    */
-  reject(work: any) {
+  private reject(work: any) {
     let processes = {};
     if (!this.transformProcesses(work, processes)) {
       return;
@@ -214,30 +235,15 @@ export class MyWorkPage {
 
     if (!processes['reject'].done) {
       processes['reject'].time = new Date();
-      processes['reject'].color = this.gray;
+      processes['reject'].color = this.disableColor;
       processes['reject'].done = true;
 
       processes['go'].show = processes['go'].done;
       processes['arrive'].show = processes['arrive'].done;
       processes['reply'].show = processes['reply'].done;
       processes['delay'].show = processes['delay'].done;
-      processes['cancel'].show = false;
-
-      // if (work.accept.done) {
-      //   work.reject.lastOperate = '接单';
-      // }
-      //
-      // if (work.go.done) {
-      //   work.reject.lastOperate = '出发';
-      // }
-      //
-      // if (work.arrive.done) {
-      //   work.reject.lastOperate = '到场';
-      // }
-      //
-      // if (work.delay.done) {
-      //   work.reject.lastOperate = '延迟';
-      // }
+      //processes['cancel'].show = false;
+      work.lastProcess = 'reject';
     }
   }
 
@@ -245,57 +251,71 @@ export class MyWorkPage {
    * 延迟
    * @param work
    */
-  delay(work: any) {
+  private delay(work: any) {
     let processes = {};
     if (!this.transformProcesses(work, processes)) {
       return;
     }
 
     if (!processes['delay'].done) {
-      processes['delay'].time = new Date();
-      processes['delay'].color = this.gray;
-      processes['delay'].done = true;
-
-      if (work.lastProcess === 'accept') {
-
+      let isSuccess: boolean = false;
+      if (work.lastProcess === 'accept'
+        && this.sortProcesses(work, "accept", "delay", "延迟时间")
+        && this.transformProcesses(work, processes = {})) {
+        isSuccess = true;
       }
 
-      if (work.lastProcess === 'go') {
-
+      if (work.lastProcess === 'go'
+        && this.sortProcesses(work, "go", "delay", "延迟时间")
+        && this.transformProcesses(work, processes = {})) {
+        isSuccess = true;
       }
 
-      if (work.lastProcess === 'arrive') {
-
+      if (work.lastProcess === 'arrive'
+        && this.sortProcesses(work, "arrive", "delay", "延迟时间")
+        && this.transformProcesses(work, processes = {})) {
+        isSuccess = true;
       }
 
-      // if (work.accept.done) {
-      //   work.delay.lastOperate = '接单';
-      // }
-      //
-      // if (work.go.done) {
-      //   work.delay.lastOperate = '出发';
-      // }
-      //
-      // if (work.arrive.done) {
-      //   work.delay.lastOperate = '到场';
-      // }
+      if (isSuccess) {
+        processes['delay'].time = new Date();
+        processes['delay'].color = this.disableColor;
+        processes['delay'].done = true;
+        work.lastProcess = 'delay';
+      }
     }
   }
 
-  cancel(work: any) {
-    // if (!work.cancel.done) {
-    //   work.cancel.time = new Date();
-    //   work.cancel.color = this.gray;
-    //   work.cancel.done = true;
-    //
-    //   work.go.show = work.go.done;
-    //   work.arrive.show = work.arrive.done;
-    //   work.reply.show = work.reply.done;
-    //   work.reject.show = work.reject.done;
-    //   work.delay.show = work.delay.done;
-    // }
+  /**
+   * 销单
+   * @param work
+   */
+  private cancel(work: any) {
+    let processes = {};
+    if (!this.transformProcesses(work, processes)) {
+      return;
+    }
+
+    if (!processes['cancel'].done) {
+      processes['cancel'].time = new Date();
+      processes['cancel'].color = this.disableColor;
+      processes['cancel'].done = true;
+
+      processes['go'].show = processes['go'].done;
+      processes['arrive'].show = processes['arrive'].done;
+      processes['reply'].show = processes['reply'].done;
+      processes['reject'].show = processes['reject'].done;
+      processes['delay'].show = processes['delay'].done;
+      work.lastProcess = 'cancel';
+    }
   }
 
+  /**
+   * 处理步骤数组转对象
+   * @param work
+   * @param processes
+   * @returns {boolean}
+   */
   private transformProcesses(work: any, processes: object): boolean {
     if (work.processes instanceof Array && work.processes.length > 0) {
       for (let i of work.processes) {
@@ -308,23 +328,42 @@ export class MyWorkPage {
     return false;
   }
 
-  private sortProcesses(work: any, lastEvent: string, curEvent: string): boolean {
-    if (work.processes instanceof Array && work.processes.length > 0) {
-      let processes = [];
-      let curProcess;
-      for (let i of work.processes) {
-        if (i.event === curEvent) {
-          curProcess = i;
-          continue;
+  /**
+   *
+   * @param work
+   * @param lastEvent
+   * @param curEvent
+   * @returns {boolean}
+   */
+  private sortProcesses(work: any, lastEvent: string, curEvent: string, curName: string): boolean {
+    if (work.processes instanceof Array
+      && work.processes.length > 0
+      && lastEvent && curEvent && curName) {
+      let lastIndex, curIndex;
+      let processes = work.processes;
+      for (let i = 0; i < processes.length; i++) {
+        if (processes[i].event === lastEvent) {
+          lastIndex = i;
+        } else if (processes[i].event === curEvent) {
+          curIndex = i;
         }
-
-        processes.push(i);
       }
 
-      for (let i of processes) {
-
+      if (lastIndex >= curIndex) {
+        return false;
       }
 
+      for (let i = curIndex; i > lastIndex; i--) {
+        processes[i].event = processes[i-1].event;
+        processes[i].name = processes[i-1].name;
+        processes[i].time = processes[i-1].time;
+        processes[i].show = processes[i-1].show;
+        processes[i].color = processes[i-1].color;
+        processes[i].done = processes[i-1].done;
+      }
+
+      processes[lastIndex + 1].event = curEvent;
+      processes[lastIndex + 1].name = curName;
       return true;
     }
 

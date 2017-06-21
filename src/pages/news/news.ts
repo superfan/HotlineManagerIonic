@@ -12,7 +12,9 @@ export class NewsPage {
     1, 2, 3, 4, 5, 6
   ];
 
-  constructor(public navCtrl: NavController) {
+  image: String;
 
+  constructor(public navCtrl: NavController) {
+    this.image = 'https://randomuser.me/api/portraits/women/79.jpg';
   }
 }

@@ -20,6 +20,7 @@ import {AppVersion} from "@ionic-native/app-version";
 import {Zip} from "@ionic-native/zip";
 import {ConfigSevice} from "../providers/ConfigSevice";
 import {FileOpener} from "@ionic-native/file-opener";
+import { WorkDetailPage } from "../pages/workdetail/workdetail";
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import {FileOpener} from "@ionic-native/file-opener";
     LoginPage,
     MainPage,
     MyWorkPage,
+    WorkDetailPage,
     NewsPage
   ],
   imports: [
@@ -44,6 +46,7 @@ import {FileOpener} from "@ionic-native/file-opener";
     LoginPage,
     MainPage,
     MyWorkPage,
+    WorkDetailPage,
     NewsPage
   ],
   providers: [

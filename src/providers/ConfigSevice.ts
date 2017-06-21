@@ -1,6 +1,5 @@
 import {Injectable} from "@angular/core";
 import {Http} from "@angular/http";
-import {getBasePath} from "@ionic/app-scripts/dist/util/glob-util";
 /**
  * Created by zhangjing on 2017/6/19.
  * 读取配置文件

@@ -1,11 +1,7 @@
 import {Component} from '@angular/core';
-import {NavController, ToastController} from 'ionic-angular';
+import {NavController} from 'ionic-angular';
 import {MainPage} from "../main/main";
-import {Http, RequestOptions} from "@angular/http";
-import {StorageService} from "../../providers/StorageService";
-import {Observable} from "rxjs/Observable";
-import {ConfigSevice} from "../../providers/ConfigSevice";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder,FormGroup, Validators} from "@angular/forms";
 
 export class User {
   constructor(public username: string,
@@ -28,10 +24,10 @@ export class LoginPage {
   // password: any;
 
   constructor(public navCtrl: NavController,
-              public toastCtrl: ToastController,
-              public storageSevice: StorageService,
-              private configService: ConfigSevice,
-              private http: Http,
+              // public toastCtrl: ToastController,
+              // public storageSevice: StorageService,
+              // private configService: ConfigSevice,
+              // private http: Http,
               private formBuilder: FormBuilder) {
 
     this.loginForm = this.formBuilder.group({

@@ -4,7 +4,7 @@
       {{title}}
     </ion-title>
     <ion-buttons end>
-      <button ion-button icon-only color="royal" (click)="toggleToolbar($event)">
+      <button ion-button icon-only color="white" (click)="toggleToolbar($event)">
         <ion-icon name="search"></ion-icon>
       </button>
     </ion-buttons>
@@ -38,146 +38,114 @@
         <div><h2 class="card-header-label-hint">任务类型 </h2><h2 class="card-header-label-content">{{item.type}}</h2></div>
       </ion-item>
 
-      <!--<ion-card-content>-->
-        <!--<ion-grid *ngFor="let item of gridItems"-->
-                  <!--[style.border-style]="item.style == 'top' ? 'solid none none none' : 'solid none solid none'">-->
-          <!--<ion-row>-->
-            <!--<ion-col col-auto class="card-content-col-hint">-->
-              <!--<div>{{item.name}}</div>-->
-            <!--</ion-col>-->
+      <ion-list>
+        <ion-list-header>
+          <ion-row>
+            <ion-col col-auto>任务描述</ion-col>
+            <ion-col>{{item.describe}}</ion-col>
+          </ion-row>
+        </ion-list-header>
 
-            <!--<ion-col class="card-content-col-content">-->
-              <!--<div>123456789</div>-->
-            <!--</ion-col>-->
-          <!--</ion-row>-->
-        <!--</ion-grid>-->
-      <!--</ion-card-content>-->
+        <!--创建时间-->
+        <button ion-item [style.color]="item.processes[0].color" *ngIf="item.processes[0].show">
+          <ion-icon name='radio-button-on'item-start></ion-icon>
+          {{item.processes[0].name}} {{item.processes[0].time}}
+          <!--<ion-icon name='ios-arrow-forward' item-end></ion-icon>-->
+        </button>
 
-        <ion-list>
-          <ion-list-header>
-            <ion-row>
-              <ion-col col-auto>任务描述</ion-col>
-              <ion-col>{{item.describe}}</ion-col>
-            </ion-row>
-          </ion-list-header>
+        <!--派发时间-->
+        <button ion-item [style.color]="item.processes[1].color" *ngIf="item.processes[1].show">
+          <ion-icon name='radio-button-on'item-start></ion-icon>
+          {{item.processes[1].name}} {{item.processes[1].time}}
+          <!--<ion-icon name='ios-arrow-forward' item-end></ion-icon>-->
+        </button>
 
-          <!--创建时间-->
-          <button ion-item [style.color]="item.processes[0].color" *ngIf="item.processes[0].show">
-            <ion-icon name='radio-button-on'item-start></ion-icon>
-            创建时间 {{item.processes[0].time}}
-            <!--<ion-icon name='ios-arrow-forward' item-end></ion-icon>-->
+        <!--接单时间-->
+        <button ion-item [style.color]="item.processes[2].color" *ngIf="item.processes[2].show" (click)="itemSelected(item, 2)">
+          <ion-icon name='radio-button-on'item-start></ion-icon>
+          {{item.processes[2].name}} {{item.processes[2].time | date:'y-MM-dd HH:mm:ss'}}
+          <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.processes[2].done" color="{{item.processes[2].color}}"></ion-icon>
+        </button>
+
+        <!--出发时间-->
+        <button ion-item [style.color]="item.processes[3].color" *ngIf="item.processes[3].show" (click)="itemSelected(item, 3)">
+          <ion-icon name='radio-button-on'item-start></ion-icon>
+          {{item.processes[3].name}} {{item.processes[3].time | date:'y-MM-dd HH:mm:ss'}}
+          <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.processes[3].done" color="{{item.processes[3].color}}"></ion-icon>
+        </button>
+
+        <!--到场时间-->
+        <button ion-item [style.color]="item.processes[4].color" *ngIf="item.processes[4].show" (click)="itemSelected(item, 4)">
+          <ion-icon name='radio-button-on'item-start></ion-icon>
+          {{item.processes[4].name}} {{item.processes[4].time | date:'y-MM-dd HH:mm:ss'}}
+          <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.processes[4].done" color="{{item.processes[4].color}}"></ion-icon>
+        </button>
+
+        <!--回复时间-->
+        <button ion-item [style.color]="item.processes[5].color" *ngIf="item.processes[5].show" (click)="itemSelected(item, 5)">
+          <ion-icon name='radio-button-on'item-start></ion-icon>
+          {{item.processes[5].name}} {{item.processes[5].time | date:'y-MM-dd HH:mm:ss'}}
+          <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.processes[5].done" color="{{item.processes[5].color}}"></ion-icon>
+        </button>
+
+        <!--退单时间-->
+        <button ion-item [style.color]="item.processes[6].color" *ngIf="item.processes[6].show" (click)="itemSelected(item, 6)">
+          <ion-icon name='radio-button-on'item-start></ion-icon>
+          {{item.processes[6].name}} {{item.processes[6].time | date:'y-MM-dd HH:mm:ss'}}
+          <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.processes[6].done" color="{{item.processes[6].color}}"></ion-icon>
+        </button>
+
+        <!--延迟时间-->
+        <button ion-item [style.color]="item.processes[7].color" *ngIf="item.processes[7].show" (click)="itemSelected(item, 7)">
+          <ion-icon name='radio-button-on'item-start></ion-icon>
+          {{item.processes[7].name}} {{item.processes[7].time | date:'y-MM-dd HH:mm:ss'}}
+          <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.processes[7].done" color="{{item.processes[7].color}}"></ion-icon>
+        </button>
+
+        <!--销单时间-->
+        <button ion-item [style.color]="item.processes[8].color" *ngIf="item.processes[8].show" (click)="itemSelected(item, 8)">
+          <ion-icon name='radio-button-on'item-start></ion-icon>
+          {{item.processes[8].name}} {{item.processes[8].time | date:'y-MM-dd HH:mm:ss'}}
+          <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.processes[8].done" color="{{item.processes[8].color}}"></ion-icon>
+        </button>
+      </ion-list>
+
+      <ion-row>
+        <ion-col>
+          <button ion-button icon-left clear small color="gray">
+            <ion-icon name="images"></ion-icon>
+            <div>{{item.photoCount}}</div>
           </button>
+        </ion-col>
 
-          <!--派发时间-->
-          <button ion-item [style.color]="item.processes[1].color" *ngIf="item.processes[1].show">
-            <ion-icon name='radio-button-on'item-start></ion-icon>
-            派发时间 {{item.processes[1].time}}
-            <!--<ion-icon name='ios-arrow-forward' item-end></ion-icon>-->
+        <ion-col>
+          <button ion-button icon-left clear small color="gray">
+            <ion-icon name="musical-notes"></ion-icon>
+            <div>{{item.audioCount}}</div>
           </button>
+        </ion-col>
 
-          <!--接单时间-->
-          <button ion-item [style.color]="item.processes[2].color" *ngIf="item.processes[2].show" (click)="accept(item)">
-            <ion-icon name='radio-button-on'item-start></ion-icon>
-            接单时间 {{item.processes[2].time | date:'y-MM-dd HH:mm:ss'}}
-            <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.processes[2].done"></ion-icon>
+        <ion-col>
+          <button ion-button icon-left clear small color="gray">
+            <ion-icon name="videocam"></ion-icon>
+            <div>{{item.videoCount}}</div>
           </button>
+        </ion-col>
 
-          <!--出发时间-->
-          <button ion-item [style.color]="item.processes[3].color" *ngIf="item.processes[3].show" (click)="go(item)">
-            <ion-icon name='radio-button-on'item-start></ion-icon>
-            出发时间 {{item.processes[3].time | date:'y-MM-dd HH:mm:ss'}}
-            <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.processes[3].done"></ion-icon>
+        <ion-col>
+          <button ion-button icon-left clear small>
+            <ion-icon name="map"></ion-icon>
+            <div>地图</div>
           </button>
+        </ion-col>
 
-          <!--到场时间-->
-          <button ion-item [style.color]="item.processes[4].color" *ngIf="item.processes[4].show" (click)="arrive(item)">
-            <ion-icon name='radio-button-on'item-start></ion-icon>
-            到场时间 {{item.processes[4].time | date:'y-MM-dd HH:mm:ss'}}
-            <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.processes[4].done"></ion-icon>
+        <ion-col>
+          <button ion-button icon-left clear small (click)="onPreview(item)">
+            <ion-icon name="information-circle"></ion-icon>
+            <div>预览</div>
           </button>
-
-          <!--回复时间-->
-          <button ion-item [style.color]="item.processes[5].color" *ngIf="item.processes[5].show" (click)="reply(item)">
-            <ion-icon name='radio-button-on'item-start></ion-icon>
-            回复时间 {{item.processes[5].time | date:'y-MM-dd HH:mm:ss'}}
-            <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.processes[5].done"></ion-icon>
-          </button>
-
-          <!--退单时间-->
-          <button ion-item [style.color]="item.processes[6].color" *ngIf="item.processes[6].show" (click)="reject(item)">
-            <ion-icon name='radio-button-on'item-start></ion-icon>
-            退单时间 {{item.processes[6].time | date:'y-MM-dd HH:mm:ss'}}
-            <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.processes[6].done"></ion-icon>
-          </button>
-
-          <!--延迟时间-->
-          <button ion-item [style.color]="item.processes[7].color" *ngIf="item.processes[7].show" (click)="delay(item)">
-            <ion-icon name='radio-button-on'item-start></ion-icon>
-            延迟时间 {{item.processes[7].time | date:'y-MM-dd HH:mm:ss'}}
-            <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.processes[7].done"></ion-icon>
-          </button>
-
-          <!--销单时间-->
-          <button ion-item [style.color]="item.processes[8].color" *ngIf="item.processes[8].show" (click)="cancel(item)">
-            <ion-icon name='radio-button-on'item-start></ion-icon>
-            销单时间 {{item.processes[8].time | date:'y-MM-dd HH:mm:ss'}}
-            <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.processes[8].done"></ion-icon>
-          </button>
-        </ion-list>
-
-      <!--<ion-row>-->
-        <!--<ion-col col-2 class="card-bottom-btn">-->
-          <!--<img src="assets/img/ic_state_btn_n.png">-->
-        <!--</ion-col>-->
-
-        <!--<ion-col class="card-bottom-btn">-->
-          <!--<img src="assets/img/ic_state_line_n.png" height="2px">-->
-        <!--</ion-col>-->
-
-        <!--<ion-col col-2 class="card-bottom-btn">-->
-          <!--<img src="assets/img/ic_state_btn_n.png">-->
-        <!--</ion-col>-->
-
-        <!--<ion-col class="card-bottom-btn">-->
-          <!--<img src="assets/img/ic_state_line_n.png" height="2px">-->
-        <!--</ion-col>-->
-
-        <!--<ion-col col-2 class="card-bottom-btn">-->
-          <!--<img src="assets/img/ic_state_btn_n.png">-->
-        <!--</ion-col>-->
-
-        <!--<ion-col class="card-bottom-btn">-->
-          <!--<img src="assets/img/ic_state_line_n.png" height="2px">-->
-        <!--</ion-col>-->
-
-        <!--<ion-col col-2 class="card-bottom-btn">-->
-          <!--<img src="assets/img/ic_state_btn_n.png">-->
-        <!--</ion-col>-->
-
-        <!--<ion-col class="card-bottom-btn">-->
-          <!--<img src="assets/img/ic_state_line_n.png" height="2px">-->
-        <!--</ion-col>-->
-
-        <!--<ion-col col-2 class="card-bottom-btn">-->
-          <!--<img src="assets/img/ic_state_btn_n.png">-->
-        <!--</ion-col>-->
-
-        <!--<ion-col class="card-bottom-btn">-->
-          <!--<img src="assets/img/ic_state_line_n.png" height="2px">-->
-        <!--</ion-col>-->
-
-        <!--<ion-col col-2 class="card-bottom-btn">-->
-          <!--<img src="assets/img/ic_state_btn_n.png">-->
-        <!--</ion-col>-->
-
-        <!--<ion-col class="card-bottom-btn">-->
-          <!--<img src="assets/img/ic_state_line_n.png" height="2px">-->
-        <!--</ion-col>-->
-
-        <!--<ion-col col-2 class="card-bottom-btn">-->
-          <!--<img src="assets/img/ic_state_btn_n.png">-->
-        <!--</ion-col>-->
-      <!--</ion-row>-->
+        </ion-col>
+      </ion-row>
     </ion-card>
   </ion-list>
 
