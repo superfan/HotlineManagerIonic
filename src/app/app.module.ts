@@ -12,6 +12,8 @@ import { MainPage } from '../pages/main/main';
 import { MyWorkPage } from '../pages/mywork/mywork';
 import { NewsPage } from "../pages/news/news";
 import { WorkDetailPage } from "../pages/workdetail/workdetail";
+import { StationWorkPage } from "../pages/stationwork/stationwork";
+import { WorkInfoPage } from "../pages/workinfo/workinfo";
 
 @NgModule({
   declarations: [
@@ -22,6 +24,8 @@ import { WorkDetailPage } from "../pages/workdetail/workdetail";
     MainPage,
     MyWorkPage,
     WorkDetailPage,
+    StationWorkPage,
+    WorkInfoPage,
     NewsPage
   ],
   imports: [
@@ -37,6 +41,8 @@ import { WorkDetailPage } from "../pages/workdetail/workdetail";
     MainPage,
     MyWorkPage,
     WorkDetailPage,
+    StationWorkPage,
+    WorkInfoPage,
     NewsPage
   ],
   providers: [

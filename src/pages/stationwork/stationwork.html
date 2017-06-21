@@ -1,0 +1,85 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>
+      {{title}}-{{subTitle}}
+    </ion-title>
+
+    <ion-buttons end>
+      <button ion-button icon-only color="white" (click)="onSearch($event)">
+        <ion-icon name="search"></ion-icon>
+      </button>
+
+      <button ion-button icon-only color="white" (click)="onFilter($event)">
+        <ion-icon name="funnel"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+  <ion-toolbar color="primary" *ngIf="showToolbar">
+    <ion-searchbar (input)="getItems($event)"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="page-stationwork">
+
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      pullingIcon="arrow-dropdown"
+      pullingText="Pull to refresh"
+      refreshingSpinner="circles"
+      refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <ion-list>
+    <ion-card *ngFor="let item of items">
+      <ion-item>
+        <ion-avatar item-start>
+          <img src="assets/img/ic_mywork_avatar.png">
+        </ion-avatar>
+        <div><h2 class="card-header-label-hint">客服编号 </h2><h2 class="card-header-label-content">{{item.customerId}}</h2></div>
+        <div><h2 class="card-header-label-hint">任务编号 </h2><h2 class="card-header-label-content">{{item.taskId}}</h2></div>
+      </ion-item>
+
+      <ion-list>
+        <ion-item *ngFor="let content of item.contents">
+          <ion-label fixed class="label-name">
+            {{content.name}}
+          </ion-label>
+          <div item-content>
+            {{content.value}}
+          </div>
+        </ion-item>
+      </ion-list>
+
+      <ion-row>
+        <ion-col class="card-bottom-btn">
+          <button ion-button icon-left clear small (click)="onDispatch(item)">
+            <ion-icon name="person"></ion-icon>
+            <div>派工</div>
+          </button>
+        </ion-col>
+
+        <ion-col class="card-bottom-btn">
+          <button ion-button icon-left clear small (click)="onClose(item)">
+            <ion-icon name="close"></ion-icon>
+            <div>销单</div>
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+  </ion-list>
+
+  <!--infinite scroll-->
+  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+  <!--fab-->
+  <ion-fab right bottom *ngIf="showFab">
+    <button ion-fab color="primary" (click)="doScroll2Top($event)">
+      <ion-icon name="arrow-dropup"></ion-icon>
+    </button>
+  </ion-fab>
+
+</ion-content>

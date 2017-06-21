@@ -1,0 +1,25 @@
+.page-stationwork{
+  .card-header-label-hint {
+    display:inline;
+    color:#5d81c1;
+    //font-family: "Microsoft YaHei", "微软雅黑";
+  }
+
+  .card-header-label-content {
+    display:inline;
+    color: black;
+    //font-family: "Microsoft YaHei", "微软雅黑";
+  }
+
+  .label-name {
+    color:#5d81c1;
+  }
+
+  .card-bottom-btn {
+    //background-color: #f0f5ff;
+    //border: 1px solid #e6e9ee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
