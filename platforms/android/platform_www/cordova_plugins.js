@@ -382,6 +382,30 @@ module.exports = [
         "clobbers": [
             "window.FileTransfer"
         ]
+    },
+    {
+        "id": "cordova-plugin-app-version.AppVersionPlugin",
+        "file": "plugins/cordova-plugin-app-version/www/AppVersionPlugin.js",
+        "pluginId": "cordova-plugin-app-version",
+        "clobbers": [
+            "cordova.getAppVersion"
+        ]
+    },
+    {
+        "id": "cordova-plugin-zip.Zip",
+        "file": "plugins/cordova-plugin-zip/zip.js",
+        "pluginId": "cordova-plugin-zip",
+        "clobbers": [
+            "zip"
+        ]
+    },
+    {
+        "id": "cordova-plugin-file-opener2.FileOpener2",
+        "file": "plugins/cordova-plugin-file-opener2/www/plugins.FileOpener2.js",
+        "pluginId": "cordova-plugin-file-opener2",
+        "clobbers": [
+            "cordova.plugins.fileOpener2"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -403,7 +427,10 @@ module.exports.metadata =
     "cordova-plugin-x-toast": "2.6.0",
     "ionic-plugin-keyboard": "2.2.1",
     "uk.co.workingedge.cordova.plugin.sqliteporter": "0.1.5",
-    "cordova-plugin-file-transfer": "1.6.3"
+    "cordova-plugin-file-transfer": "1.6.3",
+    "cordova-plugin-app-version": "0.1.9",
+    "cordova-plugin-zip": "3.1.0",
+    "cordova-plugin-file-opener2": "2.0.19"
 };
 // BOTTOM OF METADATA
 });
