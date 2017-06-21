@@ -9,25 +9,27 @@
   <ion-row>
     <ion-col>
       <ion-list>
+        <form [formGroup]="loginForm">
+          <ion-item>
+            <ion-icon name="person" item-start></ion-icon>
+            <ion-input type="text" formControlName="LoginID" clearInput></ion-input>
+          </ion-item>
+          <p *ngIf="!loginForm.controls.LoginID.valid && loginForm.controls.LoginID.touched" color="danger">请输入有效的用户名.</p>
 
-        <ion-item>
-          <ion-icon name="person" item-start></ion-icon>
-          <ion-input type="text" placeholder="账号" [(ngModel)]="user.username" clearInput></ion-input>
-        </ion-item>
+          <ion-item>
+            <ion-icon name="lock" item-start></ion-icon>
+            <ion-input type="text" formControlName="LoginPwd" clearInput></ion-input>
+          </ion-item>
+          <p *ngIf="!loginForm.controls.LoginPwd.valid && loginForm.controls.LoginPwd.touched" color="danger">请输入有效的密码.</p>
 
-        <ion-item>
-          <ion-icon name="lock" item-start></ion-icon>
-          <ion-input type="password" placeHolder="密码" [(ngModel)]="user.password" clearInput></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-label>选择人员</ion-label>
-          <ion-select okText="确定" cancelText="取消" [(ngModel)]="user.type">
-            <ion-option value="outside">外勤人员</ion-option>
-            <ion-option value="manager">管理人员</ion-option>
-          </ion-select>
-        </ion-item>
-
+          <ion-item>
+            <ion-label>选择人员</ion-label>
+            <ion-select okText="确定" cancelText="取消">
+              <ion-option value="outside">外勤人员</ion-option>
+              <ion-option value="manager">管理人员</ion-option>
+            </ion-select>
+          </ion-item>
+        </form>
       </ion-list>
     </ion-col>
   </ion-row>

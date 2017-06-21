@@ -10,12 +10,6 @@ ant-gen
 # Eclipse builds
 gen
 out
+.gradle
 # Gradle builds
 /build
-
-*.iml
-.gradle
-/.idea/workspace.xml
-/.idea/libraries
-.DS_Store
-/captures
