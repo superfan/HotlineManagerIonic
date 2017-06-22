@@ -4,6 +4,7 @@ import {MainPage} from "../main/main";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Headers, Http} from "@angular/http";
 import {AppPreferences} from "@ionic-native/app-preferences";
+import {ConfigService} from "../../providers/ConfigService";
 
 export class User {
   constructor(public username: string,
@@ -26,6 +27,7 @@ export class LoginPage {
   constructor(public navCtrl: NavController,
               public alertCtrl: AlertController,
               private formBuilder: FormBuilder,
+              private configService: ConfigService,
               private http: Http,
               private appPreferences: AppPreferences) {
 
@@ -37,13 +39,8 @@ export class LoginPage {
     });
   }
 
-  loginClick(user, _event) {
-    this.user.username = this.loginForm.controls['LoginID'].value;
-    this.user.password = this.loginForm.controls['LoginPwd'].value;
-    this.user.type = this.loginForm.controls['LoginSelect'].value;
-    console.log("username:" + this.user.username);
-    console.log("password:" + this.user.password);
-    console.log("type:" + this.user.type);
+  loginClick(user) {
+    this.user.type = user['LoginSelect'];
 
     if (this.user.type == null
       || this.user.type == '') {
@@ -51,8 +48,25 @@ export class LoginPage {
       return;
     }
 
-    let url = "http://1.24.190.190:6001/wap/v1/auth/" + this.user.username + "/" +
-      this.user.password + "?appIdentity=cc";
+    this.configService.getServerBaseUri()
+      .then(result => {
+        this.user.username = user["LoginID"];
+        this.user.password = user['LoginPwd'];
+        this.doLogin(result, user["LoginID"], user['LoginPwd']);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
+  /**
+   * 登录操作
+   * @param baseurl
+   * @param userName
+   * @param password
+   */
+  doLogin(baseurl: string, userName: string, password: string) {
+    let url = baseurl + "wap/v1/auth/" + userName + "/" + password + "?appIdentity=cc";
     console.log(url);
     let deviceId = 'cd8a8f6441b3e3d8';
     let headers = new Headers({'X-Access-Token': '', 'X-Device-ID': deviceId});

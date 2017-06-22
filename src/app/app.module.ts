@@ -20,9 +20,10 @@ import {AppVersion} from "@ionic-native/app-version";
 import {Zip} from "@ionic-native/zip";
 import {ConfigService} from "../providers/ConfigService";
 import {FileOpener} from "@ionic-native/file-opener";
-import { WorkDetailPage } from "../pages/workdetail/workdetail";
-import { StationWorkPage } from "../pages/stationwork/stationwork";
-import { WorkInfoPage } from "../pages/workinfo/workinfo";
+import {WorkDetailPage} from "../pages/workdetail/workdetail";
+import {StationWorkPage} from "../pages/stationwork/stationwork";
+import {WorkInfoPage} from "../pages/workinfo/workinfo";
+import {AppPreferences} from "@ionic-native/app-preferences";
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import { WorkInfoPage } from "../pages/workinfo/workinfo";
     AppVersion,
     Zip,
     StorageService,
+    AppPreferences,
     FileOpener,
     ConfigService,
     HttpModule,
