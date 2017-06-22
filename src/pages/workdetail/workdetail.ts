@@ -54,5 +54,13 @@ export class WorkDetailPage {
   constructor(public navCtrl: NavController) {
     this.image = "https://randomuser.me/api/portraits/women/79.jpg";
   }
+
+  onLocate(ev: any) {
+
+  }
+
+  onReply(ev: any) {
+
+  }
 }
 

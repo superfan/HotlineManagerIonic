@@ -21,6 +21,8 @@ import {Zip} from "@ionic-native/zip";
 import {ConfigSevice} from "../providers/ConfigSevice";
 import {FileOpener} from "@ionic-native/file-opener";
 import { WorkDetailPage } from "../pages/workdetail/workdetail";
+import { StationWorkPage } from "../pages/stationwork/stationwork";
+import { WorkInfoPage } from "../pages/workinfo/workinfo";
 
 @NgModule({
   declarations: [
@@ -31,6 +33,8 @@ import { WorkDetailPage } from "../pages/workdetail/workdetail";
     MainPage,
     MyWorkPage,
     WorkDetailPage,
+    StationWorkPage,
+    WorkInfoPage,
     NewsPage
   ],
   imports: [
@@ -47,6 +51,8 @@ import { WorkDetailPage } from "../pages/workdetail/workdetail";
     MainPage,
     MyWorkPage,
     WorkDetailPage,
+    StationWorkPage,
+    WorkInfoPage,
     NewsPage
   ],
   providers: [
