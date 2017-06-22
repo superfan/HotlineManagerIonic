@@ -1,7 +1,8 @@
 import {Component} from '@angular/core';
-import {NavController} from 'ionic-angular';
+import {AlertController, NavController} from 'ionic-angular';
 import {MainPage} from "../main/main";
-import {FormBuilder,FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {Headers, Http} from "@angular/http";
 
 export class User {
   constructor(public username: string,
@@ -20,27 +21,18 @@ export class LoginPage {
 
   user = new User('zj', '1111', 'outside');
   loginForm: FormGroup;
-  // username: any;
-  // password: any;
 
   constructor(public navCtrl: NavController,
-              // public toastCtrl: ToastController,
-              // public storageSevice: StorageService,
-              // private configService: ConfigSevice,
-              // private http: Http,
-              private formBuilder: FormBuilder) {
+              public alertCtrl: AlertController,
+              private formBuilder: FormBuilder,
+              private http: Http) {
 
     this.loginForm = this.formBuilder.group({
-      'LoginID': ['zj', Validators.compose([Validators.minLength(2), Validators.maxLength(11), Validators.required,Validators.pattern('[a-zA-Z ]*')])],
-      'LoginPwd': ['1111', Validators.compose([Validators.required, Validators.minLength(4)])]
+      'LoginID': ['zj', Validators.compose([Validators.minLength(2), Validators.maxLength(11),
+        Validators.required, Validators.pattern('[a-zA-Z ]*')])],
+      'LoginPwd': ['1111', Validators.compose([Validators.required, Validators.minLength(4)])],
+      'LoginSelect': ['outside', Validators.compose([Validators.required])]
     });
-
-    // this.username = this.loginForm.controls['username'];
-    // this.password = this.loginForm.controls['password'];
-    // this.loginForm = new FormGroup({
-    //   LoginID: new FormControl('zj'),
-    //   LoginPwd:new FormControl('1111')
-    // });
 
     // let storedUserName = storageSevice.read<string>("userName");
     // let storedPassword = storageSevice.read<string>("password");
@@ -50,28 +42,32 @@ export class LoginPage {
     // }
   }
 
-  login(value) {
-    // if (value.username == "手机号码" && value.password == 123456) {
-    //   this.storage.setUser(value);
-    //   this.navCtrl.push(TabsPage);
-    // } else {
-    //   console.log("登录失败");
-    // }
+  loginClick(user, _event) {
+    this.user.username = this.loginForm.controls['LoginID'].value;
+    this.user.password = this.loginForm.controls['LoginPwd'].value;
+    this.user.type = this.loginForm.controls['LoginSelect'].value;
+    console.log("username:" + this.user.username);
+    console.log("password:" + this.user.password);
+    console.log("type:" + this.user.type);
 
-  }
+    if (this.user.type == null
+      || this.user.type == '') {
+      console.log("没有选择人员");
+      return;
+    }
 
-  /**
-   * 登录
-   */
-  loginClick() {
-    // let toast = this.toastCtrl.create({
-    //   message: '输入账号' + this.user.username + '输入密码' + this.user.password
-    //   + '选择类型' + this.user.type,
-    //   duration: 2000
-    // });
-    // let test = JSON.stringify({code: "mk200"});
-    // let url = "http://210.13.106.207:8021/MobileApi/wap/v2/mobile/auth";
-    // let headers = new Headers({'Content-Type': 'application/json'});
+    let url = "http://1.24.190.190:6001/wap/v1/auth/" + this.user.username + "/" +
+      this.user.password + "?appIdentity=cc";
+    console.log(url);
+    // let url = "http://1.24.190.190:6001/wap/v1/auth/admin/0000?appIdentity=cc";
+    let deviceId = 'cd8a8f6441b3e3d8';
+    let headers = new Headers({'X-Access-Token': '', 'X-Device-ID': deviceId});
+    this.http.get(url, {headers: headers})
+      .subscribe(data => {
+        this.onSuccessCallBack(data.json());
+      }, error => {
+        this.onErrorCallBack(error);
+      });
 
     // this.configService.getServerBaseUri()
     //   .then(result => {
@@ -86,13 +82,6 @@ export class LoginPage {
     //   }, error => {
     //     console.log(error);
     //   });
-    // this.http.get("http://210.13.106.207:8021/MobileApi/wap/v2/mobile/user/4292")
-    //   .subscribe(data => {
-    //     console.log(data.json());
-    //   }, error => {
-    //     console.log(error)
-    //   });
-
     // this.storageSevice.write("userName", this.user.username);
     // console.log(this.user.username);
     // this.storageSevice.write("password", this.user.password);
@@ -102,6 +91,29 @@ export class LoginPage {
     //
     // callback(result) {
     //   console.log(result.server_inner_baseuri);
+  }
+
+  /**
+   * 成功回调
+   * @param data
+   */
+  onSuccessCallBack(data) {
+    console.log(data.Data.userId);
+    // console.log("access-token:" + );
     this.navCtrl.push(MainPage, {})
+  }
+
+  /**
+   * 失败回调
+   * @param error
+   */
+  onErrorCallBack(error) {
+    console.log(error.json().Message);
+    let alert = this.alertCtrl.create({
+      title: '提示：',
+      subTitle: error.json().Message,
+      buttons: ['确定']
+    });
+    alert.present();
   }
 }
