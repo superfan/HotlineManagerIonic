@@ -32,12 +32,35 @@ export class LoginPage {
               private appPreferences: AppPreferences) {
 
     this.loginForm = this.formBuilder.group({
-      'LoginID': ['zj', Validators.compose([Validators.minLength(2), Validators.maxLength(11),
+      'LoginID': ['', Validators.compose([Validators.minLength(2), Validators.maxLength(11),
         Validators.required, Validators.pattern('[a-zA-Z ]*')])],
-      'LoginPwd': ['1111', Validators.compose([Validators.required, Validators.minLength(4)])],
-      'LoginSelect': ['outside', Validators.compose([Validators.required])]
+      'LoginPwd': ['', Validators.compose([Validators.required, Validators.minLength(4)])],
+      'LoginSelect': [this.user.type, Validators.compose([Validators.required])]
     });
+    this.getPreferences();
   }
+
+  /**
+   * 获得app preferences
+   */
+  getPreferences() {
+    this.appPreferences.fetch("userinfo", 'username')
+      .then(result => {
+        this.user.username = result.toString();
+        this.loginForm.patchValue({LoginID: this.user.username});
+      }).catch(err => {
+      console.log(err);
+    });
+
+    this.appPreferences.fetch("userinfo", 'pwd')
+      .then(result => {
+        this.user.password = result.toString();
+        this.loginForm.patchValue({LoginPwd: result.toString()});
+      }).catch(err => {
+      console.log(err);
+    })
+  }
+
 
   loginClick(user) {
     this.user.type = user['LoginSelect'];
@@ -85,6 +108,8 @@ export class LoginPage {
   onSuccessCallBack(data) {
     console.log(data.Data.userId);
     // console.log("access-token:" + );
+    this.appPreferences.store('userinfo', 'username', this.user.username);
+    this.appPreferences.store('userinfo', 'pwd', this.user.password);
     this.navCtrl.push(MainPage, {})
   }
 
