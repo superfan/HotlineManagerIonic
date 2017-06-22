@@ -3,6 +3,7 @@ import {AlertController, NavController} from 'ionic-angular';
 import {MainPage} from "../main/main";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Headers, Http} from "@angular/http";
+import {AppPreferences} from "@ionic-native/app-preferences";
 
 export class User {
   constructor(public username: string,
@@ -25,7 +26,8 @@ export class LoginPage {
   constructor(public navCtrl: NavController,
               public alertCtrl: AlertController,
               private formBuilder: FormBuilder,
-              private http: Http) {
+              private http: Http,
+              private appPreferences: AppPreferences) {
 
     this.loginForm = this.formBuilder.group({
       'LoginID': ['zj', Validators.compose([Validators.minLength(2), Validators.maxLength(11),
@@ -33,13 +35,6 @@ export class LoginPage {
       'LoginPwd': ['1111', Validators.compose([Validators.required, Validators.minLength(4)])],
       'LoginSelect': ['outside', Validators.compose([Validators.required])]
     });
-
-    // let storedUserName = storageSevice.read<string>("userName");
-    // let storedPassword = storageSevice.read<string>("password");
-    // if (storedUserName != null && storedPassword != null) {
-    //   this.user.username = storedUserName;
-    //   this.user.password = storedPassword;
-    // }
   }
 
   loginClick(user, _event) {
@@ -59,7 +54,6 @@ export class LoginPage {
     let url = "http://1.24.190.190:6001/wap/v1/auth/" + this.user.username + "/" +
       this.user.password + "?appIdentity=cc";
     console.log(url);
-    // let url = "http://1.24.190.190:6001/wap/v1/auth/admin/0000?appIdentity=cc";
     let deviceId = 'cd8a8f6441b3e3d8';
     let headers = new Headers({'X-Access-Token': '', 'X-Device-ID': deviceId});
     this.http.get(url, {headers: headers})
@@ -68,29 +62,6 @@ export class LoginPage {
       }, error => {
         this.onErrorCallBack(error);
       });
-
-    // this.configService.getServerBaseUri()
-    //   .then(result => {
-    //     this.callback(result);
-    //   });
-    // console.log(uri);
-    // let body = '{"account":"3h_test1","appIdentify":"plt","pwd":"1111"}';
-    // this.http.post(url, {"account": "3h_test1", "appIdentify": "plt", "pwd": "1111"},
-    //       {"headers": headers})
-    //   .subscribe(data => {
-    //     console.log(data.json());
-    //   }, error => {
-    //     console.log(error);
-    //   });
-    // this.storageSevice.write("userName", this.user.username);
-    // console.log(this.user.username);
-    // this.storageSevice.write("password", this.user.password);
-    // console.log(this.user.password);
-    // this.navCtrl.push(MainPage, {})
-    // }
-    //
-    // callback(result) {
-    //   console.log(result.server_inner_baseuri);
   }
 
   /**
