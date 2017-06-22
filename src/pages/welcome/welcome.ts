@@ -1,10 +1,10 @@
 import {Component} from '@angular/core';
-import {LoadingController, NavController, Platform, ViewController} from 'ionic-angular';
+import {LoadingController, NavController, Platform, ViewController, Config} from 'ionic-angular';
 import {LoginPage} from "../login/login";
-import {FileSevice} from "../../providers/FileSevice";
+import {FileService} from "../../providers/FileService";
 import {AppVersion} from "@ionic-native/app-version";
 import {Http} from "@angular/http";
-import {ConfigSevice} from "../../providers/ConfigSevice";
+import {ConfigService} from "../../providers/ConfigService";
 
 @Component({
   selector: 'page-welcome',
@@ -20,10 +20,11 @@ export class WelcomePage {
               public loadingCtrl: LoadingController,
               private viewCtrl: ViewController,
               public platform: Platform,
-              public fileSevice: FileSevice,
+              public fileService: FileService,
               private appVersion: AppVersion,
               private http: Http,
-              private configService: ConfigSevice) {
+              private configService: ConfigService,
+              private config: Config) {
     viewCtrl.didEnter.subscribe(() => this.onDidEnter());
   }
 
@@ -34,11 +35,11 @@ export class WelcomePage {
     this.loading = this.loadingCtrl.create({
       content: '加载中...',
       dismissOnPageChange: true
-    })
+    });
     this.loading.present();
 
     //判断是否是安卓平台
-    if (this.platform.is('android')) {
+    if (!this.config.get('isChrome')) {
       this.appVersion.getVersionCode()
         .then(result => {
           this.onGetVersionCode(result);
@@ -56,7 +57,7 @@ export class WelcomePage {
   onGetVersionCode(data) {
     this.appVersionCode = data.toString();
     console.log(data.toString());
-    this.fileSevice.createDirs()
+    this.fileService.createDirs()
       .then(() => {
         this.getServerUri();
       });
@@ -103,7 +104,7 @@ export class WelcomePage {
     if (result.Code == 0 && result.StatusCode == 200 && result.Data != null) {
       downloadUrl = result.Data.url;
       console.log("downloadZipUrl:" + downloadUrl);
-      return this.fileSevice.downloadFile(downloadUrl);
+      return this.fileService.downloadFile(downloadUrl);
     }
   }
 }

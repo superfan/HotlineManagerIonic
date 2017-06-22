@@ -12,13 +12,13 @@ import {MainPage} from '../pages/main/main';
 import {MyWorkPage} from '../pages/mywork/mywork';
 import {NewsPage} from "../pages/news/news";
 import {File} from "@ionic-native/file";
-import {FileSevice} from "../providers/FileSevice";
+import {FileService} from "../providers/FileService";
 import {Transfer} from "@ionic-native/transfer";
 import {StorageService} from "../providers/StorageService";
 import {HttpModule} from "@angular/http";
 import {AppVersion} from "@ionic-native/app-version";
 import {Zip} from "@ionic-native/zip";
-import {ConfigSevice} from "../providers/ConfigSevice";
+import {ConfigService} from "../providers/ConfigService";
 import {FileOpener} from "@ionic-native/file-opener";
 import { WorkDetailPage } from "../pages/workdetail/workdetail";
 import { StationWorkPage } from "../pages/stationwork/stationwork";
@@ -40,7 +40,9 @@ import { WorkInfoPage } from "../pages/workinfo/workinfo";
   imports: [
     BrowserModule,
     [HttpModule],
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp, {
+      isChrome: true
+    })
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -60,12 +62,12 @@ import { WorkInfoPage } from "../pages/workinfo/workinfo";
     SplashScreen,
     File,
     Transfer,
-    FileSevice,
+    FileService,
     AppVersion,
     Zip,
     StorageService,
     FileOpener,
-    ConfigSevice,
+    ConfigService,
     HttpModule,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
