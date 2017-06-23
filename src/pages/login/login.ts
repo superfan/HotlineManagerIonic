@@ -61,7 +61,10 @@ export class LoginPage {
     })
   }
 
-
+  /**
+   * 登录事件
+   * @param user
+   */
   loginClick(user) {
     this.user.type = user['LoginSelect'];
 
@@ -75,7 +78,7 @@ export class LoginPage {
       .then(result => {
         this.user.username = user["LoginID"];
         this.user.password = user['LoginPwd'];
-        this.doLogin(result, user["LoginID"], user['LoginPwd']);
+        this.doLogin(result, this.user.username, this.user.password);
       })
       .catch(err => {
         console.log(err);
@@ -110,6 +113,7 @@ export class LoginPage {
     // console.log("access-token:" + );
     this.appPreferences.store('userinfo', 'username', this.user.username);
     this.appPreferences.store('userinfo', 'pwd', this.user.password);
+    this.appPreferences.store('userinfo', 'userid', data.Data.userId);
     this.navCtrl.push(MainPage, {})
   }
 
