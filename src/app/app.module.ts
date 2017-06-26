@@ -24,6 +24,8 @@ import {WorkDetailPage} from "../pages/workdetail/workdetail";
 import {StationWorkPage} from "../pages/stationwork/stationwork";
 import {WorkInfoPage} from "../pages/workinfo/workinfo";
 import {AppPreferences} from "@ionic-native/app-preferences";
+import {Network} from "@ionic-native/network";
+import {SearchPage} from "../pages/search/search";
 
 @NgModule({
   declarations: [
@@ -36,7 +38,8 @@ import {AppPreferences} from "@ionic-native/app-preferences";
     WorkDetailPage,
     StationWorkPage,
     WorkInfoPage,
-    NewsPage
+    NewsPage,
+    SearchPage
   ],
   imports: [
     BrowserModule,
@@ -56,7 +59,8 @@ import {AppPreferences} from "@ionic-native/app-preferences";
     WorkDetailPage,
     StationWorkPage,
     WorkInfoPage,
-    NewsPage
+    NewsPage,
+    SearchPage
   ],
   providers: [
     StatusBar,
@@ -71,6 +75,7 @@ import {AppPreferences} from "@ionic-native/app-preferences";
     FileOpener,
     ConfigService,
     HttpModule,
+    Network,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

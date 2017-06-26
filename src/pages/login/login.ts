@@ -1,10 +1,11 @@
 import {Component} from '@angular/core';
-import {AlertController, NavController} from 'ionic-angular';
+import {AlertController, NavController, ToastController} from 'ionic-angular';
 import {MainPage} from "../main/main";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Headers, Http} from "@angular/http";
 import {AppPreferences} from "@ionic-native/app-preferences";
 import {ConfigService} from "../../providers/ConfigService";
+import {Network} from "@ionic-native/network";
 
 export class User {
   constructor(public username: string,
@@ -21,20 +22,24 @@ export class User {
 
 export class LoginPage {
 
-  user = new User('zj', '1111', 'outside');
-  loginForm: FormGroup;
+  public user = new User('zj', '1111', 'outside');
+  public loginForm: FormGroup;
+  public successCode: number = 0;
+  public statusCode: number = 200;
 
   constructor(public navCtrl: NavController,
               public alertCtrl: AlertController,
               private formBuilder: FormBuilder,
               private configService: ConfigService,
               private http: Http,
-              private appPreferences: AppPreferences) {
+              private appPreferences: AppPreferences,
+              private network: Network,
+              private toastCtrl: ToastController) {
 
     this.loginForm = this.formBuilder.group({
-      'LoginID': ['', Validators.compose([Validators.minLength(2), Validators.maxLength(11),
+      'LoginID': ['admin', Validators.compose([Validators.minLength(2), Validators.maxLength(11),
         Validators.required, Validators.pattern('[a-zA-Z ]*')])],
-      'LoginPwd': ['', Validators.compose([Validators.required, Validators.minLength(4)])],
+      'LoginPwd': ['0000', Validators.compose([Validators.required, Validators.minLength(4)])],
       'LoginSelect': [this.user.type, Validators.compose([Validators.required])]
     });
     this.getPreferences();
@@ -44,6 +49,7 @@ export class LoginPage {
    * 获得app preferences
    */
   getPreferences() {
+    //用户名
     this.appPreferences.fetch("userinfo", 'username')
       .then(result => {
         this.user.username = result.toString();
@@ -51,11 +57,18 @@ export class LoginPage {
       }).catch(err => {
       console.log(err);
     });
-
+    //密码
     this.appPreferences.fetch("userinfo", 'pwd')
       .then(result => {
         this.user.password = result.toString();
         this.loginForm.patchValue({LoginPwd: result.toString()});
+      }).catch(err => {
+      console.log(err);
+    });
+    //角色
+    this.appPreferences.fetch("userinfo", 'role')
+      .then(result => {
+        console.log(result.toString());
       }).catch(err => {
       console.log(err);
     })
@@ -74,6 +87,29 @@ export class LoginPage {
       return;
     }
 
+    //判断网络
+    if (this.network.type == 'none' || this.network.type == 'unknow') {
+      //有网就连网登录，无网判断本地是否有存储信息,有则离线登录
+      let toastInfo: string;
+      let toast = this.toastCtrl.create({
+        duration: 2000,
+        position: 'bottom'
+      });
+      if (user['LoginID'] == this.user.username && user['LoginPwd'] == this.user.password) {
+        toastInfo = '离线登录';
+        console.log(toastInfo);
+        toast.setMessage(toastInfo);
+        this.navCtrl.push(MainPage, {})
+      } else {
+        toastInfo = '账号和密码未保存，请连网认证';
+        console.log(toastInfo);
+        toast.setMessage(toastInfo);
+      }
+      toast.present();
+      return;
+    }
+
+    //在线登录
     this.configService.getServerBaseUri()
       .then(result => {
         this.user.username = user["LoginID"];
@@ -114,7 +150,47 @@ export class LoginPage {
     this.appPreferences.store('userinfo', 'username', this.user.username);
     this.appPreferences.store('userinfo', 'pwd', this.user.password);
     this.appPreferences.store('userinfo', 'userid', data.Data.userId);
-    this.navCtrl.push(MainPage, {})
+    this.configService.getServerBaseUri()
+      .then(result => {
+        this.doGetUserInfo(result, data.Data.userId);
+        console.log(result);
+      })
+
+  }
+
+  /**
+   * 操作获取用户信息
+   * @param result
+   * @param userId
+   */
+  doGetUserInfo(result: string, userId: string) {
+    let url = result + "wap/v1/mobile/resource/user/" + userId;
+    console.log(url);
+    this.http.get(url).subscribe(data => {
+      this.onGetUserInfo(data);
+    }, error => {
+      console.log(error);
+    });
+  }
+
+  /**
+   * 获得用户信息
+   * @param data
+   */
+  onGetUserInfo(data) {
+    if (data.json().Code == this.successCode && data.json().StatusCode == this.statusCode) {
+      console.log(data.json().Data);
+      let arrRoles = data.json().Data.roles;
+      this.appPreferences.store('userinfo', 'role', arrRoles);
+      console.log(arrRoles);
+      let toast = this.toastCtrl.create({
+        duration: 2000,
+        message: '在线登录成功',
+        position: 'bottom',
+      });
+      toast.present();
+      this.navCtrl.push(MainPage, {})
+    }
   }
 
   /**

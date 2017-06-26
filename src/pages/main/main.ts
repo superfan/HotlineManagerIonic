@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
-import { MyWorkPage } from "../mywork/mywork";
-import { NewsPage } from "../news/news";
-import { StationWorkPage } from "../stationwork/stationwork";
+import {Component} from '@angular/core';
+import {NavController} from 'ionic-angular';
+import {MyWorkPage} from "../mywork/mywork";
+import {NewsPage} from "../news/news";
+import {StationWorkPage} from "../stationwork/stationwork";
+import {SearchPage} from "../search/search";
 
 @Component({
   selector: 'page-main',
@@ -83,6 +84,7 @@ export class MainPage {
       case 2:
         break;
       case 3:
+        this.navCtrl.push(SearchPage);
         break;
       case 4:
         this.navCtrl.push(StationWorkPage);

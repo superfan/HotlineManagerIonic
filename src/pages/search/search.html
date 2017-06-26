@@ -1,0 +1,68 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>
+      {{title}}
+    </ion-title>
+
+    <ion-buttons end>
+      <button ion-button icon-only color="white" (click)="onReset($event)">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="page-news">
+
+  <ion-list>
+    <form [formGroup]="searchForm">
+      <ion-item>
+        <ion-label>发生地址</ion-label>
+        <ion-input formControlName="address" type="text" clearInput></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>联系电话</ion-label>
+        <ion-input formControlName="telephone" type="number" clearInput></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>客服编号</ion-label>
+        <ion-input formControlName="customerNum" type="text" clearInput></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>任务编号</ion-label>
+        <ion-input formControlName="taskNum" type="text" clearInput></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>任务状态</ion-label>
+        <ion-input formControlName="taskState" type="text" clearInput></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>反映类别</ion-label>
+        <ion-input formControlName="reflectType" type="text" clearInput></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>反映人</ion-label>
+        <ion-input formControlName="reflectPerson" type="text" clearInput></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>派遣时间</ion-label>
+        <ion-input formControlName="dispatchTime" type="text" clearInput></ion-input>
+      </ion-item>
+    </form>
+  </ion-list>
+
+  <ion-row>
+    <ion-col>
+      <div class="login-button">
+        <button ion-button type="submit" block (click)="onSearchClick(searchForm.value)">查询</button>
+      </div>
+    </ion-col>
+  </ion-row>
+</ion-content>
