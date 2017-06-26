@@ -11,6 +11,11 @@ import {LoginPage} from "../pages/login/login";
 import {MainPage} from '../pages/main/main';
 import {MyWorkPage} from '../pages/mywork/mywork';
 import {NewsPage} from "../pages/news/news";
+import {WorkDetailPage} from "../pages/workdetail/workdetail";
+import {StationWorkPage} from "../pages/stationwork/stationwork";
+import {WorkInfoPage} from "../pages/workinfo/workinfo";
+
+
 import {File} from "@ionic-native/file";
 import {FileService} from "../providers/FileService";
 import {Transfer} from "@ionic-native/transfer";
@@ -20,9 +25,11 @@ import {AppVersion} from "@ionic-native/app-version";
 import {Zip} from "@ionic-native/zip";
 import {ConfigService} from "../providers/ConfigService";
 import {FileOpener} from "@ionic-native/file-opener";
-import { WorkDetailPage } from "../pages/workdetail/workdetail";
-import { StationWorkPage } from "../pages/stationwork/stationwork";
-import { WorkInfoPage } from "../pages/workinfo/workinfo";
+import {DataService} from "../providers/DataService";
+import {DownloadService} from "../providers/DownloadService";
+import {GlobalService} from "../providers/GlobalService";
+import {UploadService} from "../providers/UploadService";
+
 
 @NgModule({
   declarations: [
@@ -40,9 +47,7 @@ import { WorkInfoPage } from "../pages/workinfo/workinfo";
   imports: [
     BrowserModule,
     [HttpModule],
-    IonicModule.forRoot(MyApp, {
-      isChrome: true
-    })
+    IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -69,6 +74,10 @@ import { WorkInfoPage } from "../pages/workinfo/workinfo";
     FileOpener,
     ConfigService,
     HttpModule,
+    DataService,
+    DownloadService,
+    UploadService,
+    GlobalService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
