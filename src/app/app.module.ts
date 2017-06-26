@@ -29,6 +29,9 @@ import {DataService} from "../providers/DataService";
 import {DownloadService} from "../providers/DownloadService";
 import {GlobalService} from "../providers/GlobalService";
 import {UploadService} from "../providers/UploadService";
+import {Network} from "@ionic-native/network";
+import {SearchPage} from "../pages/search/search";
+import {AppPreferences} from "@ionic-native/app-preferences";
 
 
 @NgModule({
@@ -42,7 +45,8 @@ import {UploadService} from "../providers/UploadService";
     WorkDetailPage,
     StationWorkPage,
     WorkInfoPage,
-    NewsPage
+    NewsPage,
+    SearchPage
   ],
   imports: [
     BrowserModule,
@@ -60,7 +64,8 @@ import {UploadService} from "../providers/UploadService";
     WorkDetailPage,
     StationWorkPage,
     WorkInfoPage,
-    NewsPage
+    NewsPage,
+    SearchPage
   ],
   providers: [
     StatusBar,
@@ -71,9 +76,11 @@ import {UploadService} from "../providers/UploadService";
     AppVersion,
     Zip,
     StorageService,
+    AppPreferences,
     FileOpener,
     ConfigService,
     HttpModule,
+    Network,
     DataService,
     DownloadService,
     UploadService,

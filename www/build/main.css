@@ -45313,6 +45313,16 @@ page-login ion-list {
   align-items: center;
 }
 
+.page-search .search_btn {
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 30px;
+  text-align: center;
+  border: 1px solid #fff;
+}
+
 .page-stationwork .card-header-label-hint {
   display: inline;
   color: #5d81c1;

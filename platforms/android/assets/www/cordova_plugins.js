@@ -406,6 +406,23 @@ module.exports = [
         "clobbers": [
             "cordova.plugins.fileOpener2"
         ]
+    },
+    {
+        "id": "cordova-plugin-network-information.network",
+        "file": "plugins/cordova-plugin-network-information/www/network.js",
+        "pluginId": "cordova-plugin-network-information",
+        "clobbers": [
+            "navigator.connection",
+            "navigator.network.connection"
+        ]
+    },
+    {
+        "id": "cordova-plugin-network-information.Connection",
+        "file": "plugins/cordova-plugin-network-information/www/Connection.js",
+        "pluginId": "cordova-plugin-network-information",
+        "clobbers": [
+            "Connection"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -430,7 +447,8 @@ module.exports.metadata =
     "cordova-plugin-file-transfer": "1.6.3",
     "cordova-plugin-app-version": "0.1.9",
     "cordova-plugin-zip": "3.1.0",
-    "cordova-plugin-file-opener2": "2.0.19"
+    "cordova-plugin-file-opener2": "2.0.19",
+    "cordova-plugin-network-information": "1.3.3"
 };
 // BOTTOM OF METADATA
 });

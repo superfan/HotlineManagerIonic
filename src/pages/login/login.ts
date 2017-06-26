@@ -1,8 +1,11 @@
 import {Component} from '@angular/core';
-import {AlertController, NavController} from 'ionic-angular';
+import {AlertController, NavController, ToastController} from 'ionic-angular';
 import {MainPage} from "../main/main";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Headers, Http} from "@angular/http";
+import {AppPreferences} from "@ionic-native/app-preferences";
+import {ConfigService} from "../../providers/ConfigService";
+import {Network} from "@ionic-native/network";
 
 export class User {
   constructor(public username: string,
@@ -19,36 +22,64 @@ export class User {
 
 export class LoginPage {
 
-  user = new User('zj', '1111', 'outside');
-  loginForm: FormGroup;
+  public user = new User('zj', '1111', 'outside');
+  public loginForm: FormGroup;
+  public successCode: number = 0;
+  public statusCode: number = 200;
 
   constructor(public navCtrl: NavController,
               public alertCtrl: AlertController,
               private formBuilder: FormBuilder,
-              private http: Http) {
+              private configService: ConfigService,
+              private http: Http,
+              private appPreferences: AppPreferences,
+              private network: Network,
+              private toastCtrl: ToastController) {
 
     this.loginForm = this.formBuilder.group({
-      'LoginID': ['zj', Validators.compose([Validators.minLength(2), Validators.maxLength(11),
+      'LoginID': ['admin', Validators.compose([Validators.minLength(2), Validators.maxLength(11),
         Validators.required, Validators.pattern('[a-zA-Z ]*')])],
-      'LoginPwd': ['1111', Validators.compose([Validators.required, Validators.minLength(4)])],
-      'LoginSelect': ['outside', Validators.compose([Validators.required])]
+      'LoginPwd': ['0000', Validators.compose([Validators.required, Validators.minLength(4)])],
+      'LoginSelect': [this.user.type, Validators.compose([Validators.required])]
     });
-
-    // let storedUserName = storageSevice.read<string>("userName");
-    // let storedPassword = storageSevice.read<string>("password");
-    // if (storedUserName != null && storedPassword != null) {
-    //   this.user.username = storedUserName;
-    //   this.user.password = storedPassword;
-    // }
+    this.getPreferences();
   }
 
-  loginClick(user, _event) {
-    this.user.username = this.loginForm.controls['LoginID'].value;
-    this.user.password = this.loginForm.controls['LoginPwd'].value;
-    this.user.type = this.loginForm.controls['LoginSelect'].value;
-    console.log("username:" + this.user.username);
-    console.log("password:" + this.user.password);
-    console.log("type:" + this.user.type);
+  /**
+   * 获得app preferences
+   */
+  getPreferences() {
+    //用户名
+    this.appPreferences.fetch("userinfo", 'username')
+      .then(result => {
+        this.user.username = result.toString();
+        this.loginForm.patchValue({LoginID: this.user.username});
+      }).catch(err => {
+      console.log(err);
+    });
+    //密码
+    this.appPreferences.fetch("userinfo", 'pwd')
+      .then(result => {
+        this.user.password = result.toString();
+        this.loginForm.patchValue({LoginPwd: result.toString()});
+      }).catch(err => {
+      console.log(err);
+    });
+    //角色
+    this.appPreferences.fetch("userinfo", 'role')
+      .then(result => {
+        console.log(result.toString());
+      }).catch(err => {
+      console.log(err);
+    })
+  }
+
+  /**
+   * 登录事件
+   * @param user
+   */
+  loginClick(user) {
+    this.user.type = user['LoginSelect'];
 
     if (this.user.type == null
       || this.user.type == '') {
@@ -56,10 +87,49 @@ export class LoginPage {
       return;
     }
 
-    let url = "http://1.24.190.190:6001/wap/v1/auth/" + this.user.username + "/" +
-      this.user.password + "?appIdentity=cc";
+    //判断网络
+    if (this.network.type == 'none' || this.network.type == 'unknow') {
+      //有网就连网登录，无网判断本地是否有存储信息,有则离线登录
+      let toastInfo: string;
+      let toast = this.toastCtrl.create({
+        duration: 2000,
+        position: 'bottom'
+      });
+      if (user['LoginID'] == this.user.username && user['LoginPwd'] == this.user.password) {
+        toastInfo = '离线登录';
+        console.log(toastInfo);
+        toast.setMessage(toastInfo);
+        this.navCtrl.push(MainPage, {})
+      } else {
+        toastInfo = '账号和密码未保存，请连网认证';
+        console.log(toastInfo);
+        toast.setMessage(toastInfo);
+      }
+      toast.present();
+      return;
+    }
+
+    //在线登录
+    this.configService.getServerBaseUri()
+      .then(result => {
+        this.user.username = user["LoginID"];
+        this.user.password = user['LoginPwd'];
+        this.doLogin(result, this.user.username, this.user.password);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
+  /**
+   * 登录操作
+   * @param baseurl
+   * @param userName
+   * @param password
+   */
+  doLogin(baseurl: string, userName: string, password: string) {
+    let url = baseurl + "wap/v1/auth/" + userName + "/" + password + "?appIdentity=cc";
     console.log(url);
-    // let url = "http://1.24.190.190:6001/wap/v1/auth/admin/0000?appIdentity=cc";
     let deviceId = 'cd8a8f6441b3e3d8';
     let headers = new Headers({'X-Access-Token': '', 'X-Device-ID': deviceId});
     this.http.get(url, {headers: headers})
@@ -68,29 +138,6 @@ export class LoginPage {
       }, error => {
         this.onErrorCallBack(error);
       });
-
-    // this.configService.getServerBaseUri()
-    //   .then(result => {
-    //     this.callback(result);
-    //   });
-    // console.log(uri);
-    // let body = '{"account":"3h_test1","appIdentify":"plt","pwd":"1111"}';
-    // this.http.post(url, {"account": "3h_test1", "appIdentify": "plt", "pwd": "1111"},
-    //       {"headers": headers})
-    //   .subscribe(data => {
-    //     console.log(data.json());
-    //   }, error => {
-    //     console.log(error);
-    //   });
-    // this.storageSevice.write("userName", this.user.username);
-    // console.log(this.user.username);
-    // this.storageSevice.write("password", this.user.password);
-    // console.log(this.user.password);
-    // this.navCtrl.push(MainPage, {})
-    // }
-    //
-    // callback(result) {
-    //   console.log(result.server_inner_baseuri);
   }
 
   /**
@@ -100,7 +147,50 @@ export class LoginPage {
   onSuccessCallBack(data) {
     console.log(data.Data.userId);
     // console.log("access-token:" + );
-    this.navCtrl.push(MainPage, {})
+    this.appPreferences.store('userinfo', 'username', this.user.username);
+    this.appPreferences.store('userinfo', 'pwd', this.user.password);
+    this.appPreferences.store('userinfo', 'userid', data.Data.userId);
+    this.configService.getServerBaseUri()
+      .then(result => {
+        this.doGetUserInfo(result, data.Data.userId);
+        console.log(result);
+      })
+
+  }
+
+  /**
+   * 操作获取用户信息
+   * @param result
+   * @param userId
+   */
+  doGetUserInfo(result: string, userId: string) {
+    let url = result + "wap/v1/mobile/resource/user/" + userId;
+    console.log(url);
+    this.http.get(url).subscribe(data => {
+      this.onGetUserInfo(data);
+    }, error => {
+      console.log(error);
+    });
+  }
+
+  /**
+   * 获得用户信息
+   * @param data
+   */
+  onGetUserInfo(data) {
+    if (data.json().Code == this.successCode && data.json().StatusCode == this.statusCode) {
+      console.log(data.json().Data);
+      let arrRoles = data.json().Data.roles;
+      this.appPreferences.store('userinfo', 'role', arrRoles);
+      console.log(arrRoles);
+      let toast = this.toastCtrl.create({
+        duration: 2000,
+        message: '在线登录成功',
+        position: 'bottom',
+      });
+      toast.present();
+      this.navCtrl.push(MainPage, {})
+    }
   }
 
   /**

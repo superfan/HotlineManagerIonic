@@ -45255,6 +45255,10 @@ page-login ion-list {
   align-items: center;
 }
 
+.page-main ion-item:active {
+  background-color: #e6e9ee;
+}
+
 .page-main .item-img {
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
@@ -45298,6 +45302,32 @@ page-login ion-list {
 }
 
 .page-mywork .card-bottom-btn {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.page-stationwork .card-header-label-hint {
+  display: inline;
+  color: #5d81c1;
+}
+
+.page-stationwork .card-header-label-content {
+  display: inline;
+  color: black;
+}
+
+.page-stationwork .label-name {
+  color: #5d81c1;
+}
+
+.page-stationwork .card-bottom-btn {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
@@ -45364,4 +45394,12 @@ page-welcome .welcome-info {
   -webkit-align-items: center;
   -ms-flex-align: center;
   align-items: center;
+}
+
+.page-workinfo .label-name {
+  color: #5d81c1;
+}
+
+.page-workinfo .dispatch-item:active {
+  background-color: #e6e9ee;
 }

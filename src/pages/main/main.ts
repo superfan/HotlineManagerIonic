@@ -3,6 +3,7 @@ import { NavController } from 'ionic-angular';
 import { MyWorkPage } from "../mywork/mywork";
 import { NewsPage } from "../news/news";
 import { StationWorkPage } from "../stationwork/stationwork";
+import {SearchPage} from "../search/search";
 import {DataService} from "../../providers/DataService";
 
 @Component({
@@ -63,6 +64,7 @@ export class MainPage implements OnInit {
     }
   ];
 
+
   constructor(public navCtrl: NavController, private dataService: DataService) {
     let rowData = [];
     for (let item of this.listItems) {
@@ -88,6 +90,7 @@ export class MainPage implements OnInit {
       case 2:
         break;
       case 3:
+        this.navCtrl.push(SearchPage);
         break;
       case 4:
         this.navCtrl.push(StationWorkPage);

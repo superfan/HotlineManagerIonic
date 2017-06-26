@@ -41,45 +41,57 @@ export class WelcomePage {
 
     //判断是否是安卓平台
     if (!this.globalService.isChrome) {
-      this.appVersion.getVersionCode()
-        .then(result => {
-          this.onGetVersionCode(result);
-        });
+      console.log("platform is on android");
+      this.fileService.createDirs()
+        .then(() => {
+          this.getVersionCode();
+        })
+        .catch(err => {
+          console.log("initial files failed" + err);
+        })
     } else {
+      console.log("platform is on chrome");
       this.loading.dismiss();
       this.navCtrl.push(LoginPage, {});
     }
   }
 
   /**
-   * 获取版本号
+   * 获得版本号
+   */
+  getVersionCode() {
+    this.appVersion.getVersionCode()
+      .then(result => {
+        this.onGetVersionCode(result);
+      })
+      .catch(err => {
+        console.log("getVersionCode:" + err);
+      });
+  }
+
+  /**
+   * 获取服务器地址
    * @param data
    */
   onGetVersionCode(data) {
     this.appVersionCode = data.toString();
-    console.log(data.toString());
-    this.fileService.createDirs()
-      .then(() => {
-        this.getServerUri();
-      });
-  }
-
-  /**
-   * 获得服务器地址
-   */
-  getServerUri() {
     this.configService.getServerBaseUri()
       .then(result => {
+        console.log(result);
         this.checkVersion(result);
+      })
+      .catch(err => {
+        console.log(err)
       });
   }
 
+
   /**
-   * 检查版本
+   * 访问服务器检查version
    * @param result
    */
-  checkVersion(result) {
-    let serveruri = result.server_outer_baseuri + "wap/v1/system/update/app/check?version=" + this.appVersionCode;
+  checkVersion(result: string) {
+    let serveruri = result + "wap/v1/system/update/app/check?version=" + this.appVersionCode;
     console.log("welcome: serveruri:" + serveruri);
     this.http.get(serveruri)
       .subscribe(data => {
