@@ -1,16 +1,17 @@
-import {Component} from '@angular/core';
-import {NavController} from 'ionic-angular';
-import {MyWorkPage} from "../mywork/mywork";
-import {NewsPage} from "../news/news";
-import {StationWorkPage} from "../stationwork/stationwork";
+import {Component, OnInit} from '@angular/core';
+import { NavController } from 'ionic-angular';
+import { MyWorkPage } from "../mywork/mywork";
+import { NewsPage } from "../news/news";
+import { StationWorkPage } from "../stationwork/stationwork";
 import {SearchPage} from "../search/search";
+import {DataService} from "../../providers/DataService";
 
 @Component({
   selector: 'page-main',
   templateUrl: 'main.html'
 })
 
-export class MainPage {
+export class MainPage implements OnInit {
   title: string = '主界面';
   imgWidth: number = 64;
   imgHeight: number = 64;
@@ -63,7 +64,8 @@ export class MainPage {
     }
   ];
 
-  constructor(public navCtrl: NavController) {
+
+  constructor(public navCtrl: NavController, private dataService: DataService) {
     let rowData = [];
     for (let item of this.listItems) {
       if (rowData.length == 3) {
@@ -73,6 +75,10 @@ export class MainPage {
       rowData.push(item);
     }
     this.gridItems.push(rowData);
+  }
+
+  ngOnInit() {
+
   }
 
   itemSelected(id: number) {

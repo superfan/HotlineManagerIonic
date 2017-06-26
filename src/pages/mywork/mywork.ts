@@ -1,50 +1,52 @@
-import { Component, ViewChild } from '@angular/core';
-import { Content, NavController } from 'ionic-angular';
+import {Component, ViewChild, OnInit} from '@angular/core';
+import {Content, NavController, InfiniteScroll} from 'ionic-angular';
 import {WorkDetailPage} from "../workdetail/workdetail";
+import {DataService} from "../../providers/DataService";
+import {TaskEx} from "../../model/TaskEx";
 
 @Component({
   selector: 'page-mywork',
   templateUrl: 'mywork.html'
 })
 
-export class MyWorkPage {
+export class MyWorkPage implements OnInit {
+  private tag: string = "[MyWorkPage]";
+  private disableColor: string = 'gray';
+  //private enableColor: string = 'primary';
+
   @ViewChild(Content) content: Content;
+  @ViewChild(InfiniteScroll) infiniteScroll: InfiniteScroll;
+
   title: string = '任务列表';
   showToolbar: boolean = false;
   showFab: boolean = false;
-  // dark: string = 'dark';
-  // gray: string = 'gray';
 
-  disableColor: string = 'gray';
-  enableColor: string = 'primary';
+  items: TaskEx[] = [];
+  private since: number = 1;
+  private count: number = 2;
 
-  items: any[] = [];
+  constructor(public navCtrl: NavController, private dataService: DataService) {
 
-  constructor(public navCtrl: NavController) {
-    for (let i = 0; i < 10; i++) {
-      this.items.push({
-        id: this.items.length,
-        type: '热线工单',
-        describe: "上海市杨浦区控江路1555号水管维修",
-        processes: [
-          { event: 'create', name: '创建时间', time: '2017-06-01 12:30:00', show: true, color: this.disableColor },
-          { event: 'dispatch', name: '派发时间', time: '2017-06-01 12:30:00', show: true, color: this.disableColor },
-          { event: 'accept', name: '接单时间', time: '', show: true, color: this.enableColor, done: false },
-          { event: 'go', name: '出发时间', time: '', show: false, color: this.enableColor, done: false },
-          { event: 'arrive', name: '到场时间', time: '', show: false, color: this.enableColor, done: false },
-          { event: 'reply', name: '回复时间', time: '', show: false, color: this.enableColor, done: false },
-          { event: 'reject', name: '退单时间', time: '', show: false, color: this.enableColor, done: false },
-          { event: 'delay', name: '延迟时间', time: '', show: false, color: this.enableColor, done: false },
-          { event: 'cancel', name: '销单时间', time: '', show: false, color: this.enableColor, done: false }
-        ],
-        lastProcess: '',
-        photoCount: 0,
-        audioCount: 0,
-        videoCount: 0
-      });
-    }
   }
 
+  /**
+   * 初始化
+   */
+  ngOnInit() {
+    console.log(this.tag + 'ngOnInit');
+    this.getTasks(this.since, this.count)
+      .then(length => {
+        if (length <= 0) {
+          this.infiniteScroll.enable(false);
+        }
+      })
+      .catch(error => console.error(error));
+  }
+
+  /**
+   * 下拉同步
+   * @param refresher
+   */
   doRefresh(refresher) {
     console.log('Begin async operation', refresher);
 
@@ -54,6 +56,34 @@ export class MyWorkPage {
     }, 2000);
   }
 
+  /**
+   * 上拉，加载更多项
+   * @param infiniteScroll
+   */
+  doInfinite(infiniteScroll) {
+    console.log(this.tag + 'doInfinite begin');
+
+    setTimeout(() => {
+      this.since += this.count;
+      this.getTasks(this.since, this.count)
+        .then(length => {
+          this.showFab = true;
+          if (length <= 0) {
+            infiniteScroll.enable(false);
+          } else {
+            infiniteScroll.complete();
+          }
+          console.log(this.tag + 'doInfinite end');
+        })
+        .catch(error => console.error(error));
+    }, 100);
+  }
+
+  /**
+   * 处理各个操作
+   * @param work
+   * @param index
+   */
   itemSelected(work: any, index: number) {
     console.log("Selected Item", index);
     switch (work.processes[index].event) {
@@ -90,40 +120,6 @@ export class MyWorkPage {
 
   }
 
-  doInfinite(infiniteScroll) {
-    console.log('Begin async operation');
-
-    setTimeout(() => {
-      for (let i = 0; i < 30; i++) {
-        this.items.push({
-          id: this.items.length,
-          type: '热线工单',
-          processes: [
-            { event: 'create', name: '创建时间', time: '2017-06-01 12:30:00', show: true, color: this.disableColor },
-            { event: 'dispatch', name: '派发时间', time: '2017-06-01 12:30:00', show: true, color: this.disableColor },
-            { event: 'accept', name: '接单时间', time: '', show: true, color: this.enableColor, done: false },
-            { event: 'go', name: '出发时间', time: '', show: false, color: this.enableColor, done: false },
-            { event: 'arrive', name: '到场时间', time: '', show: false, color: this.enableColor, done: false },
-            { event: 'reply', name: '回复时间', time: '', show: false, color: this.enableColor, done: false },
-            { event: 'reject', name: '退单时间', time: '', show: false, color: this.enableColor, done: false },
-            { event: 'delay', name: '延迟时间', time: '', show: false, color: this.enableColor, done: false },
-            { event: 'cancel', name: '销单时间', time: '', show: false, color: this.enableColor, done: false }
-          ],
-          lastProcess: '',
-          photoCount: 0,
-          audioCount: 0,
-          videoCount: 0
-        });
-      }
-
-      this.showFab = true;
-
-      console.log('Async operation has ended');
-      infiniteScroll.complete();
-    }, 500);
-  }
-
-
   doScroll2Top(ev: any) {
     this.content.scrollToTop();
   }
@@ -137,12 +133,27 @@ export class MyWorkPage {
   }
 
   /**
+   * 获取任务列表
+   * @param since
+   * @param count
+   * @returns {Promise<T>}
+   */
+  private getTasks(since: number, count: number): Promise<number> {
+    return this.dataService.getTasks(since, count)
+      .then(tasks => {
+        TaskEx.transform(tasks, this.items);
+        console.log(this.tag + "getTasks: " + tasks.length);
+        return tasks.length;
+      })
+  }
+
+  /**
    * 接单
    * @param work
    */
-  private accept(work: any) {
+  private accept(taskEx: TaskEx) {
     let processes = {};
-    if (!this.transformProcesses(work, processes)) {
+    if (!this.transformProcesses(taskEx, processes)) {
       return;
     }
 
@@ -154,7 +165,20 @@ export class MyWorkPage {
       processes['reject'].show = true;
       processes['delay'].show = true;
       //processes['cancel'].show = true;
-      work.lastProcess = 'accept';
+      taskEx.lastProcess = 'accept';
+
+      this.dataService.accept({
+        acceptTime: processes['accept'].time,
+        location: {
+          type: "bd09ll",
+          lng: "121.525766",
+          lat: "31.280693"
+        },
+        taskId: taskEx.id,
+        userId: 1
+      }).then(data => {
+        console.log(data);
+      }).catch(error => console.error(this.tag + error));
     }
   }
 
@@ -354,12 +378,12 @@ export class MyWorkPage {
       }
 
       for (let i = curIndex; i > lastIndex; i--) {
-        processes[i].event = processes[i-1].event;
-        processes[i].name = processes[i-1].name;
-        processes[i].time = processes[i-1].time;
-        processes[i].show = processes[i-1].show;
-        processes[i].color = processes[i-1].color;
-        processes[i].done = processes[i-1].done;
+        processes[i].event = processes[i - 1].event;
+        processes[i].name = processes[i - 1].name;
+        processes[i].time = processes[i - 1].time;
+        processes[i].show = processes[i - 1].show;
+        processes[i].color = processes[i - 1].color;
+        processes[i].done = processes[i - 1].done;
       }
 
       processes[lastIndex + 1].event = curEvent;

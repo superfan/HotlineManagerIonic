@@ -49,14 +49,14 @@
         <!--创建时间-->
         <button ion-item [style.color]="item.processes[0].color" *ngIf="item.processes[0].show">
           <ion-icon name='radio-button-on'item-start></ion-icon>
-          {{item.processes[0].name}} {{item.processes[0].time}}
+          {{item.processes[0].name}} {{item.processes[0].time | date:'y-MM-dd HH:mm:ss'}}
           <!--<ion-icon name='ios-arrow-forward' item-end></ion-icon>-->
         </button>
 
         <!--派发时间-->
         <button ion-item [style.color]="item.processes[1].color" *ngIf="item.processes[1].show">
           <ion-icon name='radio-button-on'item-start></ion-icon>
-          {{item.processes[1].name}} {{item.processes[1].time}}
+          {{item.processes[1].name}} {{item.processes[1].time | date:'y-MM-dd HH:mm:ss'}}
           <!--<ion-icon name='ios-arrow-forward' item-end></ion-icon>-->
         </button>
 

@@ -1,10 +1,11 @@
 import {Component} from '@angular/core';
-import {LoadingController, NavController, Platform, ViewController, Config} from 'ionic-angular';
+import {LoadingController, NavController, Platform, ViewController} from 'ionic-angular';
 import {LoginPage} from "../login/login";
 import {FileService} from "../../providers/FileService";
 import {AppVersion} from "@ionic-native/app-version";
 import {Http} from "@angular/http";
 import {ConfigService} from "../../providers/ConfigService";
+import {GlobalService} from "../../providers/GlobalService";
 
 @Component({
   selector: 'page-welcome',
@@ -24,7 +25,8 @@ export class WelcomePage {
               private appVersion: AppVersion,
               private http: Http,
               private configService: ConfigService,
-              private config: Config) {
+              private config: Config,
+              private globalService: GlobalService) {
     viewCtrl.didEnter.subscribe(() => this.onDidEnter());
   }
 
@@ -39,7 +41,7 @@ export class WelcomePage {
     this.loading.present();
 
     //判断是否是安卓平台
-    if (!this.config.get('isChrome')) {
+    if (!this.globalService.isChrome) {
       console.log("platform is on android");
       this.fileService.createDirs()
         .then(() => {

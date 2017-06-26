@@ -11,6 +11,11 @@ import {LoginPage} from "../pages/login/login";
 import {MainPage} from '../pages/main/main';
 import {MyWorkPage} from '../pages/mywork/mywork';
 import {NewsPage} from "../pages/news/news";
+import {WorkDetailPage} from "../pages/workdetail/workdetail";
+import {StationWorkPage} from "../pages/stationwork/stationwork";
+import {WorkInfoPage} from "../pages/workinfo/workinfo";
+
+
 import {File} from "@ionic-native/file";
 import {FileService} from "../providers/FileService";
 import {Transfer} from "@ionic-native/transfer";
@@ -20,12 +25,14 @@ import {AppVersion} from "@ionic-native/app-version";
 import {Zip} from "@ionic-native/zip";
 import {ConfigService} from "../providers/ConfigService";
 import {FileOpener} from "@ionic-native/file-opener";
-import {WorkDetailPage} from "../pages/workdetail/workdetail";
-import {StationWorkPage} from "../pages/stationwork/stationwork";
-import {WorkInfoPage} from "../pages/workinfo/workinfo";
-import {AppPreferences} from "@ionic-native/app-preferences";
+import {DataService} from "../providers/DataService";
+import {DownloadService} from "../providers/DownloadService";
+import {GlobalService} from "../providers/GlobalService";
+import {UploadService} from "../providers/UploadService";
 import {Network} from "@ionic-native/network";
 import {SearchPage} from "../pages/search/search";
+import {AppPreferences} from "@ionic-native/app-preferences";
+
 
 @NgModule({
   declarations: [
@@ -44,9 +51,7 @@ import {SearchPage} from "../pages/search/search";
   imports: [
     BrowserModule,
     [HttpModule],
-    IonicModule.forRoot(MyApp, {
-      isChrome: true
-    })
+    IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -76,6 +81,10 @@ import {SearchPage} from "../pages/search/search";
     ConfigService,
     HttpModule,
     Network,
+    DataService,
+    DownloadService,
+    UploadService,
+    GlobalService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
