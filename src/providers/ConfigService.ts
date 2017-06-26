@@ -10,9 +10,9 @@ import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class ConfigService {
-  private basePath: string = "./assets/config/";
-  private systemFilePath: string = this.basePath + 'system.json';
-  private mapFilePath: string = this.basePath + 'map.json';
+  private readonly basePath: string = "./assets/config/";
+  private readonly systemFilePath: string = this.basePath + 'system.json';
+  private readonly mapFilePath: string = this.basePath + 'map.json';
 
   private systemConfig: any;
   private mapConfig: any;
