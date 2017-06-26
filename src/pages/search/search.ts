@@ -12,6 +12,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 export class SearchPage {
 
+  public title='查询任务';
   public searchForm: FormGroup;
 
   constructor(public navCtrl: NavController,
@@ -44,7 +45,7 @@ export class SearchPage {
    * @param searchInfo
    */
   onSearchClick(searchInfo) {
-    let address = searchInfo['address'];
-    let telephone = searchInfo['telephone'];
+    // let address = searchInfo['address'];
+    // let telephone = searchInfo['telephone'];
   }
 }

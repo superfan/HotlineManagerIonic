@@ -25,7 +25,6 @@ export class WelcomePage {
               private appVersion: AppVersion,
               private http: Http,
               private configService: ConfigService,
-              private config: Config,
               private globalService: GlobalService) {
     viewCtrl.didEnter.subscribe(() => this.onDidEnter());
   }
