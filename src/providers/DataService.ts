@@ -5,6 +5,7 @@ import {Task} from "../model/Task";
 import {GlobalService} from "./GlobalService";
 import {AcceptInfo} from "../model/AcceptInfo";
 import {UploadService} from "./UploadService";
+import {GoInfo} from "../model/GoInfo";
 
 @Injectable()
 export class DataService {
@@ -37,6 +38,11 @@ export class DataService {
   public accept(acceptInfo: AcceptInfo): Promise<boolean> {
     acceptInfo.userId = this.globalService.userId;
     return this.uploadService.accept(acceptInfo);
+  }
+
+  public go(goInfo: GoInfo): Promise<boolean> {
+    goInfo.userId = this.globalService.userId;
+    return this.uploadService.go(goInfo);
   }
 
   public downloadTasks() {

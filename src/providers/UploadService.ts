@@ -4,6 +4,7 @@ import {ConfigService} from "./ConfigService";
 import {GlobalService} from "./GlobalService";
 import {AcceptInfo} from "../model/AcceptInfo";
 import {BaseService} from "./BaseService";
+import {GoInfo} from "../model/GoInfo";
 
 @Injectable()
 export class UploadService extends BaseService {
@@ -42,4 +43,27 @@ export class UploadService extends BaseService {
     });
   }
 
+
+  public go(goInfo: GoInfo): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this.configService.getServerBaseUri()
+        .then(data => {
+          let url = data + "wap/v1/mobile/task/" + acceptInfo.taskId + "/accept";
+          return this.http.put(url, JSON.stringify(acceptInfo), this.getOptions())
+            .toPromise()
+            .then(data => {
+              let body = data.json();
+              if (body.Code === this.globalService.httpCode
+                && body.StatusCode === this.globalService.httpSuccessStatusCode
+                && body.Data) {
+                resolve(body.Data);
+              } else {
+                reject(body.Message ? body.Message : "failure to get tasks");
+              }
+            })
+            .catch(this.handleError);
+        })
+        .catch(error => reject(error));
+    });
+  }
 }
