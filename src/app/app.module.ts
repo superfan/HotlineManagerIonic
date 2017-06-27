@@ -32,6 +32,7 @@ import {UploadService} from "../providers/UploadService";
 import {Network} from "@ionic-native/network";
 import {SearchPage} from "../pages/search/search";
 import {AppPreferences} from "@ionic-native/app-preferences";
+import {SearchResultPage} from "../pages/searchresult/searchresult";
 
 
 @NgModule({
@@ -46,7 +47,8 @@ import {AppPreferences} from "@ionic-native/app-preferences";
     StationWorkPage,
     WorkInfoPage,
     NewsPage,
-    SearchPage
+    SearchPage,
+    SearchResultPage
   ],
   imports: [
     BrowserModule,
@@ -65,7 +67,8 @@ import {AppPreferences} from "@ionic-native/app-preferences";
     StationWorkPage,
     WorkInfoPage,
     NewsPage,
-    SearchPage
+    SearchPage,
+    SearchResultPage
   ],
   providers: [
     StatusBar,

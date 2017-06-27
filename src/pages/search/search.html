@@ -38,16 +38,16 @@
 
       <ion-item>
         <ion-label>任务状态</ion-label>
-        <ion-input formControlName="taskState" type="text" clearInput></ion-input>
+        <ion-input formControlName="taskState" type="text" clearInput (click)="showTaskType()"></ion-input>
       </ion-item>
 
       <ion-item>
         <ion-label>反映类别</ion-label>
-        <ion-input formControlName="reflectType" type="text" clearInput></ion-input>
+        <ion-input formControlName="reflectType" type="text" clearInput (click)="showReflectType()"></ion-input>
       </ion-item>
 
       <ion-item>
-        <ion-label>反映人</ion-label>
+        <ion-label>反映人员</ion-label>
         <ion-input formControlName="reflectPerson" type="text" clearInput></ion-input>
       </ion-item>
 

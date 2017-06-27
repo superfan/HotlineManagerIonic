@@ -45323,6 +45323,25 @@ page-login ion-list {
   border: 1px solid #fff;
 }
 
+.page-search-result .card-header-label {
+  display: inline;
+  color: #5d81c1;
+}
+
+.page-search-result ion-segment-button {
+  color: #00caf2;
+  background-color: #00caf2;
+}
+
+.page-search-result .label-name {
+  color: #5d81c1;
+}
+
+.page-search-result .card-header-label-content {
+  display: inline;
+  color: black;
+}
+
 .page-stationwork .card-header-label-hint {
   display: inline;
   color: #5d81c1;
