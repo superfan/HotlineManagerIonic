@@ -20,7 +20,7 @@ import {File} from "@ionic-native/file";
 import {FileService} from "../providers/FileService";
 import {Transfer} from "@ionic-native/transfer";
 import {StorageService} from "../providers/StorageService";
-import {HttpModule} from "@angular/http";
+import {HttpModule, Http, RequestOptions} from "@angular/http";
 import {AppVersion} from "@ionic-native/app-version";
 import {Zip} from "@ionic-native/zip";
 import {ConfigService} from "../providers/ConfigService";
@@ -32,6 +32,9 @@ import {UploadService} from "../providers/UploadService";
 import {Network} from "@ionic-native/network";
 import {SearchPage} from "../pages/search/search";
 import {AppPreferences} from "@ionic-native/app-preferences";
+import {HttpInterceptorBackend} from "../providers/HttpInterceptorBackend";
+import {HttpInterceptor} from "../providers/HttpInterceptor";
+import {httpFactory} from "../providers/httpFactory";
 
 
 @NgModule({
@@ -80,12 +83,15 @@ import {AppPreferences} from "@ionic-native/app-preferences";
     FileOpener,
     ConfigService,
     HttpModule,
+    HttpInterceptorBackend,
+    HttpInterceptor,
     Network,
     DataService,
     DownloadService,
     UploadService,
     GlobalService,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    {provide: Http, useFactory: httpFactory, deps:[HttpInterceptorBackend, RequestOptions]},
   ]
 })
 export class AppModule {

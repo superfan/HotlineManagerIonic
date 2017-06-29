@@ -8,12 +8,24 @@
 
 <ion-content class="page-news">
 
-  <ion-list>
-    <ion-item>
-      <ion-avatar item-left>
-        <ion-img [src]="image"></ion-img>
-      </ion-avatar>
-    </ion-item>
-  </ion-list>
+  <style>
+    body{padding:50px}
+    ul.list{border-left:solid 2px #999;padding-left:20px;margin:20px}
+    ul.list li{position:relative;border-bottom:solid 1px #999;list-style:none;padding:10px }
+    .circle{border-radius:50%;-moz-border-radius:50%;-webikit-border-radius:50%;-o-border-radius:50%;}
+    /*注意调整left值，为-(ul的padding-left+ul的border-left/2+原点宽度/2)px*/
+    ul.list li div.circle{top:10px;left:-31px; position:absolute;width:20px;height:20px;background:#999;}
+    ul.list li.current{color:green;padding-top:0}
+    ul.list li.current div.circle{top:-5px;background-color:rgba(0,128,0,0.25);width:30px;height:30px;left:-36px;}
+    ul.list li.current div.circle b{display:block;width:80%;height:80%;background:#080;position:absolute;left:50%;top:50%;margin-left:-40%;margin-top:-40%;}
+    ul.list li.list div.circle b{display:block;}
+  </style>
+
+  <ul class="list">
+    <li class="current">节点1<br />节点1<br />节点1<br />节点1<br />节点1<div class="circle"><b class="circle"></b></div></li>
+    <li>节点2<br />节点2<div class="circle"><b class="circle"></b></div></li>
+    <li>节点3<br />节点3<div class="circle"><b class="circle"></b></div></li>
+    <li>节点4<br />节点3<div class="circle"><b></b></div></li>
+  </ul>
 
 </ion-content>
