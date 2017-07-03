@@ -36,6 +36,9 @@ import {SearchResultPage} from "../pages/searchresult/searchresult";
 import {SearchDetailsPage} from "../pages/searchdetail/searchdetails";
 import {NewsDetailsPage} from "../pages/newsdetails/newsdetails";
 import {SettingPage} from "../pages/setting/setting";
+import {HttpInterceptorBackend} from "../providers/HttpInterceptorBackend";
+import {HttpInterceptor} from "../providers/HttpInterceptor";
+import {httpFactory} from "../providers/httpFactory";
 
 
 @NgModule({
