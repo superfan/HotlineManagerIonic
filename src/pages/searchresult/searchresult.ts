@@ -1,10 +1,11 @@
 import {Component} from "@angular/core";
 import {NavController} from "ionic-angular";
+import {SearchDetailsPage} from "../searchdetail/searchdetails";
 /**
  * Created by zhangjing on 2017/6/26.
  */
 @Component({
-  selector: 'page-search-result',
+  selector: 'page-searchresult',
   templateUrl: 'searchresult.html'
 })
 
@@ -32,4 +33,9 @@ export class SearchResultPage {
       });
     }
   }
+
+  onDetails(){
+    this.navCtrl.push(SearchDetailsPage);
+  }
+
 }

@@ -62,7 +62,16 @@ export class FileService {
       let originUrl = 'file:///android_asset/www/assets/config/';
       let newUrl = dirPath + dirRoot + '/' + dir + '/config';
       let fileName = 'system.json';
-      return file.copyFile(originUrl, fileName, newUrl, fileName);
+      file.checkFile(newUrl, fileName)
+        .then(result => {
+          console.log("copySystemConfig:" + result);
+          if (!result) {
+            return file.copyFile(originUrl, fileName, newUrl, fileName);
+          }
+        })
+        .catch(err => {
+          console.log("copySystemConfig" + err);
+        })
     }
 
     return createDirRoot().then(() => {

@@ -18,7 +18,7 @@
   </ion-segment>
 </ion-header>
 
-<ion-content>
+<ion-content class="page-searchresult">
   <div [ngSwitch]="segmentName">
 
     <!--总工单-->
@@ -28,8 +28,10 @@
           <ion-avatar item-start>
             <img src="assets/img/ic_mywork_avatar.png">
           </ion-avatar>
-          <div><h2>任务编号:{{items.customerId}}</h2></div>
-          <div><h2>任务类型:{{item.taskId}} </h2></div>
+          <div><h2 class="card-header-label-hint">任务编号</h2>
+            <h2 class="card-header-label-content">123456</h2></div>
+          <div><h2 class="card-header-label-hint">任务类型</h2>
+            <h2 class="card-header-label-content">{{item.taskId}}</h2></div>
         </ion-item>
 
         <ion-list>
@@ -37,7 +39,7 @@
             <ion-label fixed class="label-name">{{content.name}}</ion-label>
             <div item-content>{{content.value}}</div>
           </ion-item>
-          <ion-item>
+          <ion-item (click)="onDetails()">
             <ion-label fixed class="label-name">详细信息</ion-label>
             <ion-icon name='arrow-forward' item-end></ion-icon>
           </ion-item>

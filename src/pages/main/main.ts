@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import { NavController } from 'ionic-angular';
-import { MyWorkPage } from "../mywork/mywork";
-import { NewsPage } from "../news/news";
-import { StationWorkPage } from "../stationwork/stationwork";
+import {NavController} from 'ionic-angular';
+import {MyWorkPage} from "../mywork/mywork";
+import {NewsPage} from "../news/news";
+import {StationWorkPage} from "../stationwork/stationwork";
 import {SearchPage} from "../search/search";
 import {DataService} from "../../providers/DataService";
+import {SettingPage} from "../setting/setting";
 
 @Component({
   selector: 'page-main',
@@ -57,9 +58,9 @@ export class MainPage implements OnInit {
     },
     {
       id: 6,
-      src: 'assets/img/ic_help.png',
-      name: '帮助',
-      active: false,
+      src: 'assets/img/ic_home_setting.png',
+      name: '设置',
+      active: true,
       count: 0
     }
   ];
@@ -99,6 +100,7 @@ export class MainPage implements OnInit {
         this.navCtrl.push(NewsPage);
         break;
       case 6:
+        this.navCtrl.push(SettingPage);
         break;
       default:
         break;

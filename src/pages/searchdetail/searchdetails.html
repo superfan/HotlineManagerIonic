@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>
+      {{title}}
+    </ion-title>
+  </ion-navbar>
+
+  <ion-segment [(ngModel)]="segmentName">
+    <ion-segment-button value="basicInfo">
+      基本信息
+    </ion-segment-button>
+    <ion-segment-button value="taskState">
+      任务状态
+    </ion-segment-button>
+  </ion-segment>
+</ion-header>
+
+<ion-content class="page-searchdetails">
+
+
+  <div [ngSwitch]="segmentName">
+    <!--基本信息-->
+    <ion-list *ngSwitchCase="'basicInfo'">
+      <ion-item *ngFor="let detail of details">
+        <ion-label fixed class="label-name">
+          {{detail.name}}
+        </ion-label>
+        <div item-content>
+          {{detail.value}}
+        </div>
+      </ion-item>
+    </ion-list>
+
+
+    <!--任务状态-->
+    <ion-list *ngSwitchCase="'taskState'">
+      <ul class="list">
+        <li *ngFor="let state of states" [ngClass]="{'current':state.name=='已销单'}">{{state.name}}<br/>{{state.value}}
+          <div class="circle"><b class="circle"></b></div>
+        </li>
+      </ul>
+    </ion-list>
+
+  </div>
+</ion-content>

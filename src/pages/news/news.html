@@ -3,17 +3,34 @@
     <ion-title>
       {{title}}
     </ion-title>
+
+    <ion-buttons end>
+      <button ion-button icon-only color="white" (click)="onDeleteAll($event)">
+        <ion-icon name="trash"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content class="page-news">
-
   <ion-list>
-    <ion-item>
-      <ion-avatar item-left>
-        <ion-img [src]="image"></ion-img>
-      </ion-avatar>
-    </ion-item>
+    <ion-card *ngFor="let item of items" (click)="onJumpDetails()">
+      <ion-list>
+        <ion-item-sliding #slidingItem>
+          <ion-item>
+            <div><h2 class="card-header-label-hint">温馨提示</h2>
+              <h2 class="card-header-label-content">{{item.newsDate}}</h2></div>
+            <br>
+            <div class="card-news-content">{{item.newsContent}}</div>
+          </ion-item>
+          <ion-item-options>
+            <button  ion-button color="danger" (click)="removeItem($event,item,slidingItem)">
+              <ion-icon name="trash"></ion-icon>
+              删除
+            </button>
+          </ion-item-options>
+        </ion-item-sliding>
+      </ion-list>
+    </ion-card>
   </ion-list>
-
 </ion-content>

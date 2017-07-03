@@ -1,21 +1,30 @@
-.page-search-result {
+.page-searchresult{
+
+  .card-header-label-hint {
+    display:inline;
+    color:#5d81c1;
+    font-size: 1.1em;
+    padding-top: 3px;
+  }
+
+  .card-header-label-content {
+    padding-left: 20px;
+    display:inline;
+    color: black;
+    font-size: 1.1em;
+  }
+
   .card-header-label {
-    display: inline;
     color: #5d81c1;
   }
 
   ion-segment-button{
-    color:#00caf2;
-    background-color: #00caf2;
+    color:#5d81c1;
   }
 
   .label-name {
-    color: #5d81c1;
-  }
-
-  .card-header-label-content {
-    display: inline;
-    color: black;
+    color:#5d81c1;
+    font-size: 1.0em;
   }
 }
 

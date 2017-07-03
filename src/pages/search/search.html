@@ -12,48 +12,49 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content class="page-news">
+<ion-content class="page-search">
 
   <ion-list>
     <form [formGroup]="searchForm">
       <ion-item>
-        <ion-label>发生地址</ion-label>
+        <ion-label color="label">发生地址</ion-label>
         <ion-input formControlName="address" type="text" clearInput></ion-input>
       </ion-item>
 
       <ion-item>
-        <ion-label>联系电话</ion-label>
+        <ion-label color="label">联系电话</ion-label>
         <ion-input formControlName="telephone" type="number" clearInput></ion-input>
       </ion-item>
 
       <ion-item>
-        <ion-label>客服编号</ion-label>
+        <ion-label color="label">客服编号</ion-label>
         <ion-input formControlName="customerNum" type="text" clearInput></ion-input>
       </ion-item>
 
       <ion-item>
-        <ion-label>任务编号</ion-label>
+        <ion-label color="label">任务编号</ion-label>
         <ion-input formControlName="taskNum" type="text" clearInput></ion-input>
       </ion-item>
 
-      <ion-item>
-        <ion-label>任务状态</ion-label>
-        <ion-input formControlName="taskState" type="text" clearInput (click)="showTaskType()"></ion-input>
+      <ion-item (click)="showTaskType()">
+        <ion-label class="label-content" color="label">任务状态</ion-label>
+        <ion-label>{{searchForm.value['taskState']}}</ion-label>
+      </ion-item>
+
+      <ion-item (click)="showReflectType()">
+        <ion-label color="label">反映类别</ion-label>
+        <ion-label>{{searchForm.value['reflectType']}}</ion-label>
       </ion-item>
 
       <ion-item>
-        <ion-label>反映类别</ion-label>
-        <ion-input formControlName="reflectType" type="text" clearInput (click)="showReflectType()"></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label>反映人员</ion-label>
+        <ion-label color="label">反映人员</ion-label>
         <ion-input formControlName="reflectPerson" type="text" clearInput></ion-input>
       </ion-item>
 
       <ion-item>
-        <ion-label>派遣时间</ion-label>
-        <ion-input formControlName="dispatchTime" type="text" clearInput></ion-input>
+        <ion-label color="label">派遣时间</ion-label>
+        <ion-datetime cancelText='取消' doneText='确定' displayFormat="MMM DD, YYYY HH:mm" formControlName="dispatchTime"
+                      clearInput></ion-datetime>
       </ion-item>
     </form>
   </ion-list>

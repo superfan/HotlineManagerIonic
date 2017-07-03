@@ -11,6 +11,7 @@ import 'rxjs/add/operator/toPromise';
 @Injectable()
 export class ConfigService {
   private basePath: string = "./assets/config/";
+  // private basePath:string="file:///storage/emulated/0/sh3h/hotlinemanager/config/";
   private systemFilePath: string = this.basePath + 'system.json';
   private mapFilePath: string = this.basePath + 'map.json';
 
@@ -61,6 +62,25 @@ export class ConfigService {
           })
           .catch(error => reject(error));
       });
+  }
+
+  /**
+   * 是否是外网
+   * @returns {Promise<T>}
+   */
+  public isOuterNetwork(): Promise<boolean> {
+    return this.systemConfig && this.systemConfig.hasOwnProperty("isOuterNetwork")
+      ? Promise.resolve(this.systemConfig.isOuterNetwork)
+      : new Promise((resolve, reject) => {
+        this.readSystemConfig()
+          .then(data => {
+            if (!this.systemConfig.hasOwnProperty("isOuterNetwork")) {
+              this.systemConfig.isOuterNetwork = true;
+            }
+            resolve(this.systemConfig.isOuterNetwork);
+          })
+          .catch(error => reject(error));
+      })
   }
 
   /**

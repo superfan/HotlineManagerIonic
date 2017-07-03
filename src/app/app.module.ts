@@ -33,6 +33,9 @@ import {Network} from "@ionic-native/network";
 import {SearchPage} from "../pages/search/search";
 import {AppPreferences} from "@ionic-native/app-preferences";
 import {SearchResultPage} from "../pages/searchresult/searchresult";
+import {SearchDetailsPage} from "../pages/searchdetail/searchdetails";
+import {NewsDetailsPage} from "../pages/newsdetails/newsdetails";
+import {SettingPage} from "../pages/setting/setting";
 
 
 @NgModule({
@@ -47,8 +50,11 @@ import {SearchResultPage} from "../pages/searchresult/searchresult";
     StationWorkPage,
     WorkInfoPage,
     NewsPage,
+    NewsDetailsPage,
     SearchPage,
-    SearchResultPage
+    SearchResultPage,
+    SearchDetailsPage,
+    SettingPage
   ],
   imports: [
     BrowserModule,
@@ -67,8 +73,11 @@ import {SearchResultPage} from "../pages/searchresult/searchresult";
     StationWorkPage,
     WorkInfoPage,
     NewsPage,
+    NewsDetailsPage,
     SearchPage,
-    SearchResultPage
+    SearchResultPage,
+    SearchDetailsPage,
+    SettingPage
   ],
   providers: [
     StatusBar,
