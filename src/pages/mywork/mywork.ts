@@ -1,8 +1,9 @@
 import {Component, ViewChild, OnInit} from '@angular/core';
-import {Content, NavController, InfiniteScroll} from 'ionic-angular';
+import {Content, NavController, InfiniteScroll, ToastController, AlertController} from 'ionic-angular';
 import {WorkDetailPage} from "../workdetail/workdetail";
 import {DataService} from "../../providers/DataService";
-import {TaskEx} from "../../model/TaskEx";
+import {TaskEx, TaskState} from "../../model/Task";
+import {ProcessEx, DelayExtend, RejectExtend} from "../../model/Process";
 
 @Component({
   selector: 'page-mywork',
@@ -10,8 +11,8 @@ import {TaskEx} from "../../model/TaskEx";
 })
 
 export class MyWorkPage implements OnInit {
-  private tag: string = "[MyWorkPage]";
-  private disableColor: string = 'gray';
+  private readonly tag: string = "[MyWorkPage]";
+  private readonly disableColor: string = 'gray';
   //private enableColor: string = 'primary';
 
   @ViewChild(Content) content: Content;
@@ -25,8 +26,10 @@ export class MyWorkPage implements OnInit {
   private since: number = 1;
   private count: number = 2;
 
-  constructor(public navCtrl: NavController, private dataService: DataService) {
-
+  constructor(public navCtrl: NavController,
+              private dataService: DataService,
+              private toastCtrl: ToastController,
+              private alertCtrl: AlertController) {
   }
 
   /**
@@ -35,8 +38,8 @@ export class MyWorkPage implements OnInit {
   ngOnInit() {
     console.log(this.tag + 'ngOnInit');
     this.getTasks(this.since, this.count)
-      .then(length => {
-        if (length <= 0) {
+      .then(data => {
+        if (!data) {
           this.infiniteScroll.enable(false);
         }
       })
@@ -66,9 +69,9 @@ export class MyWorkPage implements OnInit {
     setTimeout(() => {
       this.since += this.count;
       this.getTasks(this.since, this.count)
-        .then(length => {
+        .then(data => {
           this.showFab = true;
-          if (length <= 0) {
+          if (!data) {
             infiniteScroll.enable(false);
           } else {
             infiniteScroll.complete();
@@ -81,32 +84,32 @@ export class MyWorkPage implements OnInit {
 
   /**
    * 处理各个操作
-   * @param work
+   * @param taskEx
    * @param index
    */
-  itemSelected(work: any, index: number) {
+  itemSelected(taskEx: TaskEx, index: number) {
     console.log("Selected Item", index);
-    switch (work.processes[index].event) {
+    switch (taskEx.processes[index].event) {
       case 'accept':
-        this.accept(work);
+        this.accept(taskEx);
         break;
       case 'go':
-        this.go(work);
+        this.go(taskEx);
         break;
       case 'arrive':
-        this.arrive(work);
+        this.arrive(taskEx);
         break;
       case 'reply':
-        this.reply(work);
+        this.reply(taskEx);
         break;
       case 'reject':
-        this.reject(work);
+        this.rejectPrompt(taskEx);
         break;
       case 'delay':
-        this.delay(work);
+        this.delayPrompt(taskEx);
         break;
       case 'cancel':
-        this.cancel(work);
+        this.cancel(taskEx);
         break;
     }
   }
@@ -138,37 +141,138 @@ export class MyWorkPage implements OnInit {
    * @param count
    * @returns {Promise<T>}
    */
-  private getTasks(since: number, count: number): Promise<number> {
+  private getTasks(since: number, count: number): Promise<boolean> {
     return this.dataService.getTasks(since, count)
       .then(tasks => {
-        TaskEx.transform(tasks, this.items);
         console.log(this.tag + "getTasks: " + tasks.length);
-        return tasks.length;
-      })
+        if (tasks.length <= 0) {
+          return Promise.resolve(false)
+        } else {
+          TaskEx.transform(tasks, this.items);
+          return this.setProcesses(this.items);
+        }
+      });
+  }
+
+  /**
+   *
+   * @param taskExs
+   * @returns {Promise<T>}
+   */
+  private setProcesses(taskExs: Array<TaskEx>): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      let result: boolean = false;
+      for (let taskEx of taskExs) {
+        let processEx: ProcessEx = new ProcessEx();
+        if (!this.transform2ProcessEx(taskEx, processEx)) {
+          continue;
+        }
+
+        if (processEx.accept.time) {
+          processEx.accept.show = true;
+          processEx.accept.color = this.disableColor;
+          processEx.accept.done = true;
+          taskEx.lastProcess = 'accept';
+        }
+
+        if (processEx.go.time) {
+          processEx.go.show = true;
+          processEx.go.color = this.disableColor;
+          processEx.go.done = true;
+          taskEx.lastProcess = 'go';
+        }
+
+        if (processEx.arrive.time) {
+          processEx.arrive.show = true;
+          processEx.arrive.color = this.disableColor;
+          processEx.arrive.done = true;
+          taskEx.lastProcess = 'arrive';
+        }
+
+        if (processEx.reply.time) {
+          processEx.reply.show = true;
+          processEx.reply.color = this.disableColor;
+          processEx.reply.done = true;
+          taskEx.lastProcess = 'reply';
+        }
+
+        if (processEx.reject.time) {
+          processEx.reject.show = true;
+          processEx.reject.color = this.disableColor;
+          processEx.reject.done = true;
+          taskEx.lastProcess = 'reject';
+        }
+
+        if (processEx.delay.time) {
+          processEx.delay.show = true;
+          processEx.delay.color = this.disableColor;
+          processEx.delay.done = true;
+          taskEx.lastProcess = 'delay';
+        }
+
+        if (processEx.cancel.time) {
+          processEx.cancel.show = true;
+          processEx.cancel.color = this.disableColor;
+          processEx.cancel.done = true;
+          taskEx.lastProcess = 'cancel';
+        }
+
+        switch (taskEx.lastProcess) {
+          case 'accept':
+            processEx.go.show = true;
+            processEx.reject.show = true;
+            processEx.delay.show = true;
+            break;
+          case 'go':
+            processEx.arrive.show = true;
+            processEx.reject.show = true;
+            processEx.delay.show = true;
+            break;
+          case 'arrive':
+            processEx.reply.show = true;
+            processEx.reject.show = true;
+            processEx.delay.show = true;
+            break;
+          case 'reply':
+            processEx.reject.show = false;
+            processEx.delay.show = processEx.delay.done;
+            processEx.cancel.show = true;
+            break;
+          case 'reject':
+            processEx.go.show = processEx.go.done;
+            processEx.arrive.show = processEx.arrive.done;
+            processEx.reply.show = processEx.reply.done;
+            processEx.delay.show = processEx.delay.done;
+            break;
+          case 'delay':
+            break;
+          case 'cancel':
+            break;
+          default:
+            break;
+        }
+
+        result = true;
+      }
+
+      resolve(result);
+    });
   }
 
   /**
    * 接单
-   * @param work
+   * @param taskEx
    */
   private accept(taskEx: TaskEx) {
-    let processes = {};
-    if (!this.transformProcesses(taskEx, processes)) {
+    let processEx: ProcessEx = new ProcessEx();
+    if (!this.transform2ProcessEx(taskEx, processEx)) {
       return;
     }
 
-    if (!processes['accept'].done) {
-      processes['accept'].time = new Date();
-      processes['accept'].color = this.disableColor;
-      processes['accept'].done = true;
-      processes['go'].show = true;
-      processes['reject'].show = true;
-      processes['delay'].show = true;
-      //processes['cancel'].show = true;
-      taskEx.lastProcess = 'accept';
-
+    if (!processEx.accept.done) {
+      let time = new Date();
       this.dataService.accept({
-        acceptTime: processes['accept'].time,
+        acceptTime: time.getTime(),
         location: {
           type: "bd09ll",
           lng: "121.525766",
@@ -177,194 +281,315 @@ export class MyWorkPage implements OnInit {
         taskId: taskEx.id,
         userId: 1
       }).then(data => {
-        console.log(data);
-      }).catch(error => console.error(this.tag + error));
+        processEx.accept.time = time;
+        processEx.accept.color = this.disableColor;
+        processEx.accept.done = true;
+        processEx.go.show = true;
+        processEx.reject.show = true;
+        processEx.delay.show = true;
+        //processEx.cancel.show = true;
+        taskEx.lastProcess = 'accept';
+        taskEx.state = TaskState.Accept;
+      }).catch(error => {
+        console.error(this.tag + error);
+        this.showToast(error);
+      });
     }
   }
 
   /**
    * 出发
-   * @param work
+   * @param taskEx
    */
-  private go(work: any) {
-    let processes = {};
-    if (!this.transformProcesses(work, processes)) {
+  private go(taskEx: TaskEx) {
+    let processEx: ProcessEx = new ProcessEx();
+    if (!this.transform2ProcessEx(taskEx, processEx)) {
       return;
     }
 
-    if (!processes['go'].done) {
-      processes['go'].time = new Date();
-      processes['go'].color = this.disableColor;
-      processes['go'].done = true;
-      processes['arrive'].show = true;
-      processes['reject'].show = true;
-      processes['delay'].show = true;
-      //processes['cancel'].show = true;
-      work.lastProcess = 'go';
+    if (!processEx.go.done) {
+      let time = new Date();
+      this.dataService.go({
+        goTime: time.getTime(),
+        location: {
+          type: "bd09ll",
+          lng: "121.525766",
+          lat: "31.280693"
+        },
+        taskId: taskEx.id,
+        userId: 1
+      }).then(data => {
+        processEx.go.time = new Date();
+        processEx.go.color = this.disableColor;
+        processEx.go.done = true;
+        processEx.arrive.show = true;
+        processEx.reject.show = true;
+        processEx.delay.show = true;
+        //processEx.cancel.show = true;
+        taskEx.lastProcess = 'go';
+        taskEx.state = TaskState.Go;
+      }).catch(error => {
+        console.error(this.tag + error);
+        this.showToast(error);
+      });
     }
   }
 
   /**
    * 到场
-   * @param work
+   * @param taskEx
    */
-  private arrive(work: any) {
-    let processes = {};
-    if (!this.transformProcesses(work, processes)) {
+  private arrive(taskEx: TaskEx) {
+    let processEx: ProcessEx = new ProcessEx();
+    if (!this.transform2ProcessEx(taskEx, processEx)) {
       return;
     }
 
-    if (!processes['arrive'].done) {
-      processes['arrive'].time = new Date();
-      processes['arrive'].color = this.disableColor;
-      processes['arrive'].done = true;
-      processes['reply'].show = true;
-      processes['reject'].show = true;
-      processes['delay'].show = true;
-      //processes['cancel'].show = true;
-      work.lastProcess = 'arrive';
+    if (!processEx.arrive.done) {
+      let time = new Date();
+      this.dataService.arrive({
+        arrivedTime: time.getTime(),
+        location: {
+          type: "bd09ll",
+          lng: "121.525766",
+          lat: "31.280693"
+        },
+        taskId: taskEx.id,
+        userId: 1
+      }).then(data => {
+        processEx.arrive.time = time;
+        processEx.arrive.color = this.disableColor;
+        processEx.arrive.done = true;
+        processEx.reply.show = true;
+        processEx.reject.show = true;
+        processEx.delay.show = true;
+        //processEx.cancel.show = true;
+        taskEx.lastProcess = 'arrive';
+        taskEx.state = TaskState.Arrived;
+      }).catch(error => {
+        console.error(this.tag + error);
+        this.showToast(error);
+      });
     }
   }
 
   /**
    * 回复
-   * @param work
+   * @param taskEx
    */
-  private reply(work: any) {
-    let processes = {};
-    if (!this.transformProcesses(work, processes)) {
+  private reply(taskEx: TaskEx) {
+    let processEx: ProcessEx = new ProcessEx();
+    if (!this.transform2ProcessEx(taskEx, processEx)) {
       return;
     }
 
-    if (!processes['reply'].done) {
-      processes['reply'].time = new Date();
-      processes['reply'].color = this.disableColor;
-      processes['reply'].done = true;
-      processes['reject'].show = false;
-      processes['delay'].show = processes['delay'].done;
-      processes['cancel'].show = true;
-      work.lastProcess = 'reply';
+    if (!processEx.reply.done) {
+      // processEx.reply.time = new Date();
+      // processEx.reply.color = this.disableColor;
+      // processEx.reply.done = true;
+      // processEx.reject.show = false;
+      // processEx.delay.show = processEx.delay.done;
+      // processEx.cancel.show = true;
+      // taskEx.lastProcess = 'reply';
+      // taskEx.state = TaskState.Reply;
+      this.navCtrl.push(WorkDetailPage, taskEx);
     }
   }
 
   /**
    * 退单
-   * @param work
+   * @param taskEx
    */
-  private reject(work: any) {
-    let processes = {};
-    if (!this.transformProcesses(work, processes)) {
+  private reject(taskEx: TaskEx) {
+    let processEx: ProcessEx = new ProcessEx();
+    if (!this.transform2ProcessEx(taskEx, processEx)) {
       return;
     }
 
-    if (!processes['reject'].done) {
-      processes['reject'].time = new Date();
-      processes['reject'].color = this.disableColor;
-      processes['reject'].done = true;
+    if (!processEx.reject.done) {
+      let time = new Date();
+      let rejectExtend: RejectExtend = processEx.reject.extend as RejectExtend;
+      this.dataService.reject({
+        rejectTime: time.getTime(),
+        rejectReason: rejectExtend.rejectReason,
+        location: {
+          type: "bd09ll",
+          lng: "121.525766",
+          lat: "31.280693"
+        },
+        taskId: taskEx.id,
+        userId: 1
+      }).then(data => {
+        processEx.reject.time = time;
+        processEx.reject.color = this.disableColor;
+        processEx.reject.done = true;
 
-      processes['go'].show = processes['go'].done;
-      processes['arrive'].show = processes['arrive'].done;
-      processes['reply'].show = processes['reply'].done;
-      processes['delay'].show = processes['delay'].done;
-      //processes['cancel'].show = false;
-      work.lastProcess = 'reject';
+        processEx.go.show = processEx.go.done;
+        processEx.arrive.show = processEx.arrive.done;
+        processEx.reply.show = processEx.reply.done;
+        processEx.delay.show = processEx.delay.done;
+        //processEx.cancel.show = false;
+        taskEx.lastProcess = 'reject';
+        taskEx.state = TaskState.Reject;
+      }).catch(error => {
+        console.error(this.tag + error);
+        this.showToast(error);
+      });
     }
   }
 
   /**
    * 延迟
-   * @param work
+   * @param taskEx
    */
-  private delay(work: any) {
-    let processes = {};
-    if (!this.transformProcesses(work, processes)) {
+  private delay(taskEx: TaskEx) {
+    let processEx: ProcessEx = new ProcessEx();
+    if (!this.transform2ProcessEx(taskEx, processEx)) {
       return;
     }
 
-    if (!processes['delay'].done) {
+    if (!processEx.delay.done) {
       let isSuccess: boolean = false;
-      if (work.lastProcess === 'accept'
-        && this.sortProcesses(work, "accept", "delay", "延迟时间")
-        && this.transformProcesses(work, processes = {})) {
+      let lastProcess: string = "accept";
+      let curEvent: string = "delay";
+      let curName: string = "延迟时间";
+      let extend: DelayExtend = processEx.delay.extend as DelayExtend;
+      if (taskEx.lastProcess === lastProcess
+        && this.sortDelayProcess(taskEx, lastProcess, curEvent, curName, extend)
+        && this.transform2ProcessEx(taskEx, processEx = new ProcessEx())) {
         isSuccess = true;
       }
 
-      if (work.lastProcess === 'go'
-        && this.sortProcesses(work, "go", "delay", "延迟时间")
-        && this.transformProcesses(work, processes = {})) {
+      lastProcess = "go";
+      if (taskEx.lastProcess === lastProcess
+        && this.sortDelayProcess(taskEx, lastProcess, curEvent, curName, extend)
+        && this.transform2ProcessEx(taskEx, processEx = new ProcessEx())) {
         isSuccess = true;
       }
 
-      if (work.lastProcess === 'arrive'
-        && this.sortProcesses(work, "arrive", "delay", "延迟时间")
-        && this.transformProcesses(work, processes = {})) {
+      lastProcess = "arrive";
+      if (taskEx.lastProcess === lastProcess
+        && this.sortDelayProcess(taskEx, lastProcess, curEvent, curName, extend)
+        && this.transform2ProcessEx(taskEx, processEx = new ProcessEx())) {
         isSuccess = true;
       }
 
       if (isSuccess) {
-        processes['delay'].time = new Date();
-        processes['delay'].color = this.disableColor;
-        processes['delay'].done = true;
-        work.lastProcess = 'delay';
+        let time = new Date();
+        let delayExtend: DelayExtend = processEx.delay.extend as DelayExtend;
+        this.dataService.delay({
+          delayTime: time.getTime(),
+          deadline: delayExtend.deadline.getTime(),
+          comment: delayExtend.comment,
+          location: {
+            type: "bd09ll",
+            lng: "121.525766",
+            lat: "31.280693"
+          },
+          taskId: taskEx.id,
+          userId: 1
+        }).then(data => {
+          processEx.delay.time = time;
+          processEx.delay.color = this.disableColor;
+          processEx.delay.done = true;
+          taskEx.lastProcess = 'delay';
+          taskEx.state = TaskState.Delay;
+        }).catch(error => {
+          console.error(this.tag + error);
+          this.showToast(error);
+        });
       }
     }
   }
 
   /**
    * 销单
-   * @param work
+   * @param taskEx
    */
-  private cancel(work: any) {
-    let processes = {};
-    if (!this.transformProcesses(work, processes)) {
+  private cancel(taskEx: TaskEx) {
+    let processEx: ProcessEx = new ProcessEx();
+    if (!this.transform2ProcessEx(taskEx, processEx)) {
       return;
     }
 
-    if (!processes['cancel'].done) {
-      processes['cancel'].time = new Date();
-      processes['cancel'].color = this.disableColor;
-      processes['cancel'].done = true;
+    if (!processEx.cancel.done) {
+      processEx.cancel.time = new Date();
+      processEx.cancel.color = this.disableColor;
+      processEx.cancel.done = true;
 
-      processes['go'].show = processes['go'].done;
-      processes['arrive'].show = processes['arrive'].done;
-      processes['reply'].show = processes['reply'].done;
-      processes['reject'].show = processes['reject'].done;
-      processes['delay'].show = processes['delay'].done;
-      work.lastProcess = 'cancel';
+      processEx.go.show = processEx.go.done;
+      processEx.arrive.show = processEx.arrive.done;
+      processEx.reply.show = processEx.reply.done;
+      processEx.reject.show = processEx.reject.done;
+      processEx.delay.show = processEx.delay.done;
+      taskEx.lastProcess = 'cancel';
+      taskEx.state = TaskState.Cancel;
     }
   }
 
   /**
    * 处理步骤数组转对象
-   * @param work
-   * @param processes
+   * @param taskEx
+   * @param processEx
    * @returns {boolean}
    */
-  private transformProcesses(work: any, processes: object): boolean {
-    if (work.processes instanceof Array && work.processes.length > 0) {
-      for (let i of work.processes) {
-        processes[i.event] = i;
-      }
-
-      return true;
+  private transform2ProcessEx(taskEx: TaskEx, processEx: ProcessEx): boolean {
+    if (!taskEx && !processEx) {
+      return false;
     }
 
-    return false;
+    for (let i of taskEx.processes) {
+      switch (i.event) {
+        case 'create':
+          processEx.create = i;
+          break;
+        case 'dispatch':
+          processEx.dispatch = i;
+          break;
+        case 'accept':
+          processEx.accept = i;
+          break;
+        case 'go':
+          processEx.go = i;
+          break;
+        case 'arrive':
+          processEx.arrive = i;
+          break;
+        case 'reply':
+          processEx.reply = i;
+          break;
+        case 'reject':
+          processEx.reject = i;
+          break;
+        case 'delay':
+          processEx.delay = i;
+          break;
+        case 'cancel':
+          processEx.cancel = i;
+          break;
+        default:
+          console.error(this.tag, i.event);
+          break;
+      }
+    }
+
+    return !!(processEx && processEx.create && processEx.dispatch && processEx.accept && processEx.go && processEx.arrive
+    && processEx.reply && processEx.reject && processEx.delay && processEx.cancel);
   }
 
   /**
    *
-   * @param work
+   * @param taskEx
    * @param lastEvent
    * @param curEvent
+   * @param curName
+   * @param curExtend
    * @returns {boolean}
    */
-  private sortProcesses(work: any, lastEvent: string, curEvent: string, curName: string): boolean {
-    if (work.processes instanceof Array
-      && work.processes.length > 0
-      && lastEvent && curEvent && curName) {
+  private sortDelayProcess(taskEx: TaskEx, lastEvent: string, curEvent: string, curName: string, curExtend: any): boolean {
+    if (taskEx.processes.length > 0 && lastEvent && curEvent && curName && curExtend) {
       let lastIndex, curIndex;
-      let processes = work.processes;
+      let processes = taskEx.processes;
       for (let i = 0; i < processes.length; i++) {
         if (processes[i].event === lastEvent) {
           lastIndex = i;
@@ -384,13 +609,161 @@ export class MyWorkPage implements OnInit {
         processes[i].show = processes[i - 1].show;
         processes[i].color = processes[i - 1].color;
         processes[i].done = processes[i - 1].done;
+        processes[i].extend = processes[i - 1].extend;
       }
 
       processes[lastIndex + 1].event = curEvent;
       processes[lastIndex + 1].name = curName;
+      processes[lastIndex + 1].extend = curExtend;
       return true;
     }
 
     return false;
+  }
+
+  /**
+   * toast
+   * @param message
+   */
+  private showToast(message: string): void {
+    let toast = this.toastCtrl.create({
+      message: message,
+      duration: 2000,
+      position: 'bottom'
+    });
+
+    toast.present(toast);
+  }
+
+  /**
+   * 退单对话框
+   * @param taskEx
+   */
+  private rejectPrompt(taskEx: TaskEx): void {
+    let processEx: ProcessEx = new ProcessEx();
+    if (!this.transform2ProcessEx(taskEx, processEx) || processEx.reject.done) {
+      return;
+    }
+
+    let prompt = this.alertCtrl.create({
+      title: '退单申请',
+      message: "请填写退单信息!",
+      inputs: [
+        {
+          name: 'reason',
+          placeholder: '原因'
+        }
+      ],
+      buttons: [
+        {
+          text: '取消',
+          handler: data => {
+          }
+        },
+        {
+          text: '确定',
+          handler: data => {
+            console.log(this.tag, data);
+            if (!data.reason) {
+              return this.showToast("请填写原因!");
+            }
+
+            processEx.reject.extend = {
+              rejectReason: data.reason
+            };
+
+            this.reject(taskEx);
+          }
+        }
+      ]
+    });
+    prompt.present();
+  }
+
+  /**
+   * 延迟对话框
+   * @param taskEx
+   */
+  private delayPrompt(taskEx: TaskEx): void {
+    let processEx: ProcessEx = new ProcessEx();
+    if (!this.transform2ProcessEx(taskEx, processEx) || processEx.delay.done) {
+      return;
+    }
+
+    let prompt = this.alertCtrl.create({
+      title: '延迟申请',
+      message: "请填写延迟信息!",
+      inputs: [
+        {
+          name: 'day',
+          placeholder: '天数',
+          type: 'number'
+        },
+        {
+          name: 'hour',
+          placeholder: '小时',
+          type: 'number'
+        },
+        {
+          name: 'minute',
+          placeholder: '分钟',
+          type: 'number'
+        },
+        {
+          name: 'reason',
+          placeholder: '原因'
+        }
+      ],
+      buttons: [
+        {
+          text: '取消',
+          handler: data => {
+          }
+        },
+        {
+          text: '确定',
+          handler: data => {
+            console.log(this.tag, data);
+            if (Number.isNaN(data.day)
+              && Number.isNaN(data.hour)
+              && Number.isNaN(data.minute)) {
+              return this.showToast("请填写有效的时间!");
+            } else if (!data.reason) {
+              return this.showToast("请填写原因!");
+            } else {
+              let day: number = Number.parseInt(data.day);
+              let hour: number = Number.parseInt(data.hour);
+              let minute: number = Number.parseInt(data.minute);
+              if ((Number.isFinite(day) && day < 0)
+                || (Number.isFinite(hour) && hour < 0)
+                || (Number.isFinite(minute) && minute < 0)) {
+                return this.showToast("填写的时间必须大于零!");
+              }
+
+              let time: number = 0;
+              if (Number.isFinite(day)) {
+                time += day * 24 * 60;
+              }
+
+              if (Number.isFinite(hour)) {
+                time += hour * 60;
+              }
+
+              if (Number.isFinite(minute)) {
+                time += minute;
+              }
+
+              let deadline: Date = new Date(new Date().getTime() + time * 60000);
+              processEx.delay.extend = {
+                comment: data.reason,
+                deadline
+              };
+              this.delay(taskEx);
+            }
+          }
+        }
+      ]
+    });
+    prompt.present();
   }
 }
