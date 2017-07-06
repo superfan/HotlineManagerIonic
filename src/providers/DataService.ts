@@ -167,8 +167,19 @@ export class DataService {
    */
   public searchTask(address: string, phone: string, serialNo: string, taskNo: string, taskState: number,
                     reportType: number, reportPerson: string, sendTime: number): Promise<Array<SearchTask>> {
-    return this.downloadService.getSearchTasks(this.globalService.userId,address, phone, serialNo, taskNo,
+    return this.downloadService.getSearchTasks(this.globalService.userId, address, phone, serialNo, taskNo,
       taskState, reportType, reportPerson, sendTime);
+  }
+
+  /**
+   * 获取反映类别（查询界面）
+   * @returns {Promise<T>}
+   */
+  public getReflectTypes(): Promise<Array<Word>> {
+    return this.downloadService.getAllWords('FY_LEIBIE')
+      .then(words => {
+        return words;
+      });
   }
 
   /**
@@ -176,7 +187,7 @@ export class DataService {
    */
   public searchTaskCount(address: string, phone: string, serialNo: string, taskNo: string, taskState: number,
                          reportType: number, reportPerson: string, sendTime: number): Promise<SearchTaskCount> {
-    return this.downloadService.getSearchTaskCount(this.globalService.userId,address, phone, serialNo, taskNo,
+    return this.downloadService.getSearchTaskCount(this.globalService.userId, address, phone, serialNo, taskNo,
       taskState, reportType, reportPerson, sendTime);
   }
 

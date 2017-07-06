@@ -20,7 +20,7 @@ export class SearchDetailsPage {
   segmentName: string = "basicInfo";
   taskId: string;
   details: any[];
-  states:TaskState[]=[];
+  states: TaskState[] = [];
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -122,6 +122,11 @@ export class SearchDetailsPage {
       }
       if (n1.time > n2.time) {
         return -1;
+      }
+      if (n1.time == n2.time) {
+        if (n1.state > n2.state) {
+          return -1;
+        }
       }
       return 0;
     });

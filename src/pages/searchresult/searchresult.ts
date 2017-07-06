@@ -65,8 +65,8 @@ export class SearchResultPage {
                 {name: '反映人', value: temp.reportPerson},
                 {name: '反映类别', value: temp.reportType},
                 {name: '反映内容', value: temp.reportTypeText},
-                {name: '派遣时间', value: temp.sendTime},
-                {name: '处理时限', value: temp.resolveLimitedTime},
+                {name: '派遣时间', value: this.formatDateTime(temp.sendTime)},
+                {name: '处理时限', value: this.formatDateTime(temp.resolveLimitedTime)},
                 {name: '任务状态', value: temp.taskState}
               ]
             });
@@ -100,5 +100,27 @@ export class SearchResultPage {
     console.log(taskId);
     this.navCtrl.push(SearchDetailsPage, {'taskId': taskId});
   }
+
+  /**
+   * utc时间格式化
+   * @param inputTime
+   * @returns {string}
+   */
+  private formatDateTime(inputTime): string {
+    console.log(inputTime);
+    let date = new Date(inputTime);
+    let y = date.getFullYear();
+    let m = date.getMonth() + 1;
+    let month = m < 10 ? ('0' + m) : m;
+    let d = date.getDate();
+    let day = d < 10 ? ('0' + d) : d;
+    let h = date.getHours();
+    let hour = h < 10 ? ('0' + h) : h;
+    let minute = date.getMinutes();
+    let second = date.getSeconds();
+    let minutestr = minute < 10 ? ('0' + minute) : minute;
+    let secondstr = second < 10 ? ('0' + second) : second;
+    return y + '-' + month + '-' + day + ' ' + hour + ':' + minutestr + ':' + secondstr;
+  };
 
 }
