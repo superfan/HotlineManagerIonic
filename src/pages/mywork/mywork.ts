@@ -179,6 +179,11 @@ export class MyWorkPage implements OnInit {
           processEx.go.show = true;
           processEx.go.color = this.disableColor;
           processEx.go.done = true;
+          if (taskEx.lastProcess != 'accept') {
+            processEx.accept.show = true;
+            processEx.accept.color = this.disableColor;
+            processEx.accept.done = true;
+          }
           taskEx.lastProcess = 'go';
         }
 
@@ -186,6 +191,11 @@ export class MyWorkPage implements OnInit {
           processEx.arrive.show = true;
           processEx.arrive.color = this.disableColor;
           processEx.arrive.done = true;
+          if (taskEx.lastProcess != 'go') {
+            processEx.go.show = true;
+            processEx.go.color = this.disableColor;
+            processEx.go.done = true;
+          }
           taskEx.lastProcess = 'arrive';
         }
 
@@ -193,6 +203,11 @@ export class MyWorkPage implements OnInit {
           processEx.reply.show = true;
           processEx.reply.color = this.disableColor;
           processEx.reply.done = true;
+          if (taskEx.lastProcess != 'arrive') {
+            processEx.arrive.show = true;
+            processEx.arrive.color = this.disableColor;
+            processEx.arrive.done = true;
+          }
           taskEx.lastProcess = 'reply';
         }
 

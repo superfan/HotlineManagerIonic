@@ -1,18 +1,22 @@
-import {Component, OnInit} from '@angular/core';
-import {NavController} from 'ionic-angular';
+import {Component, OnInit, AfterViewInit} from '@angular/core';
+import {NavController, LoadingController} from 'ionic-angular';
 import {MyWorkPage} from "../mywork/mywork";
 import {NewsPage} from "../news/news";
 import {StationWorkPage} from "../stationwork/stationwork";
 import {SearchPage} from "../search/search";
 import {DataService} from "../../providers/DataService";
 import {SettingPage} from "../setting/setting";
+import {GlobalService} from "../../providers/GlobalService";
+import {Word} from "../../model/Word";
 
 @Component({
   selector: 'page-main',
   templateUrl: 'main.html'
 })
 
-export class MainPage implements OnInit {
+export class MainPage implements AfterViewInit {
+  private readonly tag: string = "[MainPage]";
+
   title: string = '主界面';
   imgWidth: number = 64;
   imgHeight: number = 64;
@@ -66,7 +70,10 @@ export class MainPage implements OnInit {
   ];
 
 
-  constructor(public navCtrl: NavController, private dataService: DataService) {
+  constructor(public navCtrl: NavController,
+              private loadingCtrl: LoadingController,
+              private dataService: DataService,
+              private globalService: GlobalService) {
     let rowData = [];
     for (let item of this.listItems) {
       if (rowData.length == 3) {
@@ -78,8 +85,23 @@ export class MainPage implements OnInit {
     this.gridItems.push(rowData);
   }
 
-  ngOnInit() {
-
+  ngAfterViewInit(): void {
+    let loader = this.loadingCtrl.create({
+      content: "Please wait...",
+    });
+    loader.present();
+    this.dataService.getAllWords()
+      .then(words => {
+        console.log(this.tag, "get all words");
+        loader.dismiss();
+        if (this.globalService.isChrome) {
+          this.globalService.words = words;
+        }
+      })
+      .catch(error => {
+        console.log(this.tag, error);
+        loader.dismiss();
+      });
   }
 
   itemSelected(id: number) {
