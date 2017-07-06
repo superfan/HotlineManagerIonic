@@ -57,7 +57,7 @@ export class UploadService extends BaseService {
     return new Promise((resolve, reject) => {
       this.configService.getServerBaseUri()
         .then(data => {
-          let url = data + "wap/v1/mobile/task/" + goInfo.taskId + "/accept";
+          let url = data + "wap/v1/mobile/task/" + goInfo.taskId + "/go";
           return this.http.put(url, JSON.stringify(goInfo), this.getOptions())
             .toPromise()
             .then(data => {

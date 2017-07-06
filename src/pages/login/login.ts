@@ -40,7 +40,7 @@ export class LoginPage {
 
     this.loginForm = this.formBuilder.group({
       'LoginID': ['admin', Validators.compose([Validators.minLength(2), Validators.maxLength(11),
-        Validators.required, Validators.pattern('[a-zA-Z ]*')])],
+        Validators.required, Validators.pattern('[0-9a-zA-Z ]*')])],
       'LoginPwd': ['0000', Validators.compose([Validators.required, Validators.minLength(4)])],
       'LoginSelect': [this.user.type, Validators.compose([Validators.required])]
     });
