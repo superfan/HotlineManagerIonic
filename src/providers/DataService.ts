@@ -13,6 +13,9 @@ import {DelayInfo} from "../model/DelayInfo";
 import {CancelInfo} from "../model/CancelInfo";
 import {TaskDetail} from "../model/TaskDetail";
 import {Word} from "../model/Word";
+import {SearchTask} from "../model/SearchTask";
+import {SearchTaskDetails} from "../model/SearchTaskDetails";
+import {SearchTaskCount} from "../model/SearchTaskCount";
 
 @Injectable()
 export class DataService {
@@ -159,4 +162,29 @@ export class DataService {
     return words;
   }
 
+  /**
+   * 查询任务
+   */
+  public searchTask(address: string, phone: string, serialNo: string, taskNo: string, taskState: number,
+                    reportType: number, reportPerson: string, sendTime: number): Promise<Array<SearchTask>> {
+    return this.downloadService.getSearchTasks(this.globalService.userId,address, phone, serialNo, taskNo,
+      taskState, reportType, reportPerson, sendTime);
+  }
+
+  /**
+   * 查询工单数量
+   */
+  public searchTaskCount(address: string, phone: string, serialNo: string, taskNo: string, taskState: number,
+                         reportType: number, reportPerson: string, sendTime: number): Promise<SearchTaskCount> {
+    return this.downloadService.getSearchTaskCount(this.globalService.userId,address, phone, serialNo, taskNo,
+      taskState, reportType, reportPerson, sendTime);
+  }
+
+  /**
+   * 查询任务详情
+   * @param taskId 任务编号
+   */
+  public searchTaskDetails(taskId: string): Promise<SearchTaskDetails> {
+    return this.downloadService.getSearchTaskDetails(taskId);
+  }
 }

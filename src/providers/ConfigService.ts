@@ -234,4 +234,5 @@ export class ConfigService {
     console.error(errMsg);
     return Promise.reject(errMsg);
   }
+
 }
