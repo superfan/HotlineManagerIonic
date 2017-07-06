@@ -12,6 +12,9 @@ import {RejectInfo} from "../model/RejectInfo";
 import {DelayInfo} from "../model/DelayInfo";
 import {CancelInfo} from "../model/CancelInfo";
 import {TaskDetail} from "../model/TaskDetail";
+import {SearchTask} from "../model/SearchTask";
+import {SearchTaskDetails} from "../model/SearchTaskDetails";
+import {SearchTaskCount} from "../model/SearchTaskCount";
 
 @Injectable()
 export class DataService {
@@ -21,7 +24,7 @@ export class DataService {
               private uploadService: UploadService,
               private globalService: GlobalService,
               private events: Events) {
-    events.subscribe(this.downloadTaskEvent, (since: number, count: number)=> {
+    events.subscribe(this.downloadTaskEvent, (since: number, count: number) => {
 
     })
   }
@@ -130,4 +133,29 @@ export class DataService {
     //   .catch(error => console.error(error));
   }
 
+  /**
+   * 查询任务
+   */
+  public searchTask(address: string, phone: string, serialNo: string, taskNo: string, taskState: number,
+                    reportType: number, reportPerson: string, sendTime: number): Promise<Array<SearchTask>> {
+    return this.downloadService.getSearchTasks(this.globalService.userId,address, phone, serialNo, taskNo,
+      taskState, reportType, reportPerson, sendTime);
+  }
+
+  /**
+   * 查询工单数量
+   */
+  public searchTaskCount(address: string, phone: string, serialNo: string, taskNo: string, taskState: number,
+                         reportType: number, reportPerson: string, sendTime: number): Promise<SearchTaskCount> {
+    return this.downloadService.getSearchTaskCount(this.globalService.userId,address, phone, serialNo, taskNo,
+      taskState, reportType, reportPerson, sendTime);
+  }
+
+  /**
+   * 查询任务详情
+   * @param taskId 任务编号
+   */
+  public searchTaskDetails(taskId: string): Promise<SearchTaskDetails> {
+    return this.downloadService.getSearchTaskDetails(taskId);
+  }
 }

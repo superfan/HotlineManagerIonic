@@ -35,7 +35,7 @@
     <!--任务状态-->
     <ion-list *ngSwitchCase="'taskState'">
       <ul class="list">
-        <li *ngFor="let state of states" [ngClass]="{'current':state.name=='已销单'}">{{state.name}}<br/>{{state.value}}
+        <li *ngFor="let state of states" [ngClass]="{'current':state==states[0]}">{{state.state}}<br/>{{state.time}}
           <div class="circle"><b class="circle"></b></div>
         </li>
       </ul>

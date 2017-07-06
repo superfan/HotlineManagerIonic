@@ -152,4 +152,40 @@ export class FileService {
       .then(() => console.log('File is opened'))
       .catch(err => console.log('Error openning file', err));
   }
+
+
+  editIsGridStyle(isGrid: boolean) {
+    let fileUrl = this.dirPath + this.dirRoot + '/' + this.dir + '/config';
+    let fileName = 'system.json';
+    let jsonResult: any;
+    this.file.readAsText(fileUrl, fileName)
+      .then(result => {
+        let body = JSON.parse(result);
+        jsonResult = {
+          "sys.connect.outer.network": body["sys.connect.outer.network"],
+          "server.outer.baseuri": body["server.outer.baseuri"],
+          "server.inner.baseuri": body["server.inner.baseuri"],
+          "sys.grid.style": isGrid,
+          "sys.debug.mode": body["sys.debug.mode"],
+          "sys.keep.alive.interval": body["sys.keep.alive.interval"],
+          "sys.region": body["sys.region"]
+        }
+        console.log(jsonResult);
+        this.writeData2Json(fileUrl, fileName, jsonResult);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
+  private writeData2Json(fileUrl: string, fileName: string, jsonResult) {
+    this.file.writeExistingFile(fileUrl, fileName, JSON.stringify(jsonResult))
+      .then(result => {
+        console.log(result);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
 }

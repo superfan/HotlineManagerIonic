@@ -35,6 +35,7 @@ export class SettingPage {
    */
   private notifyIsGrid() {
     console.log("Toggled:" + this.isGrid);
+    this.fileService.editIsGridStyle(this.isGrid);
   }
 
   /**

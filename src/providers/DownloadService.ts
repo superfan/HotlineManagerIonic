@@ -5,6 +5,9 @@ import {Task} from "../model/Task";
 import {GlobalService} from "./GlobalService";
 import {BaseService} from "./BaseService";
 import {TaskDetail} from "../model/TaskDetail";
+import {SearchTask} from "../model/SearchTask";
+import {SearchTaskDetails} from "../model/SearchTaskDetails";
+import {SearchTaskCount} from "../model/SearchTaskCount";
 
 @Injectable()
 export class DownloadService extends BaseService {
@@ -75,5 +78,112 @@ export class DownloadService extends BaseService {
         })
         .catch(error => reject(error));
     });
+  }
+
+  /**
+   * 查询工单
+   * @param address
+   * @param phone
+   * @param serialNo
+   * @param taskNo
+   * @param taskState
+   * @param reportType
+   * @param reportPerson
+   * @param sendTime
+   * @returns {Promise<T>}
+   */
+  public getSearchTasks(userId: number, address: string, phone: string, serialNo: string, taskNo: string, taskState: number,
+                        reportType: number, reportPerson: string, sendTime: number): Promise<Array<SearchTask>> {
+    return new Promise((resolve, reject) => {
+      this.configService.getServerBaseUri()
+        .then(data => {
+          let url = data + "wap/v1/mobile/tasksearch/" + userId + "/tasks?happenedAddress=" + address + "&contactPhone=" + phone +
+            "&serialNo=" + serialNo + "&taskNo=" + taskNo + "&taskState=" + taskState + "&reportType=" + reportType +
+            "&reportPerson=" + reportPerson + "&sendTime=" + sendTime + "&count=10&since=0";
+          return this.http.get(url, this.getOptions())
+            .toPromise()
+            .then(data => {
+              console.log("getSearchTasks:" + data)
+              let body = data.json();
+              if (body.Code == this.globalService.httpCode
+                && body.StatusCode === this.globalService.httpSuccessStatusCode
+                && body.Data as Array<SearchTask>) {
+                resolve(body.Data);
+              } else {
+                reject(body.Message ? body.Message : "fail to search task!");
+              }
+            })
+            .catch(this.handleError)
+        })
+        .catch(error => reject(error));
+    })
+  }
+
+  /**
+   * 查询工单数量
+   * @param address
+   * @param phone
+   * @param serialNo
+   * @param taskNo
+   * @param taskState
+   * @param reportType
+   * @param reportPerson
+   * @param sendTime
+   * @returns {Promise<T>}
+   */
+  public getSearchTaskCount(userId: number, address: string, phone: string, serialNo: string, taskNo: string, taskState: number,
+                            reportType: number, reportPerson: string, sendTime: number): Promise<SearchTaskCount> {
+    return new Promise((resolve, reject) => {
+      this.configService.getServerBaseUri()
+        .then(data => {
+          let url = data + "wap/v1/mobile/tasksearch/" + userId + "/tasksCount?happenedAddress=" + address + "&contactPhone=" + phone +
+            "&serialNo=" + serialNo + "&taskNo=" + taskNo + "&taskState=" + taskState + "&reportType=" + reportType +
+            "&reportPerson=" + reportPerson + "&sendTime=" + sendTime + "&count=10&since=0";
+          return this.http.get(url, this.getOptions())
+            .toPromise()
+            .then(data => {
+              console.log("getSearchTaskCounts:" + data)
+              let body = data.json();
+              if (body.Code == this.globalService.httpCode
+                && body.StatusCode === this.globalService.httpSuccessStatusCode
+                && body.Data as SearchTaskCount) {
+                resolve(body.Data);
+              } else {
+                reject(body.Message ? body.Message : "fail to search task count!");
+              }
+            })
+            .catch(this.handleError)
+        })
+        .catch(error => reject(error));
+    })
+  }
+
+  /**
+   * 查询某条工单详情
+   * @param taskId 任务编号
+   * @returns {Promise<T>}
+   */
+  public getSearchTaskDetails(taskId: string): Promise<SearchTaskDetails> {
+    return new Promise((resolve, reject) => {
+      this.configService.getServerBaseUri()
+        .then(data => {
+          let url = data + "wap/v1/mobile/hotline/task/" + taskId + "/detail";
+          return this.http.get(url, this.getOptions())
+            .toPromise()
+            .then(data => {
+              console.log("getSearchTaskDetails" + data)
+              let body = data.json();
+              if (body.Code == this.globalService.httpCode
+                && body.StatusCode === this.globalService.httpSuccessStatusCode
+                && body.Data as SearchTaskDetails) {
+                resolve(body.Data);
+              } else {
+                reject(body.Message ? body.Message : "fail to search task details!");
+              }
+            })
+            .catch(this.handleError)
+        })
+        .catch(error => reject(error));
+    })
   }
 }

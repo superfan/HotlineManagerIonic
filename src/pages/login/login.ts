@@ -6,6 +6,7 @@ import {Headers, Http} from "@angular/http";
 import {AppPreferences} from "@ionic-native/app-preferences";
 import {ConfigService} from "../../providers/ConfigService";
 import {Network} from "@ionic-native/network";
+import {GlobalService} from "../../providers/GlobalService";
 
 export class User {
   constructor(public username: string,
@@ -34,7 +35,8 @@ export class LoginPage {
               private http: Http,
               private appPreferences: AppPreferences,
               private network: Network,
-              private toastCtrl: ToastController) {
+              private toastCtrl: ToastController,
+              public globalService: GlobalService) {
 
     this.loginForm = this.formBuilder.group({
       'LoginID': ['admin', Validators.compose([Validators.minLength(2), Validators.maxLength(11),
@@ -150,6 +152,8 @@ export class LoginPage {
     this.appPreferences.store('userinfo', 'username', this.user.username);
     this.appPreferences.store('userinfo', 'pwd', this.user.password);
     this.appPreferences.store('userinfo', 'userid', data.Data.userId);
+    this.globalService.userName = this.user.username;
+    // this.globalService.userId = data.Data.userId;
     this.configService.getServerBaseUri()
       .then(result => {
         this.doGetUserInfo(result, data.Data.userId);

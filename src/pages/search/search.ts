@@ -5,6 +5,7 @@ import {Component} from '@angular/core';
 import {AlertController, NavController} from 'ionic-angular';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SearchResultPage} from "../searchresult/searchresult";
+import {SearchTaskRequest} from "../../model/SearchTaskRequest";
 
 @Component({
   selector: 'page-search',
@@ -59,8 +60,12 @@ export class SearchPage {
   showTaskType() {
     let alert = this.alertCtrl.create();
     alert.setTitle('任务状态');
-    let arrInputs: any = [{type: 'radio', label: '已响应', value: '已响应'},
-      {type: 'radio', label: '已派工', value: '已派工'}, {type: 'radio', label: '已出发', value: '已出发'}];
+    let arrInputs: any = [{type: 'radio', label: '已派遣', value: '已派遣'},
+      {type: 'radio', label: '接收', value: '接收'}, {type: 'radio', label: '已派工', value: '已派工'},
+      {type: 'radio', label: '已出发', value: '已出发'},{type: 'radio', label: '已到场', value: '已到场'},
+      {type: 'radio', label: '已处理', value: '已处理'},{type: 'radio', label: '已退单', value: '已退单'},
+      {type: 'radio', label: '退单重派', value: '退单重派'},{type: 'radio', label: '退单结束', value: '退单结束'},
+      {type: 'radio', label: '已销单', value: '已销单'},{type: 'radio', label: '督办', value: '督办'}];
 
     for (let i = 0; i < arrInputs.length; i++) {
       alert.addInput(arrInputs[i]);
@@ -96,14 +101,65 @@ export class SearchPage {
       && searchInfo['reflectPerson'] == '' && searchInfo['dispatchTime'] == '') {
       let alert = this.alertCtrl.create({
         title: '提示：',
-        subTitle: '请至少输入一个条件',
         buttons: ['确定']
       });
+      alert.setSubTitle('请至少输入一个条件');
       alert.present();
       console.log('pls fill in one condition');
-    } else {
-      console.log('success');
-      this.navCtrl.push(SearchResultPage);
+      return;
     }
+    let taskState: number;
+    switch (searchInfo['taskState']) {
+      case '已派遣':
+        taskState = 0;
+        break;
+      case '接收':
+        taskState = 1;
+        break;
+      case '已响应':
+        taskState = 6;
+        break;
+      case '已派工':
+        taskState = 2;
+        break;
+      case '已出发':
+        taskState = 3;
+        break;
+      case '已到场':
+        taskState = 4;
+        break;
+      case '已处理':
+        taskState = 5;
+        break;
+      case '已退单':
+        taskState = -1;
+        break;
+      case '退单重派':
+        taskState = -2;
+        break;
+      case '退单结束':
+        taskState = -3;
+        break;
+      case '已销单':
+        taskState = 99;
+        break;
+      case '督办':
+        taskState = -99;
+        break;
+    }
+    let temp = new SearchTaskRequest();
+    temp.happenedAddress = searchInfo['address'];
+    temp.contactPhone = searchInfo['telephone'];
+    temp.serialNo = searchInfo['customerNum'];
+    temp.taskNo = searchInfo['taskNum'];
+    if (searchInfo['taskState'] != '' && taskState != undefined) {
+      temp.taskState = taskState;
+    } else {
+      temp.taskState = searchInfo['taskState'];
+    }
+    temp.reportType = searchInfo['reflectType'];
+    temp.reportPerson = searchInfo['reflectPerson'];
+    temp.sendTime = searchInfo['dispatchTime'];
+    this.navCtrl.push(SearchResultPage, {'tasks': temp});
   }
 }

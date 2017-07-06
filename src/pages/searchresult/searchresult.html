@@ -4,61 +4,45 @@
       {{title}}
     </ion-title>
   </ion-navbar>
-
-  <ion-segment [(ngModel)]="segmentName">
-    <ion-segment-button value="allTasks">
-      总工单:192
-    </ion-segment-button>
-    <ion-segment-button value="finishedTasks">
-      已完成:88
-    </ion-segment-button>
-    <ion-segment-button value="unfinishedTasks">
-      未完成:94
-    </ion-segment-button>
-  </ion-segment>
 </ion-header>
 
 <ion-content class="page-searchresult">
-  <div [ngSwitch]="segmentName">
+  <ion-grid no-padding>
+    <ion-row>
+      <ion-col>
+        <div class="allTasks">总共单:{{totalTaskCount}}</div>
+      </ion-col>
+      <ion-col>
+        <div class="finishedTasks">已完成:{{completedTaskCount}}</div>
+      </ion-col>
+      <ion-col>
+        <div class="unFinishedTasks">未完成:{{unCompletedTaskCount}}</div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <!--总工单-->
+  <ion-list>
+    <ion-card *ngFor="let item of items">
+      <ion-item>
+        <ion-avatar item-start>
+          <img src="assets/img/ic_mywork_avatar.png">
+        </ion-avatar>
+        <div><h2 class="card-header-label-hint">客服编号</h2>
+          <h2 class="card-header-label-content">{{item.customerId}}</h2></div>
+        <div><h2 class="card-header-label-hint">任务编号</h2>
+          <h2 class="card-header-label-content">{{item.taskId}}</h2></div>
+      </ion-item>
 
-    <!--总工单-->
-    <ion-list *ngSwitchCase="'allTasks'">
-      <ion-card *ngFor="let item of items">
-        <ion-item>
-          <ion-avatar item-start>
-            <img src="assets/img/ic_mywork_avatar.png">
-          </ion-avatar>
-          <div><h2 class="card-header-label-hint">任务编号</h2>
-            <h2 class="card-header-label-content">123456</h2></div>
-          <div><h2 class="card-header-label-hint">任务类型</h2>
-            <h2 class="card-header-label-content">{{item.taskId}}</h2></div>
+      <ion-list>
+        <ion-item *ngFor="let content of item.contents">
+          <ion-label fixed class="label-name">{{content.name}}</ion-label>
+          <div item-content>{{content.value}}</div>
         </ion-item>
-
-        <ion-list>
-          <ion-item *ngFor="let content of item.contents">
-            <ion-label fixed class="label-name">{{content.name}}</ion-label>
-            <div item-content>{{content.value}}</div>
-          </ion-item>
-          <ion-item (click)="onDetails()">
-            <ion-label fixed class="label-name">详细信息</ion-label>
-            <ion-icon name='arrow-forward' item-end></ion-icon>
-          </ion-item>
-        </ion-list>
-      </ion-card>
-    </ion-list>
-
-    <!--已完成-->
-    <ion-list *ngSwitchCase="'finishedTasks'">
-      <ion-item>
-        <h2>finishedTasks</h2>
-      </ion-item>
-    </ion-list>
-
-    <!--未完成-->
-    <ion-list *ngSwitchCase="'unfinishedTasks'">
-      <ion-item>
-        <h2>unFinishedTasks</h2>
-      </ion-item>
-    </ion-list>
-  </div>
+        <ion-item (click)="onDetails(item.taskId)">
+          <ion-label fixed class="label-name">详细信息</ion-label>
+          <ion-icon name='arrow-forward' item-end></ion-icon>
+        </ion-item>
+      </ion-list>
+    </ion-card>
+  </ion-list>
 </ion-content>
