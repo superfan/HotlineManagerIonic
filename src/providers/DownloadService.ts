@@ -186,4 +186,8 @@ export class DownloadService extends BaseService {
         .catch(error => reject(error));
     })
   }
+
+  public getReflectType(){
+
+  }
 }
