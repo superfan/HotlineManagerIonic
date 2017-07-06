@@ -5,6 +5,7 @@ import {Task} from "../model/Task";
 import {GlobalService} from "./GlobalService";
 import {BaseService} from "./BaseService";
 import {TaskDetail} from "../model/TaskDetail";
+import {Word} from "../model/Word";
 
 @Injectable()
 export class DownloadService extends BaseService {
@@ -26,9 +27,7 @@ export class DownloadService extends BaseService {
     return new Promise((resolve, reject) => {
       this.configService.getServerBaseUri()
         .then(data => {
-          let url = data + "wap/v1/mobile/task/user/" + userId
-            + "/task?taskType=" + "all" + "&completed=" + 0
-            + "&count=" + count + "&since=" + since;
+          let url = `${data}wap/v1/mobile/task/user/${userId}/task?taskType=all&completed=0&count=${count}&since=${since}`;
 
           return this.http.get(url, this.getOptions())
             .toPromise()
@@ -42,7 +41,7 @@ export class DownloadService extends BaseService {
                 reject(body.Message ? body.Message : "failure to get tasks");
               }
             })
-            .catch(this.handleError)
+            .catch(this.handleError);
         })
         .catch(error => reject(error));
     });
@@ -57,7 +56,7 @@ export class DownloadService extends BaseService {
     return new Promise((resolve, reject) => {
       this.configService.getServerBaseUri()
         .then(data => {
-          let url = data + "wap/v1/mobile/hotline/task/" + taskId + "/detail";
+          let url = `${data}wap/v1/mobile/hotline/task/${taskId}/detail`;
 
           return this.http.get(url, this.getOptions())
             .toPromise()
@@ -71,7 +70,36 @@ export class DownloadService extends BaseService {
                 reject(body.Message ? body.Message : "failure to get task detail");
               }
             })
-            .catch(this.handleError)
+            .catch(this.handleError);
+        })
+        .catch(error => reject(error));
+    });
+  }
+
+  /**
+   * 获取词语信息
+   * @param group
+   * @returns {Promise<T>}
+   */
+  public getAllWords(group: string): Promise<Array<Word>> {
+    return new Promise((resolve, reject) => {
+      this.configService.getServerBaseUri()
+        .then(data => {
+          let url = `${data}wap/v1/mobile/resource/wordNew?group=${group}`;
+
+          return this.http.get(url, this.getOptions())
+            .toPromise()
+            .then(data => {
+              let body = data.json();
+              if (body.Code === this.globalService.httpCode
+                && body.StatusCode === this.globalService.httpSuccessStatusCode
+                && body.Data instanceof Array) {
+                resolve(body.Data);
+              } else {
+                reject(body.Message ? body.Message : "failure to get words");
+              }
+            })
+            .catch(this.handleError);
         })
         .catch(error => reject(error));
     });

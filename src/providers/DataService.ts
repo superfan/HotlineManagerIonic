@@ -12,6 +12,7 @@ import {RejectInfo} from "../model/RejectInfo";
 import {DelayInfo} from "../model/DelayInfo";
 import {CancelInfo} from "../model/CancelInfo";
 import {TaskDetail} from "../model/TaskDetail";
+import {Word} from "../model/Word";
 
 @Injectable()
 export class DataService {
@@ -21,7 +22,7 @@ export class DataService {
               private uploadService: UploadService,
               private globalService: GlobalService,
               private events: Events) {
-    events.subscribe(this.downloadTaskEvent, (since: number, count: number)=> {
+    events.subscribe(this.downloadTaskEvent, (since: number, count: number) => {
 
     })
   }
@@ -43,6 +44,14 @@ export class DataService {
    */
   public getTaskDetail(taskId: string): Promise<TaskDetail> {
     return this.downloadService.getTaskDetail(taskId);
+  }
+
+  /**
+   * 获取词语信息
+   * @returns {Promise<Word>}
+   */
+  public getAllWords(): Promise<Array<Word>> {
+    return this.downloadService.getAllWords('all');
   }
 
   /**
@@ -120,6 +129,18 @@ export class DataService {
 
   }
 
+  /**
+   * 获取反映类别
+   * @returns {Promise<T>}
+   */
+  public getOptType(): Promise<Array<Word>> {
+    return this.downloadService.getAllWords('CL_LEIBIE')
+      .then(words => {
+
+        return words;
+      });
+  }
+
   private downloadTaskLoop(since: number, count: number) {
     // this.downloadService.getTasks(since, count)
     //   .then(tasks => {
@@ -128,6 +149,14 @@ export class DataService {
     //     }
     //   })
     //   .catch(error => console.error(error));
+  }
+
+  private tree2list(words: Array<Word>): Array<Word> {
+    function abc() {
+
+    }
+
+    return words;
   }
 
 }

@@ -16,14 +16,14 @@
   </ion-navbar>
 
   <ion-toolbar no-border-top>
-    <ion-segment [(ngModel)]="segmentName">
+    <ion-segment [(ngModel)]="segmentName" (ionChange)="segmentChanged($event)">
       <ion-segment-button value="detailInfo">
         基本信息
       </ion-segment-button>
       <ion-segment-button value="replyInfo">
         回填信息
       </ion-segment-button>
-      <ion-segment-button value="media">
+      <ion-segment-button value="mediaInfo">
         多媒体
       </ion-segment-button>
     </ion-segment>
@@ -35,24 +35,27 @@
   <div [ngSwitch]="segmentName">
     <!--基本信息-->
     <ion-list *ngSwitchCase="'detailInfo'">
-      <ion-item *ngFor="let detail of details">
+      <ion-item *ngFor="let item of detail">
         <ion-label fixed class="label-name">
-          {{detail.name}}
+          {{item.name}}
         </ion-label>
-        <div item-content>
-          {{detail.value}}
+        <div item-content *ngIf="item.isTime">
+          {{item.value | date:'y-MM-dd HH:mm:ss'}}
+        </div>
+        <div item-content *ngIf="!item.isTime">
+          {{item.value}}
         </div>
       </ion-item>
     </ion-list>
 
     <!--回填信息-->
     <ion-list *ngSwitchCase="'replyInfo'">
-      <ion-item *ngFor="let reply of replies" class="reply-item">
+      <ion-item *ngFor="let item of reply" class="reply-item">
         <ion-label fixed class="label-name">
-          {{reply.name}}
+          {{item.name}}
         </ion-label>
         <div item-content>
-          {{reply.value}}
+          {{item.value}}
         </div>
         <ion-icon name="ios-arrow-forward" item-end *ngIf="reply.isActive"></ion-icon>
       </ion-item>
@@ -80,7 +83,7 @@
     </ion-list>
 
     <!--多媒体-->
-    <div *ngSwitchCase="'media'">
+    <div *ngSwitchCase="'mediaInfo'">
       <button ion-item icon-left>
         <ion-icon name="camera"></ion-icon>
         拍照
