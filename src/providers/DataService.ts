@@ -139,8 +139,7 @@ export class DataService {
   public getOptType(): Promise<Array<Word>> {
     return this.downloadService.getAllWords('CL_LEIBIE')
       .then(words => {
-
-        return words;
+        return this.tree2list(words, "处理类别");
       });
   }
 
@@ -154,12 +153,42 @@ export class DataService {
     //   .catch(error => console.error(error));
   }
 
-  private tree2list(words: Array<Word>): Array<Word> {
-    function abc() {
+  /**
+   * 多级索引转一级索引
+   * @param words
+   * @param rootName
+   * @returns {any}
+   */
+  private tree2list(words: Array<Word>, rootName: string): Array<Word> {
+    function find(srcWords: Array<Word>, destWords: Array<Word>, srcWord: Word): void {
+      let found: boolean = false;
+      for (let word of srcWords) {
+        if (word.wParentId === srcWord.wid) {
+          find(srcWords, destWords, word);
+          found = true;
+        }
+      }
 
+      if (!found) {
+        destWords.push(srcWord);
+      }
     }
 
-    return words;
+    let rootWord: Word;
+    for (let word of words) {
+      if (word.wName === rootName && word.wParentId === 0) {
+        rootWord = word;
+        break;
+      }
+    }
+
+    if (!rootWord) {
+      return [];
+    }
+
+    let newWords: Array<Word> = [];
+    find(words, newWords, rootWord);
+    return newWords;
   }
 
   /**

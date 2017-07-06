@@ -14,7 +14,7 @@ export abstract class BaseService {
   protected getOptions(): any {
     let headers = new Headers({
       'Content-Type': 'application/json;charset=UTF-8',
-      'X-Access-Token': '',
+      'X-Access-Token': '123',
       'X-Device-ID': 'aa5eaa1d715240d8'
     });
     let options = new RequestOptions({headers: headers});

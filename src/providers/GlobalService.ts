@@ -6,9 +6,9 @@ export class GlobalService {
   readonly isChrome: boolean = true;
   readonly httpCode: number = 0;
   readonly httpSuccessStatusCode: number = 200;
-  userName: string = "zz";//"王超";
-  userId: number = 5005;//60;
-  department: string = "滨河营业分公司";
+  userName: string = "sh3h";//"王超";
+  userId: number = 1058;//60;
+  department: string = "东河营业分公司";//"滨河营业分公司";
   departmentId: number = 10;
   words: Array<Word>;
 
