@@ -1,4 +1,4 @@
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {AlertController, LoadingController, NavController, NavParams} from "ionic-angular";
 import {SearchDetailsPage} from "../searchdetail/searchdetails";
 import {DataService} from "../../providers/DataService";
@@ -11,8 +11,7 @@ import {SearchTaskRequest} from "../../model/SearchTaskRequest";
   templateUrl: 'searchresult.html'
 })
 
-export class SearchResultPage {
-
+export class SearchResultPage implements OnInit {
   private readonly tag: string = "[SearchResultPage]";
   title: string = '查询结果';
   segmentName: string = "allTasks";
@@ -27,6 +26,14 @@ export class SearchResultPage {
               public loadingCtrl: LoadingController,
               public dataService: DataService,
               private alertCtrl: AlertController) {
+  }
+
+  dismiss() {
+    console.log('----- dismiss loading ------ ');
+    this.loading.dismiss();
+  }
+
+  ngOnInit() {
     this.loading = this.loadingCtrl.create({
       content: '查询中...',
       dismissOnPageChange: true
@@ -41,8 +48,7 @@ export class SearchResultPage {
    * @param request
    */
   private searchTask(request: SearchTaskRequest) {
-    this.dataService.searchTask(request.happenedAddress, request.contactPhone, request.serialNo,
-      request.taskNo, request.taskState, request.reportType, request.reportPerson, request.sendTime)
+    this.dataService.searchTask(request)
       .then(tasks => {
         console.log(this.tag + "getTasks: " + tasks);
         if (tasks.length <= 0) {
@@ -97,7 +103,7 @@ export class SearchResultPage {
    * @param taskId
    */
   private onDetails(taskId: string) {
-    console.log(taskId);
+    console.log(this.tag + taskId);
     this.navCtrl.push(SearchDetailsPage, {'taskId': taskId});
   }
 
@@ -107,7 +113,6 @@ export class SearchResultPage {
    * @returns {string}
    */
   private formatDateTime(inputTime): string {
-    console.log(inputTime);
     let date = new Date(inputTime);
     let y = date.getFullYear();
     let m = date.getMonth() + 1;

@@ -49373,6 +49373,40 @@ page-login ion-list {
   font-size: 1.0em;
 }
 
+.page-searchresult .allTasks {
+  padding: 5px;
+  margin-left: 10px;
+  background-color: #427feb;
+  border-bottom-left-radius: 5px;
+  border-top-left-radius: 5px;
+  text-align: center;
+  font-size: 1.1em;
+  color: white;
+}
+
+.page-searchresult .finishedTasks {
+  padding: 5px;
+  background-color: #00caf2;
+  text-align: center;
+  font-size: 1.1em;
+  color: white;
+}
+
+.page-searchresult .unFinishedTasks {
+  padding: 5px;
+  background-color: #2ec95c;
+  text-align: center;
+  font-size: 1.1em;
+  color: white;
+  margin-right: 10px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.page-searchresult ion-grid {
+  margin-top: 5px;
+}
+
 .page-setting .label-right {
   padding-right: 10px;
   font-size: 0.8em;

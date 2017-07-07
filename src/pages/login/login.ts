@@ -39,7 +39,7 @@ export class LoginPage {
               public globalService: GlobalService) {
 
     this.loginForm = this.formBuilder.group({
-      'LoginID': ['admin', Validators.compose([Validators.minLength(2), Validators.maxLength(11),
+      'LoginID': ['zz', Validators.compose([Validators.minLength(2), Validators.maxLength(11),
         Validators.required, Validators.pattern('[0-9a-zA-Z ]*')])],
       'LoginPwd': ['0000', Validators.compose([Validators.required, Validators.minLength(4)])],
       'LoginSelect': [this.user.type, Validators.compose([Validators.required])]
@@ -130,7 +130,7 @@ export class LoginPage {
    * @param password
    */
   doLogin(baseurl: string, userName: string, password: string) {
-    let url = baseurl + "wap/v1/auth/" + userName + "/" + password + "?appIdentity=cc";
+    let url = baseurl + "wap/v1/auth/wap/" + userName + "/" + password + "?appIdentity=cc";
     console.log(url);
     let deviceId = 'cd8a8f6441b3e3d8';
     let headers = new Headers({'X-Access-Token': '', 'X-Device-ID': deviceId});
@@ -153,6 +153,7 @@ export class LoginPage {
     this.appPreferences.store('userinfo', 'pwd', this.user.password);
     this.appPreferences.store('userinfo', 'userid', data.Data.userId);
     this.globalService.userName = this.user.username;
+    this.globalService.userId = data.Data.userId;
     // this.globalService.userId = data.Data.userId;
     this.configService.getServerBaseUri()
       .then(result => {
@@ -168,7 +169,7 @@ export class LoginPage {
    * @param userId
    */
   doGetUserInfo(result: string, userId: string) {
-    let url = result + "wap/v1/mobile/resource/user/" + userId;
+    let url = result + "wap/v1/mobile/resource/user/hotline/" + userId;
     console.log(url);
     this.http.get(url).subscribe(data => {
       this.onGetUserInfo(data);

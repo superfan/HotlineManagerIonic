@@ -1,7 +1,7 @@
 /**
  * Created by zhangjing on 2017/6/23.
  */
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AlertController, NavController} from 'ionic-angular';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SearchResultPage} from "../searchresult/searchresult";
@@ -14,16 +14,20 @@ import {Word} from "../../model/Word";
   templateUrl: 'search.html'
 })
 
-export class SearchPage {
-
+export class SearchPage implements OnInit {
+  private readonly tag: string = "[SearchPage]";
   public title = '查询任务';
   public searchForm: FormGroup;
   public reflectTypes: Word[];
+  myDate: string;
 
   constructor(public navCtrl: NavController,
               private alertCtrl: AlertController,
               private formBuilder: FormBuilder,
               private dataService: DataService) {
+  }
+
+  ngOnInit() {
     this.searchForm = this.formBuilder.group({
       'address': ['', Validators.compose([Validators.minLength(2)])],
       'telephone': ['', Validators.compose([Validators.minLength(4)])],
@@ -37,13 +41,14 @@ export class SearchPage {
     this.getReflectTypes();
   }
 
+
   /**
    * 获得反映类别
    */
   private getReflectTypes() {
     this.dataService.getReflectTypes()
       .then(words => {
-        console.log(words);
+        console.log(this.tag + words);
         if (words.length <= 0) {
           return Promise.resolve(false);
         } else {
@@ -127,9 +132,9 @@ export class SearchPage {
       });
       alert.setSubTitle('请至少输入一个条件');
       alert.present();
-      console.log('pls fill in one condition');
       return;
     }
+    let utcSendTime = Date.parse(this.myDate) - 28800000;
     let taskState = this.transformTaskState(searchInfo['taskState']);
     let reflectType = this.transformRefelctType(searchInfo['reflectType'])
     let temp = new SearchTaskRequest();
@@ -140,9 +145,10 @@ export class SearchPage {
     temp.taskState = (searchInfo['taskState'] != '' && taskState != undefined) ? taskState : searchInfo['taskState'];
     temp.reportType = (searchInfo['taskState'] != '' && taskState != undefined) ? reflectType : searchInfo['reflectType'];
     temp.reportPerson = searchInfo['reflectPerson'];
-    temp.sendTime = searchInfo['dispatchTime'];
+    temp.sendTime = utcSendTime;
     this.navCtrl.push(SearchResultPage, {'tasks': temp});
   }
+
 
   /**
    * 转换任务状态

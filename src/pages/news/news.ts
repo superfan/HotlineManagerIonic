@@ -1,22 +1,52 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AlertController, ItemSliding, NavController} from 'ionic-angular';
 import {NewsDetailsPage} from "../newsdetails/newsdetails";
+import {DataService} from "../../providers/DataService";
+import {News} from "../../model/News";
 
 @Component({
   selector: 'page-news',
   templateUrl: 'news.html'
 })
 
-export class NewsPage {
+export class NewsPage implements OnInit {
+
+  private readonly tag: string = "[NewsPage]";
   title: string = '系统公告';
   items: any[] = [];
 
   constructor(public navCtrl: NavController,
-                public alertCtrl:AlertController) {
-    for (let i = 0; i < 5; i++) {
+              public alertCtrl: AlertController,
+              public dataService: DataService) {
+  }
+
+  ngOnInit() {
+    this.getNews();
+  }
+
+  private getNews() {
+    this.dataService.getNews()
+      .then(news => {
+        console.log(this.tag + news);
+        if (news.length <= 0) {
+          return Promise.resolve(false);
+        } else {
+          this.transFormNews(news);
+          return Promise.resolve(true);
+        }
+      });
+  }
+
+  /**
+   * 转换公告
+   * @param news
+   */
+  private transFormNews(news: Array<News>) {
+    for (let temp of news) {
       this.items.push({
-        newsDate: '2017.06.28',
-        newsContent: '大连西路145弄8号401室。部件损坏，煤气阀松动，待检修。第' + i + '项',
+        newsDate: this.formatDateTime(temp.pubTime),
+        newsTitle: temp.title,
+        newsContent: temp.content
       });
     }
   }
@@ -25,7 +55,7 @@ export class NewsPage {
    * 侧滑删除某些公告
    * @param item
    */
-  removeItem(event:Event,item,slidingItem: ItemSliding) {
+  removeItem(event: Event, item, slidingItem: ItemSliding) {
     event.preventDefault();
     event.stopPropagation();
     for (let i = 0; i < this.items.length; i++) {
@@ -37,7 +67,7 @@ export class NewsPage {
             {
               text: '取消',
               handler: () => {
-                console.log('Disagree clicked');
+                console.log(this.tag + 'Disagree clicked');
                 slidingItem.close();
               }
             },
@@ -45,7 +75,7 @@ export class NewsPage {
               text: '确定',
               handler: () => {
                 this.items.splice(i, 1);
-                console.log('Agree clicked');
+                console.log(this.tag + 'Agree clicked');
               }
             }
           ]
@@ -67,14 +97,14 @@ export class NewsPage {
         {
           text: '取消',
           handler: () => {
-            console.log('Disagree clicked');
+            console.log(this.tag + 'Disagree clicked');
           }
         },
         {
           text: '确定',
           handler: () => {
             this.items.splice(0, this.items.length);
-            console.log('Agree clicked');
+            console.log(this.tag + 'Agree clicked');
           }
         }
       ]
@@ -85,7 +115,32 @@ export class NewsPage {
   /**
    * 跳转公告详情
    */
-  onJumpDetails() {
-    this.navCtrl.push(NewsDetailsPage);
+  onJumpDetails(item) {
+    this.navCtrl.push(NewsDetailsPage, {
+      title: item.newsTitle,
+      time: item.newsDate,
+      newsContent: item.newsContent
+    });
   }
+
+  /**
+   * utc时间格式化
+   * @param inputTime
+   * @returns {string}
+   */
+  private formatDateTime(inputTime): string {
+    let date = new Date(inputTime);
+    let y = date.getFullYear();
+    let m = date.getMonth() + 1;
+    let month = m < 10 ? ('0' + m) : m;
+    let d = date.getDate();
+    let day = d < 10 ? ('0' + d) : d;
+    let h = date.getHours();
+    let hour = h < 10 ? ('0' + h) : h;
+    let minute = date.getMinutes();
+    let second = date.getSeconds();
+    let minutestr = minute < 10 ? ('0' + minute) : minute;
+    let secondstr = second < 10 ? ('0' + second) : second;
+    return y + '-' + month + '-' + day + ' ' + hour + ':' + minutestr + ':' + secondstr;
+  };
 }
