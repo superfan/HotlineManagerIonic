@@ -39,6 +39,7 @@ export class TaskEx {
   photoCount: number;
   audioCount: number;
   videoCount: number;
+  isPreview: boolean;
 
   constructor(task: Task) {
     this.id = task.taskId;
@@ -49,6 +50,7 @@ export class TaskEx {
     this.photoCount = 0;
     this.audioCount = 0;
     this.videoCount = 0;
+    this.isPreview = false;
 
     this.processes = [];
     this.processes.push({

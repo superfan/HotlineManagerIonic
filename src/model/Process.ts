@@ -4,7 +4,11 @@ export class DelayExtend {
 }
 
 export class RejectExtend {
-  rejectReason: string;
+  reason: string;
+}
+
+export class CancelExtend {
+  remark: string;
 }
 
 export class Process {

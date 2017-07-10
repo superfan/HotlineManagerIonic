@@ -169,9 +169,11 @@ export class LoginPage {
    * @param userId
    */
   doGetUserInfo(result: string, userId: string) {
-    let url = result + "wap/v1/mobile/resource/user/hotline/" + userId;
+    let url = result + "wap/v1/mobile/resource/user/" + userId;
     console.log(url);
-    this.http.get(url).subscribe(data => {
+    let deviceId = 'cd8a8f6441b3e3d8';
+    let headers = new Headers({'X-Access-Token': '', 'X-Device-ID': deviceId});
+    this.http.get(url, {headers: headers}).subscribe(data => {
       this.onGetUserInfo(data);
     }, error => {
       console.log(error);
