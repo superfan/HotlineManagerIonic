@@ -46,6 +46,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
       .then(data => {
         this.infiniteScroll.enable(data);
         //this.downloadTasks();
+        this.getTaskCount();
       })
       .catch(error => {
         console.error(error);
@@ -68,7 +69,10 @@ export class MyWorkPage implements OnInit, OnDestroy {
   doRefresh(refresher) {
     console.log(this.tag, 'doRefresh');
     this.downloadTasks()
-      .then(data => refresher.complete());
+      .then(data => {
+        refresher.complete();
+        this.getTaskCount();
+      });
   }
 
   /**
@@ -309,6 +313,14 @@ export class MyWorkPage implements OnInit, OnDestroy {
 
       resolve(result);
     });
+  }
+
+  private getTaskCount(): void {
+    this.dataService.getTaskCount()
+      .then(count => {
+        this.events.publish(this.globalService.mainUpdateEvent, {type: 'myWorkCount', count});
+      })
+      .catch(error => console.error(error));
   }
 
   /**

@@ -1,5 +1,10 @@
 import {Injectable} from '@angular/core';
-import {Word} from "../model/Word";
+
+export interface UpdateEvent {
+  type: 'myWorkCount' | 'newsCount' | 'stationWorkCount' | 'gridStyle';
+  count: number;
+  gridStyle: boolean;
+}
 
 @Injectable()
 export class GlobalService {
@@ -10,6 +15,7 @@ export class GlobalService {
   userId: number = 5005;//60;5005
   department: string = "东河营业分公司";//"滨河营业分公司";
   departmentId: number = 10;
+  readonly mainUpdateEvent: string = "main:update";
   readonly myWorkDownloadEvent:string = "mywork:download";
   readonly myWorkReplyEvent: string = "mywork:reply";
 

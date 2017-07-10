@@ -58,7 +58,9 @@ export class DataService {
     return this.downloadService.getTasks(this.globalService.userId, since, count);
   }
 
-
+  public getTaskCount(): Promise<number> {
+    return Promise.resolve(5);
+  }
 
   /**
    * 同步任务
