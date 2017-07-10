@@ -130,7 +130,7 @@ export class LoginPage {
    * @param password
    */
   doLogin(baseurl: string, userName: string, password: string) {
-    let url = baseurl + "wap/v1/auth/wap/" + userName + "/" + password + "?appIdentity=cc";
+    let url = baseurl + "wap/v1/auth/" + userName + "/" + password + "?appIdentity=cc";
     console.log(url);
     let deviceId = 'cd8a8f6441b3e3d8';
     let headers = new Headers({'X-Access-Token': '', 'X-Device-ID': deviceId});
