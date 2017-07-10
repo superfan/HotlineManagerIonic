@@ -113,7 +113,7 @@ export class UploadService extends BaseService {
     return new Promise((resolve, reject) => {
       this.configService.getServerBaseUri()
         .then(data => {
-          let url = data + "wap/v1/mobile/task/" + replyInfo.taskId + "/reject";
+          let url = data + "wap/v1/mobile/hotline/task/" + replyInfo.taskId + "/reply";
           return this.http.post(url, JSON.stringify(replyInfo), this.getOptions())
             .toPromise()
             .then(data => {
@@ -197,21 +197,20 @@ export class UploadService extends BaseService {
     return new Promise((resolve, reject) => {
       this.configService.getServerBaseUri()
         .then(data => {
-          resolve(true);
-          // let url = data + "wap/v1/mobile/task/" + cancelInfo.taskId + "/delay";
-          // return this.http.put(url, JSON.stringify(cancelInfo), this.getOptions())
-          //   .toPromise()
-          //   .then(data => {
-          //     let body = data.json();
-          //     if (body.Code === this.globalService.httpCode
-          //       && body.StatusCode === this.globalService.httpSuccessStatusCode
-          //       && body.Data) {
-          //       resolve(body.Data);
-          //     } else {
-          //       reject(body.Message ? body.Message : "failure to cancel");
-          //     }
-          //   })
-          //   .catch(this.handleError);
+          let url = data + "wap/v1/mobile/task/" + cancelInfo.taskId + "/taskXD";
+          return this.http.put(url, JSON.stringify(cancelInfo), this.getOptions())
+            .toPromise()
+            .then(data => {
+              let body = data.json();
+              if (body.Code === this.globalService.httpCode
+                && body.StatusCode === this.globalService.httpSuccessStatusCode
+                && body.Data) {
+                resolve(body.Data);
+              } else {
+                reject(body.Message ? body.Message : "failure to cancel");
+              }
+            })
+            .catch(this.handleError);
         })
         .catch(error => reject(error));
     });

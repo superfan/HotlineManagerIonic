@@ -1,16 +1,17 @@
-import {Component, ViewChild, OnInit} from '@angular/core';
-import {Content, NavController, InfiniteScroll, ToastController, AlertController} from 'ionic-angular';
+import {Component, ViewChild, OnInit, OnDestroy} from '@angular/core';
+import {Content, NavController, InfiniteScroll, ToastController, AlertController, Events} from 'ionic-angular';
 import {WorkDetailPage} from "../workdetail/workdetail";
 import {DataService} from "../../providers/DataService";
 import {TaskEx, TaskState} from "../../model/Task";
-import {ProcessEx, DelayExtend, RejectExtend} from "../../model/Process";
+import {ProcessEx, DelayExtend, RejectExtend, CancelExtend} from "../../model/Process";
+import {GlobalService} from "../../providers/GlobalService";
 
 @Component({
   selector: 'page-mywork',
   templateUrl: 'mywork.html'
 })
 
-export class MyWorkPage implements OnInit {
+export class MyWorkPage implements OnInit, OnDestroy {
   private readonly tag: string = "[MyWorkPage]";
   private readonly disableColor: string = 'gray';
   //private enableColor: string = 'primary';
@@ -25,25 +26,39 @@ export class MyWorkPage implements OnInit {
   items: TaskEx[] = [];
   private since: number = 1;
   private count: number = 2;
+  private isDownloadFinished: boolean = true;
 
   constructor(public navCtrl: NavController,
               private dataService: DataService,
               private toastCtrl: ToastController,
-              private alertCtrl: AlertController) {
+              private alertCtrl: AlertController,
+              private events: Events,
+              private globalService: GlobalService) {
   }
 
   /**
    * 初始化
    */
   ngOnInit() {
-    console.log(this.tag + 'ngOnInit');
+    console.log(this.tag, 'ngOnInit');
+    this.subscribeEvent(this.events);
     this.getTasks(this.since, this.count)
       .then(data => {
-        if (!data) {
-          this.infiniteScroll.enable(false);
-        }
+        this.infiniteScroll.enable(data);
+        //this.downloadTasks();
       })
-      .catch(error => console.error(error));
+      .catch(error => {
+        console.error(error);
+        //this.downloadTasks();
+      });
+  }
+
+  /**
+   * 销毁
+   */
+  ngOnDestroy() {
+    console.log(this.tag, 'ngOnDestroy');
+    this.events.unsubscribe(this.globalService.myWorkReplyEvent);
   }
 
   /**
@@ -51,12 +66,9 @@ export class MyWorkPage implements OnInit {
    * @param refresher
    */
   doRefresh(refresher) {
-    console.log('Begin async operation', refresher);
-
-    setTimeout(() => {
-      console.log('Async operation has ended');
-      refresher.complete();
-    }, 2000);
+    console.log(this.tag, 'doRefresh');
+    this.downloadTasks()
+      .then(data => refresher.complete());
   }
 
   /**
@@ -64,7 +76,7 @@ export class MyWorkPage implements OnInit {
    * @param infiniteScroll
    */
   doInfinite(infiniteScroll) {
-    console.log(this.tag + 'doInfinite begin');
+    console.log(this.tag, 'doInfinite begin');
 
     setTimeout(() => {
       this.since += this.count;
@@ -76,7 +88,7 @@ export class MyWorkPage implements OnInit {
           } else {
             infiniteScroll.complete();
           }
-          console.log(this.tag + 'doInfinite end');
+          console.log(this.tag, 'doInfinite end');
         })
         .catch(error => console.error(error));
     }, 100);
@@ -88,7 +100,7 @@ export class MyWorkPage implements OnInit {
    * @param index
    */
   itemSelected(taskEx: TaskEx, index: number) {
-    console.log("Selected Item", index);
+    console.log(this.tag, "Selected Item " + index);
     switch (taskEx.processes[index].event) {
       case 'accept':
         this.accept(taskEx);
@@ -109,7 +121,7 @@ export class MyWorkPage implements OnInit {
         this.delayPrompt(taskEx);
         break;
       case 'cancel':
-        this.cancel(taskEx);
+        this.cancelPrompt(taskEx);
         break;
     }
   }
@@ -129,10 +141,34 @@ export class MyWorkPage implements OnInit {
 
   /**
    * 预览工单
-   * @param work
+   * @param taskEx
    */
-  onPreview(work: any) {
-    this.navCtrl.push(WorkDetailPage);
+  onPreview(taskEx: TaskEx) {
+    taskEx.isPreview = true;
+    this.navCtrl.push(WorkDetailPage, taskEx);
+  }
+
+  /**
+   * 下载任务
+   */
+  private downloadTasks(): Promise<boolean> {
+    this.isDownloadFinished = false;
+    return this.dataService.downloadTasks()
+      .then(data => {
+        this.since = 1;
+        while (this.items.shift());
+        return this.getTasks(this.since, this.count);
+      })
+      .then(data => {
+        this.infiniteScroll.enable(data);
+        this.isDownloadFinished = true;
+        return Promise.resolve(data);
+      })
+      .catch(error => {
+        console.error(error);
+        this.isDownloadFinished = true;
+        return Promise.resolve(false);
+      });
   }
 
   /**
@@ -145,6 +181,7 @@ export class MyWorkPage implements OnInit {
     return this.dataService.getTasks(since, count)
       .then(tasks => {
         console.log(this.tag + "getTasks: " + tasks.length);
+
         if (tasks.length <= 0) {
           return Promise.resolve(false)
         } else {
@@ -294,7 +331,7 @@ export class MyWorkPage implements OnInit {
           lat: "31.280693"
         },
         taskId: taskEx.id,
-        userId: 1
+        userId: this.globalService.userId
       }).then(data => {
         processEx.accept.time = time;
         processEx.accept.color = this.disableColor;
@@ -332,7 +369,7 @@ export class MyWorkPage implements OnInit {
           lat: "31.280693"
         },
         taskId: taskEx.id,
-        userId: 1
+        userId: this.globalService.userId
       }).then(data => {
         processEx.go.time = new Date();
         processEx.go.color = this.disableColor;
@@ -370,7 +407,7 @@ export class MyWorkPage implements OnInit {
           lat: "31.280693"
         },
         taskId: taskEx.id,
-        userId: 1
+        userId: this.globalService.userId
       }).then(data => {
         processEx.arrive.time = time;
         processEx.arrive.color = this.disableColor;
@@ -399,14 +436,7 @@ export class MyWorkPage implements OnInit {
     }
 
     if (!processEx.reply.done) {
-      // processEx.reply.time = new Date();
-      // processEx.reply.color = this.disableColor;
-      // processEx.reply.done = true;
-      // processEx.reject.show = false;
-      // processEx.delay.show = processEx.delay.done;
-      // processEx.cancel.show = true;
-      // taskEx.lastProcess = 'reply';
-      // taskEx.state = TaskState.Reply;
+      taskEx.isPreview = false;
       this.navCtrl.push(WorkDetailPage, taskEx);
     }
   }
@@ -426,14 +456,14 @@ export class MyWorkPage implements OnInit {
       let rejectExtend: RejectExtend = processEx.reject.extend as RejectExtend;
       this.dataService.reject({
         rejectTime: time.getTime(),
-        rejectReason: rejectExtend.rejectReason,
+        rejectReason: rejectExtend.reason,
         location: {
           type: "bd09ll",
           lng: "121.525766",
           lat: "31.280693"
         },
         taskId: taskEx.id,
-        userId: 1
+        userId: this.globalService.userId
       }).then(data => {
         processEx.reject.time = time;
         processEx.reject.color = this.disableColor;
@@ -502,7 +532,7 @@ export class MyWorkPage implements OnInit {
             lat: "31.280693"
           },
           taskId: taskEx.id,
-          userId: 1
+          userId: this.globalService.userId
         }).then(data => {
           processEx.delay.time = time;
           processEx.delay.color = this.disableColor;
@@ -528,17 +558,36 @@ export class MyWorkPage implements OnInit {
     }
 
     if (!processEx.cancel.done) {
-      processEx.cancel.time = new Date();
-      processEx.cancel.color = this.disableColor;
-      processEx.cancel.done = true;
+      let time = new Date();
+      let cancelExtend: CancelExtend = processEx.cancel.extend as CancelExtend;
+      this.dataService.cancel({
+        destroyTime: time.getTime(),
+        destroyRemark: cancelExtend.remark,
+        location: {
+          type: "bd09ll",
+          lng: "121.525766",
+          lat: "31.280693"
+        },
+        taskId: taskEx.id,
+        userId: this.globalService.userId
+      }).then(data => {
+        processEx.cancel.time = time;
+        processEx.cancel.color = this.disableColor;
+        processEx.cancel.done = true;
 
-      processEx.go.show = processEx.go.done;
-      processEx.arrive.show = processEx.arrive.done;
-      processEx.reply.show = processEx.reply.done;
-      processEx.reject.show = processEx.reject.done;
-      processEx.delay.show = processEx.delay.done;
-      taskEx.lastProcess = 'cancel';
-      taskEx.state = TaskState.Cancel;
+        processEx.go.show = processEx.go.done;
+        processEx.arrive.show = processEx.arrive.done;
+        processEx.reply.show = processEx.reply.done;
+        processEx.reject.show = processEx.reject.done;
+        processEx.delay.show = processEx.delay.done;
+        taskEx.lastProcess = 'cancel';
+        taskEx.state = TaskState.Cancel;
+      }).catch(error => {
+        console.error(this.tag + error);
+        this.showToast(error);
+      });
+
+
     }
   }
 
@@ -684,7 +733,7 @@ export class MyWorkPage implements OnInit {
             }
 
             processEx.reject.extend = {
-              rejectReason: data.reason
+              reason: data.reason
             };
 
             this.reject(taskEx);
@@ -780,5 +829,70 @@ export class MyWorkPage implements OnInit {
       ]
     });
     prompt.present();
+  }
+
+  /**
+   * 销单对话框
+   * @param taskEx
+   */
+  private cancelPrompt(taskEx: TaskEx): void {
+    let processEx: ProcessEx = new ProcessEx();
+    if (!this.transform2ProcessEx(taskEx, processEx) || processEx.cancel.done) {
+      return;
+    }
+
+    let prompt = this.alertCtrl.create({
+      title: '销单申请',
+      message: "请填写销单信息!",
+      inputs: [
+        {
+          name: 'remark',
+          placeholder: '备注'
+        }
+      ],
+      buttons: [
+        {
+          text: '取消',
+          handler: data => {
+          }
+        },
+        {
+          text: '确定',
+          handler: data => {
+            console.log(this.tag, data);
+            if (!data.remark) {
+              return this.showToast("请填写备注!");
+            }
+
+            processEx.cancel.extend = {
+              remark: data.remark
+            };
+
+            this.cancel(taskEx);
+          }
+        }
+      ]
+    });
+    prompt.present();
+  }
+
+  private subscribeEvent(events: Events): void {
+    events.subscribe(this.globalService.myWorkReplyEvent, (taskEx: TaskEx, time: number) => {
+      console.log("my work need to update");
+
+      let processEx: ProcessEx = new ProcessEx();
+      if (!this.transform2ProcessEx(taskEx, processEx)) {
+        return;
+      }
+
+      processEx.reply.time = new Date(time);
+      processEx.reply.color = this.disableColor;
+      processEx.reply.done = true;
+      processEx.reject.show = false;
+      processEx.delay.show = processEx.delay.done;
+      processEx.cancel.show = true;
+      taskEx.lastProcess = 'reply';
+      taskEx.state = TaskState.Reply;
+    });
   }
 }

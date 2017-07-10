@@ -1,4 +1,4 @@
-import {Component, OnInit, AfterViewInit} from '@angular/core';
+import {Component, AfterViewInit} from '@angular/core';
 import {NavController, LoadingController} from 'ionic-angular';
 import {MyWorkPage} from "../mywork/mywork";
 import {NewsPage} from "../news/news";
@@ -94,9 +94,9 @@ export class MainPage implements AfterViewInit {
       .then(words => {
         console.log(this.tag, "get all words");
         loader.dismiss();
-        if (this.globalService.isChrome) {
-          this.globalService.words = words;
-        }
+        // if (this.globalService.isChrome) {
+        //   this.globalService.words = words;
+        // }
       })
       .catch(error => {
         console.log(this.tag, error);

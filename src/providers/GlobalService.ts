@@ -10,7 +10,8 @@ export class GlobalService {
   userId: number = 1058;//60;
   department: string = "东河营业分公司";//"滨河营业分公司";
   departmentId: number = 10;
-  words: Array<Word>;
+  readonly myWorkDownloadEvent:string = "mywork:download";
+  readonly myWorkReplyEvent: string = "mywork:reply";
 
   constructor() {
 

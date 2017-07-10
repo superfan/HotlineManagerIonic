@@ -4,7 +4,7 @@
       {{title}}
     </ion-title>
 
-    <ion-buttons end>
+    <ion-buttons end *ngIf="!isPreview">
       <button ion-button icon-only color="white" (click)="onLocate($event)">
         <ion-icon name="locate"></ion-icon>
       </button>
@@ -50,11 +50,11 @@
 
     <!--回填信息-->
     <ion-list *ngSwitchCase="'replyInfo'">
-      <ion-item *ngFor="let item of reply" class="reply-item">
+      <ion-item *ngFor="let item of reply" class="reply-item" (click)="itemSelected(item)">
         <ion-label fixed class="label-name">
           {{item.name}}
         </ion-label>
-        <div item-content>
+        <div item-content [style.color]="item.color">
           {{item.value}}
         </div>
         <ion-icon name="ios-arrow-forward" item-end *ngIf="reply.isActive"></ion-icon>
