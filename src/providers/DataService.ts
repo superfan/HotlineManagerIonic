@@ -16,6 +16,8 @@ import {Word} from "../model/Word";
 import {SearchTask} from "../model/SearchTask";
 import {SearchTaskDetails} from "../model/SearchTaskDetails";
 import {SearchTaskCount} from "../model/SearchTaskCount";
+import {News} from "../model/News";
+import {SearchTaskRequest} from "../model/SearchTaskRequest";
 
 @Injectable()
 export class DataService {
@@ -234,6 +236,17 @@ export class DataService {
         });
   }
 
+  /**
+   * 获取反映类别（查询界面）
+   * @returns {Promise<T>}
+   */
+  public getReflectTypes(): Promise<Array<Word>> {
+    return this.downloadService.getAllWords('FY_LEIBIE')
+      .then(words => {
+        return this.tree2list(words, "反映类别");
+      });
+  }
+
   private uploadTasks(): Promise<boolean> {
     return Promise.resolve(true);
   }
@@ -279,11 +292,11 @@ export class DataService {
   /**
    * 查询任务
    */
-  public searchTask(address: string, phone: string, serialNo: string, taskNo: string, taskState: number,
-                    reportType: number, reportPerson: string, sendTime: number): Promise<Array<SearchTask>> {
-    return this.downloadService.getSearchTasks(this.globalService.userId, address, phone, serialNo, taskNo,
-      taskState, reportType, reportPerson, sendTime);
+  public searchTask(request:SearchTaskRequest): Promise<Array<SearchTask>> {
+    return this.downloadService.getSearchTasks(this.globalService.userId, request);
   }
+
+
 
   /**
    * 查询工单数量
@@ -301,4 +314,10 @@ export class DataService {
   public searchTaskDetails(taskId: string): Promise<SearchTaskDetails> {
     return this.downloadService.getSearchTaskDetails(taskId);
   }
+
+  public getNews():Promise<Array<News>>{
+    return this.downloadService.getNews();
+  }
+
+
 }

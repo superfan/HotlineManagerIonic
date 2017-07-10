@@ -1,10 +1,9 @@
 /**
  * Created by zhangjing on 2017/6/29.
  */
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {ActionSheetController, AlertController, NavController} from "ionic-angular";
 import {ConfigService} from "../../providers/ConfigService";
-import {errorHandler} from "@angular/platform-browser/src/browser";
 import {FileService} from "../../providers/FileService";
 
 @Component({
@@ -12,18 +11,24 @@ import {FileService} from "../../providers/FileService";
   templateUrl: 'setting.html'
 })
 
-export class SettingPage {
+export class SettingPage implements OnInit {
+  private readonly tag: string = "[SettingPage]";
   title: string = '系统参数';
   isGrid: boolean;//是否是九宫格样式
   isOuterNet: boolean;//是否是外网
   netWorkUri: string;//数据地址
   keepAlive: number;//心跳频率
+  alermStyle: string = '仅铃声';//提醒方式
 
   constructor(public navCtrl: NavController,
               public alertCtrl: AlertController,
               public actionsheetCtrl: ActionSheetController,
               public configService: ConfigService,
               public fileService: FileService) {
+
+  }
+
+  ngOnInit() {
     this.isGridStyle();
     this.isOuterNetwork();
     this.getNetworkUri();
@@ -34,7 +39,7 @@ export class SettingPage {
    * 切换九宫格
    */
   private notifyIsGrid() {
-    console.log("Toggled:" + this.isGrid);
+    console.log(this.tag + "Toggled:" + this.isGrid);
     this.fileService.editIsGridStyle(this.isGrid);
   }
 
@@ -42,7 +47,7 @@ export class SettingPage {
    * 切换内外网
    */
   private notifyIsOutNet() {
-    console.log("Toggled:" + this.isOuterNet);
+    console.log(this.tag + "Toggled:" + this.isOuterNet);
   }
 
   /**
@@ -51,10 +56,10 @@ export class SettingPage {
   private isGridStyle() {
     this.configService.isGridStyle()
       .then(data => {
-        console.log(data);
+        console.log(this.tag + data);
         this.isGrid = data;
       }).catch(err => {
-      console.log(err);
+      console.log(this.tag + err);
     })
   }
 
@@ -64,11 +69,11 @@ export class SettingPage {
   private isOuterNetwork() {
     this.configService.isOuterNetwork()
       .then(data => {
-        console.log(data);
+        console.log(this.tag + data);
         this.isOuterNet = data;
       })
       .catch(err => {
-        console.log(err);
+        console.log(this.tag + err);
       })
   }
 
@@ -78,11 +83,11 @@ export class SettingPage {
   private getNetworkUri() {
     this.configService.getServerBaseUri()
       .then(data => {
-        console.log(data);
+        console.log(this.tag + data);
         this.netWorkUri = data;
       })
       .catch(err => {
-        console.log(err);
+        console.log(this.tag + err);
       })
   }
 
@@ -92,11 +97,11 @@ export class SettingPage {
   private getKeepAlive() {
     this.configService.getKeepAliveInterval()
       .then(data => {
-        console.log(data);
+        console.log(this.tag + data);
         this.keepAlive = data;
       })
       .catch(err => {
-        console.log(err);
+        console.log(this.tag + err);
       })
   }
 
@@ -116,13 +121,13 @@ export class SettingPage {
         {
           text: '取消',
           handler: data => {
-            console.log('Cancel clicked');
+            console.log(this.tag + 'showNetwork cancel');
           }
         },
         {
           text: '保存',
           handler: data => {
-            console.log(data);
+            console.log(this.tag + data);
           }
         }
       ]
@@ -147,13 +152,14 @@ export class SettingPage {
         {
           text: '取消',
           handler: data => {
-            console.log('Cancel clicked');
+            console.log(this.tag + 'showHeartSetting Cancel clicked');
           }
         },
         {
           text: '保存',
           handler: data => {
-            console.log(data);
+            this.keepAlive=data;
+            console.log(this.tag + 'showHeartSetting' + data);
           }
         }
       ]
@@ -174,21 +180,24 @@ export class SettingPage {
           role: 'destructive',
           icon: 'notifications',
           handler: () => {
-            console.log('Delete clicked');
+            this.alermStyle = '仅铃声';
+            console.log(this.tag + 'showAlermType Delete clicked');
           }
         },
         {
           text: '仅震动',
           icon: 'pulse',
           handler: () => {
-            console.log('Share clicked');
+            this.alermStyle = '仅震动';
+            console.log(this.tag + 'showAlermType Share clicked');
           }
         },
         {
           text: '铃声+震动',
           icon: 'arrow-dropright-circle',
           handler: () => {
-            console.log('Play clicked');
+            this.alermStyle = '铃声+震动';
+            console.log(this.tag + 'showAlermType Play clicked');
           }
         },
         {
@@ -196,7 +205,7 @@ export class SettingPage {
           role: '取消', // will always sort to be on the bottom
           icon: 'close',
           handler: () => {
-            console.log('Cancel clicked');
+            console.log(this.tag + 'showAlermType Cancel clicked');
           }
         }
       ]
@@ -215,13 +224,13 @@ export class SettingPage {
         {
           text: '取消',
           handler: () => {
-            console.log('取消 clicked');
+            console.log(this.tag + '取消 clicked');
           }
         },
         {
           text: '确定',
           handler: () => {
-            console.log('保存 clicked');
+            console.log(this.tag + '保存 clicked');
           }
         }
       ]

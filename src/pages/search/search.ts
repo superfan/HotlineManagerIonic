@@ -1,25 +1,33 @@
 /**
  * Created by zhangjing on 2017/6/23.
  */
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AlertController, NavController} from 'ionic-angular';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SearchResultPage} from "../searchresult/searchresult";
 import {SearchTaskRequest} from "../../model/SearchTaskRequest";
+import {DataService} from "../../providers/DataService";
+import {Word} from "../../model/Word";
 
 @Component({
   selector: 'page-search',
   templateUrl: 'search.html'
 })
 
-export class SearchPage {
-
+export class SearchPage implements OnInit {
+  private readonly tag: string = "[SearchPage]";
   public title = '查询任务';
   public searchForm: FormGroup;
+  public reflectTypes: Word[];
+  myDate: string;
 
   constructor(public navCtrl: NavController,
               private alertCtrl: AlertController,
-              private formBuilder: FormBuilder) {
+              private formBuilder: FormBuilder,
+              private dataService: DataService) {
+  }
+
+  ngOnInit() {
     this.searchForm = this.formBuilder.group({
       'address': ['', Validators.compose([Validators.minLength(2)])],
       'telephone': ['', Validators.compose([Validators.minLength(4)])],
@@ -30,7 +38,26 @@ export class SearchPage {
       'reflectPerson': [''],
       'dispatchTime': [''],
     });
+    this.getReflectTypes();
   }
+
+
+  /**
+   * 获得反映类别
+   */
+  private getReflectTypes() {
+    this.dataService.getReflectTypes()
+      .then(words => {
+        console.log(this.tag + words);
+        if (words.length <= 0) {
+          return Promise.resolve(false);
+        } else {
+          this.reflectTypes = words;
+          return Promise.resolve(true);
+        }
+      })
+  }
+
 
   /**
    * 显示反映类型
@@ -38,10 +65,10 @@ export class SearchPage {
   showReflectType() {
     let alert = this.alertCtrl.create();
     alert.setTitle('反映类别');
-    let arrInputs: any = [{type: 'radio', label: '供水', value: '供水'},
-      {type: 'radio', label: '排水', value: '排水'}];
+    let arrInputs: any = [];
 
-    for (let i = 0; i < arrInputs.length; i++) {
+    for (let i = 0; i < this.reflectTypes.length; i++) {
+      arrInputs.push({type: 'radio', label: this.reflectTypes[i].wName, value: this.reflectTypes[i].wName});
       alert.addInput(arrInputs[i]);
     }
     alert.addButton('取消');
@@ -62,10 +89,10 @@ export class SearchPage {
     alert.setTitle('任务状态');
     let arrInputs: any = [{type: 'radio', label: '已派遣', value: '已派遣'},
       {type: 'radio', label: '接收', value: '接收'}, {type: 'radio', label: '已派工', value: '已派工'},
-      {type: 'radio', label: '已出发', value: '已出发'},{type: 'radio', label: '已到场', value: '已到场'},
-      {type: 'radio', label: '已处理', value: '已处理'},{type: 'radio', label: '已退单', value: '已退单'},
-      {type: 'radio', label: '退单重派', value: '退单重派'},{type: 'radio', label: '退单结束', value: '退单结束'},
-      {type: 'radio', label: '已销单', value: '已销单'},{type: 'radio', label: '督办', value: '督办'}];
+      {type: 'radio', label: '已出发', value: '已出发'}, {type: 'radio', label: '已到场', value: '已到场'},
+      {type: 'radio', label: '已处理', value: '已处理'}, {type: 'radio', label: '已退单', value: '已退单'},
+      {type: 'radio', label: '退单重派', value: '退单重派'}, {type: 'radio', label: '退单结束', value: '退单结束'},
+      {type: 'radio', label: '已销单', value: '已销单'}, {type: 'radio', label: '督办', value: '督办'}];
 
     for (let i = 0; i < arrInputs.length; i++) {
       alert.addInput(arrInputs[i]);
@@ -105,11 +132,32 @@ export class SearchPage {
       });
       alert.setSubTitle('请至少输入一个条件');
       alert.present();
-      console.log('pls fill in one condition');
       return;
     }
+    let utcSendTime = Date.parse(this.myDate) - 28800000;
+    let taskState = this.transformTaskState(searchInfo['taskState']);
+    let reflectType = this.transformRefelctType(searchInfo['reflectType'])
+    let temp = new SearchTaskRequest();
+    temp.happenedAddress = searchInfo['address'];
+    temp.contactPhone = searchInfo['telephone'];
+    temp.serialNo = searchInfo['customerNum'];
+    temp.taskNo = searchInfo['taskNum'];
+    temp.taskState = (searchInfo['taskState'] != '' && taskState != undefined) ? taskState : searchInfo['taskState'];
+    temp.reportType = (searchInfo['taskState'] != '' && taskState != undefined) ? reflectType : searchInfo['reflectType'];
+    temp.reportPerson = searchInfo['reflectPerson'];
+    temp.sendTime = utcSendTime;
+    this.navCtrl.push(SearchResultPage, {'tasks': temp});
+  }
+
+
+  /**
+   * 转换任务状态
+   * @param strState
+   * @returns {number}
+   */
+  private transformTaskState(strState: string): number {
     let taskState: number;
-    switch (searchInfo['taskState']) {
+    switch (strState) {
       case '已派遣':
         taskState = 0;
         break;
@@ -147,19 +195,17 @@ export class SearchPage {
         taskState = -99;
         break;
     }
-    let temp = new SearchTaskRequest();
-    temp.happenedAddress = searchInfo['address'];
-    temp.contactPhone = searchInfo['telephone'];
-    temp.serialNo = searchInfo['customerNum'];
-    temp.taskNo = searchInfo['taskNum'];
-    if (searchInfo['taskState'] != '' && taskState != undefined) {
-      temp.taskState = taskState;
-    } else {
-      temp.taskState = searchInfo['taskState'];
+    return taskState;
+  }
+
+  private transformRefelctType(strReflectType: string): number {
+    let refelectType: number;
+    for (let temp of this.reflectTypes) {
+      if (strReflectType == temp.wName) {
+        refelectType = temp.wid;
+        break;
+      }
     }
-    temp.reportType = searchInfo['reflectType'];
-    temp.reportPerson = searchInfo['reflectPerson'];
-    temp.sendTime = searchInfo['dispatchTime'];
-    this.navCtrl.push(SearchResultPage, {'tasks': temp});
+    return refelectType;
   }
 }

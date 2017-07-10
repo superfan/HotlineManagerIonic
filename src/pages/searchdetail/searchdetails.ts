@@ -9,6 +9,7 @@ export class TaskState {
   state: string;
   time: string
 }
+
 @Component({
   selector: 'page-searchdetails',
   templateUrl: 'searchdetails.html'
@@ -20,7 +21,7 @@ export class SearchDetailsPage {
   segmentName: string = "basicInfo";
   taskId: string;
   details: any[];
-  states:TaskState[]=[];
+  states: TaskState[] = [];
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -116,6 +117,7 @@ export class SearchDetailsPage {
       temp.time = this.formatDateTime(details.superviseTime);
       this.states.push(temp);
     }
+    //排序
     this.states.sort((n1: TaskState, n2: TaskState) => {
       if (n1.time < n2.time) {
         return 1;
@@ -123,9 +125,16 @@ export class SearchDetailsPage {
       if (n1.time > n2.time) {
         return -1;
       }
+      if (n1.time == n2.time) {
+        if (n1.state > n2.state) {
+          return 1;
+        } else {
+          return -1;
+        }
+      }
       return 0;
     });
-    console.log(this.states);
+    console.log(this.tag + this.states);
   }
 
   /**
@@ -134,7 +143,6 @@ export class SearchDetailsPage {
    * @returns {string}
    */
   private formatDateTime(inputTime): string {
-    console.log(inputTime);
     let date = new Date(inputTime);
     let y = date.getFullYear();
     let m = date.getMonth() + 1;

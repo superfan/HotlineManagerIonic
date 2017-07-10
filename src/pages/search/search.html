@@ -53,8 +53,9 @@
 
       <ion-item>
         <ion-label color="label">派遣时间</ion-label>
-        <ion-datetime cancelText='取消' doneText='确定' displayFormat="MMM DD, YYYY HH:mm" formControlName="dispatchTime"
-                      clearInput></ion-datetime>
+        <ion-datetime cancelText='取消' doneText='确定' displayFormat="YYYY-MM-DD HH:mm"
+                      pickerFormat="YYYY-MM-DD HH:mm" formControlName="dispatchTime"
+                      [(ngModel)]="myDate"  clearInput></ion-datetime>
       </ion-item>
     </form>
   </ion-list>

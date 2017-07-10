@@ -14,7 +14,7 @@
 
 <ion-content class="page-news">
   <ion-list>
-    <ion-card *ngFor="let item of items" (click)="onJumpDetails()">
+    <ion-card *ngFor="let item of items" (click)="onJumpDetails(item)">
       <ion-list>
         <ion-item-sliding #slidingItem>
           <ion-item>

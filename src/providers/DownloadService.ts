@@ -9,6 +9,8 @@ import {Word} from "../model/Word";
 import {SearchTask} from "../model/SearchTask";
 import {SearchTaskDetails} from "../model/SearchTaskDetails";
 import {SearchTaskCount} from "../model/SearchTaskCount";
+import {News} from "../model/News";
+import {SearchTaskRequest} from "../model/SearchTaskRequest";
 
 @Injectable()
 export class DownloadService extends BaseService {
@@ -120,14 +122,15 @@ export class DownloadService extends BaseService {
    * @param sendTime
    * @returns {Promise<T>}
    */
-  public getSearchTasks(userId: number, address: string, phone: string, serialNo: string, taskNo: string, taskState: number,
-                        reportType: number, reportPerson: string, sendTime: number): Promise<Array<SearchTask>> {
+  public getSearchTasks(userId: number, request: SearchTaskRequest): Promise<Array<SearchTask>> {
     return new Promise((resolve, reject) => {
       this.configService.getServerBaseUri()
         .then(data => {
-          let url = data + "wap/v1/mobile/tasksearch/" + userId + "/tasks?happenedAddress=" + address + "&contactPhone=" + phone +
-            "&serialNo=" + serialNo + "&taskNo=" + taskNo + "&taskState=" + taskState + "&reportType=" + reportType +
-            "&reportPerson=" + reportPerson + "&sendTime=" + sendTime + "&count=10&since=0";
+          let url = data + "wap/v1/mobile/tasksearch/" + userId + "/tasks?happenedAddress=" +
+            request.happenedAddress + "&contactPhone=" + request.contactPhone + "&serialNo=" +
+            request.serialNo + "&taskNo=" + request.taskNo + "&taskState=" + request.taskState +
+            "&reportType=" + request.reportType + "&reportPerson=" + request.reportPerson +
+            "&sendTime=" + request.sendTime + "&count=10&since=0";
           return this.http.get(url, this.getOptions())
             .toPromise()
             .then(data => {
@@ -214,4 +217,34 @@ export class DownloadService extends BaseService {
         .catch(error => reject(error));
     })
   }
+
+  /**
+   * 获取公告
+   * @returns {Promise<T>}
+   */
+  public getNews(): Promise<Array<News>> {
+    return new Promise((resolve, reject) => {
+      this.configService.getServerBaseUri()
+        .then(data => {
+          let url = data + "wap/v1/mobile/resource/news/latestd";
+          return this.http.get(url, this.getOptions())
+            .toPromise()
+            .then(data => {
+              console.log("getNews:" + data)
+              let body = data.json();
+              if (body.Code == this.globalService.httpCode
+                && body.StatusCode === this.globalService.httpSuccessStatusCode
+                && body.Data as Array<News>) {
+                resolve(body.Data);
+              } else {
+                reject(body.Message ? body.Message : "fail to get news!");
+              }
+            })
+            .catch(this.handleError)
+        })
+        .catch(error => reject(error));
+    })
+  }
+
+
 }
