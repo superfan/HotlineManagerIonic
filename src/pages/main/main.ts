@@ -9,11 +9,11 @@ import {SettingPage} from "../setting/setting";
 import {GlobalService, UpdateEvent} from "../../providers/GlobalService";
 
 enum ItemId {
-  MyWork = 1,
+  MyWork,
   History,
   Map,
-  Search,
   StationWork,
+  Search,
   News
 }
 
@@ -40,66 +40,15 @@ export class MainPage implements AfterViewInit, OnDestroy {
 
   gridItems: Item[][] = [];
 
-  listItems: Item[] = [
-    {
-      id: ItemId.MyWork,
-      src: 'assets/img/ic_mywork.png',
-      name: '我的任务',
-      active: true,
-      count: 0
-    },
-    {
-      id: ItemId.History,
-      src: 'assets/img/ic_history.png',
-      name: '历史记录',
-      active: true,
-      count: 0
-    },
-    {
-      id: ItemId.Map,
-      src: 'assets/img/ic_map.png',
-      name: '地图',
-      active: true,
-      count: 0
-    },
-    {
-      id: ItemId.Search,
-      src: 'assets/img/ic_searching.png',
-      name: '查询',
-      active: true,
-      count: 0
-    },
-    {
-      id: ItemId.StationWork,
-      src: 'assets/img/ic_stationwork.png',
-      name: '站点任务',
-      active: true,
-      count: 0
-    },
-    {
-      id: ItemId.News,
-      src: 'assets/img/ic_news.png',
-      name: '公告',
-      active: true,
-      count: 0
-    }
-  ];
+  listItems: Item[] = [];
 
   constructor(public navCtrl: NavController,
               private loadingCtrl: LoadingController,
               private events: Events,
               private dataService: DataService,
               private globalService: GlobalService) {
-    let rowData: Item[] = [];
-    for (let item of this.listItems) {
-      if (rowData.length == 3) {
-        this.gridItems.push(rowData);
-        rowData = [];
-      }
-      rowData.push(item);
-    }
-    this.gridItems.push(rowData);
-
+    this.initListItem();
+    this.initGirdItems();
     this.subscribeEvent(events);
   }
 
@@ -169,6 +118,74 @@ export class MainPage implements AfterViewInit, OnDestroy {
   }
 
   /**
+   * 初始化list
+   */
+  private initListItem(): void {
+    this.listItems.push({
+      id: ItemId.MyWork,
+      src: 'assets/img/ic_mywork.png',
+      name: '我的任务',
+      active: true,
+      count: 0
+    });
+
+    this.listItems.push({
+      id: ItemId.History,
+      src: 'assets/img/ic_history.png',
+      name: '历史记录',
+      active: true,
+      count: 0
+    });
+
+    this.listItems.push({
+      id: ItemId.Map,
+      src: 'assets/img/ic_map.png',
+      name: '地图',
+      active: true,
+      count: 0
+    });
+
+    this.listItems.push({
+      id: ItemId.StationWork,
+      src: 'assets/img/ic_stationwork.png',
+      name: '站点任务',
+      active: true,
+      count: 0
+    });
+
+    this.listItems.push({
+      id: ItemId.Search,
+      src: 'assets/img/ic_searching.png',
+      name: '查询',
+      active: true,
+      count: 0
+    });
+
+    this.listItems.push({
+      id: ItemId.News,
+      src: 'assets/img/ic_news.png',
+      name: '公告',
+      active: true,
+      count: 0
+    });
+  }
+
+  /**
+   * 初始化grid
+   */
+  private initGirdItems(): void {
+    let rowData: Item[] = [];
+    for (let item of this.listItems) {
+      if (rowData.length == 3) {
+        this.gridItems.push(rowData);
+        rowData = [];
+      }
+      rowData.push(item);
+    }
+    this.gridItems.push(rowData);
+  }
+
+  /**
    * 订阅消息
    * @param events
    */
@@ -176,11 +193,13 @@ export class MainPage implements AfterViewInit, OnDestroy {
     events.subscribe(this.globalService.mainUpdateEvent, (updateEvent: UpdateEvent) => {
       switch (updateEvent.type) {
         case 'myWorkCount':
-          this.listItems[0].count = updateEvent.count;
+          this.listItems[ItemId.MyWork].count = updateEvent.count;
           break;
         case 'newsCount':
+          this.listItems[ItemId.News].count = updateEvent.count;
           break;
         case 'stationWorkCount':
+          this.listItems[ItemId.StationWork].count = updateEvent.count;
           break;
         case 'gridStyle':
           this.gridStyle = updateEvent.gridStyle;
