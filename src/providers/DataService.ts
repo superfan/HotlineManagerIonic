@@ -3,7 +3,7 @@ import {DownloadService} from "./DownloadService";
 import {Events} from "ionic-angular";
 import {Task} from "../model/Task";
 import {GlobalService} from "./GlobalService";
-import {AcceptInfo} from "../model/AcceptInfo";
+import {AcceptInfo, AcceptExInfo} from "../model/AcceptInfo";
 import {UploadService} from "./UploadService";
 import {GoInfo} from "../model/GoInfo";
 import {ArriveInfo} from "../model/ArriveInfo";
@@ -27,6 +27,8 @@ export class DataService {
   private optReason: Array<Word>;
   private optSolution: Array<Word>;
   private optResult: Array<Word>;
+  private reflectType: Array<Word>;
+  private reflectContent: Array<Word>;
 
   constructor(private downloadService: DownloadService,
               private uploadService: UploadService,
@@ -92,6 +94,27 @@ export class DataService {
    */
   public getAllWords(): Promise<Array<Word>> {
     return this.downloadService.getAllWords('all');
+  }
+
+  /**
+   * 获取未派工任务
+   * @param since
+   * @param count
+   * @returns {Promise<Array<SearchTask>>}
+   */
+  public getUnDispatchedTasks(since: number, count: number): Promise<Array<SearchTask>> {
+    return this.downloadService.getUnDispatchedTasks(this.globalService.userId, since, count);
+  }
+
+  /**
+   * 获取已派工任务
+   * @param since
+   * @param count
+   * @param minutes
+   * @returns {Promise<Array<SearchTask>>}
+   */
+  public getDispatchedTasks(since: number, count: number, minutes: number): Promise<Array<SearchTask>> {
+    return this.downloadService.getDispatchedTasks(this.globalService.userId, since, count, minutes);
   }
 
   /**
@@ -163,6 +186,15 @@ export class DataService {
   public cancel(cancelInfo: CancelInfo): Promise<boolean> {
     //cancelInfo.userId = this.globalService.userId;
     return this.uploadService.cancel(cancelInfo);
+  }
+
+  /**
+   * 站点任务接单
+   * @param acceptExInfo
+   * @returns {Promise<boolean>}
+   */
+  public acceptEx(acceptExInfo: AcceptExInfo): Promise<boolean> {
+    return this.uploadService.acceptEx(acceptExInfo);
   }
 
   /**
@@ -240,13 +272,28 @@ export class DataService {
 
   /**
    * 获取反映类别（查询界面）
-   * @returns {Promise<T>}
+   * @returns {Promise<Array<Word>>|Promise<TResult>}
    */
-  public getReflectTypes(): Promise<Array<Word>> {
-    return this.downloadService.getAllWords('FY_LEIBIE')
-      .then(words => {
-        return this.tree2list(words, "反映类别");
-      });
+  public getReflectType(): Promise<Array<Word>> {
+    return (this.reflectType && this.reflectType.length > 0)
+      ? Promise.resolve(this.reflectType)
+      : this.downloadService.getAllWords('FY_LEIBIE')
+        .then(words => {
+          return this.reflectType = this.tree2list(words, "反映类别");
+        });
+  }
+
+  /**
+   * 获取反映内容
+   * @returns {Promise<Array<Word>>|Promise<TResult>}
+   */
+  public getReflectContent(): Promise<Array<Word>> {
+    return (this.reflectContent && this.reflectContent.length > 0)
+      ? Promise.resolve(this.reflectContent)
+      : this.downloadService.getAllWords('FY_NEIRONG')
+        .then(words => {
+          return this.reflectContent = this.tree2list(words, "反映内容");
+        });
   }
 
   private uploadTasks(): Promise<boolean> {

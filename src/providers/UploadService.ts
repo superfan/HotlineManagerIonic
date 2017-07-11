@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Http} from "@angular/http";
 import {ConfigService} from "./ConfigService";
 import {GlobalService} from "./GlobalService";
-import {AcceptInfo} from "../model/AcceptInfo";
+import {AcceptInfo, AcceptExInfo} from "../model/AcceptInfo";
 import {BaseService} from "./BaseService";
 import {GoInfo} from "../model/GoInfo";
 import {ArriveInfo} from "../model/ArriveInfo";
@@ -208,6 +208,34 @@ export class UploadService extends BaseService {
                 resolve(body.Data);
               } else {
                 reject(body.Message ? body.Message : "failure to cancel");
+              }
+            })
+            .catch(this.handleError);
+        })
+        .catch(error => reject(error));
+    });
+  }
+
+  /**
+   * 站点任务接单
+   * @param acceptExInfo
+   * @returns {Promise<T>}
+   */
+  public acceptEx(acceptExInfo: AcceptExInfo): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this.configService.getServerBaseUri()
+        .then(data => {
+          let url = data + "wap/v1/mobile/stationTask/" + acceptExInfo.taskId + "/accept";
+          return this.http.put(url, JSON.stringify(acceptExInfo), this.getOptions())
+            .toPromise()
+            .then(data => {
+              let body = data.json();
+              if (body.Code === this.globalService.httpCode
+                && body.StatusCode === this.globalService.httpSuccessStatusCode
+                && body.Data) {
+                resolve(body.Data);
+              } else {
+                reject(body.Message ? body.Message : "failure to accept for station task");
               }
             })
             .catch(this.handleError);

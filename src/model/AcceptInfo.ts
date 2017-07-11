@@ -6,3 +6,9 @@ export class AcceptInfo {
   taskId: string;
   userId: number;
 }
+
+export class AcceptExInfo {
+  acceptOperator: number;
+  acceptTime: number;
+  taskId: string;
+}

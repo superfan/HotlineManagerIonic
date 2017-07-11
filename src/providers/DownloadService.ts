@@ -111,6 +111,69 @@ export class DownloadService extends BaseService {
   }
 
   /**
+   * 获取未派工任务
+   * @param userId
+   * @param since
+   * @param count
+   * @returns {Promise<T>}
+   */
+  public getUnDispatchedTasks(userId: number, since: number, count: number): Promise<Array<SearchTask>> {
+    return new Promise((resolve, reject) => {
+      this.configService.getServerBaseUri()
+        .then(data => {
+          let url = `${data}wap/v1/mobile/tasksearch/${userId}/unDispatchedTasks?count=${count}&since=${since}`;
+
+          return this.http.get(url, this.getOptions())
+            .toPromise()
+            .then(data => {
+              let body = data.json();
+              if (body.Code === this.globalService.httpCode
+                && body.StatusCode === this.globalService.httpSuccessStatusCode
+                && body.Data instanceof Array) {
+                resolve(body.Data);
+              } else {
+                reject(body.Message ? body.Message : "failure to get undispatched tasks");
+              }
+            })
+            .catch(this.handleError);
+        })
+        .catch(error => reject(error));
+    });
+  }
+
+  /**
+   * 获取已派工任务
+   * @param userId
+   * @param since
+   * @param count
+   * @param minutes
+   * @returns {Promise<T>}
+   */
+  public getDispatchedTasks(userId: number, since: number, count: number, minutes: number): Promise<Array<SearchTask>> {
+    return new Promise((resolve, reject) => {
+      this.configService.getServerBaseUri()
+        .then(data => {
+          let url = `${data}wap/v1/mobile/tasksearch/${userId}/dispatchedTasks/${minutes}?count=${count}&since=${since}`;
+
+          return this.http.get(url, this.getOptions())
+            .toPromise()
+            .then(data => {
+              let body = data.json();
+              if (body.Code === this.globalService.httpCode
+                && body.StatusCode === this.globalService.httpSuccessStatusCode
+                && body.Data instanceof Array) {
+                resolve(body.Data);
+              } else {
+                reject(body.Message ? body.Message : "failure to get dispatched tasks");
+              }
+            })
+            .catch(this.handleError);
+        })
+        .catch(error => reject(error));
+    });
+  }
+
+  /**
    * 查询工单
    * @param address
    * @param phone

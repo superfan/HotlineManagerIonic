@@ -39,7 +39,6 @@ export class MainPage implements AfterViewInit, OnDestroy {
   gridStyle: boolean = true;
 
   gridItems: Item[][] = [];
-
   listItems: Item[] = [];
 
   constructor(public navCtrl: NavController,
@@ -79,11 +78,15 @@ export class MainPage implements AfterViewInit, OnDestroy {
   /**
    * 销毁
    */
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     console.log(this.tag, "ngOnDestroy");
     this.events.unsubscribe(this.globalService.mainUpdateEvent);
   }
 
+  /**
+   * 选择功能按钮
+   * @param id
+   */
   itemSelected(id: number): void {
     console.log(id);
     switch (id) {

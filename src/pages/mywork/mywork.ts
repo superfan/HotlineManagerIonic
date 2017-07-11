@@ -94,7 +94,10 @@ export class MyWorkPage implements OnInit, OnDestroy {
           }
           console.log(this.tag, 'doInfinite end');
         })
-        .catch(error => console.error(error));
+        .catch(error => {
+          console.error(error);
+          infiniteScroll.complete();
+        });
     }, 100);
   }
 
