@@ -27,7 +27,7 @@ export abstract class BaseService {
    * @returns {Promise<never>}
    */
   protected handleError(error: any): Promise<never> {
-    let errMsg = error.message ? error.message :
+    let errMsg = error.json().Message ? error.json().Message :
       error.status ? `${error.status} - ${error.statusText}` : 'Server error';
     console.error(errMsg);
     return Promise.reject(errMsg);

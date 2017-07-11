@@ -18,6 +18,8 @@ import {SearchTaskDetails} from "../model/SearchTaskDetails";
 import {SearchTaskCount} from "../model/SearchTaskCount";
 import {News} from "../model/News";
 import {SearchTaskRequest} from "../model/SearchTaskRequest";
+import {UserInfo} from "../model/UserInfo";
+import {UserResult} from "../model/UserResult";
 
 @Injectable()
 export class DataService {
@@ -303,10 +305,8 @@ export class DataService {
   /**
    * 查询工单数量
    */
-  public searchTaskCount(address: string, phone: string, serialNo: string, taskNo: string, taskState: number,
-                         reportType: number, reportPerson: string, sendTime: number): Promise<SearchTaskCount> {
-    return this.downloadService.getSearchTaskCount(this.globalService.userId, address, phone, serialNo, taskNo,
-      taskState, reportType, reportPerson, sendTime);
+  public searchTaskCount(request:SearchTaskRequest): Promise<SearchTaskCount> {
+    return this.downloadService.getSearchTaskCount(this.globalService.userId, request);
   }
 
   /**
@@ -317,9 +317,20 @@ export class DataService {
     return this.downloadService.getSearchTaskDetails(taskId);
   }
 
+  /**
+   * 获取公告信息
+   * @returns {Promise<Array<News>>}
+   */
   public getNews():Promise<Array<News>>{
     return this.downloadService.getNews();
   }
 
-
+  /**
+   * 获取用户信息
+   * @param user
+   * @returns {Promise<UserResult>}
+   */
+  public getUserInfo(user:UserInfo):Promise<UserResult>{
+   return this.downloadService.getUserInfo(user);
+  }
 }

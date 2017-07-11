@@ -2,11 +2,13 @@ import {Component} from '@angular/core';
 import {AlertController, NavController, ToastController} from 'ionic-angular';
 import {MainPage} from "../main/main";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Headers, Http} from "@angular/http";
 import {AppPreferences} from "@ionic-native/app-preferences";
 import {ConfigService} from "../../providers/ConfigService";
 import {Network} from "@ionic-native/network";
 import {GlobalService} from "../../providers/GlobalService";
+import {UserInfo} from "../../model/UserInfo";
+import {DataService} from "../../providers/DataService";
+import {UserResult} from "../../model/UserResult";
 
 export class User {
   constructor(public username: string,
@@ -32,14 +34,14 @@ export class LoginPage {
               public alertCtrl: AlertController,
               private formBuilder: FormBuilder,
               private configService: ConfigService,
-              private http: Http,
               private appPreferences: AppPreferences,
               private network: Network,
               private toastCtrl: ToastController,
-              public globalService: GlobalService) {
+              public globalService: GlobalService,
+              public dataService: DataService) {
 
     this.loginForm = this.formBuilder.group({
-      'LoginID': ['zz', Validators.compose([Validators.minLength(2), Validators.maxLength(11),
+      'LoginID': [this.globalService.userName, Validators.compose([Validators.minLength(2), Validators.maxLength(11),
         Validators.required, Validators.pattern('[0-9a-zA-Z ]*')])],
       'LoginPwd': ['0000', Validators.compose([Validators.required, Validators.minLength(4)])],
       'LoginSelect': [this.user.type, Validators.compose([Validators.required])]
@@ -130,15 +132,15 @@ export class LoginPage {
    * @param password
    */
   doLogin(baseurl: string, userName: string, password: string) {
-    let url = baseurl + "wap/v1/auth/" + userName + "/" + password + "?appIdentity=cc";
-    console.log(url);
-    let deviceId = 'cd8a8f6441b3e3d8';
-    let headers = new Headers({'X-Access-Token': '', 'X-Device-ID': deviceId});
-    this.http.get(url, {headers: headers})
-      .subscribe(data => {
-        this.onSuccessCallBack(data.json());
-      }, error => {
-        this.onErrorCallBack(error);
+    let user = new UserInfo();
+    user.userName = userName;
+    user.password = password;
+    this.dataService.getUserInfo(user)
+      .then(userResult => {
+        this.onSuccessCallBack(user.userName, userResult);
+      })
+      .catch(err => {
+        this.onErrorCallBack(err);
       });
   }
 
@@ -146,58 +148,17 @@ export class LoginPage {
    * 成功回调
    * @param data
    */
-  onSuccessCallBack(data) {
-    console.log(data.Data.userId);
-    // console.log("access-token:" + );
-    this.appPreferences.store('userinfo', 'username', this.user.username);
-    this.appPreferences.store('userinfo', 'pwd', this.user.password);
-    this.appPreferences.store('userinfo', 'userid', data.Data.userId);
-    this.globalService.userName = this.user.username;
-    this.globalService.userId = data.Data.userId;
-    // this.globalService.userId = data.Data.userId;
-    this.configService.getServerBaseUri()
-      .then(result => {
-        this.doGetUserInfo(result, data.Data.userId);
-        console.log(result);
-      })
-
-  }
-
-  /**
-   * 操作获取用户信息
-   * @param result
-   * @param userId
-   */
-  doGetUserInfo(result: string, userId: string) {
-    let url = result + "wap/v1/mobile/resource/user/" + userId;
-    console.log(url);
-    let deviceId = 'cd8a8f6441b3e3d8';
-    let headers = new Headers({'X-Access-Token': '', 'X-Device-ID': deviceId});
-    this.http.get(url, {headers: headers}).subscribe(data => {
-      this.onGetUserInfo(data);
-    }, error => {
-      console.log(error);
+  onSuccessCallBack(userName: string, userResult: UserResult) {
+    this.globalService.userName = userName;
+    // this.globalService.userId = userResult.userId;
+    this.globalService.department = userResult.Department;
+    let toast = this.toastCtrl.create({
+      duration: 2000,
+      message: '在线登录成功',
+      position: 'bottom',
     });
-  }
-
-  /**
-   * 获得用户信息
-   * @param data
-   */
-  onGetUserInfo(data) {
-    if (data.json().Code == this.successCode && data.json().StatusCode == this.statusCode) {
-      console.log(data.json().Data);
-      let arrRoles = data.json().Data.roles;
-      this.appPreferences.store('userinfo', 'role', arrRoles);
-      console.log(arrRoles);
-      let toast = this.toastCtrl.create({
-        duration: 2000,
-        message: '在线登录成功',
-        position: 'bottom',
-      });
-      toast.present();
-      this.navCtrl.push(MainPage, {})
-    }
+    toast.present();
+    this.navCtrl.push(MainPage, {})
   }
 
   /**
@@ -205,10 +166,10 @@ export class LoginPage {
    * @param error
    */
   onErrorCallBack(error) {
-    console.log(error.json().Message);
+    console.log(error);
     let alert = this.alertCtrl.create({
       title: '提示：',
-      subTitle: error.json().Message,
+      subTitle: error ? error : '登录失败',
       buttons: ['确定']
     });
     alert.present();

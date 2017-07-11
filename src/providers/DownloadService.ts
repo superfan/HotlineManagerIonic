@@ -11,6 +11,8 @@ import {SearchTaskDetails} from "../model/SearchTaskDetails";
 import {SearchTaskCount} from "../model/SearchTaskCount";
 import {News} from "../model/News";
 import {SearchTaskRequest} from "../model/SearchTaskRequest";
+import {UserInfo} from "../model/UserInfo";
+import {UserResult} from "../model/UserResult";
 
 @Injectable()
 export class DownloadService extends BaseService {
@@ -162,14 +164,15 @@ export class DownloadService extends BaseService {
    * @param sendTime
    * @returns {Promise<T>}
    */
-  public getSearchTaskCount(userId: number, address: string, phone: string, serialNo: string, taskNo: string, taskState: number,
-                            reportType: number, reportPerson: string, sendTime: number): Promise<SearchTaskCount> {
+  public getSearchTaskCount(userId: number, request: SearchTaskRequest): Promise<SearchTaskCount> {
     return new Promise((resolve, reject) => {
       this.configService.getServerBaseUri()
         .then(data => {
-          let url = data + "wap/v1/mobile/tasksearch/" + userId + "/tasksCount?happenedAddress=" + address + "&contactPhone=" + phone +
-            "&serialNo=" + serialNo + "&taskNo=" + taskNo + "&taskState=" + taskState + "&reportType=" + reportType +
-            "&reportPerson=" + reportPerson + "&sendTime=" + sendTime + "&count=10&since=0";
+          let url = data + "wap/v1/mobile/tasksearch/" + userId + "/tasksCount?happenedAddress=" +
+            request.happenedAddress + "&contactPhone=" + request.contactPhone + "&serialNo=" +
+            request.serialNo + "&taskNo=" + request.taskNo + "&taskState=" + request.taskState +
+            "&reportType=" + request.reportType + "&reportPerson=" + request.reportPerson + "&sendTime=" +
+            request.sendTime;
           return this.http.get(url, this.getOptions())
             .toPromise()
             .then(data => {
@@ -246,5 +249,33 @@ export class DownloadService extends BaseService {
     })
   }
 
+  /**
+   * 获取用户信息
+   * @param user
+   * @returns {Promise<T>}
+   */
+  public getUserInfo(user: UserInfo): Promise<UserResult> {
 
+    return new Promise((resolve, reject) => {
+      this.configService.getServerBaseUri()
+        .then(data => {
+          let url = data + "wap/v1/auth/" + user.userName + "/" + user.password + "?appIdentity=cc";
+          return this.http.get(url, this.getOptions())
+            .toPromise()
+            .then(data => {
+              console.log("getUserInfo:" + data);
+              let body = data.json();
+              if (body.Code == this.globalService.httpCode
+                && body.StatusCode === this.globalService.httpSuccessStatusCode
+                && body.Data as UserResult) {
+                resolve(body.Data);
+              } else {
+                reject(body.Message ? body.Message : "fail to get userInfo!");
+              }
+            })
+            .catch(this.handleError);
+        })
+        .catch(error => reject(error));
+    });
+  }
 }
