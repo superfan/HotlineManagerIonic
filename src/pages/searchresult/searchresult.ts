@@ -40,7 +40,6 @@ export class SearchResultPage implements OnInit {
     });
     this.loading.present();
     this.searchTask(this.navParams.get('tasks'));
-    this.searchTaskCount(this.navParams.get('tasks'));
   }
 
   /**
@@ -50,6 +49,7 @@ export class SearchResultPage implements OnInit {
   private searchTask(request: SearchTaskRequest) {
     this.dataService.searchTask(request)
       .then(tasks => {
+        this.searchTaskCount(this.navParams.get('tasks'));
         console.log(this.tag + "getTasks: " + tasks);
         if (tasks.length <= 0) {
           let alert = this.alertCtrl.create({
@@ -78,6 +78,15 @@ export class SearchResultPage implements OnInit {
             });
           }
         }
+      })
+      .catch(err => {
+        console.log(err);
+        let alert = this.alertCtrl.create({
+          title: '提示：',
+          subTitle: err ? err : '出现错误',
+          buttons: ['确定']
+        });
+        alert.present();
       });
   }
 
@@ -86,8 +95,7 @@ export class SearchResultPage implements OnInit {
    * @param request
    */
   private searchTaskCount(request: SearchTaskRequest) {
-    this.dataService.searchTaskCount(request.happenedAddress, request.contactPhone, request.serialNo,
-      request.taskNo, request.taskState, request.reportType, request.reportPerson, request.sendTime)
+    this.dataService.searchTaskCount(request)
       .then(count => {
         console.log(this.tag + "getTasksCount: " + count);
         if (count != null || undefined) {
@@ -95,6 +103,9 @@ export class SearchResultPage implements OnInit {
           this.completedTaskCount = count.completedTaskCount;
           this.unCompletedTaskCount = count.uncompletedTaskCount;
         }
+      })
+      .catch(err => {
+        console.log(err);
       });
   }
 
