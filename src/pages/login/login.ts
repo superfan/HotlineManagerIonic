@@ -1,52 +1,45 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AlertController, NavController, ToastController} from 'ionic-angular';
 import {MainPage} from "../main/main";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AppPreferences} from "@ionic-native/app-preferences";
-import {ConfigService} from "../../providers/ConfigService";
 import {Network} from "@ionic-native/network";
 import {GlobalService} from "../../providers/GlobalService";
 import {UserInfo} from "../../model/UserInfo";
 import {DataService} from "../../providers/DataService";
 import {UserResult} from "../../model/UserResult";
 
-export class User {
-  constructor(public username: string,
-              public password: string,
-              public type: string) {
-  }
-}
-
 @Component({
   selector: 'page-login',
   templateUrl: 'login.html',
 })
 
+export class LoginPage implements OnInit {
 
-export class LoginPage {
 
-  public user = new User('zj', '1111', 'outside');
+  public user = new UserInfo();
   public loginForm: FormGroup;
-  public successCode: number = 0;
-  public statusCode: number = 200;
 
   constructor(public navCtrl: NavController,
               public alertCtrl: AlertController,
               private formBuilder: FormBuilder,
-              private configService: ConfigService,
               private appPreferences: AppPreferences,
               private network: Network,
               private toastCtrl: ToastController,
               public globalService: GlobalService,
               public dataService: DataService) {
+  }
 
+  ngOnInit() {
     this.loginForm = this.formBuilder.group({
       'LoginID': [this.globalService.userName, Validators.compose([Validators.minLength(2), Validators.maxLength(11),
         Validators.required, Validators.pattern('[0-9a-zA-Z ]*')])],
       'LoginPwd': ['0000', Validators.compose([Validators.required, Validators.minLength(4)])],
-      'LoginSelect': [this.user.type, Validators.compose([Validators.required])]
+      'LoginSelect': ['worker', Validators.compose([Validators.required])]
     });
-    this.getPreferences();
+    if (!this.globalService.isChrome) {
+      this.getPreferences();
+    }
   }
 
   /**
@@ -56,8 +49,8 @@ export class LoginPage {
     //用户名
     this.appPreferences.fetch("userinfo", 'username')
       .then(result => {
-        this.user.username = result.toString();
-        this.loginForm.patchValue({LoginID: this.user.username});
+        this.user.userName = result.toString();
+        this.loginForm.patchValue({LoginID: this.user.userName});
       }).catch(err => {
       console.log(err);
     });
@@ -83,46 +76,39 @@ export class LoginPage {
    * @param user
    */
   loginClick(user) {
-    this.user.type = user['LoginSelect'];
-
-    if (this.user.type == null
-      || this.user.type == '') {
-      console.log("没有选择人员");
-      return;
-    }
-
     //判断网络
     if (this.network.type == 'none' || this.network.type == 'unknow') {
       //有网就连网登录，无网判断本地是否有存储信息,有则离线登录
-      let toastInfo: string;
-      let toast = this.toastCtrl.create({
-        duration: 2000,
-        position: 'bottom'
-      });
-      if (user['LoginID'] == this.user.username && user['LoginPwd'] == this.user.password) {
-        toastInfo = '离线登录';
-        console.log(toastInfo);
-        toast.setMessage(toastInfo);
-        this.navCtrl.push(MainPage, {})
-      } else {
-        toastInfo = '账号和密码未保存，请连网认证';
-        console.log(toastInfo);
-        toast.setMessage(toastInfo);
+      if (!this.globalService.isChrome) {
+        let toastInfo: string;
+        let toast = this.toastCtrl.create({
+          duration: 2000,
+          position: 'bottom'
+        });
+        if (user['LoginID'] == this.user.userName && user['LoginPwd'] == this.user.password) {
+          toastInfo = '离线登录';
+          console.log(toastInfo);
+          toast.setMessage(toastInfo);
+          this.navCtrl.push(MainPage, {})
+        } else {
+          toastInfo = '账号和密码未保存，请连网认证';
+          console.log(toastInfo);
+          toast.setMessage(toastInfo);
+        }
+        toast.present();
+        return;
       }
-      toast.present();
-      return;
     }
 
     //在线登录
-    this.configService.getServerBaseUri()
-      .then(result => {
-        this.user.username = user["LoginID"];
-        this.user.password = user['LoginPwd'];
-        this.doLogin(result, this.user.username, this.user.password);
-      })
-      .catch(err => {
-        console.log(err);
-      })
+    this.user.userName = user['LoginID'];
+    this.user.password = user['LoginPwd'];
+    if (user['LoginSelect'] == 'worker') {
+      this.user.isWorker = true;
+    } else {
+      this.user.isWorker = false;
+    }
+    this.doLogin();
   }
 
   /**
@@ -131,17 +117,17 @@ export class LoginPage {
    * @param userName
    * @param password
    */
-  doLogin(baseurl: string, userName: string, password: string) {
-    let user = new UserInfo();
-    user.userName = userName;
-    user.password = password;
-    this.dataService.getUserInfo(user)
-      .then(userResult => {
-        this.onSuccessCallBack(user.userName, userResult);
-      })
-      .catch(err => {
-        this.onErrorCallBack(err);
-      });
+  doLogin() {
+    if (this.user.userName && this.user.password) {
+      this.dataService.doLogin(this.user)
+        .then(userResult => {
+          this.globalService.isWorker = this.user.isWorker;
+          this.onSuccessCallBack(this.user.userName, userResult);
+        })
+        .catch(err => {
+          this.onErrorCallBack(err);
+        });
+    }
   }
 
   /**
@@ -152,6 +138,35 @@ export class LoginPage {
     this.globalService.userName = userName;
     this.globalService.userId = userResult.userId;
     this.globalService.department = userResult.Department;
+
+    //外勤
+    if (this.user.isWorker) {
+      this.dataService.getWorkInfo()
+        .then(userWorkInfo => {
+          console.log(userWorkInfo);
+          this.onSuccessLogin();
+        })
+        .catch(err => {
+          this.onErrorCallBack(err);
+        });
+      return;
+    }
+
+    //管理
+    this.dataService.getManageInfo()
+      .then(managerInfo => {
+        console.log(managerInfo);
+        this.onSuccessLogin();
+      })
+      .catch(err => {
+        this.onErrorCallBack(err);
+      })
+  }
+
+  /**
+   * 最终成功登录
+   */
+  private onSuccessLogin() {
     let toast = this.toastCtrl.create({
       duration: 2000,
       message: '在线登录成功',

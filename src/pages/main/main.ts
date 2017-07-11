@@ -92,6 +92,9 @@ export class MainPage implements AfterViewInit, OnDestroy {
               private globalService: GlobalService) {
     let rowData: Item[] = [];
     for (let item of this.listItems) {
+      if (this.globalService.isWorker) {
+        (item.id == ItemId.Search) || (item.id == ItemId.StationWork) ? item.active = false : item.active = true;
+      }
       if (rowData.length == 3) {
         this.gridItems.push(rowData);
         rowData = [];

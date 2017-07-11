@@ -296,16 +296,15 @@ export class DataService {
   /**
    * 查询任务
    */
-  public searchTask(request:SearchTaskRequest): Promise<Array<SearchTask>> {
+  public searchTask(request: SearchTaskRequest): Promise<Array<SearchTask>> {
     return this.downloadService.getSearchTasks(this.globalService.userId, request);
   }
-
 
 
   /**
    * 查询工单数量
    */
-  public searchTaskCount(request:SearchTaskRequest): Promise<SearchTaskCount> {
+  public searchTaskCount(request: SearchTaskRequest): Promise<SearchTaskCount> {
     return this.downloadService.getSearchTaskCount(this.globalService.userId, request);
   }
 
@@ -321,7 +320,7 @@ export class DataService {
    * 获取公告信息
    * @returns {Promise<Array<News>>}
    */
-  public getNews():Promise<Array<News>>{
+  public getNews(): Promise<Array<News>> {
     return this.downloadService.getNews();
   }
 
@@ -330,7 +329,23 @@ export class DataService {
    * @param user
    * @returns {Promise<UserResult>}
    */
-  public getUserInfo(user:UserInfo):Promise<UserResult>{
-   return this.downloadService.getUserInfo(user);
+  public doLogin(user: UserInfo): Promise<UserResult> {
+    return this.downloadService.doLogin(user);
+  }
+
+  /**
+   * 获取管理员用户信息
+   * @returns {Promise<UserRole>}
+   */
+  public getManageInfo() {
+    return this.downloadService.getManagerUserInfo(this.globalService.userId);
+  }
+
+  /**
+   * 获取外勤用户信息
+   * @returns {Promise<UserWorkInfo>}
+   */
+  public getWorkInfo(){
+    return this.downloadService.getWorkerUserInfo(this.globalService.userId);
   }
 }
