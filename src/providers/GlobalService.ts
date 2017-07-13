@@ -23,6 +23,7 @@ export class GlobalService {
   userId: number = 1;//60;5005
   department: string = "东河营业分公司";//"滨河营业分公司";
   departmentId: number = 10;
+  isWorker:boolean;//是否是外勤人员
   readonly mainUpdateEvent: string = "main:update";
   readonly myWorkDownloadEvent:string = "mywork:download";
   readonly myWorkUpdateEvent: string = "mywork:update";

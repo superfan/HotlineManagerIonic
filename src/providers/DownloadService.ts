@@ -14,6 +14,8 @@ import {SearchTaskRequest} from "../model/SearchTaskRequest";
 import {UserInfo} from "../model/UserInfo";
 import {UserResult} from "../model/UserResult";
 import {Personnel} from "../model/Personnel";
+import {UserWorkInfo} from "../model/UserWorkInfo";
+import {UserManageInfo} from "../model/UserManageInfo";
 
 @Injectable()
 export class DownloadService extends BaseService {
@@ -314,16 +316,20 @@ export class DownloadService extends BaseService {
   }
 
   /**
-   * 获取用户信息
+   * 用户登录操作
    * @param user
    * @returns {Promise<T>}
    */
-  public getUserInfo(user: UserInfo): Promise<UserResult> {
-
+  public doLogin(user: UserInfo): Promise<UserResult> {
     return new Promise((resolve, reject) => {
       this.configService.getServerBaseUri()
         .then(data => {
-          let url = data + "wap/v1/auth/" + user.userName + "/" + user.password + "?appIdentity=cc";
+          let url;
+          if (user.isWorker) {
+            url = data + "wap/v1/auth/" + user.userName + "/" + user.password + "?appIdentity=cc";
+          } else {
+            url = data + "wap/v1/auth/wap/" + user.userName + "/" + user.password + "?appIdentity=cc";
+          }
           return this.http.get(url, this.getOptions())
             .toPromise()
             .then(data => {
@@ -369,5 +375,62 @@ export class DownloadService extends BaseService {
         })
         .catch(error => reject(error));
     });
+  }
+
+   /* 获得管理人员信息
+   * @param userId
+   * @returns {Promise<T>}
+   */
+  public getManagerUserInfo(userId: number): Promise<UserManageInfo> {
+    return new Promise((resolve, reject) => {
+      this.configService.getServerBaseUri()
+        .then(data => {
+          let url = data + "wap/v1/mobile/resource/user/hotline/" + userId;
+          return this.http.get(url, this.getOptions())
+            .toPromise()
+            .then(data => {
+              console.log("getManagerUserInfo:" + data);
+              let body = data.json();
+              if (body.Code == this.globalService.httpCode
+                && body.StatusCode == this.globalService.httpSuccessStatusCode
+                && body.Data as UserManageInfo) {
+                resolve(body.Data);
+              } else {
+                reject(body.Message ? body.Message : "fail to get ManagerUserInfo!");
+              }
+            })
+            .catch(this.handleError);
+        })
+        .catch(error => reject(error));
+    })
+  }
+
+  /**
+   * 获得外勤人员信息
+   * @param userId
+   * @returns {Promise<T>}
+   */
+  public getWorkerUserInfo(userId: number): Promise<UserWorkInfo> {
+    return new Promise((resolve, reject) => {
+      this.configService.getServerBaseUri()
+        .then(data => {
+          let url = data + "wap/v1/mobile/resource/user/" + userId;
+          return this.http.get(url, this.getOptions())
+            .toPromise()
+            .then(data => {
+              console.log("getWorkerUserInfo:" + data);
+              let body = data.json();
+              if (body.Code == this.globalService.httpCode
+                && body.StatusCode == this.globalService.httpSuccessStatusCode
+                && body.Data as UserWorkInfo) {
+                resolve(body.Data);
+              } else {
+                reject(body.Message ? body.Message : "fail to get WorkerUserInfo!")
+              }
+            })
+            .catch(this.handleError);
+        })
+        .catch(error => reject(error));
+    })
   }
 }
