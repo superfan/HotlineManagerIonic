@@ -10,7 +10,7 @@ import {ArriveInfo} from "../model/ArriveInfo";
 import {ReplyInfo} from "../model/ReplyInfo";
 import {RejectInfo} from "../model/RejectInfo";
 import {DelayInfo} from "../model/DelayInfo";
-import {CancelInfo} from "../model/CancelInfo";
+import {CancelInfo, CancelExInfo} from "../model/CancelInfo";
 import {TaskDetail} from "../model/TaskDetail";
 import {Word} from "../model/Word";
 import {SearchTask} from "../model/SearchTask";
@@ -20,17 +20,20 @@ import {News} from "../model/News";
 import {SearchTaskRequest} from "../model/SearchTaskRequest";
 import {UserInfo} from "../model/UserInfo";
 import {UserResult} from "../model/UserResult";
+import {Personnel} from "../model/Personnel";
+import {DispatchInfo} from "../model/DispatchInfo";
 
 @Injectable()
 export class DataService {
   private downloadTaskEvent: string = 'task:download';
-  private optType: Array<Word>;
-  private optContent: Array<Word>;
-  private optReason: Array<Word>;
-  private optSolution: Array<Word>;
-  private optResult: Array<Word>;
-  private reflectType: Array<Word>;
-  private reflectContent: Array<Word>;
+  private optTypes: Array<Word>;
+  private optContents: Array<Word>;
+  private optReasons: Array<Word>;
+  private optSolutions: Array<Word>;
+  private optResults: Array<Word>;
+  private reflectTypes: Array<Word>;
+  private reflectContents: Array<Word>;
+  private personnels: Array<Personnel>;
 
   constructor(private downloadService: DownloadService,
               private uploadService: UploadService,
@@ -62,6 +65,10 @@ export class DataService {
     return this.downloadService.getTasks(this.globalService.userId, since, count);
   }
 
+  /**
+   * 获取任务总数
+   * @returns {Promise<number>}
+   */
   public getTaskCount(): Promise<number> {
     return Promise.resolve(5);
   }
@@ -88,14 +95,6 @@ export class DataService {
    */
   public getTaskDetail(taskId: string): Promise<TaskDetail> {
     return this.downloadService.getTaskDetail(taskId);
-  }
-
-  /**
-   * 获取词语信息
-   * @returns {Promise<Word>}
-   */
-  public getAllWords(): Promise<Array<Word>> {
-    return this.downloadService.getAllWords('all');
   }
 
   /**
@@ -200,29 +199,55 @@ export class DataService {
   }
 
   /**
-   * 获取处理类别
-   * @returns {Promise<T>}
+   * 站点派单
+   * @param dispatchInfo
+   * @returns {Promise<boolean>}
    */
-  public getOptType(): Promise<Array<Word>> {
-    return (this.optType && this.optType.length > 0)
-      ? Promise.resolve(this.optType)
+  public dispatch(dispatchInfo: DispatchInfo): Promise<boolean> {
+    return this.uploadService.dispatch(dispatchInfo);
+  }
+
+  /**
+   * 站点销单
+   * @param cancelExInfo
+   * @returns {Promise<boolean>}
+   */
+  public cancelEx(cancelExInfo: CancelExInfo): Promise<boolean> {
+    return this.uploadService.cancelEx(cancelExInfo);
+  }
+
+  /**
+   * 获取词语信息
+   * @returns {Promise<Word>}
+   */
+  public getAllWords(): Promise<Array<Word>> {
+    return this.downloadService.getAllWords('all');
+  }
+
+  /**
+   * 获取处理类别
+   * @returns {Promise<Array<Word>>|Promise<TResult>}
+   */
+  public getOptTypes(): Promise<Array<Word>> {
+    return (this.optTypes && this.optTypes.length > 0)
+      ? Promise.resolve(this.optTypes)
       : this.downloadService.getAllWords('CL_LEIBIE')
         .then(words => {
-          return this.optType = this.tree2list(words, "处理类别");
+          return this.optTypes = this.tree2list(words, "处理类别");
         });
   }
 
   /**
    * 获取处理内容
    * @param parentId
-   * @returns {Promise<TResult>}
+   * @returns {Promise<Array<Word>>}
    */
-  public getOptContent(parentId: number): Promise<Array<Word>> {
-    return (this.optContent && this.optContent.length > 0
-      ? Promise.resolve(this.optContent)
+  public getOptContents(parentId: number): Promise<Array<Word>> {
+    return (this.optContents && this.optContents.length > 0
+      ? Promise.resolve(this.optContents)
       : this.downloadService.getAllWords('CL_NEIRONG'))
       .then(words => {
-        this.optContent = words;
+        this.optContents = words;
         let newWords: Array<Word> = [];
         for (let word of words) {
           if (word.wParentId === parentId) {
@@ -237,12 +262,12 @@ export class DataService {
    * 获取发生原因
    * @returns {Promise<Array<Word>>|Promise<TResult>}
    */
-  public getOptReason(): Promise<Array<Word>> {
-    return (this.optReason && this.optReason.length > 0)
-      ? Promise.resolve(this.optReason)
+  public getOptReasons(): Promise<Array<Word>> {
+    return (this.optReasons && this.optReasons.length > 0)
+      ? Promise.resolve(this.optReasons)
       : this.downloadService.getAllWords('FS_YUANYIN')
         .then(words => {
-          return this.optReason = this.tree2list(words, "发生原因");
+          return this.optReasons = this.tree2list(words, "发生原因");
         });
   }
 
@@ -250,12 +275,12 @@ export class DataService {
    * 获取解决措施
    * @returns {Promise<Array<Word>>|Promise<TResult>}
    */
-  public getOptSolution(): Promise<Array<Word>> {
-    return (this.optSolution && this.optSolution.length > 0)
-      ? Promise.resolve(this.optSolution)
+  public getOptSolutions(): Promise<Array<Word>> {
+    return (this.optSolutions && this.optSolutions.length > 0)
+      ? Promise.resolve(this.optSolutions)
       : this.downloadService.getAllWords('JJ_CUOSHI')
         .then(words => {
-          return this.optSolution = this.tree2list(words, "解决措施");
+          return this.optSolutions = this.tree2list(words, "解决措施");
         });
   }
 
@@ -263,12 +288,12 @@ export class DataService {
    * 获取处理结果
    * @returns {Promise<Array<Word>>|Promise<TResult>}
    */
-  public getOptResult(): Promise<Array<Word>> {
-    return (this.optResult && this.optResult.length > 0)
-      ? Promise.resolve(this.optResult)
+  public getOptResults(): Promise<Array<Word>> {
+    return (this.optResults && this.optResults.length > 0)
+      ? Promise.resolve(this.optResults)
       : this.downloadService.getAllWords('CL_JIEGUO')
         .then(words => {
-          return this.optResult = this.tree2list(words, "处理结果");
+          return this.optResults = this.tree2list(words, "处理结果");
         });
   }
 
@@ -276,12 +301,12 @@ export class DataService {
    * 获取反映类别（查询界面）
    * @returns {Promise<Array<Word>>|Promise<TResult>}
    */
-  public getReflectType(): Promise<Array<Word>> {
-    return (this.reflectType && this.reflectType.length > 0)
-      ? Promise.resolve(this.reflectType)
+  public getReflectTypes(): Promise<Array<Word>> {
+    return (this.reflectTypes && this.reflectTypes.length > 0)
+      ? Promise.resolve(this.reflectTypes)
       : this.downloadService.getAllWords('FY_LEIBIE')
         .then(words => {
-          return this.reflectType = this.tree2list(words, "反映类别");
+          return this.reflectTypes = this.tree2list(words, "反映类别");
         });
   }
 
@@ -289,12 +314,65 @@ export class DataService {
    * 获取反映内容
    * @returns {Promise<Array<Word>>|Promise<TResult>}
    */
-  public getReflectContent(): Promise<Array<Word>> {
-    return (this.reflectContent && this.reflectContent.length > 0)
-      ? Promise.resolve(this.reflectContent)
+  public getReflectContents(): Promise<Array<Word>> {
+    return (this.reflectContents && this.reflectContents.length > 0)
+      ? Promise.resolve(this.reflectContents)
       : this.downloadService.getAllWords('FY_NEIRONG')
         .then(words => {
-          return this.reflectContent = this.tree2list(words, "反映内容");
+          return this.reflectContents = this.tree2list(words, "反映内容");
+        });
+  }
+
+  /**
+   * 查询任务
+   */
+  public searchTask(request:SearchTaskRequest): Promise<Array<SearchTask>> {
+    return this.downloadService.getSearchTasks(this.globalService.userId, request);
+  }
+
+  /**
+   * 查询工单数量
+   */
+  public searchTaskCount(request:SearchTaskRequest): Promise<SearchTaskCount> {
+    return this.downloadService.getSearchTaskCount(this.globalService.userId, request);
+  }
+
+  /**
+   * 查询任务详情
+   * @param taskId 任务编号
+   */
+  public searchTaskDetails(taskId: string): Promise<SearchTaskDetails> {
+    return this.downloadService.getSearchTaskDetails(taskId);
+  }
+
+  /**
+   * 获取公告信息
+   * @returns {Promise<Array<News>>}
+   */
+  public getNews():Promise<Array<News>>{
+    return this.downloadService.getNews();
+  }
+
+  /**
+   * 获取用户信息
+   * @param user
+   * @returns {Promise<UserResult>}
+   */
+  public getUserInfo(user:UserInfo):Promise<UserResult>{
+   return this.downloadService.getUserInfo(user);
+  }
+
+  /**
+   * 获取施工人员
+   * @param userId
+   * @returns {Promise<Array<Personnel>>}
+   */
+  public getPersonnels(userId: number): Promise<Array<Personnel>> {
+    return (this.personnels && this.personnels.length > 0)
+      ? Promise.resolve(this.personnels)
+      : this.downloadService.getPersonnels(userId)
+        .then(personnels => {
+          return this.personnels = personnels;
         });
   }
 
@@ -338,46 +416,5 @@ export class DataService {
     let newWords: Array<Word> = [];
     find(words, newWords, rootWord);
     return newWords;
-  }
-
-  /**
-   * 查询任务
-   */
-  public searchTask(request:SearchTaskRequest): Promise<Array<SearchTask>> {
-    return this.downloadService.getSearchTasks(this.globalService.userId, request);
-  }
-
-
-
-  /**
-   * 查询工单数量
-   */
-  public searchTaskCount(request:SearchTaskRequest): Promise<SearchTaskCount> {
-    return this.downloadService.getSearchTaskCount(this.globalService.userId, request);
-  }
-
-  /**
-   * 查询任务详情
-   * @param taskId 任务编号
-   */
-  public searchTaskDetails(taskId: string): Promise<SearchTaskDetails> {
-    return this.downloadService.getSearchTaskDetails(taskId);
-  }
-
-  /**
-   * 获取公告信息
-   * @returns {Promise<Array<News>>}
-   */
-  public getNews():Promise<Array<News>>{
-    return this.downloadService.getNews();
-  }
-
-  /**
-   * 获取用户信息
-   * @param user
-   * @returns {Promise<UserResult>}
-   */
-  public getUserInfo(user:UserInfo):Promise<UserResult>{
-   return this.downloadService.getUserInfo(user);
   }
 }

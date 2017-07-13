@@ -46,7 +46,7 @@ export class SearchPage implements OnInit {
    * 获得反映类别
    */
   private getReflectTypes() {
-    this.dataService.getReflectType()
+    this.dataService.getReflectTypes()
       .then(words => {
         console.log(this.tag + words);
         if (words.length <= 0) {

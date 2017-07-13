@@ -60,15 +60,15 @@
           </button>
         </ion-col>
 
-        <ion-col class="card-bottom-btn">
+        <ion-col class="card-bottom-btn" *ngIf="item.isAccepted">
           <button ion-button icon-left clear small (click)="onDispatch(item)">
             <ion-icon name="person"></ion-icon>
             <div>派工</div>
           </button>
         </ion-col>
 
-        <ion-col class="card-bottom-btn">
-          <button ion-button icon-left clear small (click)="onClose(item)">
+        <ion-col class="card-bottom-btn" *ngIf="item.isAccepted">
+          <button ion-button icon-left clear small (click)="onCancel(item)">
             <ion-icon name="close"></ion-icon>
             <div>销单</div>
           </button>

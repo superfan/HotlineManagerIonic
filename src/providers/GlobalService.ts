@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {ToastController} from "ionic-angular";
 
 export interface UpdateEvent {
   type: 'myWorkCount' | 'newsCount' | 'stationWorkCount' | 'gridStyle';
@@ -18,8 +19,9 @@ export class GlobalService {
   readonly mainUpdateEvent: string = "main:update";
   readonly myWorkDownloadEvent:string = "mywork:download";
   readonly myWorkReplyEvent: string = "mywork:reply";
+  readonly stationWorkDispatchEvent: string = "stationwork:dispatch";
 
-  constructor() {
+  constructor(private toastCtrl: ToastController) {
 
   }
 
@@ -32,6 +34,20 @@ export class GlobalService {
     let second = this.padLeftZero(date.getSeconds().toString());
 
     return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+  }
+
+  /**
+   * toast
+   * @param message
+   */
+  showToast(message: string): void {
+    let toast = this.toastCtrl.create({
+      message: message,
+      duration: 2000,
+      position: 'bottom'
+    });
+
+    toast.present(toast);
   }
 
   private padLeftZero(name: string): string {

@@ -13,6 +13,7 @@ import {News} from "../model/News";
 import {SearchTaskRequest} from "../model/SearchTaskRequest";
 import {UserInfo} from "../model/UserInfo";
 import {UserResult} from "../model/UserResult";
+import {Personnel} from "../model/Personnel";
 
 @Injectable()
 export class DownloadService extends BaseService {
@@ -334,6 +335,34 @@ export class DownloadService extends BaseService {
                 resolve(body.Data);
               } else {
                 reject(body.Message ? body.Message : "fail to get userInfo!");
+              }
+            })
+            .catch(this.handleError);
+        })
+        .catch(error => reject(error));
+    });
+  }
+
+  /**
+   * 获取施工人员
+   * @param userId
+   * @returns {Promise<T>}
+   */
+  public getPersonnels(userId: number): Promise<Array<Personnel>> {
+    return new Promise((resolve, reject) => {
+      this.configService.getServerBaseUri()
+        .then(data => {
+          let url = `${data}wap/v1/mobile/resource/user/${userId}/getFieldPersonnel`;
+          return this.http.get(url, this.getOptions())
+            .toPromise()
+            .then(data => {
+              let body = data.json();
+              if (body.Code === this.globalService.httpCode
+                && body.StatusCode === this.globalService.httpSuccessStatusCode
+                && body.Data instanceof Array) {
+                resolve(body.Data);
+              } else {
+                reject(body.Message ? body.Message : "failure to get personnels");
               }
             })
             .catch(this.handleError);

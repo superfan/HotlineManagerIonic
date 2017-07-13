@@ -1,10 +1,11 @@
-import {Component, ViewChild, OnInit} from '@angular/core';
-import {Content, NavController, AlertController, LoadingController} from 'ionic-angular';
+import {Component, ViewChild, OnInit, OnDestroy} from '@angular/core';
+import {Content, NavController, AlertController, LoadingController, Events} from 'ionic-angular';
 import {WorkInfoPage} from "../workinfo/workinfo";
 import {DataService} from "../../providers/DataService";
 import {SearchTask} from "../../model/SearchTask";
 import {GlobalService} from "../../providers/GlobalService";
 import {Word} from "../../model/Word";
+import {CancelExInfo} from "../../model/CancelInfo";
 
 interface StationTask {
   serialNo: string;
@@ -18,7 +19,7 @@ interface StationTask {
   templateUrl: 'stationwork.html'
 })
 
-export class StationWorkPage implements OnInit {
+export class StationWorkPage implements OnInit, OnDestroy {
   private readonly tag: string = "[StationWorkPage]";
   private readonly contentNames: {} = {
     happenedAddress: '发生地址',
@@ -30,7 +31,7 @@ export class StationWorkPage implements OnInit {
     resolveLimitedTime: '处理时限',
     taskState: '任务状态'
   };
-  private readonly dispatched: string = '已派遣';
+  //private readonly dispatched: string = '已派遣';
   private readonly accepted: string = '已接收';
 
   @ViewChild(Content) content: Content;
@@ -49,12 +50,13 @@ export class StationWorkPage implements OnInit {
   private since: number = 0;
   private count: number = 10;
 
-  private reflectType: Array<Word>;
-  private reflectContent: Array<Word>;
+  private reflectTypes: Array<Word>;
+  private reflectContents: Array<Word>;
 
   constructor(public navCtrl: NavController,
               private alertCtrl: AlertController,
               private loadingCtrl: LoadingController,
+              private events: Events,
               private dataService: DataService,
               private globalService: GlobalService) {
   }
@@ -64,6 +66,12 @@ export class StationWorkPage implements OnInit {
    */
   ngOnInit(): void {
     console.log(this.tag, "ngOnInit");
+    this.events.subscribe(this.globalService.stationWorkDispatchEvent, () => {
+      this.since = 0;
+      while (this.items.shift());
+      this.getUnDispatchedTasks(this.since, this.count);
+    });
+
     this.getReflectType()
       .then(result => {
         return this.getReflectContent();
@@ -72,6 +80,13 @@ export class StationWorkPage implements OnInit {
         return this.getUnDispatchedTasks(this.since, this.count);
       })
       .catch(error => console.error(error));
+  }
+
+  /**
+   * 销毁
+   */
+  ngOnDestroy(): void {
+    this.events.unsubscribe(this.globalService.stationWorkDispatchEvent);
   }
 
   doRefresh(refresher) {
@@ -202,7 +217,10 @@ export class StationWorkPage implements OnInit {
     }).then(result => {
       stationTask.isAccepted = true;
       stationTask.contents[stationTask.contents.length - 1].value = this.accepted;
-    }).catch(error => console.error(error));
+    }).catch(error => {
+      console.error(error);
+      this.globalService.showToast(error);
+    });
   }
 
   /**
@@ -210,15 +228,22 @@ export class StationWorkPage implements OnInit {
    * @param stationTask
    */
   onDispatch(stationTask: StationTask): void {
-    this.navCtrl.push(WorkInfoPage);
+    this.navCtrl.push(WorkInfoPage, stationTask.taskNo);
   }
 
   /**
    * 销单
    * @param stationTask
    */
-  onClose(stationTask: StationTask): void {
-
+  onCancel(stationTask: StationTask): void {
+    this.popupRemarkAlert({
+      TaskNo: stationTask.taskNo,
+      TaskType: '1',
+      WcOperator: this.globalService.userId,
+      WcTime: new Date().getTime(),
+      XdComment: '',
+      XdOperator: this.globalService.userId
+    });
   }
 
   /**
@@ -226,9 +251,9 @@ export class StationWorkPage implements OnInit {
    * @returns {Promise<TResult|TResult>}
    */
   private getReflectType(): Promise<boolean> {
-    return this.dataService.getReflectType()
+    return this.dataService.getReflectTypes()
       .then(words => {
-        this.reflectType = words;
+        this.reflectTypes = words;
         return Promise.resolve(words.length > 0);
       })
       .catch(error => {
@@ -242,9 +267,9 @@ export class StationWorkPage implements OnInit {
    * @returns {Promise<TResult|TResult>}
    */
   private getReflectContent(): Promise<boolean> {
-    return this.dataService.getReflectContent()
+    return this.dataService.getReflectContents()
       .then(words => {
-        this.reflectContent = words;
+        this.reflectContents = words;
         return Promise.resolve(words.length > 0);
       })
       .catch(error => {
@@ -300,10 +325,12 @@ export class StationWorkPage implements OnInit {
       };
 
       for (let key in this.contentNames) {
-        stationTask.contents.push({
-          name: this.contentNames[key],
-          value: this.transform2String(key, searchTask[key])
-        });
+        if (searchTask.hasOwnProperty(key)) {
+          stationTask.contents.push({
+            name: this.contentNames[key],
+            value: this.transform2String(key, searchTask[key])
+          });
+        }
       }
 
       stationTasks.push(stationTask);
@@ -318,14 +345,14 @@ export class StationWorkPage implements OnInit {
    */
   private transform2String(key: string, value: any): string {
     if (typeof value === 'number') {
-      if (key === "reportType" && this.reflectType) {
-        for (let word of this.reflectType) {
+      if (key === "reportType" && this.reflectTypes) {
+        for (let word of this.reflectTypes) {
           if (word.wid === <number>value) {
             return word.wName;
           }
         }
-      } else if (key === "reportContent" && this.reflectContent) {
-        for (let word of this.reflectContent) {
+      } else if (key === "reportContent" && this.reflectContents) {
+        for (let word of this.reflectContents) {
           if (word.wid === <number>value) {
             return word.wName;
           }
@@ -336,5 +363,58 @@ export class StationWorkPage implements OnInit {
     }
 
     return value.toString();
+  }
+
+  /**
+   * 处理备注
+   * @param cancelExInfo
+   */
+  private popupRemarkAlert(cancelExInfo: CancelExInfo): void {
+    let prompt = this.alertCtrl.create({
+      title: '销单备注',
+      message: "请输入销单备注",
+      inputs: [
+        {
+          name: 'remark',
+          placeholder: ''
+        },
+      ],
+      buttons: [
+        {
+          text: '取消',
+          handler: data => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: '确定',
+          handler: data => {
+            console.log('Saved clicked');
+            cancelExInfo.XdComment = data.remark;
+            this.cancel(cancelExInfo);
+          }
+        }
+      ]
+    });
+    prompt.present();
+  }
+
+  /**
+   * 销单
+   * @param cancelExInfo
+   */
+  private cancel(cancelExInfo: CancelExInfo): void {
+    this.dataService.cancelEx(cancelExInfo)
+      .then(result => {
+        if (result) {
+          this.events.publish(this.globalService.stationWorkDispatchEvent);
+        } else {
+          this.globalService.showToast('销单失败!');
+        }
+      })
+      .catch(error => {
+        console.error(error);
+        this.globalService.showToast('销单失败!');
+      });
   }
 }

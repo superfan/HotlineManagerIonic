@@ -90,11 +90,11 @@ export class WorkDetailPage implements OnInit {
   private taskDetail: TaskDetail;
   private replyInfo: ReplyInfo;
 
-  private optType: Array<Word>;
-  private optContent: Array<Word>;
-  private optReason: Array<Word>;
-  private optSolution: Array<Word>;
-  private optResult: Array<Word>;
+  private optTypes: Array<Word>;
+  private optContents: Array<Word>;
+  private optReasons: Array<Word>;
+  private optSolutions: Array<Word>;
+  private optResults: Array<Word>;
 
   constructor(public navCtrl: NavController,
               private navParams: NavParams,
@@ -196,22 +196,22 @@ export class WorkDetailPage implements OnInit {
 
     switch (item.name) {
       case this.optTypeName:
-        this.popupOptType();
+        this.popupOptTypeAlert();
         break;
       case this.optContentName:
-        this.popupOptContent();
+        this.popupOptContentAlert();
         break;
       case this.optReasonName:
-        this.popupOptReason();
+        this.popupOptReasonAlert();
         break;
       case this.optSolutionName:
-        this.popupOptSolution();
+        this.popupOptSolutionAlert();
         break;
       case this.optResultName:
-        this.popupOptResult();
+        this.popupOptResultAlert();
         break;
       case this.optRemarkName:
-        this.popupRemark();
+        this.popupRemarkAlert();
         break;
     }
   }
@@ -249,6 +249,9 @@ export class WorkDetailPage implements OnInit {
     }
   }
 
+  /**
+   *
+   */
   private setReplyInfo(): void {
     this.reply[0].value = this.globalService.getFormatTime(new Date());
     // department
@@ -256,28 +259,31 @@ export class WorkDetailPage implements OnInit {
     // person
     this.reply[2].value = this.globalService.userName;
     // operation type
-    this.getOptType();
+    this.getOptTypes();
     // operation reason
-    this.getOptReason();
+    this.getOptReasons();
     // operation solution
-    this.getOptSolution();
+    this.getOptSolutions();
     // operation result
-    this.getOptResult();
+    this.getOptResults();
+    // remark
+    this.reply[8].isActive = !this.isPreview;
   }
 
   /**
    * 获取处理类别
    */
-  private getOptType(): void {
-    this.dataService.getOptType()
+  private getOptTypes(): void {
+    this.dataService.getOptTypes()
       .then(words => {
-        console.log(this.tag, "getOptType");
-        this.optType = words;
-        if (this.optType.length > 0) {
-          this.reply[3].value = this.optType[0].wName;
-          this.reply[3].remark = this.optType[0].wRemark;
-          this.replyInfo.opLeiBie = this.optType[0].wid;
-          this.getOptContent(Number.parseInt(this.optType[0].wRemark));
+        console.log(this.tag, "getOptTypes");
+        this.optTypes = words;
+        if (this.optTypes.length > 0) {
+          this.reply[3].value = this.optTypes[0].wName;
+          this.reply[3].isActive = !this.isPreview;
+          this.reply[3].remark = this.optTypes[0].wRemark;
+          this.replyInfo.opLeiBie = this.optTypes[0].wid;
+          this.getOptContents(Number.parseInt(this.optTypes[0].wRemark));
         }
       })
       .catch(error => console.error(error));
@@ -287,22 +293,23 @@ export class WorkDetailPage implements OnInit {
    * 获取处理内容
    * @param parentId
    */
-  private getOptContent(parentId: number): void {
-    this.dataService.getOptContent(parentId)
+  private getOptContents(parentId: number): void {
+    this.dataService.getOptContents(parentId)
       .then(words => {
-        console.log(this.tag, "getOptContent");
-        this.optContent = words;
-        if (this.optContent.length > 0) {
-          this.reply[4].value = this.optContent[0].wName;
-          this.reply[4].remark = this.optContent[0].wRemark;
+        console.log(this.tag, "getOptContents");
+        this.optContents = words;
+        if (this.optContents.length > 0) {
+          this.reply[4].value = this.optContents[0].wName;
+          this.reply[4].remark = this.optContents[0].wRemark;
           this.reply[4].color = this.enableColor;
-          this.replyInfo.opContent = this.optContent[0].wid;
+          this.replyInfo.opContent = this.optContents[0].wid;
         } else {
           this.reply[4].value = "请选择处理内容";
           this.reply[4].remark = "";
           this.reply[4].color = this.disableColor;
           this.replyInfo.opContent = 0;
         }
+        this.reply[4].isActive = !this.isPreview;
       })
       .catch(error => console.error(error));
   }
@@ -310,15 +317,16 @@ export class WorkDetailPage implements OnInit {
   /**
    * 获取发生原因
    */
-  private getOptReason(): void {
-    this.dataService.getOptReason()
+  private getOptReasons(): void {
+    this.dataService.getOptReasons()
       .then(words => {
-        console.log(this.tag, "getOptReason");
-        this.optReason = words;
-        if (this.optReason.length > 0) {
-          this.reply[5].value = this.optReason[0].wName;
-          this.reply[5].remark = this.optReason[0].wRemark;
-          this.replyInfo.reason = this.optReason[0].wid;
+        console.log(this.tag, "getOptReasons");
+        this.optReasons = words;
+        if (this.optReasons.length > 0) {
+          this.reply[5].value = this.optReasons[0].wName;
+          this.reply[5].isActive = !this.isPreview;
+          this.reply[5].remark = this.optReasons[0].wRemark;
+          this.replyInfo.reason = this.optReasons[0].wid;
         }
       })
       .catch(error => console.error(error));
@@ -327,15 +335,16 @@ export class WorkDetailPage implements OnInit {
   /**
    * 获取解决措施
    */
-  private getOptSolution(): void {
-    this.dataService.getOptSolution()
+  private getOptSolutions(): void {
+    this.dataService.getOptSolutions()
       .then(words => {
-        console.log(this.tag, "getOptSolution");
-        this.optSolution = words;
-        if (this.optSolution.length > 0) {
-          this.reply[6].value = this.optSolution[0].wName;
-          this.reply[6].remark = this.optSolution[0].wRemark;
-          this.replyInfo.solution = this.optSolution[0].wid;
+        console.log(this.tag, "getOptSolutions");
+        this.optSolutions = words;
+        if (this.optSolutions.length > 0) {
+          this.reply[6].value = this.optSolutions[0].wName;
+          this.reply[6].isActive = !this.isPreview;
+          this.reply[6].remark = this.optSolutions[0].wRemark;
+          this.replyInfo.solution = this.optSolutions[0].wid;
         }
       })
       .catch(error => console.error(error));
@@ -344,15 +353,16 @@ export class WorkDetailPage implements OnInit {
   /**
    * 获取处理结果
    */
-  private getOptResult(): void {
-    this.dataService.getOptResult()
+  private getOptResults(): void {
+    this.dataService.getOptResults()
       .then(words => {
         console.log(this.tag, "getOptResult");
-        this.optResult = words;
-        if (this.optResult.length > 0) {
-          this.reply[7].value = this.optResult[0].wName;
-          this.reply[7].remark = this.optResult[0].wRemark;
-          this.replyInfo.result = this.optResult[0].wid;
+        this.optResults = words;
+        if (this.optResults.length > 0) {
+          this.reply[7].value = this.optResults[0].wName;
+          this.reply[7].isActive = !this.isPreview;
+          this.reply[7].remark = this.optResults[0].wRemark;
+          this.replyInfo.result = this.optResults[0].wid;
         }
       })
       .catch(error => console.error(error));
@@ -361,62 +371,62 @@ export class WorkDetailPage implements OnInit {
   /**
    * 处理类别
    */
-  private popupOptType(): void {
-    if (!this.optType || this.optType.length <= 0) {
+  private popupOptTypeAlert(): void {
+    if (!this.optTypes || this.optTypes.length <= 0) {
       return this.showToast("处理类别为空!")
     }
 
-    this.popupAlert(this.optType, this.optTypeName, this.reply[3], this.replyInfo, "opLeiBie");
+    this.popupAlert(this.optTypes, this.optTypeName, this.reply[3], this.replyInfo, "opLeiBie");
   }
 
   /**
    * 处理内容
    */
-  private popupOptContent(): void {
-    if (!this.optContent || this.optContent.length <= 0) {
+  private popupOptContentAlert(): void {
+    if (!this.optContents || this.optContents.length <= 0) {
       return this.showToast("处理内容为空!")
     }
 
-    this.popupAlert(this.optContent, this.optContentName, this.reply[4], this.replyInfo, "opContent");
+    this.popupAlert(this.optContents, this.optContentName, this.reply[4], this.replyInfo, "opContent");
   }
 
   /**
    * 发生原因
    */
-  private popupOptReason(): void {
-    if (!this.optReason || this.optReason.length <= 0) {
+  private popupOptReasonAlert(): void {
+    if (!this.optReasons || this.optReasons.length <= 0) {
       return this.showToast("发生原因为空!")
     }
 
-    this.popupAlert(this.optReason, this.optReasonName, this.reply[5], this.replyInfo, "reason");
+    this.popupAlert(this.optReasons, this.optReasonName, this.reply[5], this.replyInfo, "reason");
   }
 
   /**
    * 解决措施
    */
-  private popupOptSolution(): void {
-    if (!this.optSolution || this.optSolution.length <= 0) {
+  private popupOptSolutionAlert(): void {
+    if (!this.optSolutions || this.optSolutions.length <= 0) {
       return this.showToast("解决措施为空!")
     }
 
-    this.popupAlert(this.optSolution, this.optSolutionName, this.reply[6], this.replyInfo, "solution");
+    this.popupAlert(this.optSolutions, this.optSolutionName, this.reply[6], this.replyInfo, "solution");
   }
 
   /**
    * 处理结果
    */
-  private popupOptResult(): void {
-    if (!this.optResult || this.optResult.length <= 0) {
+  private popupOptResultAlert(): void {
+    if (!this.optResults || this.optResults.length <= 0) {
       return this.showToast("处理结果为空!")
     }
 
-    this.popupAlert(this.optResult, this.optResultName, this.reply[7], this.replyInfo, "result");
+    this.popupAlert(this.optResults, this.optResultName, this.reply[7], this.replyInfo, "result");
   }
 
   /**
    * 处理备注
    */
-  private popupRemark(): void {
+  private popupRemarkAlert(): void {
     let prompt = this.alertCtrl.create({
       title: '处理备注',
       message: "请输入处理备注",
@@ -481,7 +491,7 @@ export class WorkDetailPage implements OnInit {
         replyInfo[propertyName] = Number.parseInt(values[1]);
         reply.remark = values[2];
         if (title === this.optTypeName) {
-          this.getOptContent(Number.parseInt(reply.remark));
+          this.getOptContents(Number.parseInt(reply.remark));
         }
       }
     });

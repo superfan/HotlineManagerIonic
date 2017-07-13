@@ -54,10 +54,10 @@
         <ion-label fixed class="label-name">
           {{item.name}}
         </ion-label>
-        <div item-content [style.color]="item.color">
+        <div item-content>
           {{item.value}}
         </div>
-        <ion-icon name="ios-arrow-forward" item-end *ngIf="reply.isActive"></ion-icon>
+        <ion-icon name="ios-arrow-forward" item-end *ngIf="item.isActive"></ion-icon>
       </ion-item>
 
       <!--<ion-row>-->
