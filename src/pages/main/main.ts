@@ -152,7 +152,7 @@ export class MainPage implements AfterViewInit, OnDestroy {
       id: ItemId.StationWork,
       src: 'assets/img/ic_stationwork.png',
       name: '站点任务',
-      active: true,
+      active: !this.globalService.isWorker,
       count: 0
     });
 
@@ -160,7 +160,7 @@ export class MainPage implements AfterViewInit, OnDestroy {
       id: ItemId.Search,
       src: 'assets/img/ic_searching.png',
       name: '查询',
-      active: true,
+      active: !this.globalService.isWorker,
       count: 0
     });
 
