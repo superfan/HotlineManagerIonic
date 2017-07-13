@@ -52,7 +52,7 @@
         </ion-item>
       </ion-list>
 
-      <ion-row>
+      <ion-row *ngIf="isUnDispatchedMode">
         <ion-col class="card-bottom-btn" *ngIf="!item.isAccepted">
           <button ion-button icon-left clear small (click)="onAccept(item)">
             <ion-icon name="done-all"></ion-icon>

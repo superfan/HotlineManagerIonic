@@ -161,7 +161,11 @@ export class WorkDetailPage implements OnInit {
     this.dataService.reply(this.replyInfo)
       .then(date => {
         console.log("success");
-        this.events.publish(this.globalService.myWorkReplyEvent, this.taskEx, this.replyInfo.opTime);
+        this.events.publish(this.globalService.myWorkUpdateEvent, {
+          type: 'reply',
+          taskEx: this.taskEx,
+          time: this.replyInfo.opTime
+        });
         this.navCtrl.pop();
       })
       .catch(error => {

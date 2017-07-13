@@ -155,8 +155,7 @@ export class DataService {
    */
   public reply(replyInfo: ReplyInfo): Promise<boolean> {
     //replyInfo.userId = this.globalService.userId;
-    //return this.uploadService.reply(replyInfo);
-    return Promise.resolve(true);
+    return this.uploadService.reply(replyInfo);
   }
 
   /**

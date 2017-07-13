@@ -98,7 +98,7 @@ export class WorkInfoPage implements OnInit {
    */
   onDispatch(ev: any): void {
     let time: string = `${this.dispatches[2].value} ${this.dispatches[3].value}`;
-    let utc: number = new Date(time).getTime();
+    let utc: number = new Date(time).getTime() + 1000;
     if (this.dispatchInfo.dispatchTime > utc) {
       return this.globalService.showToast('施工日期或施工时间不准确!');
     }
@@ -106,7 +106,7 @@ export class WorkInfoPage implements OnInit {
     this.dispatchInfo.dispatchTime = utc;
     this.dataService.dispatch(this.dispatchInfo)
       .then(result => {
-        this.events.publish(this.globalService.stationWorkDispatchEvent);
+        this.events.publish(this.globalService.stationWorkUpdateEvent);
         this.navCtrl.pop();
       })
       .catch(error => console.error(error));

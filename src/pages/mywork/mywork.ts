@@ -1,10 +1,10 @@
 import {Component, ViewChild, OnInit, OnDestroy} from '@angular/core';
-import {Content, NavController, InfiniteScroll, ToastController, AlertController, Events} from 'ionic-angular';
+import {Content, NavController, InfiniteScroll, AlertController, Events} from 'ionic-angular';
 import {WorkDetailPage} from "../workdetail/workdetail";
 import {DataService} from "../../providers/DataService";
 import {TaskEx, TaskState} from "../../model/Task";
 import {ProcessEx, DelayExtend, RejectExtend, CancelExtend} from "../../model/Process";
-import {GlobalService} from "../../providers/GlobalService";
+import {GlobalService, MyWorkUpdateEvent} from "../../providers/GlobalService";
 
 @Component({
   selector: 'page-mywork',
@@ -25,12 +25,11 @@ export class MyWorkPage implements OnInit, OnDestroy {
 
   items: TaskEx[] = [];
   private since: number = 1;
-  private count: number = 2;
+  private count: number = 10;
   private isDownloadFinished: boolean = true;
 
   constructor(public navCtrl: NavController,
               private dataService: DataService,
-              private toastCtrl: ToastController,
               private alertCtrl: AlertController,
               private events: Events,
               private globalService: GlobalService) {
@@ -59,7 +58,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
    */
   ngOnDestroy() {
     console.log(this.tag, 'ngOnDestroy');
-    this.events.unsubscribe(this.globalService.myWorkReplyEvent);
+    this.events.unsubscribe(this.globalService.myWorkUpdateEvent);
   }
 
   /**
@@ -318,6 +317,9 @@ export class MyWorkPage implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * 获取任务数
+   */
   private getTaskCount(): void {
     this.dataService.getTaskCount()
       .then(count => {
@@ -359,7 +361,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
         taskEx.state = TaskState.Accept;
       }).catch(error => {
         console.error(this.tag + error);
-        this.showToast(error);
+        this.globalService.showToast(error);
       });
     }
   }
@@ -397,7 +399,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
         taskEx.state = TaskState.Go;
       }).catch(error => {
         console.error(this.tag + error);
-        this.showToast(error);
+        this.globalService.showToast(error);
       });
     }
   }
@@ -435,7 +437,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
         taskEx.state = TaskState.Arrived;
       }).catch(error => {
         console.error(this.tag + error);
-        this.showToast(error);
+        this.globalService.showToast(error);
       });
     }
   }
@@ -493,7 +495,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
         taskEx.state = TaskState.Reject;
       }).catch(error => {
         console.error(this.tag + error);
-        this.showToast(error);
+        this.globalService.showToast(error);
       });
     }
   }
@@ -556,7 +558,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
           taskEx.state = TaskState.Delay;
         }).catch(error => {
           console.error(this.tag + error);
-          this.showToast(error);
+          this.globalService.showToast(error);
         });
       }
     }
@@ -597,12 +599,12 @@ export class MyWorkPage implements OnInit, OnDestroy {
         processEx.delay.show = processEx.delay.done;
         taskEx.lastProcess = 'cancel';
         taskEx.state = TaskState.Cancel;
+
+        this.events.publish(this.globalService.myWorkUpdateEvent, {type: 'cancel'});
       }).catch(error => {
         console.error(this.tag + error);
-        this.showToast(error);
+        this.globalService.showToast(error);
       });
-
-
     }
   }
 
@@ -701,20 +703,6 @@ export class MyWorkPage implements OnInit, OnDestroy {
   }
 
   /**
-   * toast
-   * @param message
-   */
-  private showToast(message: string): void {
-    let toast = this.toastCtrl.create({
-      message: message,
-      duration: 2000,
-      position: 'bottom'
-    });
-
-    toast.present(toast);
-  }
-
-  /**
    * 退单对话框
    * @param taskEx
    */
@@ -744,7 +732,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
           handler: data => {
             console.log(this.tag, data);
             if (!data.reason) {
-              return this.showToast("请填写原因!");
+              return this.globalService.showToast("请填写原因!");
             }
 
             processEx.reject.extend = {
@@ -806,9 +794,9 @@ export class MyWorkPage implements OnInit, OnDestroy {
             if (Number.isNaN(data.day)
               && Number.isNaN(data.hour)
               && Number.isNaN(data.minute)) {
-              return this.showToast("请填写有效的时间!");
+              return this.globalService.showToast("请填写有效的时间!");
             } else if (!data.reason) {
-              return this.showToast("请填写原因!");
+              return this.globalService.showToast("请填写原因!");
             } else {
               let day: number = Number.parseInt(data.day);
               let hour: number = Number.parseInt(data.hour);
@@ -816,7 +804,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
               if ((Number.isFinite(day) && day < 0)
                 || (Number.isFinite(hour) && hour < 0)
                 || (Number.isFinite(minute) && minute < 0)) {
-                return this.showToast("填写的时间必须大于零!");
+                return this.globalService.showToast("填写的时间必须大于零!");
               }
 
               let time: number = 0;
@@ -876,7 +864,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
           handler: data => {
             console.log(this.tag, data);
             if (!data.remark) {
-              return this.showToast("请填写备注!");
+              return this.globalService.showToast("请填写备注!");
             }
 
             processEx.cancel.extend = {
@@ -892,22 +880,28 @@ export class MyWorkPage implements OnInit, OnDestroy {
   }
 
   private subscribeEvent(events: Events): void {
-    events.subscribe(this.globalService.myWorkReplyEvent, (taskEx: TaskEx, time: number) => {
+    events.subscribe(this.globalService.myWorkUpdateEvent, (myWorkUpdateEvent: MyWorkUpdateEvent) => {
       console.log("my work need to update");
 
-      let processEx: ProcessEx = new ProcessEx();
-      if (!this.transform2ProcessEx(taskEx, processEx)) {
-        return;
-      }
+      if (myWorkUpdateEvent.type === 'reply' && myWorkUpdateEvent.taskEx && myWorkUpdateEvent.time) {
+        let processEx: ProcessEx = new ProcessEx();
+        if (!this.transform2ProcessEx(myWorkUpdateEvent.taskEx, processEx)) {
+          return;
+        }
 
-      processEx.reply.time = new Date(time);
-      processEx.reply.color = this.disableColor;
-      processEx.reply.done = true;
-      processEx.reject.show = false;
-      processEx.delay.show = processEx.delay.done;
-      processEx.cancel.show = true;
-      taskEx.lastProcess = 'reply';
-      taskEx.state = TaskState.Reply;
+        processEx.reply.time = new Date(myWorkUpdateEvent.time);
+        processEx.reply.color = this.disableColor;
+        processEx.reply.done = true;
+        processEx.reject.show = false;
+        processEx.delay.show = processEx.delay.done;
+        processEx.cancel.show = true;
+        myWorkUpdateEvent.taskEx.lastProcess = 'reply';
+        myWorkUpdateEvent.taskEx.state = TaskState.Reply;
+      } else if (myWorkUpdateEvent.type === 'cancel') {
+        this.since = 1;
+        while (this.items.shift());
+        this.getTasks(this.since, this.count);
+      }
     });
   }
 }

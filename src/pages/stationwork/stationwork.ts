@@ -33,18 +33,18 @@ export class StationWorkPage implements OnInit, OnDestroy {
   };
   //private readonly dispatched: string = '已派遣';
   private readonly accepted: string = '已接收';
+  //private readonly disableColor: string = 'gray';
+  //private readonly enableColor: string = 'primary';
+  private readonly undispatchedName: string = '未派工';
+  private readonly dispatchedName: string = '24小时内已派工';
 
   @ViewChild(Content) content: Content;
-
-  disableColor: string = 'gray';
-  enableColor: string = 'primary';
-  undispatchedName: string = '未派工';
-  dispatchedName: string = '24小时内已派工';
 
   title: string = '站点任务';
   subTitle: string = this.undispatchedName;
   showToolbar: boolean = false;
   showFab: boolean = false;
+  isUnDispatchedMode: boolean = true;
 
   items: StationTask[] = [];
   private since: number = 0;
@@ -66,36 +66,49 @@ export class StationWorkPage implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     console.log(this.tag, "ngOnInit");
-    this.events.subscribe(this.globalService.stationWorkDispatchEvent, () => {
+    this.events.subscribe(this.globalService.stationWorkUpdateEvent, () => {
       this.since = 0;
       while (this.items.shift());
       this.getUnDispatchedTasks(this.since, this.count);
     });
 
-    this.getReflectType()
-      .then(result => {
-        return this.getReflectContent();
-      })
-      .then(result => {
-        return this.getUnDispatchedTasks(this.since, this.count);
-      })
+    Promise.all([this.getReflectType(), this.getReflectContent(), this.getUnDispatchedTasks(this.since, this.count)])
+      .then(result => console.log(this.tag, result))
       .catch(error => console.error(error));
+
+    // this.getReflectType()
+    //   .then(result => {
+    //     return this.getReflectContent();
+    //   })
+    //   .then(result => {
+    //     return this.getUnDispatchedTasks(this.since, this.count);
+    //   })
+    //   .catch(error => console.error(error));
   }
 
   /**
    * 销毁
    */
   ngOnDestroy(): void {
-    this.events.unsubscribe(this.globalService.stationWorkDispatchEvent);
+    this.events.unsubscribe(this.globalService.stationWorkUpdateEvent);
   }
 
+  /**
+   * 下拉刷新
+   * @param refresher
+   */
   doRefresh(refresher) {
-    console.log('Begin async operation', refresher);
+    console.log(this.tag, refresher);
 
-    setTimeout(() => {
-      console.log('Async operation has ended');
-      refresher.complete();
-    }, 2000);
+    this.since = 0;
+    while (this.items.shift());
+    let promise: Promise<boolean> = this.isUnDispatchedMode
+        ? this.getUnDispatchedTasks(this.since, this.count)
+        : this.getDispatchedTasks(this.since, this.count);
+    promise
+      .then(result => console.log(this.tag, result))
+      .catch(error => console.error(error))
+      .then(() => refresher.complete());
   }
 
   onSearch(ev: any) {
@@ -143,20 +156,17 @@ export class StationWorkPage implements OnInit, OnDestroy {
         let promise: Promise<boolean>;
         if (data === this.undispatchedName) {
           this.subTitle = this.undispatchedName;
+          this.isUnDispatchedMode = true;
           promise = this.getUnDispatchedTasks(this.since, this.count);
         } else {
           this.subTitle = this.dispatchedName;
+          this.isUnDispatchedMode = false;
           promise = this.getDispatchedTasks(this.since, this.count);
         }
         promise
-          .then(result => {
-            console.log(this.tag, result);
-            loader.dismiss();
-          })
-          .catch(error => {
-            console.error(error);
-            loader.dismiss();
-          });
+          .then(result => console.log(this.tag, result))
+          .catch(error => console.error(error))
+          .then(() => loader.dismiss());
       }
     });
 
@@ -289,6 +299,9 @@ export class StationWorkPage implements OnInit, OnDestroy {
     return this.dataService.getUnDispatchedTasks(since, count)
       .then(tasks => {
         this.transform2StationTasks(tasks, this.items);
+        if (this.items.length > 0) {
+          this.events.publish(this.globalService.mainUpdateEvent, {type: 'stationWorkCount', count: this.items.length});
+        }
         return Promise.resolve(tasks.length > 0);
       })
       .catch(error => {
@@ -390,6 +403,10 @@ export class StationWorkPage implements OnInit, OnDestroy {
           text: '确定',
           handler: data => {
             console.log('Saved clicked');
+            if (!data.remark) {
+              return this.globalService.showToast("请填写备注!");
+            }
+
             cancelExInfo.XdComment = data.remark;
             this.cancel(cancelExInfo);
           }
@@ -407,14 +424,18 @@ export class StationWorkPage implements OnInit, OnDestroy {
     this.dataService.cancelEx(cancelExInfo)
       .then(result => {
         if (result) {
-          this.events.publish(this.globalService.stationWorkDispatchEvent);
-        } else {
-          this.globalService.showToast('销单失败!');
+          this.events.publish(this.globalService.stationWorkUpdateEvent);
         }
+        Promise.resolve(result);
       })
       .catch(error => {
         console.error(error);
-        this.globalService.showToast('销单失败!');
+        Promise.resolve(false);
+      })
+      .then(result => {
+        if (!result) {
+          this.globalService.showToast('销单失败!');
+        }
       });
   }
 }

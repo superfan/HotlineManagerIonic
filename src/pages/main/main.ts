@@ -6,7 +6,7 @@ import {StationWorkPage} from "../stationwork/stationwork";
 import {SearchPage} from "../search/search";
 import {DataService} from "../../providers/DataService";
 import {SettingPage} from "../setting/setting";
-import {GlobalService, UpdateEvent} from "../../providers/GlobalService";
+import {GlobalService, MainUpdateEvent} from "../../providers/GlobalService";
 
 enum ItemId {
   MyWork,
@@ -193,19 +193,19 @@ export class MainPage implements AfterViewInit, OnDestroy {
    * @param events
    */
   private subscribeEvent(events: Events): void {
-    events.subscribe(this.globalService.mainUpdateEvent, (updateEvent: UpdateEvent) => {
-      switch (updateEvent.type) {
+    events.subscribe(this.globalService.mainUpdateEvent, (mainUpdateEvent: MainUpdateEvent) => {
+      switch (mainUpdateEvent.type) {
         case 'myWorkCount':
-          this.listItems[ItemId.MyWork].count = updateEvent.count;
+          this.listItems[ItemId.MyWork].count = mainUpdateEvent.count;
           break;
         case 'newsCount':
-          this.listItems[ItemId.News].count = updateEvent.count;
+          this.listItems[ItemId.News].count = mainUpdateEvent.count;
           break;
         case 'stationWorkCount':
-          this.listItems[ItemId.StationWork].count = updateEvent.count;
+          this.listItems[ItemId.StationWork].count = mainUpdateEvent.count;
           break;
         case 'gridStyle':
-          this.gridStyle = updateEvent.gridStyle;
+          this.gridStyle = mainUpdateEvent.gridStyle;
           break;
         default:
           break;

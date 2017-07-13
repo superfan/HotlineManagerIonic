@@ -1,10 +1,17 @@
 import {Injectable} from '@angular/core';
 import {ToastController} from "ionic-angular";
+import {TaskEx} from "../model/Task";
 
-export interface UpdateEvent {
+export interface MainUpdateEvent {
   type: 'myWorkCount' | 'newsCount' | 'stationWorkCount' | 'gridStyle';
   count: number;
   gridStyle: boolean;
+}
+
+export interface MyWorkUpdateEvent {
+  type: 'reply' | 'cancel',
+  taskEx?: TaskEx;
+  time?: number;
 }
 
 @Injectable()
@@ -18,8 +25,8 @@ export class GlobalService {
   departmentId: number = 10;
   readonly mainUpdateEvent: string = "main:update";
   readonly myWorkDownloadEvent:string = "mywork:download";
-  readonly myWorkReplyEvent: string = "mywork:reply";
-  readonly stationWorkDispatchEvent: string = "stationwork:dispatch";
+  readonly myWorkUpdateEvent: string = "mywork:update";
+  readonly stationWorkUpdateEvent: string = "stationwork:update";
 
   constructor(private toastCtrl: ToastController) {
 
