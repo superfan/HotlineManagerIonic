@@ -12,7 +12,7 @@
   </ion-navbar>
 
   <ion-toolbar no-border-top>
-    <ion-segment [(ngModel)]="segmentName">
+    <ion-segment [(ngModel)]="segmentName" (ionChange)="segmentChanged($event)">
       <ion-segment-button value="detailInfo">
         基本信息
       </ion-segment-button>
@@ -38,13 +38,19 @@
     </ion-list>
 
     <ion-list *ngSwitchCase="'dispatchInfo'">
-      <ion-item *ngFor="let dispatch of dispatches" class="dispatch-item">
+      <ion-item *ngFor="let dispatch of dispatches" class="dispatch-item" (click)="itemSelected(dispatch)">
         <ion-label fixed class="label-name">
           {{dispatch.name}}
         </ion-label>
-        <div item-content>
+        <div item-content *ngIf="!dispatch.isDate&&!dispatch.isTime">
           {{dispatch.value}}
         </div>
+        <ion-datetime *ngIf="dispatch.isDate" style="padding-left: 0px;"
+                      cancelText='取消' doneText='确定' displayFormat="YYYY-MM-DD"
+                      pickerFormat="YYYY-MM-DD" [(ngModel)]="dispatch.value"></ion-datetime>
+        <ion-datetime *ngIf="dispatch.isTime" style="padding-left: 0px;"
+                      cancelText='取消' doneText='确定' displayFormat="HH:mm:ss"
+                      pickerFormat="HH:mm:ss" [(ngModel)]="dispatch.value"></ion-datetime>
         <ion-icon name="ios-arrow-forward" item-end *ngIf="dispatch.isActive"></ion-icon>
       </ion-item>
     </ion-list>

@@ -13,6 +13,7 @@ import {News} from "../model/News";
 import {SearchTaskRequest} from "../model/SearchTaskRequest";
 import {UserInfo} from "../model/UserInfo";
 import {UserResult} from "../model/UserResult";
+import {Personnel} from "../model/Personnel";
 import {UserWorkInfo} from "../model/UserWorkInfo";
 import {UserManageInfo} from "../model/UserManageInfo";
 import {VersionInfo} from "../model/VersionInfo";
@@ -107,6 +108,69 @@ export class DownloadService extends BaseService {
                 resolve(body.Data);
               } else {
                 reject(body.Message ? body.Message : "failure to get words");
+              }
+            })
+            .catch(this.handleError);
+        })
+        .catch(error => reject(error));
+    });
+  }
+
+  /**
+   * 获取未派工任务
+   * @param userId
+   * @param since
+   * @param count
+   * @returns {Promise<T>}
+   */
+  public getUnDispatchedTasks(userId: number, since: number, count: number): Promise<Array<SearchTask>> {
+    return new Promise((resolve, reject) => {
+      this.configService.getServerBaseUri()
+        .then(data => {
+          let url = `${data}wap/v1/mobile/tasksearch/${userId}/unDispatchedTasks?count=${count}&since=${since}`;
+
+          return this.http.get(url, this.getOptions())
+            .toPromise()
+            .then(data => {
+              let body = data.json();
+              if (body.Code === this.globalService.httpCode
+                && body.StatusCode === this.globalService.httpSuccessStatusCode
+                && body.Data instanceof Array) {
+                resolve(body.Data);
+              } else {
+                reject(body.Message ? body.Message : "failure to get undispatched tasks");
+              }
+            })
+            .catch(this.handleError);
+        })
+        .catch(error => reject(error));
+    });
+  }
+
+  /**
+   * 获取已派工任务
+   * @param userId
+   * @param since
+   * @param count
+   * @param minutes
+   * @returns {Promise<T>}
+   */
+  public getDispatchedTasks(userId: number, since: number, count: number, minutes: number): Promise<Array<SearchTask>> {
+    return new Promise((resolve, reject) => {
+      this.configService.getServerBaseUri()
+        .then(data => {
+          let url = `${data}wap/v1/mobile/tasksearch/${userId}/dispatchedTasks/${minutes}?count=${count}&since=${since}`;
+
+          return this.http.get(url, this.getOptions())
+            .toPromise()
+            .then(data => {
+              let body = data.json();
+              if (body.Code === this.globalService.httpCode
+                && body.StatusCode === this.globalService.httpSuccessStatusCode
+                && body.Data instanceof Array) {
+                resolve(body.Data);
+              } else {
+                reject(body.Message ? body.Message : "failure to get dispatched tasks");
               }
             })
             .catch(this.handleError);
@@ -287,7 +351,34 @@ export class DownloadService extends BaseService {
   }
 
   /**
-   * 获得管理人员信息
+   * 获取施工人员
+   * @param userId
+   * @returns {Promise<T>}
+   */
+  public getPersonnels(userId: number): Promise<Array<Personnel>> {
+    return new Promise((resolve, reject) => {
+      this.configService.getServerBaseUri()
+        .then(data => {
+          let url = `${data}wap/v1/mobile/resource/user/${userId}/getFieldPersonnel`;
+          return this.http.get(url, this.getOptions())
+            .toPromise()
+            .then(data => {
+              let body = data.json();
+              if (body.Code === this.globalService.httpCode
+                && body.StatusCode === this.globalService.httpSuccessStatusCode
+                && body.Data instanceof Array) {
+                resolve(body.Data);
+              } else {
+                reject(body.Message ? body.Message : "failure to get personnels");
+              }
+            })
+            .catch(this.handleError);
+        })
+        .catch(error => reject(error));
+    });
+  }
+
+   /* 获得管理人员信息
    * @param userId
    * @returns {Promise<T>}
    */

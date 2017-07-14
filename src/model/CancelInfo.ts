@@ -7,3 +7,12 @@ export class CancelInfo {
   taskId: string;
   userId: number;
 }
+
+export class CancelExInfo {
+  TaskNo: string;
+  TaskType: string;
+  WcOperator: number;
+  WcTime: number;
+  XdComment: string;
+  XdOperator: number;
+}

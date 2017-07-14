@@ -2,14 +2,15 @@ import {Injectable} from '@angular/core';
 import {Http} from "@angular/http";
 import {ConfigService} from "./ConfigService";
 import {GlobalService} from "./GlobalService";
-import {AcceptInfo} from "../model/AcceptInfo";
+import {AcceptInfo, AcceptExInfo} from "../model/AcceptInfo";
 import {BaseService} from "./BaseService";
 import {GoInfo} from "../model/GoInfo";
 import {ArriveInfo} from "../model/ArriveInfo";
 import {RejectInfo} from "../model/RejectInfo";
 import {DelayInfo} from "../model/DelayInfo";
 import {ReplyInfo} from "../model/ReplyInfo";
-import {CancelInfo} from "../model/CancelInfo";
+import {CancelInfo, CancelExInfo} from "../model/CancelInfo";
+import {DispatchInfo} from "../model/DispatchInfo";
 
 @Injectable()
 export class UploadService extends BaseService {
@@ -193,7 +194,7 @@ export class UploadService extends BaseService {
    * @param cancelInfo
    * @returns {Promise<T>}
    */
-  public cancel(cancelInfo: CancelInfo) {
+  public cancel(cancelInfo: CancelInfo): Promise<boolean> {
     return new Promise((resolve, reject) => {
       this.configService.getServerBaseUri()
         .then(data => {
@@ -208,6 +209,90 @@ export class UploadService extends BaseService {
                 resolve(body.Data);
               } else {
                 reject(body.Message ? body.Message : "failure to cancel");
+              }
+            })
+            .catch(this.handleError);
+        })
+        .catch(error => reject(error));
+    });
+  }
+
+  /**
+   * 站点任务接单
+   * @param acceptExInfo
+   * @returns {Promise<T>}
+   */
+  public acceptEx(acceptExInfo: AcceptExInfo): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this.configService.getServerBaseUri()
+        .then(data => {
+          let url = data + "wap/v1/mobile/stationTask/" + acceptExInfo.taskId + "/accept";
+          return this.http.put(url, JSON.stringify(acceptExInfo), this.getOptions())
+            .toPromise()
+            .then(data => {
+              let body = data.json();
+              if (body.Code === this.globalService.httpCode
+                && body.StatusCode === this.globalService.httpSuccessStatusCode
+                && body.Data) {
+                resolve(body.Data);
+              } else {
+                reject(body.Message ? body.Message : "failure to accept for station task");
+              }
+            })
+            .catch(this.handleError);
+        })
+        .catch(error => reject(error));
+    });
+  }
+
+  /**
+   * 站点派单
+   * @param dispatchInfo
+   * @returns {Promise<T>}
+   */
+  public dispatch(dispatchInfo: DispatchInfo): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this.configService.getServerBaseUri()
+        .then(data => {
+          let url = data + "wap/v1/mobile/stationTask/" + dispatchInfo.taskId + "/dispatch";
+          return this.http.put(url, JSON.stringify(dispatchInfo), this.getOptions())
+            .toPromise()
+            .then(data => {
+              let body = data.json();
+              if (body.Code === this.globalService.httpCode
+                && body.StatusCode === this.globalService.httpSuccessStatusCode
+                && body.Data) {
+                resolve(body.Data);
+              } else {
+                reject(body.Message ? body.Message : "failure to dispatch for station task");
+              }
+            })
+            .catch(this.handleError);
+        })
+        .catch(error => reject(error));
+    });
+  }
+
+  /**
+   * 站点销单
+   * @param cancelExInfo
+   * @returns {Promise<T>}
+   */
+  public cancelEx(cancelExInfo: CancelExInfo): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this.configService.getServerBaseUri()
+        .then(data => {
+          let url = data + "wap/v1/mobile/stationTask/" + cancelExInfo.TaskNo + "/saveTaskXD";
+          return this.http.post(url, JSON.stringify(cancelExInfo), this.getOptions())
+            .toPromise()
+            .then(data => {
+              let body = data.json();
+              if (body.Code === this.globalService.httpCode
+                && body.StatusCode === this.globalService.httpSuccessStatusCode
+                && body.Data) {
+                resolve(body.Data);
+              } else {
+                reject(body.Message ? body.Message : "failure to cancel for station task");
               }
             })
             .catch(this.handleError);

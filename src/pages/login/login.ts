@@ -134,7 +134,7 @@ export class LoginPage implements OnInit {
    */
   onSuccessCallBack(userName: string, userResult: UserResult) {
     this.globalService.userName = userName;
-    this.globalService.userId = userResult.userId;
+    this.globalService.userId = 1;//userResult.userId;
     this.globalService.department = userResult.Department;
     this.globalService.isWorker = (this.user.role == 'worker');
     //外勤

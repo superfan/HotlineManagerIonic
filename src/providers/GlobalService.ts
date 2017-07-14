@@ -1,9 +1,17 @@
 import {Injectable} from '@angular/core';
+import {ToastController} from "ionic-angular";
+import {TaskEx} from "../model/Task";
 
-export interface UpdateEvent {
+export interface MainUpdateEvent {
   type: 'myWorkCount' | 'newsCount' | 'stationWorkCount' | 'gridStyle';
   count: number;
   gridStyle: boolean;
+}
+
+export interface MyWorkUpdateEvent {
+  type: 'reply' | 'cancel',
+  taskEx?: TaskEx;
+  time?: number;
 }
 
 @Injectable()
@@ -12,15 +20,16 @@ export class GlobalService {
   readonly httpCode: number = 0;
   readonly httpSuccessStatusCode: number = 200;
   userName: string = "sh3h";//"王超";
-  userId: number = 5005;//60;5005
+  userId: number = 1;//60;5005
   department: string = "东河营业分公司";//"滨河营业分公司";
   departmentId: number = 10;
-  isWorker:boolean;//是否是外勤人员
+  isWorker: boolean;//是否是外勤人员
   readonly mainUpdateEvent: string = "main:update";
-  readonly myWorkDownloadEvent:string = "mywork:download";
-  readonly myWorkReplyEvent: string = "mywork:reply";
+  readonly myWorkDownloadEvent: string = "mywork:download";
+  readonly myWorkUpdateEvent: string = "mywork:update";
+  readonly stationWorkUpdateEvent: string = "stationwork:update";
 
-  constructor() {
+  constructor(private toastCtrl: ToastController) {
 
   }
 
@@ -33,6 +42,20 @@ export class GlobalService {
     let second = this.padLeftZero(date.getSeconds().toString());
 
     return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+  }
+
+  /**
+   * toast
+   * @param message
+   */
+  showToast(message: string): void {
+    let toast = this.toastCtrl.create({
+      message: message,
+      duration: 2000,
+      position: 'bottom'
+    });
+
+    toast.present(toast);
   }
 
   private padLeftZero(name: string): string {

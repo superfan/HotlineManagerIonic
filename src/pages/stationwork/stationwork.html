@@ -37,8 +37,8 @@
         <ion-avatar item-start>
           <img src="assets/img/ic_mywork_avatar.png">
         </ion-avatar>
-        <div><h2 class="card-header-label-hint">客服编号 </h2><h2 class="card-header-label-content">{{item.customerId}}</h2></div>
-        <div><h2 class="card-header-label-hint">任务编号 </h2><h2 class="card-header-label-content">{{item.taskId}}</h2></div>
+        <div><h2 class="card-header-label-hint">客服编号 </h2><h2 class="card-header-label-content">{{item.serialNo}}</h2></div>
+        <div><h2 class="card-header-label-hint">任务编号 </h2><h2 class="card-header-label-content">{{item.taskNo}}</h2></div>
       </ion-item>
 
       <ion-list>
@@ -52,16 +52,23 @@
         </ion-item>
       </ion-list>
 
-      <ion-row>
-        <ion-col class="card-bottom-btn">
+      <ion-row *ngIf="isUnDispatchedMode">
+        <ion-col class="card-bottom-btn" *ngIf="!item.isAccepted">
+          <button ion-button icon-left clear small (click)="onAccept(item)">
+            <ion-icon name="done-all"></ion-icon>
+            <div>接单</div>
+          </button>
+        </ion-col>
+
+        <ion-col class="card-bottom-btn" *ngIf="item.isAccepted">
           <button ion-button icon-left clear small (click)="onDispatch(item)">
             <ion-icon name="person"></ion-icon>
             <div>派工</div>
           </button>
         </ion-col>
 
-        <ion-col class="card-bottom-btn">
-          <button ion-button icon-left clear small (click)="onClose(item)">
+        <ion-col class="card-bottom-btn" *ngIf="item.isAccepted">
+          <button ion-button icon-left clear small (click)="onCancel(item)">
             <ion-icon name="close"></ion-icon>
             <div>销单</div>
           </button>
