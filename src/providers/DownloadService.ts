@@ -15,6 +15,7 @@ import {UserInfo} from "../model/UserInfo";
 import {UserResult} from "../model/UserResult";
 import {UserWorkInfo} from "../model/UserWorkInfo";
 import {UserManageInfo} from "../model/UserManageInfo";
+import {VersionInfo} from "../model/VersionInfo";
 
 @Injectable()
 export class DownloadService extends BaseService {
@@ -261,7 +262,7 @@ export class DownloadService extends BaseService {
       this.configService.getServerBaseUri()
         .then(data => {
           let url;
-          if (user.isWorker) {
+          if (user.role=='worker') {
             url = data + "wap/v1/auth/" + user.userName + "/" + user.password + "?appIdentity=cc";
           } else {
             url = data + "wap/v1/auth/wap/" + user.userName + "/" + user.password + "?appIdentity=cc";
@@ -335,6 +336,63 @@ export class DownloadService extends BaseService {
                 resolve(body.Data);
               } else {
                 reject(body.Message ? body.Message : "fail to get WorkerUserInfo!")
+              }
+            })
+            .catch(this.handleError);
+        })
+        .catch(error => reject(error));
+    })
+  }
+
+  /**
+   * 检查app更新
+   * @param version
+   * @returns {Promise<T>}
+   */
+  public checkAppVersion(version: number): Promise<VersionInfo> {
+    return new Promise((resolve, reject) => {
+      this.configService.getServerBaseUri()
+        .then(data => {
+          let url = `${data}wap/v1/system/update/app/check?version=${version}`;
+          return this.http.get(url, this.getOptions())
+            .toPromise()
+            .then(data => {
+              console.log("checkAppVersion:" + data);
+              let body = data.json();
+              if (body.Code == this.globalService.httpCode
+                && body.StatusCode == this.globalService.httpSuccessStatusCode
+                && body.Data as VersionInfo) {
+                resolve(body.Data);
+              } else {
+                reject(body.Message ? body.Message : "fail to get check app version info!")
+              }
+            })
+            .catch(this.handleError);
+        })
+        .catch(error => reject(error));
+    })
+  }
+
+  /**
+   * 检查data更新
+   * @param version
+   */
+  public checkDataVersion(version: number): Promise<VersionInfo> {
+    return new Promise((resolve, reject) => {
+      this.configService.getServerBaseUri()
+        .then(data => {
+          let url = `${data}wap/v1/system/update/data/check?version=${version}`;
+          return this.http.get(url, this.getOptions())
+            .toPromise()
+            .then(data => {
+              console.log("checkDataVersion:" + data);
+              let body = data.json();
+              if (body.Code == this.globalService.httpCode
+                && body.StatusCode == this.globalService.httpSuccessStatusCode
+                && body.Data as VersionInfo) {
+                resolve(body.Data);
+              } else {
+                reject(body.Message ? body.Message : "fail to get check data version info!")
               }
             })
             .catch(this.handleError);

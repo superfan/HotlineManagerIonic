@@ -1,32 +1,32 @@
-import {Component} from '@angular/core';
-import {LoadingController, NavController, Platform, ViewController} from 'ionic-angular';
+import {Component, OnInit} from '@angular/core';
+import {LoadingController, NavController, ToastController, ViewController} from 'ionic-angular';
 import {LoginPage} from "../login/login";
 import {FileService} from "../../providers/FileService";
 import {AppVersion} from "@ionic-native/app-version";
-import {Http} from "@angular/http";
-import {ConfigService} from "../../providers/ConfigService";
 import {GlobalService} from "../../providers/GlobalService";
+import {DataService} from "../../providers/DataService";
 
 @Component({
   selector: 'page-welcome',
   templateUrl: 'welcome.html'
 })
 
-export class WelcomePage {
-
-  appVersionCode: string;
-  loading;
+export class WelcomePage implements OnInit {
+  private readonly tag: string = "[WelcomePage]";
+  public loading;
 
   constructor(public navCtrl: NavController,
               public loadingCtrl: LoadingController,
               private viewCtrl: ViewController,
-              public platform: Platform,
               public fileService: FileService,
               private appVersion: AppVersion,
-              private http: Http,
-              private configService: ConfigService,
-              private globalService: GlobalService) {
-    viewCtrl.didEnter.subscribe(() => this.onDidEnter());
+              private toastCtrl: ToastController,
+              private globalService: GlobalService,
+              public dataService: DataService) {
+  }
+
+  ngOnInit() {
+    this.viewCtrl.didEnter.subscribe(() => this.onDidEnter());
   }
 
   /**
@@ -42,13 +42,16 @@ export class WelcomePage {
     //判断是否是安卓平台
     if (!this.globalService.isChrome) {
       console.log("platform is on android");
-      this.fileService.createDirs()
-        .then(() => {
-          this.getVersionCode();
-        })
-        .catch(err => {
-          console.log("initial files failed" + err);
-        })
+      // this.fileService.createDirRoot()
+      //   .then((result) => {
+      //     console.log(this.tag + 'onDidEnter:' + result);
+      //     this.getVersionCode();
+      //   })
+      //   .catch(err => {
+      //     console.log("initial files failed" + err);
+      //   })
+      this.loading.dismiss();
+      this.navCtrl.push(LoginPage, {});
     } else {
       console.log("platform is on chrome");
       this.loading.dismiss();
@@ -59,10 +62,10 @@ export class WelcomePage {
   /**
    * 获得版本号
    */
-  getVersionCode() {
+  private getVersionCode() {
     this.appVersion.getVersionCode()
-      .then(result => {
-        this.onGetVersionCode(result);
+      .then(versionCode => {
+        this.checkUpdate(versionCode);
       })
       .catch(err => {
         console.log("getVersionCode:" + err);
@@ -70,54 +73,79 @@ export class WelcomePage {
   }
 
   /**
-   * 获取服务器地址
-   * @param data
+   * 检查更新(app和data)
+   * @param version
    */
-  onGetVersionCode(data) {
-    this.appVersionCode = data.toString();
-    this.configService.getServerBaseUri()
+  private checkUpdate(version: number) {
+    Promise.all([this.checkAppVersion(version), this.checkDataVersion(version)])
       .then(result => {
-        console.log(result);
-        this.checkVersion(result);
+        console.log(this.tag + 'checkUpdate:' + result);
+        this.jump2Login();
       })
-      .catch(err => {
-        console.log(err)
-      });
+      .catch(error => {
+        console.log(this.tag + 'checkUpdate:' + error);
+      })
   }
 
-
   /**
-   * 访问服务器检查version
-   * @param result
+   * 检查app更新
+   * @param version
+   * @returns {Promise<TResult|TResult2|TResult1>}
    */
-  checkVersion(result: string) {
-    let serveruri = result + "wap/v1/system/update/app/check?version=" + this.appVersionCode;
-    console.log("welcome: serveruri:" + serveruri);
-    this.http.get(serveruri)
-      .subscribe(data => {
-          this.updateApp(data.json())
-            .then(() => {
-              this.loading.dismiss();
-              this.navCtrl.push(LoginPage, {});
-              console.log("go go go success");
-            }).catch(err => console.log(err));
-        }
-        , error => {
-          console.log(error);
+  private checkAppVersion(version: number): Promise<string> {
+    return new Promise((resolve, reject) => {
+      this.dataService.checkAppVersion(version)
+        .then(appVersion => {
+          if (appVersion && appVersion.url) {
+            resolve(this.fileService.downloadFile(false, appVersion.url));
+          }else{
+            resolve('no update app');
+          }
         })
+        .catch(error => {
+          let toast = this.toastCtrl.create({
+            duration: 2000,
+            position: 'bottom',
+            message: error
+          });
+          toast.present();
+          resolve(error);
+        })
+    })
   }
 
   /**
-   * 更新App
-   * @param result
-   * @returns {Promise<TResult2|TResult1>}
+   * 检查数据包更新
+   * @param version
+   * @returns {Promise<TResult|TResult2|TResult1>}
    */
-  updateApp(result) {
-    let downloadUrl;
-    if (result.Code == 0 && result.StatusCode == 200 && result.Data != null) {
-      downloadUrl = result.Data.url;
-      console.log("downloadZipUrl:" + downloadUrl);
-      return this.fileService.downloadFile(downloadUrl);
-    }
+  private checkDataVersion(version: number): Promise<string> {
+    return new Promise((resolve, reject) => {
+      this.dataService.checkDataVersion(version)
+        .then(dataVersion => {
+          if (dataVersion && dataVersion.url) {
+            resolve(this.fileService.downloadFile(true, dataVersion.url));
+          }else{
+            resolve('no update data');
+          }
+        })
+        .catch(error => {
+          let toast = this.toastCtrl.create({
+            duration: 2000,
+            position: 'bottom',
+            message: error
+          });
+          toast.present();
+          resolve(error);
+        })
+    })
+  }
+
+  /**
+   * 跳转至登录界面
+   */
+  private jump2Login() {
+    this.loading.dismiss();
+    this.navCtrl.push(LoginPage, {});
   }
 }

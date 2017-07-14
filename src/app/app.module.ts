@@ -39,6 +39,7 @@ import {SettingPage} from "../pages/setting/setting";
 import {HttpInterceptorBackend} from "../providers/HttpInterceptorBackend";
 import {HttpInterceptor} from "../providers/HttpInterceptor";
 import {httpFactory} from "../providers/httpFactory";
+import {Device} from "@ionic-native/device";
 
 
 @NgModule({
@@ -102,6 +103,7 @@ import {httpFactory} from "../providers/httpFactory";
     DownloadService,
     UploadService,
     GlobalService,
+    Device,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     {provide: Http, useFactory: httpFactory, deps:[HttpInterceptorBackend, RequestOptions]},
   ]

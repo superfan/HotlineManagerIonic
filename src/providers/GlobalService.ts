@@ -8,7 +8,7 @@ export interface UpdateEvent {
 
 @Injectable()
 export class GlobalService {
-  readonly isChrome: boolean = true;
+  readonly isChrome: boolean = false;
   readonly httpCode: number = 0;
   readonly httpSuccessStatusCode: number = 200;
   userName: string = "sh3h";//"王超";

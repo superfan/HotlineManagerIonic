@@ -345,7 +345,25 @@ export class DataService {
    * 获取外勤用户信息
    * @returns {Promise<UserWorkInfo>}
    */
-  public getWorkInfo(){
+  public getWorkInfo() {
     return this.downloadService.getWorkerUserInfo(this.globalService.userId);
+  }
+
+  /**
+   * 检查app更新
+   * @param version
+   * @returns {Promise<VersionInfo>}
+   */
+  public checkAppVersion(version: number) {
+    return this.downloadService.checkAppVersion(version);
+  }
+
+  /**
+   * 检查数据包更新
+   * @param version
+   * @returns {Promise<VersionInfo>}
+   */
+  public checkDataVersion(version: number) {
+    return this.downloadService.checkDataVersion(version);
   }
 }
