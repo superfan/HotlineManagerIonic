@@ -42,16 +42,14 @@ export class WelcomePage implements OnInit {
     //判断是否是安卓平台
     if (!this.globalService.isChrome) {
       console.log("platform is on android");
-      // this.fileService.createDirRoot()
-      //   .then((result) => {
-      //     console.log(this.tag + 'onDidEnter:' + result);
-      //     this.getVersionCode();
-      //   })
-      //   .catch(err => {
-      //     console.log("initial files failed" + err);
-      //   })
-      this.loading.dismiss();
-      this.navCtrl.push(LoginPage, {});
+      this.fileService.createDirRoot()
+        .then((result) => {
+          console.log(this.tag + 'onDidEnter:' + result);
+          this.getVersionCode();
+        })
+        .catch(err => {
+          console.log("initial files failed" + err);
+        })
     } else {
       console.log("platform is on chrome");
       this.loading.dismiss();
@@ -98,7 +96,7 @@ export class WelcomePage implements OnInit {
         .then(appVersion => {
           if (appVersion && appVersion.url) {
             resolve(this.fileService.downloadFile(false, appVersion.url));
-          }else{
+          } else {
             resolve('no update app');
           }
         })
@@ -125,7 +123,7 @@ export class WelcomePage implements OnInit {
         .then(dataVersion => {
           if (dataVersion && dataVersion.url) {
             resolve(this.fileService.downloadFile(true, dataVersion.url));
-          }else{
+          } else {
             resolve('no update data');
           }
         })
