@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {LoadingController, NavController, ToastController, Platform} from 'ionic-angular';
+import {LoadingController, NavController, Platform} from 'ionic-angular';
 import {LoginPage} from "../login/login";
 import {FileService} from "../../providers/FileService";
 import {AppVersion} from "@ionic-native/app-version";
@@ -23,7 +23,6 @@ export class WelcomePage {
               private globalService: GlobalService,
               private dataService: DataService) {
     this.platform.ready().then(readySource => this.onDidEnter());
-
   }
 
   /**
