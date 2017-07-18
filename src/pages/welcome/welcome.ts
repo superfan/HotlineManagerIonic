@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {LoadingController, NavController, Platform, ViewController} from 'ionic-angular';
+import {LoadingController, NavController, Platform} from 'ionic-angular';
 import {LoginPage} from "../login/login";
 import {FileService} from "../../providers/FileService";
 import {AppVersion} from "@ionic-native/app-version";
@@ -19,14 +19,13 @@ export class WelcomePage {
 
   constructor(public navCtrl: NavController,
               public loadingCtrl: LoadingController,
-              private viewCtrl: ViewController,
               public platform: Platform,
               public fileService: FileService,
               private appVersion: AppVersion,
               private http: Http,
               private configService: ConfigService,
               private globalService: GlobalService) {
-    viewCtrl.didEnter.subscribe(() => this.onDidEnter());
+    this.platform.ready().then(readySource => this.onDidEnter());
   }
 
   /**

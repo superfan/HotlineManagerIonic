@@ -15,17 +15,17 @@
   <!--grid style-->
   <ion-grid *ngIf="gridStyle">
     <ion-row *ngFor="let item of gridItems">
-      <ion-col col-4 (click)="itemSelected(item[0].id)" *ngIf="item[0].active">
+      <ion-col col-4 (click)="itemSelected(item[0].id)" *ngIf="item[0] && item[0].active">
         <img src="{{item[0].src}}" width="{{imgWidth}}" height="{{imgHeight}}"/>
         <ion-badge color="danger" class="grid-item-badge" *ngIf="item[0].count>0">{{item[0].count}}</ion-badge>
         <ion-label>{{item[0].name}}</ion-label>
       </ion-col>
-      <ion-col col-4 (click)="itemSelected(item[1].id)" *ngIf="item[1].active">
+      <ion-col col-4 (click)="itemSelected(item[1].id)" *ngIf="item[1] && item[1].active">
         <img src="{{item[1].src}}" width="{{imgWidth}}" height="{{imgHeight}}"/>
         <ion-badge color="danger" class="grid-item-badge" *ngIf="item[1].count>0">{{item[1].count}}</ion-badge>
         <ion-label>{{item[1].name}}</ion-label>
       </ion-col>
-      <ion-col col-4 (click)="itemSelected(item[2].id)" *ngIf="item[2].active">
+      <ion-col col-4 (click)="itemSelected(item[2].id)" *ngIf="item[2] && item[2].active">
         <img src="{{item[2].src}}" width="{{imgWidth}}" height="{{imgHeight}}"/>
         <ion-badge color="danger" class="grid-item-badge" *ngIf="item[2].count>0">{{item[2].count}}</ion-badge>
         <ion-label>{{item[2].name}}</ion-label>

@@ -66,6 +66,9 @@
         },
         "cordova-plugin-network-information": {
             "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "cordova-sqlite-storage": {
+            "PACKAGE_NAME": "io.ionic.starter"
         }
     },
     "dependent_plugins": {

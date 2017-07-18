@@ -9,12 +9,11 @@ import {FileOpener} from "@ionic-native/file-opener";
  */
 @Injectable()
 export class FileService {
-
-  dirPath: string = this.file.externalRootDirectory;
-  dirRoot: string = 'sh3h';
-  dir: string = 'hotlinemanager';
-  arrDirs = ['config', 'data', 'images', 'log', 'sounds', 'update', 'user'];
-  apkName = "/TaskManager.apk";
+  private dirPath: string = null;
+  private readonly dirRoot: string = 'sh3h';
+  private readonly dir: string = 'hotlinemanager';
+  private readonly arrDirs: string[] = ['config', 'data', 'images', 'log', 'sounds', 'update', 'user'];
+  private readonly apkName: string = "/TaskManager.apk";
 
   constructor(private file: File,
               private transfer: Transfer,
@@ -24,9 +23,26 @@ export class FileService {
   }
 
   /**
+   * 获取db路径
+   * @returns {string}
+   */
+  public getDbDir(): string {
+    return `${this.dirPath}/${this.dirRoot}/${this.dir}/data`;
+  }
+
+  /**
+   * 获取config路径
+   * @returns {string}
+   */
+  public getConfigDir(): string {
+    return `${this.dirPath}/${this.dirRoot}/${this.dir}/config`;
+  }
+
+  /**
    * 创建文件夹目录
    */
   createDirs() {
+    this.dirPath = this.file.externalRootDirectory;
     const dirPath = this.dirPath;
     const dirRoot = this.dirRoot;
     const dir = this.dir;
@@ -60,18 +76,21 @@ export class FileService {
      */
     function copySystemConfig() {
       let originUrl = 'file:///android_asset/www/assets/config/';
-      let newUrl = dirPath + dirRoot + '/' + dir + '/config';
+      let newUrl = dirPath + dirRoot + '/' + dir + '/config/';
       let fileName = 'system.json';
-      file.checkFile(newUrl, fileName)
+      return file.checkFile(newUrl, fileName)
         .then(result => {
           console.log("copySystemConfig:" + result);
           if (!result) {
             return file.copyFile(originUrl, fileName, newUrl, fileName);
+          } else {
+            Promise.resolve('success');
           }
         })
-        .catch(err => {
-          console.log("copySystemConfig" + err);
-        })
+        .catch(error => {
+          console.error(error);
+          return file.copyFile(originUrl, fileName, newUrl, fileName);
+        });
     }
 
     return createDirRoot().then(() => {
@@ -81,8 +100,7 @@ export class FileService {
     }).then(() => {
       return copySystemConfig()
     }).then(() => console.log('success'))
-      .catch(err => console.log(err))
-
+      .catch(err => console.log(err));
   }
 
   /**

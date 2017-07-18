@@ -1,7 +1,25 @@
 import {Injectable} from "@angular/core";
 import {Http} from "@angular/http";
+import {Storage} from '@ionic/storage';
+import {GlobalService} from "./GlobalService";
 import {File} from "@ionic-native/file";
 import 'rxjs/add/operator/toPromise';
+import {FileService} from "./FileService";
+
+interface SystemConfig {
+  outerBaseUri: string;
+  innerBaseUri: string;
+  serverBaseUri: string;
+  isOuterNetwork: boolean;
+  isGridStyle: boolean;
+  isDebugMode: boolean;
+  keepAliveInterval: number;
+  sysRegion: string;
+}
+
+interface MapConfig {
+  mapServerUrl: string
+}
 
 /**
  * Created by zhangjing on 2017/6/19.
@@ -10,14 +28,21 @@ import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class ConfigService {
-  private readonly basePath: string = "./assets/config/";
-  // private basePath:string="file:///storage/emulated/0/sh3h/hotlinemanager/config/";
-  private readonly systemFilePath: string = this.basePath + 'system.json';
-  private readonly mapFilePath: string = this.basePath + 'map.json';
-  private systemConfig: any;
-  private mapConfig: any;
+  private readonly basePath: string = './assets/config/';
+  private readonly systemFileName: string = 'system.json';
+  private readonly mapFileName: string = 'map.json';
+  private readonly systemFilePath: string = `${this.basePath}${this.systemFileName}`;
+  private readonly mapFilePath: string = `${this.basePath}${this.mapFileName}`;
+  private readonly systemStorageName: string = 'system';
+  private readonly mapStorageName: string = 'map';
+  private systemConfig: SystemConfig;
+  private mapConfig: MapConfig;
 
-  constructor(public http: Http, public file: File) {
+  constructor(private http: Http,
+              private storage: Storage,
+              private file: File,
+              private globalService: GlobalService,
+              private fileService: FileService) {
   }
 
   /**
@@ -25,19 +50,20 @@ export class ConfigService {
    * @returns {Promise<string>|Promise<T>}
    */
   public getServerBaseUri(): Promise<string> {
-    return this.systemConfig && this.systemConfig.serverBaseUri
+    return ConfigService.isValid<SystemConfig>(this.systemConfig, 'serverBaseUri')
       ? Promise.resolve(this.systemConfig.serverBaseUri)
       : new Promise((resolve, reject) => {
         this.readSystemConfig()
           .then(data => {
-            if (this.systemConfig.outerBaseUri && this.systemConfig.innerBaseUri) {
+            this.systemConfig = data as SystemConfig;
+            if (ConfigService.isValid<SystemConfig>(this.systemConfig, 'outerBaseUri')
+              && ConfigService.isValid<SystemConfig>(this.systemConfig, 'innerBaseUri')
+              && ConfigService.isValid<SystemConfig>(this.systemConfig, 'isOuterNetwork')) {
               this.systemConfig.serverBaseUri =
-                this.systemConfig.isOuterNetwork
-                  ? this.systemConfig.outerBaseUri
-                  : this.systemConfig.innerBaseUri;
+                this.systemConfig.isOuterNetwork ? this.systemConfig.outerBaseUri : this.systemConfig.innerBaseUri;
               resolve(this.systemConfig.serverBaseUri);
             } else {
-              reject("base uri of the server is error");
+              reject("failure to getServerBaseUri");
             }
           })
           .catch(error => reject(error));
@@ -49,15 +75,18 @@ export class ConfigService {
    * @returns {Promise<T>}
    */
   public isGridStyle(): Promise<boolean> {
-    return this.systemConfig && this.systemConfig.hasOwnProperty("isGridStyle")
+    return ConfigService.isValid<SystemConfig>(this.systemConfig, 'isGridStyle')
       ? Promise.resolve(this.systemConfig.isGridStyle)
       : new Promise((resolve, reject) => {
         this.readSystemConfig()
           .then(data => {
-            if (!this.systemConfig.hasOwnProperty("isGridStyle")) {
-              this.systemConfig.isGridStyle = true;
+            this.systemConfig = data as SystemConfig;
+            if (ConfigService.isValid<SystemConfig>(this.systemConfig, 'isGridStyle')) {
+              resolve(this.systemConfig.isGridStyle);
             }
-            resolve(this.systemConfig.isGridStyle);
+            else {
+              reject("failure to check isGridStyle");
+            }
           })
           .catch(error => reject(error));
       });
@@ -68,15 +97,18 @@ export class ConfigService {
    * @returns {Promise<T>}
    */
   public isOuterNetwork(): Promise<boolean> {
-    return this.systemConfig && this.systemConfig.hasOwnProperty("isOuterNetwork")
+    return ConfigService.isValid<SystemConfig>(this.systemConfig, 'isOuterNetwork')
       ? Promise.resolve(this.systemConfig.isOuterNetwork)
       : new Promise((resolve, reject) => {
         this.readSystemConfig()
           .then(data => {
-            if (!this.systemConfig.hasOwnProperty("isOuterNetwork")) {
-              this.systemConfig.isOuterNetwork = true;
+            this.systemConfig = data as SystemConfig;
+            if (ConfigService.isValid<SystemConfig>(this.systemConfig, 'isOuterNetwork')) {
+              resolve(this.systemConfig.isOuterNetwork);
             }
-            resolve(this.systemConfig.isOuterNetwork);
+            else {
+              reject("failure to check isOuterNetwork");
+            }
           })
           .catch(error => reject(error));
       })
@@ -87,15 +119,18 @@ export class ConfigService {
    * @returns {Promise<T>}
    */
   public isDebugMode(): Promise<boolean> {
-    return this.systemConfig && this.systemConfig.hasOwnProperty("isDebugMode")
+    return ConfigService.isValid<SystemConfig>(this.systemConfig, 'isDebugMode')
       ? Promise.resolve(this.systemConfig.isDebugMode)
       : new Promise((resolve, reject) => {
         this.readSystemConfig()
           .then(data => {
-            if (!this.systemConfig.hasOwnProperty("isDebugMode")) {
-              this.systemConfig.isDebugMode = true;
+            this.systemConfig = data as SystemConfig;
+            if (ConfigService.isValid<SystemConfig>(this.systemConfig, 'isDebugMode')) {
+              resolve(this.systemConfig.isDebugMode);
             }
-            resolve(this.systemConfig.isDebugMode);
+            else {
+              reject("failure to check isDebugMode");
+            }
           })
           .catch(error => reject(error));
       });
@@ -106,15 +141,18 @@ export class ConfigService {
    * @returns {Promise<T>}
    */
   public getKeepAliveInterval(): Promise<number> {
-    return this.systemConfig && this.systemConfig.hasOwnProperty("keepAliveInterval")
+    return ConfigService.isValid<SystemConfig>(this.systemConfig, 'keepAliveInterval')
       ? Promise.resolve(this.systemConfig.keepAliveInterval)
       : new Promise((resolve, reject) => {
         this.readSystemConfig()
           .then(data => {
-            if (!this.systemConfig.hasOwnProperty("keepAliveInterval")) {
-              this.systemConfig.keepAliveInterval = 30000;
+            this.systemConfig = data as SystemConfig;
+            if (ConfigService.isValid<SystemConfig>(this.systemConfig, 'keepAliveInterval')) {
+              resolve(this.systemConfig.keepAliveInterval);
             }
-            resolve(this.systemConfig.keepAliveInterval);
+            else {
+              reject("failure to getKeepAliveInterval");
+            }
           })
           .catch(error => reject(error));
       });
@@ -125,15 +163,18 @@ export class ConfigService {
    * @returns {Promise<T>}
    */
   public getSysRegion(): Promise<string> {
-    return this.systemConfig && this.systemConfig.hasOwnProperty("sysRegion")
+    return ConfigService.isValid<SystemConfig>(this.systemConfig, 'sysRegion')
       ? Promise.resolve(this.systemConfig.sysRegion)
       : new Promise((resolve, reject) => {
         this.readSystemConfig()
           .then(data => {
-            if (!this.systemConfig.hasOwnProperty("sysRegion")) {
-              this.systemConfig.sysRegion = "shanghai";
+            this.systemConfig = data as SystemConfig;
+            if (ConfigService.isValid<SystemConfig>(this.systemConfig, 'sysRegion')) {
+              resolve(this.systemConfig.sysRegion);
             }
-            resolve(this.systemConfig.sysRegion);
+            else {
+              reject("failure to getSysRegion");
+            }
           })
           .catch(error => reject(error));
       });
@@ -144,12 +185,13 @@ export class ConfigService {
    * @returns {Promise<T>}
    */
   public getMapServerUrl(): Promise<string> {
-    return this.mapConfig && this.mapConfig.hasOwnProperty("mapServerUrl")
+    return ConfigService.isValid<MapConfig>(this.mapConfig, 'mapServerUrl')
       ? Promise.resolve(this.mapConfig.mapServerUrl)
       : new Promise((resolve, reject) => {
         this.readMapConfig()
           .then(data => {
-            if (this.mapConfig.hasOwnProperty("mapServerUrl")) {
+            this.mapConfig = data as MapConfig;
+            if (ConfigService.isValid<MapConfig>(this.mapConfig, 'mapServerUrl')) {
               resolve(this.mapConfig.mapServerUrl);
             } else {
               reject("the url of map server is error");
@@ -160,79 +202,151 @@ export class ConfigService {
   }
 
   /**
+   * 设置九宫格样式
+   * @param isGridStyle
+   * @returns {any}
+   */
+  public setGridStyle(isGridStyle: boolean): Promise<boolean> {
+    if (ConfigService.isValid<SystemConfig>(this.systemConfig, 'isGridStyle')) {
+      return new Promise((resolve, reject) => {
+        let systemConfig: SystemConfig = Object.create(this.systemConfig);
+        systemConfig.isGridStyle = isGridStyle;
+        this.writeSystemConfig(systemConfig)
+          .then(result => {
+            if (result) {
+              this.systemConfig.isGridStyle = isGridStyle;
+            }
+            resolve(!!result);
+          })
+          .catch(error => reject(error));
+      });
+    } else {
+      return Promise.reject("systemConfig has no data");
+    }
+  }
+
+  /**
    * 读取system.json
+   * @returns {Promise<TResult2|SystemConfig>|Promise<any>|Promise<SystemConfig>}
+   */
+  private readSystemConfig(): Promise<SystemConfig> {
+    if (this.globalService.isChrome) {
+      return this.storage.get(this.systemStorageName)
+        .then(val => {
+          if (!val) {
+            return this.http.get(this.systemFilePath)
+              .toPromise()
+              .then(res => this.storage.set(this.systemStorageName, JSON.stringify(res.json())))
+              .then(val => ConfigService.transform2SystemConfig(val));
+          } else {
+            return ConfigService.transform2SystemConfig(val);
+          }
+        });
+    } else {
+      return this.file.readAsText(this.fileService.getConfigDir(), this.systemFileName)
+        .then(result => {
+          return ConfigService.transform2SystemConfig(result);
+        });
+    }
+  }
+
+  /**
+   * 写入system.json
    * @returns {Promise<TResult|T>}
    */
-  private readSystemConfig(): Promise<any> {
-    return this.http.get(this.systemFilePath)
-      .toPromise()
-      .then(res => {
-        let body = res.json();
-        return this.systemConfig = {
-          isOuterNetwork: body["sys.connect.outer.network"],
-          outerBaseUri: body["server.outer.baseuri"],
-          innerBaseUri: body["server.inner.baseuri"],
-          isGridStyle: body["sys.grid.style"],
-          isDebugMode: body["sys.debug.mode"],
-          keepAliveInterval: body["sys.keep.alive.interval"],
-          sysRegion: body["sys.region"]
-        };
-      })
-      .catch(this.handleError);
+  private writeSystemConfig(systemConfig: SystemConfig): Promise<any> {
+    if (this.globalService.isChrome) {
+      return this.storage.set(this.systemStorageName, ConfigService.transform2SystemString(systemConfig));
+    } else {
+      return this.file.writeExistingFile(this.fileService.getConfigDir(), this.systemFileName,
+        ConfigService.transform2SystemString(systemConfig));
+    }
   }
 
   /**
    * 读取map.json
-   * @returns {Promise<string>}
+   * @returns {Promise<TResult2|MapConfig>|Promise<any>|Promise<MapConfig>}
    */
-  private readMapConfig() {
-    return this.http.get(this.mapFilePath)
-      .toPromise()
-      .then(res => {
-        let body = res.json();
-        return this.mapConfig = {
-          mapServerUrl: body["map.server.url"]
-        };
-      })
-      .catch(this.handleError);
+  private readMapConfig(): Promise<MapConfig> {
+    return this.storage.get(this.mapStorageName)
+      .then(val => {
+        if (!val) {
+          return this.http.get(this.mapFilePath)
+            .toPromise()
+            .then(res => this.storage.set(this.mapStorageName, JSON.stringify(res.json())))
+            .then(val => ConfigService.transform2MapConfig(val));
+        } else {
+          return ConfigService.transform2MapConfig(val);
+        }
+      });
   }
 
   /**
-   * to json
-   * @param res
-   * @returns {any|{}}
+   * 判断是否有效
+   * @param config
+   * @param field
+   * @returns {T|boolean}
    */
-  // private extractData(res: Response): string {
-  //   let body = res.json();
-  //   let isOuterNetwork = body["sys.connect.outer.network"];
-  //   let outerBaseUri = body["server.outer.baseuri"];
-  //   let innerBaseUri = body["server.inner.baseuri"];
-  //   let isGridStyle = body["sys.grid.style"];
-  //   let isDebugMode = body["sys.debug.mode"];
-  //   let keepAliveInterval = body["sys.keep.alive.interval"];
-  //   let sysRegion = body["sys.region"];
-  //   this.systemConfig = {
-  //     isOuterNetwork,
-  //     outerBaseUri,
-  //     innerBaseUri,
-  //     isGridStyle,
-  //     isDebugMode,
-  //     keepAliveInterval,
-  //     sysRegion
-  //   };
-  //   return "ok";
-  // }
-
-  /**
-   * 出错处理
-   * @param error
-   * @returns {Promise<never>}
-   */
-  private handleError(error: any): Promise<never> {
-    let errMsg = error.message ? error.message :
-      error.status ? `${error.status} - ${error.statusText}` : 'Server error';
-    console.error(errMsg);
-    return Promise.reject(errMsg);
+  private static isValid<T>(config: T, field: string): boolean {
+    return config && config[field] != undefined && config[field] != null
   }
 
+  /**
+   * json string转换对象
+   * @param data
+   * @returns {{outerBaseUri: any, innerBaseUri: any, serverBaseUri: any, isOuterNetwork: any, isGridStyle: any, isDebugMode: any, keepAliveInterval: any, sysRegion: any}}
+   */
+  private static transform2SystemConfig(data: string): SystemConfig {
+    let obj: Object = JSON.parse(data);
+    return {
+      outerBaseUri: obj["server.outer.baseuri"],
+      innerBaseUri: obj["server.inner.baseuri"],
+      serverBaseUri: obj["sys.connect.outer.network"] ? obj["server.outer.baseuri"] : obj["server.inner.baseuri"],
+      isOuterNetwork: obj["sys.connect.outer.network"],
+      isGridStyle: obj["sys.grid.style"],
+      isDebugMode: obj["sys.debug.mode"],
+      keepAliveInterval: obj["sys.keep.alive.interval"],
+      sysRegion: obj["sys.region"]
+    };
+  }
+
+  /**
+   * json string转换对象
+   * @param data
+   * @returns {{mapServerUrl: any}}
+   */
+  private static transform2MapConfig(data: string): MapConfig {
+    let obj: Object = JSON.parse(data);
+    return {
+      mapServerUrl: obj["map.server.url"]
+    };
+  }
+
+  /**
+   * 对象转json string
+   * @param systemConfig
+   * @returns {string}
+   */
+  private static transform2SystemString(systemConfig: SystemConfig): string {
+    return JSON.stringify({
+      "server.outer.baseuri": systemConfig.outerBaseUri,
+      "server.inner.baseuri": systemConfig.innerBaseUri,
+      "sys.connect.outer.network": systemConfig.isOuterNetwork,
+      "sys.grid.style": systemConfig.isGridStyle,
+      "sys.debug.mode": systemConfig.isDebugMode,
+      "sys.keep.alive.interval": systemConfig.keepAliveInterval,
+      "sys.region": systemConfig.sysRegion
+    });
+  }
+
+  /**
+   * 对象转json string
+   * @param mapConfig
+   * @returns {string}
+   */
+  private static transform2MapString(mapConfig: MapConfig): string {
+    return JSON.stringify({
+      "map.server.url": mapConfig.mapServerUrl
+    });
+  }
 }
