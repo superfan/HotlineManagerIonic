@@ -39,8 +39,11 @@ import {SettingPage} from "../pages/setting/setting";
 import {HttpInterceptorBackend} from "../providers/HttpInterceptorBackend";
 import {HttpInterceptor} from "../providers/HttpInterceptor";
 import {httpFactory} from "../providers/httpFactory";
+import {SQLite} from "@ionic-native/sqlite";
+import {SQLitePorter} from "@ionic-native/sqlite-porter";
+import {DbService} from "../providers/DbService";
+import {IonicStorageModule} from "@ionic/storage";
 import {Device} from "@ionic-native/device";
-
 
 @NgModule({
   declarations: [
@@ -63,7 +66,8 @@ import {Device} from "@ionic-native/device";
   imports: [
     BrowserModule,
     [HttpModule],
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -102,10 +106,13 @@ import {Device} from "@ionic-native/device";
     DataService,
     DownloadService,
     UploadService,
+    SQLite,
+    SQLitePorter,
     GlobalService,
+    DbService,
     Device,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    {provide: Http, useFactory: httpFactory, deps:[HttpInterceptorBackend, RequestOptions]},
+    {provide: Http, useFactory: httpFactory, deps: [HttpInterceptorBackend, RequestOptions]},
   ]
 })
 export class AppModule {

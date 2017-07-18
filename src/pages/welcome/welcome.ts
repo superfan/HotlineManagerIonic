@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {LoadingController, NavController, ToastController, ViewController} from 'ionic-angular';
+import {Component} from '@angular/core';
+import {LoadingController, NavController, Platform} from 'ionic-angular';
 import {LoginPage} from "../login/login";
 import {FileService} from "../../providers/FileService";
 import {AppVersion} from "@ionic-native/app-version";
@@ -11,22 +11,18 @@ import {DataService} from "../../providers/DataService";
   templateUrl: 'welcome.html'
 })
 
-export class WelcomePage implements OnInit {
+export class WelcomePage {
   private readonly tag: string = "[WelcomePage]";
   public loading;
 
   constructor(public navCtrl: NavController,
               public loadingCtrl: LoadingController,
-              private viewCtrl: ViewController,
+              public platform: Platform,
               public fileService: FileService,
               private appVersion: AppVersion,
-              private toastCtrl: ToastController,
               private globalService: GlobalService,
-              public dataService: DataService) {
-  }
-
-  ngOnInit() {
-    this.viewCtrl.didEnter.subscribe(() => this.onDidEnter());
+              private dataService: DataService) {
+    this.platform.ready().then(readySource => this.onDidEnter());
   }
 
   /**
@@ -103,12 +99,7 @@ export class WelcomePage implements OnInit {
           }
         })
         .catch(error => {
-          let toast = this.toastCtrl.create({
-            duration: 2000,
-            position: 'bottom',
-            message: error
-          });
-          toast.present();
+          this.globalService.showToast(error);
           resolve(error);
         })
     })
@@ -130,12 +121,7 @@ export class WelcomePage implements OnInit {
           }
         })
         .catch(error => {
-          let toast = this.toastCtrl.create({
-            duration: 2000,
-            position: 'bottom',
-            message: error
-          });
-          toast.present();
+          this.globalService.showToast(error);
           resolve(error);
         })
     })

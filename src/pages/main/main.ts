@@ -1,4 +1,4 @@
-import {Component, AfterViewInit, OnDestroy} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {NavController, LoadingController, Events} from 'ionic-angular';
 import {MyWorkPage} from "../mywork/mywork";
 import {NewsPage} from "../news/news";
@@ -7,6 +7,7 @@ import {SearchPage} from "../search/search";
 import {DataService} from "../../providers/DataService";
 import {SettingPage} from "../setting/setting";
 import {GlobalService, MainUpdateEvent} from "../../providers/GlobalService";
+import {DbService} from "../../providers/DbService";
 import {ConfigService} from "../../providers/ConfigService";
 
 enum ItemId {
@@ -31,7 +32,7 @@ interface Item {
   templateUrl: 'main.html'
 })
 
-export class MainPage implements AfterViewInit, OnDestroy {
+export class MainPage implements OnInit, OnDestroy {
   private readonly tag: string = "[MainPage]";
 
   title: string = '主界面';
@@ -47,17 +48,27 @@ export class MainPage implements AfterViewInit, OnDestroy {
               private events: Events,
               private dataService: DataService,
               private globalService: GlobalService,
-              private configService:ConfigService) {
-    this.initListItem();
-    this.initGirdItems();
-    this.subscribeEvent(events);
+              private dbService: DbService,
+              private configService: ConfigService) {
   }
 
   /**
    * 初始化
    */
-  ngAfterViewInit(): void {
-    console.log(this.tag, "ngAfterViewInit");
+  ngOnInit(): void {
+    console.log(this.tag, "ngOnInit");
+
+    this.initListItem();
+    this.initGirdItems();
+    this.subscribeEvent(this.events);
+    this.configService.isGridStyle()
+      .then(result => this.gridStyle = result)
+      .catch(error => {
+        console.error(error);
+        this.gridStyle = true;
+      });
+
+    this.dbService.createTables();
 
     let loader = this.loadingCtrl.create({
       content: "Please wait...",
@@ -118,8 +129,11 @@ export class MainPage implements AfterViewInit, OnDestroy {
    * @param event
    */
   selectSettings(event: any): void {
-    //this.gridStyle = !this.gridStyle;
     this.navCtrl.push(SettingPage);
+    // this.gridStyle = !this.gridStyle;
+    // this.configService.setGridStyle(this.gridStyle)
+    //   .then(result => console.log(result))
+    //   .catch(error => console.error(error));
   }
 
   /**
@@ -150,21 +164,23 @@ export class MainPage implements AfterViewInit, OnDestroy {
       count: 0
     });
 
-    this.listItems.push({
-      id: ItemId.StationWork,
-      src: 'assets/img/ic_stationwork.png',
-      name: '站点任务',
-      active: !this.globalService.isWorker,
-      count: 0
-    });
+    if (!this.globalService.isWorker) {
+      this.listItems.push({
+        id: ItemId.StationWork,
+        src: 'assets/img/ic_stationwork.png',
+        name: '站点任务',
+        active: true,
+        count: 0
+      });
 
-    this.listItems.push({
-      id: ItemId.Search,
-      src: 'assets/img/ic_searching.png',
-      name: '查询',
-      active: !this.globalService.isWorker,
-      count: 0
-    });
+      this.listItems.push({
+        id: ItemId.Search,
+        src: 'assets/img/ic_searching.png',
+        name: '查询',
+        active: true,
+        count: 0
+      });
+    }
 
     this.listItems.push({
       id: ItemId.News,

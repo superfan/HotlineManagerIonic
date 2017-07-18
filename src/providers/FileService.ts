@@ -9,15 +9,16 @@ import {FileOpener} from "@ionic-native/file-opener";
  */
 @Injectable()
 export class FileService {
+  private dirPath: string = null;
+  private readonly dirRoot: string = 'sh3h';
+  private readonly dir: string = 'hotlinemanager';
+  private readonly arrDirs: string[] = ['config', 'data', 'images', 'log', 'sounds', 'update', 'user'];
+  private readonly apkName: string = "/TaskManager.apk";
 
-  public dirPath: string = this.file.externalRootDirectory;
-  public dirRoot: string = 'sh3h';
-  public dir: string = 'hotlinemanager';
-  public arrDirs = ['config', 'data', 'images', 'log', 'sounds', 'update', 'user'];
-  apkName = "/TaskManager.apk";
+
+
   private configFileUrl = this.dirPath + this.dirRoot + '/' + this.dir + '/config';
   private systemFileName = 'system.json';
-
   constructor(private file: File,
               private transfer: Transfer,
               private alertCtrl: AlertController,
@@ -26,10 +27,27 @@ export class FileService {
   }
 
   /**
+   * 获取db路径
+   * @returns {string}
+   */
+  public getDbDir(): string {
+    return `${this.dirPath}/${this.dirRoot}/${this.dir}/data`;
+  }
+
+  /**
+   * 获取config路径
+   * @returns {string}
+   */
+  public getConfigDir(): string {
+    return `${this.dirPath}/${this.dirRoot}/${this.dir}/config`;
+  }
+
+  /**
    * 创建sh3h目录
    * @returns {Promise<T>}
    */
   public createDirRoot(): Promise<boolean> {
+    this.dirPath = this.file.externalRootDirectory;
     return new Promise((resolve, reject) => {
       this.file.createDir(this.dirPath, this.dirRoot, true)
         .then(result => {
@@ -111,8 +129,8 @@ export class FileService {
               console.log(error);
               reject(false);
             });
-        })
-    })
+        });
+    });
   }
 
   /**

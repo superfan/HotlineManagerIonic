@@ -51,7 +51,6 @@ export class SettingPage implements OnInit {
     if (this.isChrome) {
       this.storageService.write('isGridStyle', this.isGrid);
     } else {
-      this.configService.systemConfig.isGridStyle = this.isGrid;
       this.fileService.editIsGridStyle(this.isGrid);
     }
     let gridStyle = this.isGrid;
@@ -66,7 +65,6 @@ export class SettingPage implements OnInit {
     if (this.isChrome) {
       this.storageService.write('isOuterNet', this.isOuterNet);
     } else {
-      this.configService.systemConfig.isOuterNetwork = this.isOuterNet;
       this.fileService.editIsOuterNet(this.isOuterNet);
     }
   }
@@ -250,7 +248,6 @@ export class SettingPage implements OnInit {
             if (this.isChrome) {
               this.storageService.write('keepAlive', this.keepAlive);
             } else {
-              this.configService.systemConfig.keepAliveInterval = this.keepAlive;
               this.fileService.editheartBeat(this.keepAlive);
             }
           }
