@@ -10,11 +10,11 @@ import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class ConfigService {
-  private readonly basePath: string = "./assets/config/";
-  // private basePath:string="file:///storage/emulated/0/sh3h/hotlinemanager/config/";
+  // private readonly basePath: string = "./assets/config/";
+  private basePath: string = "file:///storage/emulated/0/sh3h/hotlinemanager/config/";
   private readonly systemFilePath: string = this.basePath + 'system.json';
   private readonly mapFilePath: string = this.basePath + 'map.json';
-  private systemConfig: any;
+  public systemConfig: any;
   private mapConfig: any;
 
   constructor(public http: Http, public file: File) {
@@ -168,6 +168,7 @@ export class ConfigService {
       .toPromise()
       .then(res => {
         let body = res.json();
+        console.log('readSystemConfig:' + body);
         return this.systemConfig = {
           isOuterNetwork: body["sys.connect.outer.network"],
           outerBaseUri: body["server.outer.baseuri"],

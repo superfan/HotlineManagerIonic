@@ -15,6 +15,8 @@ export class FileService {
   public dir: string = 'hotlinemanager';
   public arrDirs = ['config', 'data', 'images', 'log', 'sounds', 'update', 'user'];
   apkName = "/TaskManager.apk";
+  private configFileUrl = this.dirPath + this.dirRoot + '/' + this.dir + '/config';
+  private systemFileName = 'system.json';
 
   constructor(private file: File,
               private transfer: Transfer,
@@ -193,12 +195,13 @@ export class FileService {
     });
   }
 
-
+  /**
+   * 修改是否是九宫格
+   * @param isGrid
+   */
   public editIsGridStyle(isGrid: boolean) {
-    let fileUrl = this.dirPath + this.dirRoot + '/' + this.dir + '/config';
-    let fileName = 'system.json';
     let jsonResult: any;
-    this.file.readAsText(fileUrl, fileName)
+    this.file.readAsText(this.configFileUrl, this.systemFileName)
       .then(result => {
         let body = JSON.parse(result);
         jsonResult = {
@@ -211,13 +214,97 @@ export class FileService {
           "sys.region": body["sys.region"]
         }
         console.log(jsonResult);
-        this.writeData2Json(fileUrl, fileName, jsonResult);
+        this.writeData2Json(this.configFileUrl, this.systemFileName, jsonResult);
       })
       .catch(err => {
         console.log(err);
       })
   }
 
+  /**
+   * 修改内外网选择
+   * @param isOuterNet
+   */
+  public editIsOuterNet(isOuterNet: boolean) {
+    let jsonResult: any;
+    this.file.readAsText(this.configFileUrl, this.systemFileName)
+      .then(result => {
+        let body = JSON.parse(result);
+        jsonResult = {
+          "sys.connect.outer.network": isOuterNet,
+          "server.outer.baseuri": body["server.outer.baseuri"],
+          "server.inner.baseuri": body["server.inner.baseuri"],
+          "sys.grid.style": body["sys.grid.style"],
+          "sys.debug.mode": body["sys.debug.mode"],
+          "sys.keep.alive.interval": body["sys.keep.alive.interval"],
+          "sys.region": body["sys.region"]
+        }
+        console.log(jsonResult);
+        this.writeData2Json(this.configFileUrl, this.systemFileName, jsonResult);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
+  /**
+   * 修改后台地址
+   * @param baseUri
+   */
+  public editSystemUri(baseUri:string){
+    let jsonResult: any;
+    this.file.readAsText(this.configFileUrl, this.systemFileName)
+      .then(result => {
+        let body = JSON.parse(result);
+        jsonResult = {
+          "sys.connect.outer.network": body["sys.connect.outer.network"],
+          "server.outer.baseuri": baseUri,
+          "server.inner.baseuri": baseUri,
+          "sys.grid.style": body["sys.grid.style"],
+          "sys.debug.mode": body["sys.debug.mode"],
+          "sys.keep.alive.interval": body["sys.keep.alive.interval"],
+          "sys.region": body["sys.region"]
+        }
+        console.log(jsonResult);
+        this.writeData2Json(this.configFileUrl, this.systemFileName, jsonResult);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
+  /**
+   * 心跳
+   * @param keepAlive
+   */
+  public editheartBeat(keepAlive:number){
+    let jsonResult: any;
+    this.file.readAsText(this.configFileUrl, this.systemFileName)
+      .then(result => {
+        let body = JSON.parse(result);
+        jsonResult = {
+          "sys.connect.outer.network": body["sys.connect.outer.network"],
+          "server.outer.baseuri": body["server.outer.baseuri"],
+          "server.inner.baseuri": body["server.inner.baseuri"],
+          "sys.grid.style": body["sys.grid.style"],
+          "sys.debug.mode": body["sys.debug.mode"],
+          "sys.keep.alive.interval": keepAlive,
+          "sys.region": body["sys.region"]
+        }
+        console.log(jsonResult);
+        this.writeData2Json(this.configFileUrl, this.systemFileName, jsonResult);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
+  /**
+   * 写至json文件
+   * @param fileUrl
+   * @param fileName
+   * @param jsonResult
+   */
   private writeData2Json(fileUrl: string, fileName: string, jsonResult) {
     this.file.writeExistingFile(fileUrl, fileName, JSON.stringify(jsonResult))
       .then(result => {

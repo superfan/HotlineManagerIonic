@@ -7,6 +7,7 @@ import {SearchPage} from "../search/search";
 import {DataService} from "../../providers/DataService";
 import {SettingPage} from "../setting/setting";
 import {GlobalService, MainUpdateEvent} from "../../providers/GlobalService";
+import {ConfigService} from "../../providers/ConfigService";
 
 enum ItemId {
   MyWork,
@@ -45,7 +46,8 @@ export class MainPage implements AfterViewInit, OnDestroy {
               private loadingCtrl: LoadingController,
               private events: Events,
               private dataService: DataService,
-              private globalService: GlobalService) {
+              private globalService: GlobalService,
+              private configService:ConfigService) {
     this.initListItem();
     this.initGirdItems();
     this.subscribeEvent(events);

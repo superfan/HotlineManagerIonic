@@ -2,10 +2,11 @@
  * Created by zhangjing on 2017/6/29.
  */
 import {Component, OnInit} from "@angular/core";
-import {ActionSheetController, AlertController, NavController} from "ionic-angular";
+import {ActionSheetController, AlertController, Events, NavController} from "ionic-angular";
 import {ConfigService} from "../../providers/ConfigService";
 import {GlobalService} from "../../providers/GlobalService";
 import {StorageService} from "../../providers/StorageService";
+import {FileService} from "../../providers/FileService";
 
 @Component({
   selector: 'page-setting',
@@ -15,7 +16,7 @@ import {StorageService} from "../../providers/StorageService";
 export class SettingPage implements OnInit {
   private readonly tag: string = "[SettingPage]";
   title: string = '系统参数';
-  isGrid: boolean;//是否是九宫格样式
+  public isGrid: boolean;//是否是九宫格样式
   isOuterNet: boolean;//是否是外网
   netWorkUri: string;//数据地址
   keepAlive: number;//心跳频率
@@ -27,7 +28,9 @@ export class SettingPage implements OnInit {
               public actionsheetCtrl: ActionSheetController,
               public configService: ConfigService,
               public globalService: GlobalService,
-              public storageService: StorageService) {
+              public storageService: StorageService,
+              public fileService: FileService,
+              public events: Events) {
   }
 
   ngOnInit() {
@@ -47,7 +50,12 @@ export class SettingPage implements OnInit {
     console.log(this.tag + "Toggled:" + this.isGrid);
     if (this.isChrome) {
       this.storageService.write('isGridStyle', this.isGrid);
+    } else {
+      this.configService.systemConfig.isGridStyle = this.isGrid;
+      this.fileService.editIsGridStyle(this.isGrid);
     }
+    let gridStyle = this.isGrid;
+    this.events.publish(this.globalService.mainUpdateEvent, {type: 'gridStyle', gridStyle});
   }
 
   /**
@@ -57,6 +65,9 @@ export class SettingPage implements OnInit {
     console.log(this.tag + "Toggled:" + this.isOuterNet);
     if (this.isChrome) {
       this.storageService.write('isOuterNet', this.isOuterNet);
+    } else {
+      this.configService.systemConfig.isOuterNetwork = this.isOuterNet;
+      this.fileService.editIsOuterNet(this.isOuterNet);
     }
   }
 
@@ -199,6 +210,8 @@ export class SettingPage implements OnInit {
           handler: data => {
             if (this.isChrome) {
               this.storageService.write('netWorkUri', data)
+            } else {
+              this.fileService.editSystemUri(data);
             }
             console.log(this.tag + data);
           }
@@ -236,6 +249,9 @@ export class SettingPage implements OnInit {
             console.log(this.tag + 'showHeartSetting' + data.heartBeat);
             if (this.isChrome) {
               this.storageService.write('keepAlive', this.keepAlive);
+            } else {
+              this.configService.systemConfig.keepAliveInterval = this.keepAlive;
+              this.fileService.editheartBeat(this.keepAlive);
             }
           }
         }
