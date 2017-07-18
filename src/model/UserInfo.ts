@@ -5,5 +5,5 @@ export class UserInfo {
 
   userName: string;
   password: string;
-  isWorker:boolean;//是否是外勤人员
+  role:string;
 }

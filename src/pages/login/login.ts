@@ -8,6 +8,7 @@ import {GlobalService} from "../../providers/GlobalService";
 import {UserInfo} from "../../model/UserInfo";
 import {DataService} from "../../providers/DataService";
 import {UserResult} from "../../model/UserResult";
+import {Device} from "@ionic-native/device";
 
 @Component({
   selector: 'page-login',
@@ -16,7 +17,7 @@ import {UserResult} from "../../model/UserResult";
 
 export class LoginPage implements OnInit {
 
-
+  private readonly tag: string = "[LoginPage]";
   public user = new UserInfo();
   public loginForm: FormGroup;
 
@@ -27,7 +28,8 @@ export class LoginPage implements OnInit {
               private network: Network,
               private toastCtrl: ToastController,
               public globalService: GlobalService,
-              public dataService: DataService) {
+              public dataService: DataService,
+              public device: Device) {
   }
 
   ngOnInit() {
@@ -65,7 +67,8 @@ export class LoginPage implements OnInit {
     //角色
     this.appPreferences.fetch("userinfo", 'role')
       .then(result => {
-        console.log(result.toString());
+        this.user.role = result.toString();
+        this.loginForm.patchValue({LoginSelect: result.toString()})
       }).catch(err => {
       console.log(err);
     })
@@ -103,11 +106,7 @@ export class LoginPage implements OnInit {
     //在线登录
     this.user.userName = user['LoginID'];
     this.user.password = user['LoginPwd'];
-    if (user['LoginSelect'] == 'worker') {
-      this.user.isWorker = true;
-    } else {
-      this.user.isWorker = false;
-    }
+    this.user.role = user['LoginSelect'];
     this.doLogin();
   }
 
@@ -121,7 +120,6 @@ export class LoginPage implements OnInit {
     if (this.user.userName && this.user.password) {
       this.dataService.doLogin(this.user)
         .then(userResult => {
-          this.globalService.isWorker = this.user.isWorker;
           this.onSuccessCallBack(this.user.userName, userResult);
         })
         .catch(err => {
@@ -138,9 +136,9 @@ export class LoginPage implements OnInit {
     this.globalService.userName = userName;
     this.globalService.userId = 1;//userResult.userId;
     this.globalService.department = userResult.Department;
-
+    this.globalService.isWorker = (this.user.role == 'worker');
     //外勤
-    if (this.user.isWorker) {
+    if (this.globalService.isWorker) {
       this.dataService.getWorkInfo()
         .then(userWorkInfo => {
           console.log(userWorkInfo);
@@ -173,8 +171,41 @@ export class LoginPage implements OnInit {
       position: 'bottom',
     });
     toast.present();
+    this.saveAppPreferences();
     this.navCtrl.push(MainPage, {})
   }
+
+  /**
+   * 保存参数
+   */
+  private saveAppPreferences() {
+    Promise.all([this.saveUserInfo('username', this.user.userName),
+      this.saveUserInfo('pwd', this.user.password),
+      this.saveUserInfo('role', this.user.role)])
+      .then(result => {
+        console.log(this.tag + 'saveAppPreferences:' + result);
+      })
+      .catch(error => {
+        console.log(this.tag + 'saveAppPreferences:' + error);
+      })
+  }
+
+  /**
+   * 用户信息
+   * @param infoType
+   * @param valueInfo
+   * @returns {Promise<TResult|TResult2|TResult1>}
+   */
+  private saveUserInfo(infoType: string, valueInfo: string): Promise<any> {
+    return this.appPreferences.store('userinfo', infoType, valueInfo)
+      .then(result => {
+        console.log(this.tag + ':saveUserName:' + result);
+      })
+      .catch(error => {
+        console.log(this.tag + ':saveUserName:' + error);
+      })
+  }
+
 
   /**
    * 失败回调

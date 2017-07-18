@@ -43,6 +43,7 @@ import {SQLite} from "@ionic-native/sqlite";
 import {SQLitePorter} from "@ionic-native/sqlite-porter";
 import {DbService} from "../providers/DbService";
 import {IonicStorageModule} from "@ionic/storage";
+import {Device} from "@ionic-native/device";
 
 @NgModule({
   declarations: [
@@ -109,6 +110,7 @@ import {IonicStorageModule} from "@ionic/storage";
     SQLitePorter,
     GlobalService,
     DbService,
+    Device,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     {provide: Http, useFactory: httpFactory, deps: [HttpInterceptorBackend, RequestOptions]},
   ]

@@ -378,6 +378,24 @@ export class DataService {
   }
 
   /**
+   * 检查app更新
+   * @param version
+   * @returns {Promise<VersionInfo>}
+   */
+  public checkAppVersion(version: number) {
+    return this.downloadService.checkAppVersion(version);
+  }
+
+  /**
+   * 检查数据包更新
+   * @param version
+   * @returns {Promise<VersionInfo>}
+   */
+  public checkDataVersion(version: number) {
+    return this.downloadService.checkDataVersion(version);
+  }
+
+  /**
    * 获取施工人员
    * @param userId
    * @returns {Promise<Array<Personnel>>}

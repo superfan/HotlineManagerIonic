@@ -39,85 +39,110 @@ export class FileService {
   }
 
   /**
-   * 创建文件夹目录
+   * 创建sh3h目录
+   * @returns {Promise<T>}
    */
-  createDirs() {
+  public createDirRoot(): Promise<boolean> {
     this.dirPath = this.file.externalRootDirectory;
-    const dirPath = this.dirPath;
-    const dirRoot = this.dirRoot;
-    const dir = this.dir;
-    const arrDirs = this.arrDirs;
-    var file = this.file;
-
-    function createDirRoot() {
-      return file.createDir(dirPath, dirRoot, true);
-    }
-
-    function createDir() {
-      return file.createDir(dirPath + dirRoot, dir, true);
-    }
-
-    /**
-     * 创建子目录
-     * @returns Promise
-     */
-    function createChildDir() {
-      let url = dirPath + dirRoot + '/' + dir;
-      let promiseArr: Array<Promise<DirectoryEntry>> = [];
-      for (let i = 0; i < arrDirs.length; i++) {
-        promiseArr.push(file.createDir(url, arrDirs[i], true));
-      }
-      return Promise.all(promiseArr);
-    }
-
-    /**
-     * 拷贝配置文件
-     * @returns {Promise<Entry>}
-     */
-    function copySystemConfig() {
-      let originUrl = 'file:///android_asset/www/assets/config/';
-      let newUrl = dirPath + dirRoot + '/' + dir + '/config/';
-      let fileName = 'system.json';
-      return file.checkFile(newUrl, fileName)
+    return new Promise((resolve, reject) => {
+      this.file.createDir(this.dirPath, this.dirRoot, true)
         .then(result => {
-          console.log("copySystemConfig:" + result);
-          if (!result) {
-            return file.copyFile(originUrl, fileName, newUrl, fileName);
-          } else {
-            Promise.resolve('success');
-          }
+          console.log('createDirRoot success');
+          resolve(this.createAppDir());
         })
         .catch(error => {
-          console.error(error);
-          return file.copyFile(originUrl, fileName, newUrl, fileName);
+          reject(error);
         });
+    })
+  }
+
+  /**
+   * 创建app目录(hotlineManager)
+   * @returns {Promise<T>}
+   */
+  private createAppDir(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this.file.createDir(this.dirPath + this.dirRoot, this.dir, true)
+        .then(result => {
+          console.log('createAppDir success');
+          resolve(this.createChildDir());
+        })
+        .catch(error => {
+          reject(error);
+        })
+    })
+  }
+
+  /**
+   * 创建子目录(七个子文件夹)
+   * @returns Promise
+   */
+  private createChildDir(): Promise<boolean> {
+    let url = this.dirPath + this.dirRoot + '/' + this.dir;
+    let promiseArr: Array<Promise<DirectoryEntry>> = [];
+    for (let i = 0; i < this.arrDirs.length; i++) {
+      promiseArr.push(this.file.createDir(url, this.arrDirs[i], true));
     }
 
-    return createDirRoot().then(() => {
-      return createDir()
-    }).then(() => {
-      return createChildDir()
-    }).then(() => {
-      return copySystemConfig()
-    }).then(() => console.log('success'))
-      .catch(err => console.log(err));
+    return new Promise((resolve, reject) => {
+      Promise.all(promiseArr)
+        .then(result => {
+          console.log('createChildDir Promise all success');
+          resolve(this.copySystemConfig());
+        })
+        .catch(error => {
+          console.log(error);
+          return Promise.reject(false);
+        });
+    });
+  }
+
+  /**
+   * 拷贝配置文件
+   * @returns {Promise<Entry>}
+   */
+  private copySystemConfig(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      let originUrl = 'file:///android_asset/www/assets/config/';
+      let newUrl = this.dirPath + this.dirRoot + '/' + this.dir + '/config/';
+      console.log('copySystemConfig:' + newUrl);
+      let fileName = 'system.json';
+
+      this.file.checkFile(newUrl, fileName)
+        .then(result => {
+          //文件存在
+          console.log("systemConfig has exist!" + result);
+          resolve(true);
+        })
+        .catch(error => {
+          console.log(error);
+          this.file.copyFile(originUrl, fileName, newUrl, fileName)
+            .then(result => {
+              console.log('copySystemConfig success' + result);
+              resolve(true);
+            })
+            .catch(error => {
+              console.log(error);
+              reject(false);
+            });
+        });
+    });
   }
 
   /**
    * 下载文件
    */
-  downloadFile(url: string) {
+  public downloadFile(isData: boolean, url: string): Promise<boolean> {
     let alert = this.alertCtrl.create({
       title: '下载更新包',
       message: '下载进度:0%',
       enableBackdropDismiss: false,
     });
     alert.present();
-
-    const fileTransfer: TransferObject = this.transfer.create();
-    // var uri = encodeURI("http://dn168.net/img/apk/Patrol.apk");//服务器路径
-    const apkInstallUrl = this.dirPath + this.dirRoot + '/' + this.dir + '/' + this.arrDirs[5] + '/test.zip';//apk的安装路径
-    console.log(apkInstallUrl);
+    let fileTransfer: TransferObject = this.transfer.create();
+    let downloadUrl;
+    let defaultUrl = this.dirPath + this.dirRoot + '/' + this.dir + '/' + this.arrDirs[5];
+    downloadUrl = isData ? (defaultUrl + '/data.zip') : (defaultUrl + '/app.zip');
 
     fileTransfer.onProgress((event) => {
       var downloadProgress = Math.floor((event.loaded / event.total) * 100);
@@ -129,19 +154,16 @@ export class FileService {
       }
     });
 
-    return fileTransfer.download(
-      url,
-      apkInstallUrl)
-      .then((entry) => {
-          console.log("download complete:" + entry.toURL());
+    return new Promise((resolve, reject) => {
+      fileTransfer.download(url, downloadUrl)
+        .then((entry) => {
           let destUrl = this.dirPath + this.dirRoot + '/' + this.dir + '/' + this.arrDirs[5];
-          this.unZipFile(entry.toURL(), destUrl);
-        },
-        (error) => {
-          console.log("download error source " + error.source);
-          console.log("download error target " + error.target);
-          console.log("download error code" + error.code);
-        });
+          resolve(this.unZipFile(entry.toURL(), destUrl, isData));
+        })
+        .catch(err => {
+          reject(err);
+        })
+    });
   }
 
   /**
@@ -149,30 +171,46 @@ export class FileService {
    * @param sourceUrl
    * @param destUrl
    */
-  unZipFile(sourceUrl, destUrl) {
-    this.zip.unzip(sourceUrl, destUrl)
-      .then((result) => {
-        console.log("unzip file success");
-        this.openApkFile(destUrl);
-      })
-      .catch(() => {
-        console.log("unzip file failed");
-      })
+  private unZipFile(sourceUrl, destUrl, isData: boolean): Promise<boolean> {
+
+    return new Promise((resolve, reject) => {
+      this.zip.unzip(sourceUrl, destUrl)
+        .then((result) => {
+          console.log("unzip file success");
+          if (!isData) {
+            resolve(this.openApkFile(destUrl));
+          } else {
+            resolve(true);
+          }
+        })
+        .catch((error) => {
+          reject(error);
+        })
+    })
   }
 
   /**
    * 打开安装包
    * @param destPath
    */
-  openApkFile(destPath) {
+  private openApkFile(destPath): Promise<boolean> {
     let destUrl = destPath + this.apkName;
-    this.fileOpener.open(destUrl, 'application/vnd.android.package-archive')
-      .then(() => console.log('File is opened'))
-      .catch(err => console.log('Error openning file', err));
+    return new Promise((resolve, reject) => {
+      this.fileOpener.open(destUrl, 'application/vnd.android.package-archive')
+        .then(() => {
+            console.log('File is opened');
+            resolve(true);
+          }
+        )
+        .catch(err => {
+          console.log('Error openning file', err);
+          reject(err);
+        });
+    });
   }
 
 
-  editIsGridStyle(isGrid: boolean) {
+  public editIsGridStyle(isGrid: boolean) {
     let fileUrl = this.dirPath + this.dirRoot + '/' + this.dir + '/config';
     let fileName = 'system.json';
     let jsonResult: any;
@@ -205,5 +243,4 @@ export class FileService {
         console.log(err);
       })
   }
-
 }
