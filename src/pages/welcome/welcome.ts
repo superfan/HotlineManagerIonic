@@ -46,8 +46,6 @@ export class WelcomePage {
         .catch(err => {
           console.log("initial files failed" + err);
         })
-      // this.loading.dismiss();
-      // this.navCtrl.push(LoginPage, {});
     } else {
       console.log("platform is on chrome");
       this.loading.dismiss();
