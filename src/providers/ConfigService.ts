@@ -28,12 +28,12 @@ interface MapConfig {
 
 @Injectable()
 export class ConfigService {
-  private readonly basePath: string = './assets/config/';
+  private basePath: string = './assets/config/';
   private readonly systemFileName: string = 'system.json';
   private readonly mapFileName: string = 'map.json';
   private readonly systemFilePath: string = `${this.basePath}${this.systemFileName}`;
   private readonly mapFilePath: string = `${this.basePath}${this.mapFileName}`;
-  private readonly systemStorageName: string = 'system';
+  public readonly systemStorageName: string = 'system';
   private readonly mapStorageName: string = 'map';
   private systemConfig: SystemConfig;
   private mapConfig: MapConfig;
@@ -226,6 +226,84 @@ export class ConfigService {
   }
 
   /**
+   * 设置内外网
+   * @param isOuterNet
+   * @returns {any}
+   */
+  public setIsOuterNet(isOuterNet: boolean): Promise<boolean> {
+    if (ConfigService.isValid<SystemConfig>(this.systemConfig, 'isOuterNetwork')) {
+      return new Promise((resolve, reject) => {
+        let systemConfig: SystemConfig = Object.create(this.systemConfig);
+        systemConfig.isOuterNetwork = isOuterNet;
+        this.writeSystemConfig(systemConfig)
+          .then(result => {
+            if (result) {
+              this.systemConfig.isOuterNetwork = isOuterNet;
+              this.systemConfig.serverBaseUri = this.systemConfig.isOuterNetwork ?
+                this.systemConfig.outerBaseUri : this.systemConfig.innerBaseUri;
+            }
+            resolve(!!result);
+          })
+          .catch(error => reject(error));
+      });
+    } else {
+      return Promise.reject('sysytemConfig has no data');
+    }
+  }
+
+  /**
+   * 设置地址
+   * @param isOuterNet
+   * @param systemUrl
+   * @returns {any}
+   */
+  public setSystemUrl(systemUrl: string): Promise<boolean> {
+    if (ConfigService.isValid<SystemConfig>(this.systemConfig, 'isOuterNetwork')
+      && ConfigService.isValid<SystemConfig>(this.systemConfig, 'serverBaseUri')) {
+      return new Promise((resolve, reject) => {
+        let systemConfig: SystemConfig = Object.create(this.systemConfig);
+        systemConfig.serverBaseUri = systemUrl;
+        this.systemConfig.isOuterNetwork ? systemConfig.outerBaseUri = systemUrl : systemConfig.innerBaseUri = systemUrl;
+        this.writeSystemConfig(systemConfig)
+          .then(result => {
+            if (result) {
+              this.systemConfig.serverBaseUri = systemUrl;
+              this.systemConfig.isOuterNetwork ? this.systemConfig.outerBaseUri = systemUrl : this.systemConfig.innerBaseUri = systemUrl;
+            }
+            resolve(!!result);
+          })
+          .catch(error => reject(error));
+      })
+    } else {
+      return Promise.reject('sysytemConfig has no data');
+    }
+  }
+
+  /**
+   * 设置呼吸频率
+   * @param keepAlive
+   * @returns {any}
+   */
+  public setKeepAlive(keepAlive: number): Promise<boolean> {
+    if (ConfigService.isValid<SystemConfig>(this.systemConfig, 'keepAliveInterval')) {
+      return new Promise((resolve, reject) => {
+        let systemConfig: SystemConfig = Object.create(this.systemConfig);
+        systemConfig.keepAliveInterval = keepAlive;
+        this.writeSystemConfig(systemConfig)
+          .then(result => {
+            if (result) {
+              this.systemConfig.keepAliveInterval = keepAlive;
+            }
+            resolve(!!result);
+          })
+          .catch(error => reject(error));
+      })
+    } else {
+      return Promise.reject('systemConfig has no data');
+    }
+  }
+
+  /**
    * 读取system.json
    * @returns {Promise<TResult2|SystemConfig>|Promise<any>|Promise<SystemConfig>}
    */
@@ -296,7 +374,7 @@ export class ConfigService {
    * @param data
    * @returns {{outerBaseUri: any, innerBaseUri: any, serverBaseUri: any, isOuterNetwork: any, isGridStyle: any, isDebugMode: any, keepAliveInterval: any, sysRegion: any}}
    */
-  private static transform2SystemConfig(data: string): SystemConfig {
+  public static transform2SystemConfig(data: string): SystemConfig {
     let obj: Object = JSON.parse(data);
     return {
       outerBaseUri: obj["server.outer.baseuri"],
