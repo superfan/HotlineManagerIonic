@@ -1,6 +1,6 @@
 import {Location} from "./Location";
 
-export class CancelInfo {
+export interface CancelInfo {
   destroyTime: number;
   destroyRemark: string;
   location: Location;
@@ -8,7 +8,7 @@ export class CancelInfo {
   userId: number;
 }
 
-export class CancelExInfo {
+export interface CancelExInfo {
   TaskNo: string;
   TaskType: string;
   WcOperator: number;

@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {NavController, LoadingController, Events} from 'ionic-angular';
+import {NavController, Events} from 'ionic-angular';
 import {MyWorkPage} from "../mywork/mywork";
 import {NewsPage} from "../news/news";
 import {StationWorkPage} from "../stationwork/stationwork";
@@ -7,7 +7,6 @@ import {SearchPage} from "../search/search";
 import {DataService} from "../../providers/DataService";
 import {SettingPage} from "../setting/setting";
 import {GlobalService, MainUpdateEvent} from "../../providers/GlobalService";
-import {DbService} from "../../providers/DbService";
 import {ConfigService} from "../../providers/ConfigService";
 
 enum ItemId {
@@ -44,11 +43,9 @@ export class MainPage implements OnInit, OnDestroy {
   listItems: Item[] = [];
 
   constructor(public navCtrl: NavController,
-              private loadingCtrl: LoadingController,
               private events: Events,
               private dataService: DataService,
               private globalService: GlobalService,
-              private dbService: DbService,
               private configService: ConfigService) {
   }
 
@@ -61,31 +58,8 @@ export class MainPage implements OnInit, OnDestroy {
     this.initListItem();
     this.initGirdItems();
     this.subscribeEvent(this.events);
-    this.configService.isGridStyle()
-      .then(result => this.gridStyle = result)
-      .catch(error => {
-        console.error(error);
-        this.gridStyle = true;
-      });
-
-    this.dbService.createTables();
-
-    let loader = this.loadingCtrl.create({
-      content: "Please wait...",
-    });
-    loader.present();
-    this.dataService.getAllWords()
-      .then(words => {
-        console.log(this.tag, "get all words");
-        loader.dismiss();
-        // if (this.globalService.isChrome) {
-        //   this.globalService.words = words;
-        // }
-      })
-      .catch(error => {
-        console.log(this.tag, error);
-        loader.dismiss();
-      });
+    this.initGridStyle();
+    this.initData();
   }
 
   /**
@@ -94,6 +68,7 @@ export class MainPage implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     console.log(this.tag, "ngOnDestroy");
     this.events.unsubscribe(this.globalService.mainUpdateEvent);
+    this.dataService.destroy();
   }
 
   /**
@@ -229,5 +204,48 @@ export class MainPage implements OnInit, OnDestroy {
           break;
       }
     });
+  }
+
+  /**
+   * 设置九宫格或列表
+   */
+  private initGridStyle(): void {
+    this.configService.isGridStyle()
+      .then(result => this.gridStyle = result)
+      .catch(error => {
+        console.error(error);
+        this.gridStyle = true;
+      });
+  }
+
+  /**
+   * 初始化数据
+   */
+  private initData(): void {
+    this.globalService.showLoading('初始化数据...');
+    this.dataService.init()
+      .then(result => {
+        console.log(result);
+      })
+      .catch(error => console.error(error))
+      .then(() => {
+        this.globalService.hideLoading();
+        this.syncData();
+      });
+  }
+
+  /**
+   * 同步数据
+   */
+  private syncData(): void {
+    this.globalService.showLoading('同步数据...');
+    this.dataService.downloadWords()
+      .then(result => {
+        console.log(this.tag, "syncData: " + result);
+      })
+      .catch(error => {
+        console.log(this.tag, error);
+      })
+      .then(() => this.globalService.hideLoading());
   }
 }

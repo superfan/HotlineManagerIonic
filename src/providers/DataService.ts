@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {DownloadService} from "./DownloadService";
 import {Events} from "ionic-angular";
-import {Task} from "../model/Task";
+import {TaskState, Task} from "../model/Task";
 import {GlobalService} from "./GlobalService";
 import {AcceptInfo, AcceptExInfo} from "../model/AcceptInfo";
 import {UploadService} from "./UploadService";
@@ -22,10 +22,12 @@ import {UserInfo} from "../model/UserInfo";
 import {UserResult} from "../model/UserResult";
 import {Personnel} from "../model/Personnel";
 import {DispatchInfo} from "../model/DispatchInfo";
+import {DbService} from "./DbService";
 
 @Injectable()
 export class DataService {
   private downloadTaskEvent: string = 'task:download';
+  private downloadTaskDetailEvent: string = 'task:detail:download';
   private optTypes: Array<Word>;
   private optContents: Array<Word>;
   private optReasons: Array<Word>;
@@ -34,25 +36,46 @@ export class DataService {
   private reflectTypes: Array<Word>;
   private reflectContents: Array<Word>;
   private personnels: Array<Personnel>;
+  private isDownloadTaskAndDetailFinished: boolean;
 
   constructor(private downloadService: DownloadService,
               private uploadService: UploadService,
               private globalService: GlobalService,
+              private dbService: DbService,
               private events: Events) {
-    events.subscribe(this.downloadTaskEvent, (since: number, count: number) => {
-
-    })
   }
 
   /**
-   * 下载任务
+   * 初始化
    * @returns {Promise<boolean>}
    */
-  public downloadTasks(): Promise<boolean> {
-    //return this.globalService.isChrome ? Promise.resolve(true) : Promise.resolve(true);
-    return new Promise((resolve, reject) => {
-      setTimeout(resolve, 2000, true);
-    });
+  public init(): Promise<boolean> {
+    this.isDownloadTaskAndDetailFinished = true;
+    this.subscribeEvent();
+    return this.dbService.init();
+  }
+
+  /**
+   * 销毁
+   */
+  public destroy(): void {
+    this.events.unsubscribe(this.downloadTaskEvent);
+    this.events.unsubscribe(this.downloadTaskDetailEvent);
+    this.dbService.destroy();
+  }
+
+  /**
+   * 下载所有任务和详情
+   * @returns {boolean}
+   */
+  public downloadTasksAndDetails(): boolean {
+    if (this.isDownloadTaskAndDetailFinished) {
+      this.isDownloadTaskAndDetailFinished = false;
+      this.events.publish(this.downloadTaskEvent, this.globalService.taskSinceDefault,
+        this.globalService.taskCountDefault100);
+    }
+
+    return this.isDownloadTaskAndDetailFinished;
   }
 
   /**
@@ -62,7 +85,11 @@ export class DataService {
    * @returns {Promise<Array<Task>>}
    */
   public getTasks(since: number, count: number): Promise<Array<Task>> {
-    return this.downloadService.getTasks(this.globalService.userId, since, count);
+    if (this.globalService.isChrome) {
+      return this.downloadService.getTasks(this.globalService.userId, since, count);
+    } else {
+      return this.dbService.getTasks(this.globalService.userId, since, count);
+    }
   }
 
   /**
@@ -70,23 +97,12 @@ export class DataService {
    * @returns {Promise<number>}
    */
   public getTaskCount(): Promise<number> {
-    return Promise.resolve(5);
+    if (this.globalService.isChrome) {
+      return Promise.resolve(0);
+    } else {
+      return this.dbService.getTaskCount(this.globalService.userId);
+    }
   }
-
-  /**
-   * 同步任务
-   * @returns {Promise<boolean>}
-   */
-  // public syncTasks(since: number, count: number): Promise<Array<Task>> {
-  //   return this.uploadTasks()
-  //     .then(result => {
-  //       return this.getTasks(since, count);
-  //     })
-  //     .catch(error => {
-  //       console.error(error);
-  //       return this.getTasks(since, count);
-  //     })
-  // }
 
   /**
    * 获取任务详情
@@ -94,7 +110,18 @@ export class DataService {
    * @returns {Promise<TaskDetail>}
    */
   public getTaskDetail(taskId: string): Promise<TaskDetail> {
-    return this.downloadService.getTaskDetail(taskId);
+    if (this.globalService.isChrome) {
+      return this.downloadService.getTaskDetail(taskId);
+    } else {
+      return this.dbService.getTaskDetail(taskId)
+        .then(detail => {
+          return detail && detail.taskId
+            ? Promise.resolve(detail)
+            : this.downloadService.getTaskDetail(taskId)
+              .then(detail => this.dbService.saveTaskDetail(detail))
+              .then(result => this.dbService.getTaskDetail(taskId));
+        });
+    }
   }
 
   /**
@@ -119,63 +146,137 @@ export class DataService {
   }
 
   /**
-   * 接受
+   * 接收
    * @param acceptInfo
-   * @returns {Promise<T>}
+   * @param task
+   * @returns {Promise<boolean>}
    */
-  public accept(acceptInfo: AcceptInfo): Promise<boolean> {
-    //acceptInfo.userId = this.globalService.userId;
-    return this.uploadService.accept(acceptInfo);
+  public accept(acceptInfo: AcceptInfo, task: Task): Promise<boolean> {
+    let promise: Promise<boolean> = this.uploadService.accept(acceptInfo);
+    return this.globalService.isChrome
+      ? promise
+      : promise.catch(error => console.error(error))
+        .then(result => this.dbService.saveHistory({
+          userId: acceptInfo.userId,
+          taskId: acceptInfo.taskId,
+          state: TaskState.Accept,
+          task,
+          reply: acceptInfo,
+          uploadedFlag: result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal
+        }))
+        .then(result => this.dbService.saveTask(task));
   }
 
   /**
    * 出发
    * @param goInfo
+   * @param task
    * @returns {Promise<boolean>}
    */
-  public go(goInfo: GoInfo): Promise<boolean> {
-    //goInfo.userId = this.globalService.userId;
-    return this.uploadService.go(goInfo);
+  public go(goInfo: GoInfo, task: Task): Promise<boolean> {
+    let promise: Promise<boolean> = this.uploadService.go(goInfo);
+    return this.globalService.isChrome
+      ? promise
+      : promise.catch(error => console.error(error))
+        .then((result) => this.dbService.saveHistory({
+          userId: goInfo.userId,
+          taskId: goInfo.taskId,
+          state: TaskState.Go,
+          task,
+          reply: goInfo,
+          uploadedFlag: result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal
+        }))
+        .then(result => this.dbService.saveTask(task));
   }
 
   /**
    * 到场
    * @param arriveInfo
+   * @param task
    * @returns {Promise<boolean>}
    */
-  public arrive(arriveInfo: ArriveInfo): Promise<boolean> {
-    //arriveInfo.userId = this.globalService.userId;
-    return this.uploadService.arrive(arriveInfo);
+  public arrive(arriveInfo: ArriveInfo, task: Task): Promise<boolean> {
+    let promise: Promise<boolean> = this.uploadService.arrive(arriveInfo);
+    return this.globalService.isChrome
+      ? promise
+      : promise.catch(error => console.error(error))
+        .then((result) => this.dbService.saveHistory({
+          userId: arriveInfo.userId,
+          taskId: arriveInfo.taskId,
+          state: TaskState.Arrived,
+          task,
+          reply: arriveInfo,
+          uploadedFlag: result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal
+        }))
+        .then(result => this.dbService.saveTask(task));
   }
 
   /**
    * 回复
    * @param replyInfo
+   * @param task
+   * @param taskDetail
    * @returns {Promise<boolean>}
    */
-  public reply(replyInfo: ReplyInfo): Promise<boolean> {
-    //replyInfo.userId = this.globalService.userId;
-    return this.uploadService.reply(replyInfo);
+  public reply(replyInfo: ReplyInfo, task: Task, taskDetail: TaskDetail): Promise<boolean> {
+    let promise: Promise<boolean> = this.uploadService.reply(replyInfo);
+    return this.globalService.isChrome
+      ? promise
+      : promise.catch(error => console.error(error))
+        .then((result) => this.dbService.saveHistory({
+          userId: replyInfo.userId,
+          taskId: replyInfo.taskId,
+          state: TaskState.Reply,
+          task,
+          reply: replyInfo,
+          uploadedFlag: result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal,
+          taskDetail
+        }))
+        .then(result => this.dbService.saveTask(task));
   }
 
   /**
    * 退单
    * @param rejectInfo
+   * @param task
    * @returns {Promise<boolean>}
    */
-  public reject(rejectInfo: RejectInfo) {
-    //rejectInfo.userId = this.globalService.userId;
-    return this.uploadService.reject(rejectInfo);
+  public reject(rejectInfo: RejectInfo, task: Task) {
+    let promise: Promise<boolean> = this.uploadService.reject(rejectInfo);
+    return this.globalService.isChrome
+      ? promise
+      : promise.catch(error => console.error(error))
+        .then((result) => this.dbService.saveHistory({
+          userId: rejectInfo.userId,
+          taskId: rejectInfo.taskId,
+          state: TaskState.Reject,
+          task,
+          reply: rejectInfo,
+          uploadedFlag: result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal
+        }))
+        .then(result => this.dbService.saveTask(task));
   }
 
   /**
    * 延期
    * @param delayInfo
+   * @param task
    * @returns {Promise<boolean>}
    */
-  public delay(delayInfo: DelayInfo): Promise<boolean> {
-    //delayInfo.userId = this.globalService.userId;
-    return this.uploadService.delay(delayInfo);
+  public delay(delayInfo: DelayInfo, task: Task): Promise<boolean> {
+    let promise: Promise<boolean> = this.uploadService.delay(delayInfo);
+    return this.globalService.isChrome
+      ? promise
+      : promise.catch(error => console.error(error))
+        .then((result) => this.dbService.saveHistory({
+          userId: delayInfo.userId,
+          taskId: delayInfo.taskId,
+          state: TaskState.Delay,
+          task,
+          reply: delayInfo,
+          uploadedFlag: result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal
+        }))
+        .then(result => this.dbService.saveTask(task));
   }
 
   /**
@@ -216,11 +317,12 @@ export class DataService {
   }
 
   /**
-   * 获取词语信息
-   * @returns {Promise<Word>}
+   * 下载词语信息
+   * @returns {Promise<Array<Word>>}
    */
-  public getAllWords(): Promise<Array<Word>> {
-    return this.downloadService.getAllWords('all');
+  public downloadWords(): Promise<boolean> {
+    return this.downloadService.getAllWords('all')
+      .then(words => this.dbService.saveWords(words));
   }
 
   /**
@@ -228,11 +330,17 @@ export class DataService {
    * @returns {Promise<Array<Word>>|Promise<TResult>}
    */
   public getOptTypes(): Promise<Array<Word>> {
+    const group: string = 'CL_LEIBIE';
+    const rootName: string = '处理类别';
     return (this.optTypes && this.optTypes.length > 0)
       ? Promise.resolve(this.optTypes)
-      : this.downloadService.getAllWords('CL_LEIBIE')
+      : this.dbService.getWords(group)
+        .catch(error => {
+          console.error(error);
+          return this.downloadService.getAllWords(group);
+        })
         .then(words => {
-          return this.optTypes = this.tree2list(words, "处理类别");
+          return this.optTypes = this.tree2list(words, rootName);
         });
   }
 
@@ -242,19 +350,23 @@ export class DataService {
    * @returns {Promise<Array<Word>>}
    */
   public getOptContents(parentId: number): Promise<Array<Word>> {
-    return (this.optContents && this.optContents.length > 0
+    const group: string = 'CL_NEIRONG';
+    return (this.optContents && this.optContents.length > 0 && this.optContents[0].wParentId === parentId)
       ? Promise.resolve(this.optContents)
-      : this.downloadService.getAllWords('CL_NEIRONG'))
-      .then(words => {
-        this.optContents = words;
-        let newWords: Array<Word> = [];
-        for (let word of words) {
-          if (word.wParentId === parentId) {
-            newWords.push(word);
+      : this.dbService.getWords(group)
+        .catch(error => {
+          console.error(error);
+          return this.downloadService.getAllWords(group);
+        })
+        .then(words => {
+          let newWords: Array<Word> = [];
+          for (let word of words) {
+            if (word.wParentId === parentId) {
+              newWords.push(word);
+            }
           }
-        }
-        return newWords;
-      });
+          return this.optContents = newWords;
+        });
   }
 
   /**
@@ -262,11 +374,17 @@ export class DataService {
    * @returns {Promise<Array<Word>>|Promise<TResult>}
    */
   public getOptReasons(): Promise<Array<Word>> {
+    const group: string = 'FS_YUANYIN';
+    const rootName: string = '发生原因';
     return (this.optReasons && this.optReasons.length > 0)
       ? Promise.resolve(this.optReasons)
-      : this.downloadService.getAllWords('FS_YUANYIN')
+      : this.dbService.getWords(group)
+        .catch(error => {
+          console.error(error);
+          return this.downloadService.getAllWords(group);
+        })
         .then(words => {
-          return this.optReasons = this.tree2list(words, "发生原因");
+          return this.optReasons = this.tree2list(words, rootName);
         });
   }
 
@@ -275,11 +393,17 @@ export class DataService {
    * @returns {Promise<Array<Word>>|Promise<TResult>}
    */
   public getOptSolutions(): Promise<Array<Word>> {
+    const group: string = 'JJ_CUOSHI';
+    const rootName: string = '解决措施';
     return (this.optSolutions && this.optSolutions.length > 0)
       ? Promise.resolve(this.optSolutions)
-      : this.downloadService.getAllWords('JJ_CUOSHI')
+      : this.dbService.getWords(group)
+        .catch(error => {
+          console.error(error);
+          return this.downloadService.getAllWords(group);
+        })
         .then(words => {
-          return this.optSolutions = this.tree2list(words, "解决措施");
+          return this.optSolutions = this.tree2list(words, rootName);
         });
   }
 
@@ -288,11 +412,17 @@ export class DataService {
    * @returns {Promise<Array<Word>>|Promise<TResult>}
    */
   public getOptResults(): Promise<Array<Word>> {
+    const group: string = 'CL_JIEGUO';
+    const rootName: string = '处理结果';
     return (this.optResults && this.optResults.length > 0)
       ? Promise.resolve(this.optResults)
-      : this.downloadService.getAllWords('CL_JIEGUO')
+      : this.dbService.getWords(group)
+        .catch(error => {
+          console.error(error);
+          return this.downloadService.getAllWords(group);
+        })
         .then(words => {
-          return this.optResults = this.tree2list(words, "处理结果");
+          return this.optResults = this.tree2list(words, rootName);
         });
   }
 
@@ -301,11 +431,17 @@ export class DataService {
    * @returns {Promise<Array<Word>>|Promise<TResult>}
    */
   public getReflectTypes(): Promise<Array<Word>> {
+    const group: string = 'FY_LEIBIE';
+    const rootName: string = '反映类别';
     return (this.reflectTypes && this.reflectTypes.length > 0)
       ? Promise.resolve(this.reflectTypes)
-      : this.downloadService.getAllWords('FY_LEIBIE')
+      : this.dbService.getWords(group)
+        .catch(error => {
+          console.error(error);
+          return this.downloadService.getAllWords(group);
+        })
         .then(words => {
-          return this.reflectTypes = this.tree2list(words, "反映类别");
+          return this.reflectTypes = this.tree2list(words, rootName);
         });
   }
 
@@ -314,11 +450,17 @@ export class DataService {
    * @returns {Promise<Array<Word>>|Promise<TResult>}
    */
   public getReflectContents(): Promise<Array<Word>> {
+    const group: string = 'FY_NEIRONG';
+    const rootName: string = '反映内容';
     return (this.reflectContents && this.reflectContents.length > 0)
       ? Promise.resolve(this.reflectContents)
-      : this.downloadService.getAllWords('FY_NEIRONG')
+      : this.dbService.getWords(group)
+        .catch(error => {
+          console.error(error);
+          return this.downloadService.getAllWords(group);
+        })
         .then(words => {
-          return this.reflectContents = this.tree2list(words, "反映内容");
+          return this.reflectContents = this.tree2list(words, rootName);
         });
   }
 
@@ -449,5 +591,55 @@ export class DataService {
     let newWords: Array<Word> = [];
     find(words, newWords, rootWord);
     return newWords;
+  }
+
+  /**
+   * 订阅事件
+   */
+  private subscribeEvent() {
+    // download all tasks
+    this.events.subscribe(this.downloadTaskEvent, (since: number, count: number) => {
+      if (this.globalService.isChrome) {
+        this.isDownloadTaskAndDetailFinished = true;
+        this.events.publish(this.globalService.myWorkDownloadFinishEvent);
+      } else {
+        this.downloadService.getTasks(this.globalService.userId, since, count)
+          .then(tasks => this.dbService.saveTasks(this.globalService.userId, tasks))
+          .then(result => {
+            this.events.publish(this.downloadTaskEvent,
+              this.globalService.taskSinceDefault + this.globalService.taskCountDefault100,
+              this.globalService.taskCountDefault100);
+          })
+          .catch(error => {
+            console.error(error);
+            this.dbService.getNoDetailTaskIds(this.globalService.userId)
+              .then(taskIds => {
+                this.events.publish(this.downloadTaskDetailEvent, taskIds);
+              })
+              .catch(error => {
+                console.error(error);
+                this.isDownloadTaskAndDetailFinished = true;
+                this.events.publish(this.globalService.myWorkDownloadFinishEvent);
+              });
+          });
+      }
+    });
+
+    // download task detail
+    this.events.subscribe(this.downloadTaskDetailEvent, (taskIds: Array<string>) => {
+      if (taskIds && taskIds.length > 0) {
+        let taskId: string = taskIds.shift();
+        if (taskId) {
+          this.downloadService.getTaskDetail(taskId)
+            .then(detail => this.dbService.saveTaskDetail(detail))
+            .catch(error => console.error(error))
+            .then((result) => this.events.publish(this.downloadTaskDetailEvent, taskIds));
+          return;
+        }
+      }
+
+      this.isDownloadTaskAndDetailFinished = true;
+      this.events.publish(this.globalService.myWorkDownloadFinishEvent);
+    });
   }
 }

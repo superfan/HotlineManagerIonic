@@ -1,6 +1,6 @@
 import {Location} from "./Location";
 
-export class DelayInfo {
+export interface DelayInfo {
   delayTime: number;
   deadline: number;
   comment: string;

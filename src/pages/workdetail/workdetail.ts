@@ -1,11 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {NavController, NavParams, AlertController, ToastController, Events} from 'ionic-angular';
-import {TaskEx} from "../../model/Task";
+import {NavController, NavParams, AlertController, Events} from 'ionic-angular';
+import {Task, TaskEx, transform2ProcessEx, transform2Task} from "../../model/Task";
 import {DataService} from "../../providers/DataService";
 import {TaskDetail} from "../../model/TaskDetail";
 import {ReplyInfo} from "../../model/ReplyInfo";
 import {GlobalService} from "../../providers/GlobalService";
 import {Word} from "../../model/Word";
+import {ProcessEx} from "../../model/Process";
 
 interface Detail {
   name: string;
@@ -99,7 +100,6 @@ export class WorkDetailPage implements OnInit {
   constructor(public navCtrl: NavController,
               private navParams: NavParams,
               private alertCtrl: AlertController,
-              private toastCtrl: ToastController,
               private events: Events,
               private dataService: DataService,
               private globalService: GlobalService) {
@@ -155,10 +155,17 @@ export class WorkDetailPage implements OnInit {
       || !this.replyInfo.reason
       || !this.replyInfo.solution
       || !this.replyInfo.result) {
-      return this.showToast("数据填写不完整!");
+      return this.globalService.showToast("数据填写不完整!");
     }
 
-    this.dataService.reply(this.replyInfo)
+    let processEx: ProcessEx = new ProcessEx();
+    if (!transform2ProcessEx(this.taskEx, processEx)
+      || processEx.reply.done) {
+      return this.globalService.showToast("数据转换失败!");
+    }
+
+    let task: Task = transform2Task(this.replyInfo, this.taskEx, processEx);
+    this.dataService.reply(this.replyInfo, task, this.taskDetail)
       .then(date => {
         console.log("success");
         this.events.publish(this.globalService.myWorkUpdateEvent, {
@@ -170,7 +177,7 @@ export class WorkDetailPage implements OnInit {
       })
       .catch(error => {
         console.error(error);
-        this.showToast("回填失败!");
+        this.globalService.showToast("回填失败!");
       });
   }
 
@@ -218,20 +225,6 @@ export class WorkDetailPage implements OnInit {
         this.popupRemarkAlert();
         break;
     }
-  }
-
-  /**
-   * toast
-   * @param message
-   */
-  private showToast(message: string): void {
-    let toast = this.toastCtrl.create({
-      message: message,
-      duration: 2000,
-      position: 'bottom'
-    });
-
-    toast.present(toast);
   }
 
   /**
@@ -377,7 +370,7 @@ export class WorkDetailPage implements OnInit {
    */
   private popupOptTypeAlert(): void {
     if (!this.optTypes || this.optTypes.length <= 0) {
-      return this.showToast("处理类别为空!")
+      return this.globalService.showToast("处理类别为空!")
     }
 
     this.popupAlert(this.optTypes, this.optTypeName, this.reply[3], this.replyInfo, "opLeiBie");
@@ -388,7 +381,7 @@ export class WorkDetailPage implements OnInit {
    */
   private popupOptContentAlert(): void {
     if (!this.optContents || this.optContents.length <= 0) {
-      return this.showToast("处理内容为空!")
+      return this.globalService.showToast("处理内容为空!")
     }
 
     this.popupAlert(this.optContents, this.optContentName, this.reply[4], this.replyInfo, "opContent");
@@ -399,7 +392,7 @@ export class WorkDetailPage implements OnInit {
    */
   private popupOptReasonAlert(): void {
     if (!this.optReasons || this.optReasons.length <= 0) {
-      return this.showToast("发生原因为空!")
+      return this.globalService.showToast("发生原因为空!")
     }
 
     this.popupAlert(this.optReasons, this.optReasonName, this.reply[5], this.replyInfo, "reason");
@@ -410,7 +403,7 @@ export class WorkDetailPage implements OnInit {
    */
   private popupOptSolutionAlert(): void {
     if (!this.optSolutions || this.optSolutions.length <= 0) {
-      return this.showToast("解决措施为空!")
+      return this.globalService.showToast("解决措施为空!")
     }
 
     this.popupAlert(this.optSolutions, this.optSolutionName, this.reply[6], this.replyInfo, "solution");
@@ -421,7 +414,7 @@ export class WorkDetailPage implements OnInit {
    */
   private popupOptResultAlert(): void {
     if (!this.optResults || this.optResults.length <= 0) {
-      return this.showToast("处理结果为空!")
+      return this.globalService.showToast("处理结果为空!")
     }
 
     this.popupAlert(this.optResults, this.optResultName, this.reply[7], this.replyInfo, "result");
@@ -504,5 +497,89 @@ export class WorkDetailPage implements OnInit {
       //this.testRadioOpen = true;
     });
   }
+
+  /**
+   * 处理步骤数组转对象
+   * @param taskEx
+   * @param processEx
+   * @returns {boolean}
+   */
+  // private transform2ProcessEx(taskEx: TaskEx, processEx: ProcessEx): boolean {
+  //   if (!taskEx && !processEx) {
+  //     return false;
+  //   }
+  //
+  //   for (let i of taskEx.processes) {
+  //     switch (i.event) {
+  //       case 'create':
+  //         processEx.create = i;
+  //         break;
+  //       case 'dispatch':
+  //         processEx.dispatch = i;
+  //         break;
+  //       case 'accept':
+  //         processEx.accept = i;
+  //         break;
+  //       case 'go':
+  //         processEx.go = i;
+  //         break;
+  //       case 'arrive':
+  //         processEx.arrive = i;
+  //         break;
+  //       case 'reply':
+  //         processEx.reply = i;
+  //         break;
+  //       case 'reject':
+  //         processEx.reject = i;
+  //         break;
+  //       case 'delay':
+  //         processEx.delay = i;
+  //         break;
+  //       case 'cancel':
+  //         processEx.cancel = i;
+  //         break;
+  //       default:
+  //         console.error(this.tag, i.event);
+  //         break;
+  //     }
+  //   }
+  //
+  //   return !!(processEx && processEx.create && processEx.dispatch && processEx.accept && processEx.go && processEx.arrive
+  //   && processEx.reply && processEx.reject && processEx.delay && processEx.cancel);
+  // }
+
+  /**
+   *
+   * @param info
+   * @param taskEx
+   * @param processEx
+   * @returns {any}
+   */
+  // private toTask(info: any, taskEx: TaskEx, processEx: ProcessEx): Task {
+  //   if (info instanceof ReplyInfo) {
+  //     let replyInfo: ReplyInfo = info as ReplyInfo;
+  //     return {
+  //       acceptTime: processEx.accept.time.getTime(),
+  //       arrivedTime: processEx.arrive.time.getTime(),
+  //       assignTime: processEx.dispatch.time.getTime(),
+  //       compltedTime: 0,
+  //       createTime: processEx.create.time.getTime(),
+  //       desc: taskEx.describe,
+  //       goTime: processEx.go.time.getTime(),
+  //       location: {
+  //         type: taskEx.location.type,
+  //         lng: taskEx.location.lng,
+  //         lat: taskEx.location.lat
+  //       },
+  //       replyTime: replyInfo.opTime,
+  //       source: taskEx.source,
+  //       state: TaskState.Reply,
+  //       taskId: taskEx.id,
+  //       taskType: taskEx.type
+  //     };
+  //   } else {
+  //     return new Task();
+  //   }
+  // }
 }
 

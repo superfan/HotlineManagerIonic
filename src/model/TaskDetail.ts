@@ -1,5 +1,5 @@
 
-export class TaskDetail {
+export interface TaskDetail {
   taskId: string;
   Type: string;
   desc: string;
@@ -31,4 +31,5 @@ export class TaskDetail {
   assignStation: string;
   assignPerson: string;
   assignComment: string;
+  extendedInfo?: string; // used for media
 }
