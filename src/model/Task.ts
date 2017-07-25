@@ -151,6 +151,71 @@ export class TaskEx {
     }
   }
 
+  static transformCompletedData(tasks: Array<Task>, taskExs: Array<TaskEx>) {
+    for (let task of tasks) {
+      let taskEx = new TaskEx(task);
+      taskEx.processes[2] = {
+        event: 'accept',
+        name: '接单时间',
+        time: TaskEx.utc2Date(task.acceptTime),
+        show: true,
+        color: 'gray',
+        done: false,
+        extend: null
+      };
+      taskEx.processes[3] = {
+        event: 'go', name: '出发时间', time: TaskEx.utc2Date(task.goTime), show: true,
+        color: 'gray', done: true, extend: null
+      };
+      taskEx.processes[4] = {
+        event: 'arrive',
+        name: '到场时间',
+        time: TaskEx.utc2Date(task.arrivedTime),
+        show: true,
+        color: 'gray',
+        done: true,
+        extend: null
+      };
+      taskEx.processes[5] = {
+        event: 'reply',
+        name: '回复时间',
+        time: TaskEx.utc2Date(task.replyTime),
+        show: true,
+        color: 'gray',
+        done: true,
+        extend: null
+      };
+      taskEx.processes[6] = {
+        event: 'reject',
+        name: '退单时间',
+        time: TaskEx.utc2Date(new Date().getTime()),
+        show: false,
+        color: 'gray',
+        done: true,
+        extend: null
+      };
+      taskEx.processes[7] = {
+        event: 'delay',
+        name: '延迟时间',
+        time: TaskEx.utc2Date(new Date().getTime()),
+        show: false,
+        color: 'gray',
+        done: true,
+        extend: null
+      };
+      taskEx.processes[8] = {
+        event: 'cancel',
+        name: '销单时间',
+        time: TaskEx.utc2Date(new Date().getTime()),
+        show: true,
+        color: 'gray',
+        done: true,
+        extend: null
+      }
+      taskExs.push(taskEx);
+    }
+  }
+
   private static utc2Date(utc: number): Date {
     return utc > 0 ? new Date(utc) : undefined;
   }

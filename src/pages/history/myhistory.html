@@ -1,0 +1,146 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>
+      {{title}}
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only color="white" (click)="toggleToolbar($event)">
+        <ion-icon name="search"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+  <ion-toolbar color="primary" *ngIf="showToolbar">
+    <ion-searchbar (input)="getItems($event)"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="page-myhistory">
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      pullingIcon="arrow_dropdown"
+      pullingText="Pull to refresh"
+      refreshingSpinner="circles"
+      refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
+  <ion-list>
+    <ion-card *ngFor="let item of items">
+      <ion-item>
+        <ion-avatar item-start>
+          <img src="assets/img/ic_mywork_avatar.png">
+        </ion-avatar>
+        <div><h2 class="card-header-label-hint">任务编号 </h2>
+          <h2 class="card-header-label-content">{{item.id}}</h2></div>
+        <div><h2 class="card-header-label-hint">任务类型 </h2>
+          <h2 class="card-header-label-content">{{item.type}}</h2></div>
+      </ion-item>
+
+      <ion-list>
+        <ion-list-header>
+          <ion-row>
+            <ion-col col-auto>任务描述</ion-col>
+            <ion-col>{{item.describe}}</ion-col>
+          </ion-row>
+        </ion-list-header>
+
+        <!--创建时间-->
+        <button ion-item [style.color]="item.processes[0].color" *ngIf="item.processes[0].show">
+          <ion-icon name='icon-vline' item-start></ion-icon>
+          {{item.processes[0].name}} {{item.processes[0].time | date:'y-MM-dd HH:mm:ss'}}
+          <!--<ion-icon name='ios-arrow-forward' item-end></ion-icon>-->
+        </button>
+
+        <!--派发时间-->
+        <button ion-item [style.color]="item.processes[1].color" *ngIf="item.processes[1].show">
+          <ion-icon name='icon-vline' item-start></ion-icon>
+          {{item.processes[1].name}} {{item.processes[1].time | date:'y-MM-dd HH:mm:ss'}}
+          <!--<ion-icon name='ios-arrow-forward' item-end></ion-icon>-->
+        </button>
+
+        <!--接单时间 -->
+        <button ion-item  [style.color]="item.processes[2].color" *ngIf="item.processes[2].show">
+          <ion-icon name='icon-vline' item-start color="{{item.processes[2].color}}"></ion-icon>
+          {{item.processes[2].name}} {{item.processes[2].time | date:'y-MM-dd HH:mm:ss'}}
+        </button>
+
+        <!--出发时间-->
+        <button ion-item [style.color]="item.processes[3].color" *ngIf="item.processes[3].show">
+          <ion-icon name='icon-vline' item-start color="{{item.processes[3].color}}"></ion-icon>
+          {{item.processes[3].name}} {{item.processes[3].time | date:'y-MM-dd HH:mm:ss'}}
+        </button>
+
+        <!--到场时间-->
+        <button ion-item [style.color]="item.processes[4].color" *ngIf="item.processes[4].show">
+          <ion-icon name='icon-vline' item-start color="{{item.processes[4].color}}"></ion-icon>
+          {{item.processes[4].name}} {{item.processes[4].time | date:'y-MM-dd HH:mm:ss'}}
+        </button>
+
+        <!--回复时间-->
+        <button ion-item [style.color]="item.processes[5].color" *ngIf="item.processes[5].show">
+          <ion-icon name='icon-vline' item-start color="{{item.processes[5].color}}"></ion-icon>
+          {{item.processes[5].name}} {{item.processes[5].time | date:'y-MM-dd HH:mm:ss'}}
+        </button>
+
+        <!--退单时间-->
+        <button ion-item [style.color]="item.processes[6].color" *ngIf="item.processes[6].show">
+          <ion-icon name='icon-vline' item-start color="{{item.processes[6].color}}"></ion-icon>
+          {{item.processes[6].name}} {{item.processes[6].time | date:'y-MM-dd HH:mm:ss'}}
+        </button>
+
+        <!--延迟时间-->
+        <button ion-item [style.color]="item.processes[7].color" *ngIf="item.processes[7].show">
+          <ion-icon name='icon-vline' item-start color="{{item.processes[7].color}}"></ion-icon>
+          {{item.processes[7].name}} {{item.processes[7].time | date:'y-MM-dd HH:mm:ss'}}
+        </button>
+
+        <!--销单时间-->
+        <button ion-item [style.color]="item.processes[8].color" *ngIf="item.processes[8].show">
+          <ion-icon name='icon-vline' item-start color="{{item.processes[8].color}}"></ion-icon>
+          {{item.processes[8].name}} {{item.processes[8].time | date:'y-MM-dd HH:mm:ss'}}
+        </button>
+      </ion-list>
+      <ion-row>
+        <ion-col>
+          <button ion-button icon-left clear small color="gray">
+            <ion-icon name="images"></ion-icon>
+            <div>{{item.photoCount}}</div>
+          </button>
+        </ion-col>
+
+        <ion-col>
+          <button ion-button icon-left clear small color="gray">
+            <ion-icon name="musical-notes"></ion-icon>
+            <div>{{item.audioCount}}</div>
+          </button>
+        </ion-col>
+
+        <ion-col>
+          <button ion-button icon-left clear small color="gray">
+            <ion-icon name="videocam"></ion-icon>
+            <div>{{item.videoCount}}</div>
+          </button>
+        </ion-col>
+
+        <ion-col>
+          <button ion-button icon-left clear small>
+            <ion-icon name="map"></ion-icon>
+            <div>地图</div>
+          </button>
+        </ion-col>
+
+      </ion-row>
+    </ion-card>
+  </ion-list>
+
+  <!--infinite scroll-->
+  <ion-infinite-scroll (ionInfinite)="doInfinite($event)"  immediate-check="false" distance=1%>
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+  <!--fab-->
+  <ion-fab right bottom *ngIf="showFab">
+    <button ion-fab color="primary" (click)="doScroll2Top($event)">
+      <ion-icon name="arrow-dropup"></ion-icon>
+    </button>
+  </ion-fab>
+</ion-content>

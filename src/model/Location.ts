@@ -1,4 +1,3 @@
-
 export class Location {
   type: string;
   lng: string;

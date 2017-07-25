@@ -14,6 +14,7 @@ import {NewsPage} from "../pages/news/news";
 import {WorkDetailPage} from "../pages/workdetail/workdetail";
 import {StationWorkPage} from "../pages/stationwork/stationwork";
 import {WorkInfoPage} from "../pages/workinfo/workinfo";
+import {MyHistory} from '../pages/history/myhistory';
 
 
 import {File} from "@ionic-native/file";
@@ -61,7 +62,8 @@ import {Device} from "@ionic-native/device";
     SearchPage,
     SearchResultPage,
     SearchDetailsPage,
-    SettingPage
+    SettingPage,
+    MyHistory
   ],
   imports: [
     BrowserModule,
@@ -85,7 +87,8 @@ import {Device} from "@ionic-native/device";
     SearchPage,
     SearchResultPage,
     SearchDetailsPage,
-    SettingPage
+    SettingPage,
+    MyHistory
   ],
   providers: [
     StatusBar,

@@ -43,7 +43,6 @@ export class DataService {
 
     })
   }
-
   /**
    * 下载任务
    * @returns {Promise<boolean>}
