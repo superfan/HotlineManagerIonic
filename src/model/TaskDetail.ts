@@ -31,5 +31,5 @@ export interface TaskDetail {
   assignStation: string;
   assignPerson: string;
   assignComment: string;
-  extendedInfo?: string; // used for media
+  extendedInfo?: string;
 }

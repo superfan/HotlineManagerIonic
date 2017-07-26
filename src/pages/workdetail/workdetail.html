@@ -84,7 +84,7 @@
 
     <!--多媒体-->
     <div *ngSwitchCase="'mediaInfo'">
-      <button ion-item icon-left>
+      <button ion-item icon-left (click)="onTakePicture($event)">
         <ion-icon name="camera"></ion-icon>
         拍照
       </button>
@@ -92,20 +92,20 @@
       <ion-grid>
         <ion-row>
           <ion-col class="col-img">
-            <img width="80" height="80" src="assets/img/ic_photo_default.png"/>
+            <img width="80" height="80" src="{{pictures[0]}}"/>
           </ion-col>
 
           <ion-col class="col-img">
-            <img width="80" height="80" src="assets/img/ic_photo_default.png"/>
+            <img width="80" height="80" src="{{pictures[1]}}"/>
           </ion-col>
 
           <ion-col class="col-img">
-            <img width="80" height="80" src="assets/img/ic_photo_default.png"/>
+            <img width="80" height="80" src="{{pictures[2]}}"/>
           </ion-col>
         </ion-row>
       </ion-grid>
 
-      <button ion-item icon-left>
+      <button ion-item icon-left (click)="onRecord($event)">
         <ion-icon name="microphone"></ion-icon>
         录音
       </button>
@@ -127,24 +127,24 @@
         </ion-item>
       </ion-list>
 
-      <button ion-item icon-left>
-        <ion-icon name="videocam"></ion-icon>
-        视频
-      </button>
+      <!--<button ion-item icon-left>-->
+        <!--<ion-icon name="videocam"></ion-icon>-->
+        <!--视频-->
+      <!--</button>-->
 
-      <ion-row>
-        <ion-col class="col-img">
-          <img width="80" height="80" src="assets/img/ic_video_default.png"/>
-        </ion-col>
+      <!--<ion-row>-->
+        <!--<ion-col class="col-img">-->
+          <!--<img width="80" height="80" src="assets/img/ic_video_default.png"/>-->
+        <!--</ion-col>-->
 
-        <ion-col class="col-img">
-          <img width="80" height="80" src="assets/img/ic_video_default.png"/>
-        </ion-col>
+        <!--<ion-col class="col-img">-->
+          <!--<img width="80" height="80" src="assets/img/ic_video_default.png"/>-->
+        <!--</ion-col>-->
 
-        <ion-col class="col-img">
-          <img width="80" height="80" src="assets/img/ic_video_default.png"/>
-        </ion-col>
-      </ion-row>
+        <!--<ion-col class="col-img">-->
+          <!--<img width="80" height="80" src="assets/img/ic_video_default.png"/>-->
+        <!--</ion-col>-->
+      <!--</ion-row>-->
     </div>
   </div>
 

@@ -9,7 +9,7 @@ export interface MainUpdateEvent {
 }
 
 export interface MyWorkUpdateEvent {
-  type: 'reply' | 'cancel',
+  type: 'reply' | 'cancel' | 'reject',
   taskEx?: TaskEx;
   time?: number;
 }
@@ -88,7 +88,9 @@ export class GlobalService {
    * 隐藏加载对话框
    */
   public hideLoading() {
-    this.loading.dismiss();
+    if (this.loading) {
+      this.loading.dismiss();
+    }
     this.loading = undefined;
   }
 

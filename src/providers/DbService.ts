@@ -7,6 +7,7 @@ import {Word} from "../model/Word";
 import {Task} from "../model/Task";
 import {TaskDetail} from "../model/TaskDetail";
 import {History} from "../model/History";
+import {Media} from "../model/Media";
 
 interface LocalWord {
   ID: number;
@@ -61,7 +62,7 @@ interface LocalHistory {
 
 interface HistoryExtendedInfo {
   taskDetail?: TaskDetail;
-  mediaIds?: string;
+  mediaNames?: string;
 }
 
 @Injectable()
@@ -133,7 +134,7 @@ export class DbService {
     } else {
       return this.openDb()
         .then(db => {
-          return db.executeSql(`SELECT * FROM GD_WORDS WHERE S_WGROUP = ${group};`, {})
+          return db.executeSql(`SELECT * FROM GD_WORDS WHERE S_WGROUP = '${group}';`, {})
             .then(data => {
               let rows: any = data.rows;
               let words: Array<Word> = [];
@@ -169,24 +170,24 @@ export class DbService {
               let rows: any = data.rows;
               let sql: string = '';
               if (rows && rows.length > 0) {
-                for (let i = 0; i < rows.length; i++) {
-                  let localTask: LocalTask = rows.item(i) as LocalTask;
-                  if (!localTask || !localTask.S_TASKID) {
-                    continue;
-                  }
+                for (let serverTask of serverTasks) {
+                  let foundLocalTask: LocalTask;
+                  for (let i = 0; i < rows.length; i++) {
+                    let localTask: LocalTask = rows.item(i) as LocalTask;
+                    if (!localTask || !localTask.S_TASKID) {
+                      continue;
+                    }
 
-                  let foundTask: Task;
-                  for (let serverTask of serverTasks) {
                     if (localTask.S_TASKID === serverTask.taskId) {
-                      foundTask = serverTask;
+                      foundLocalTask = localTask;
                       break;
                     }
                   }
 
-                  if (foundTask) { // update
-                    sql += this.toTaskUpdateSql(foundTask, localTask);
+                  if (foundLocalTask) { // update
+                    sql += this.toTaskUpdateSql(serverTask, foundLocalTask);
                   } else { // insert
-                    sql += this.toTaskInsertSql(foundTask);
+                    sql += this.toTaskInsertSql(serverTask);
                   }
                 }
               } else {
@@ -223,15 +224,25 @@ export class DbService {
    * @param userId
    * @param since
    * @param count
+   * @param states
+   * @param key
    * @returns {any}
    */
-  public getTasks(userId: number, since: number, count: number): Promise<Array<Task>> {
+  public getTasks(userId: number, since: number, count: number, states?: Array<number>, key?: string): Promise<Array<Task>> {
     if (this.globalService.isChrome) {
       return Promise.reject('chrome');
     } else {
       return this.openDb()
         .then(db => {
-          return db.executeSql(`SELECT * FROM GD_TASKS WHERE I_USERID = ${userId} ORDER BY ID LIMIT ${count} OFFSET ${since} ;`, {})
+          let sql: string = `SELECT * FROM GD_TASKS WHERE I_USERID = ${userId}`;
+          if (states && states.length > 0) {
+            sql += ` AND I_STATE IN (${states.join(',')})`;
+          }
+          if (key && key !== '') {
+            sql += ` AND S_TASKID LIKE '%${key}%'`;
+          }
+          sql += ` ORDER BY ID LIMIT ${count} OFFSET ${since};`;
+          return db.executeSql(sql, {})
             .then(data => {
               let rows: any = data.rows;
               let tasks: Array<Task> = [];
@@ -365,30 +376,42 @@ export class DbService {
     } else {
       return this.openDb()
         .then(db => {
-          let sql: string = this.toHistoryInsertSql(history);
-          return db.executeSql(sql, {});
+          let sql: string = `SELECT * FROM GD_HISTORIES WHERE I_USERID = ${history.userId} AND S_TASKID = '${history.taskId}' AND I_STATE = ${history.state} ORDER BY ID;`;
+          return db.executeSql(sql, {})
+            .then(data => {
+              let rows: any = data.rows;
+              let sql;
+              if (rows && rows.length > 0) {
+                //let localHistory: LocalHistory = rows.item(0) as LocalHistory;
+                sql = this.toHistoryUpdateSql(history);
+              } else {
+                sql = this.toHistoryInsertSql(history);
+              }
+
+              return db.executeSql(sql, {});
+            });
         });
     }
   }
 
   /**
    * 获取历史记录
+   * @param userId
    * @param taskId
    * @param uploadedFlag
    * @returns {any}
    */
-  public getHistories(taskId: string, uploadedFlag?: number): Promise<Array<History>> {
+  public getHistories(userId: number, taskId: string, uploadedFlag?: number): Promise<Array<History>> {
     if (this.globalService.isChrome) {
       return Promise.reject('chrome');
     } else {
       return this.openDb()
         .then(db => {
-          let sql = `SELECT * FROM GD_HISTORIES WHERE S_TASKID = '${taskId}'`;
+          let sql = `SELECT * FROM GD_HISTORIES WHERE I_USERID = ${userId} AND S_TASKID = '${taskId}'`;
           if (uploadedFlag != undefined && uploadedFlag != null) {
-            sql += ` AND I_UPLOADEDFLAG = ${uploadedFlag};`;
-          } else {
-            sql += ';';
+            sql += ` AND I_UPLOADEDFLAG = ${uploadedFlag}`;
           }
+          sql += ' ORDER BY ID;';
 
           return db.executeSql(sql, {});
         })
@@ -405,6 +428,42 @@ export class DbService {
             }
           }
           return Promise.resolve(histories);
+        });
+    }
+  }
+
+  /**
+   * 销单删除任务及详情
+   * @param userId
+   * @param taskId
+   * @returns {any}
+   */
+  public deleteTaskAndDetail(userId: number, taskId: string) {
+    if (this.globalService.isChrome) {
+      return Promise.reject('chrome');
+    } else {
+      return this.openDb()
+        .then(db => {
+          let sql = `DELETE FROM GD_TASKS WHERE I_USERID = ${userId} AND S_TASKID = '${taskId}';`
+            + `DELETE FROM GD_TASKDETAILS WHERE S_TASKID = '${taskId}';`;
+          return this.sqlitePorter.importSqlToDb(db, sql);
+        });
+    }
+  }
+
+  /**
+   *
+   * @param media
+   * @returns {any}
+   */
+  public saveMedia(media: Media): Promise<boolean> {
+    if (this.globalService.isChrome) {
+      return Promise.reject('chrome');
+    } else {
+      return this.openDb()
+        .then(db => {
+          let sql: string = this.toMediaInsertSql(media);
+          return this.sqlitePorter.importSqlToDb(db, sql);
         });
     }
   }
@@ -627,7 +686,7 @@ export class DbService {
       }
 
       if (sql && sql.length > 0) {
-        sql = `UPDATE GD_TASKS SET ${sql} where S_TASKID = '${serverTask.taskId}';`;
+        sql = `UPDATE GD_TASKS SET ${sql} WHERE S_TASKID = '${serverTask.taskId}';`;
       } else {
         sql = '';
       }
@@ -655,7 +714,7 @@ export class DbService {
     if (taskDetail.extendedInfo) {
       sql += `, S_EXTENDEDINFO = '${taskDetail.extendedInfo}'}`;
     }
-    sql += `;`;
+    sql += ` WHERE S_TASKID = '${taskDetail.taskId}';`;
     return sql
   }
 
@@ -670,11 +729,29 @@ export class DbService {
       extendInfo.taskDetail = history.taskDetail;
     }
 
-    if (history.mediaIds && history.mediaIds.length > 0) {
-      extendInfo.mediaIds = history.mediaIds.join(',');
+    if (history.mediaNames && history.mediaNames.length > 0) {
+      extendInfo.mediaNames = history.mediaNames.join(',');
     }
 
     return `INSERT INTO GD_HISTORIES VALUES (null, ${history.userId}, '${history.task.taskId}', ${history.task.state}, '${JSON.stringify(history.task)}', '${JSON.stringify(history.reply)}', ${history.uploadedFlag}, '${JSON.stringify(extendInfo)}');`
+  }
+
+  /**
+   *
+   * @param history
+   * @returns {string}
+   */
+  private toHistoryUpdateSql(history: History): string {
+    let extendInfo: HistoryExtendedInfo = {};
+    if (history.taskDetail) {
+      extendInfo.taskDetail = history.taskDetail;
+    }
+
+    if (history.mediaNames && history.mediaNames.length > 0) {
+      extendInfo.mediaNames = history.mediaNames.join(',');
+    }
+
+    return `UPDATE GD_HISTORIES SET S_CONTENT = '${JSON.stringify(history.task)}', S_REPLY = '${JSON.stringify(history.reply)}', I_UPLOADEDFLAG = ${history.uploadedFlag}, S_EXTENDEDINFO = '${JSON.stringify(extendInfo)}' WHERE I_USERID = ${history.userId} AND S_TASKID = '${history.taskId}' AND I_STATE = ${history.state};`
   }
 
   /**
@@ -729,14 +806,14 @@ export class DbService {
   private toHistory(localHistory: LocalHistory): History {
     try {
       let taskDetail: TaskDetail;
-      let mediaIds: Array<number>;
+      let mediaNames: Array<string>;
       if (localHistory.S_EXTENDEDINFO) {
         let historyExtendedInfo: HistoryExtendedInfo = JSON.parse(localHistory.S_EXTENDEDINFO);
         if (historyExtendedInfo.taskDetail) {
           taskDetail = historyExtendedInfo.taskDetail;
         }
-        if (historyExtendedInfo.mediaIds && historyExtendedInfo.mediaIds.length > 0) {
-          mediaIds = historyExtendedInfo.mediaIds.split(',').map(i => Number.parseInt(i));
+        if (historyExtendedInfo.mediaNames && historyExtendedInfo.mediaNames.length > 0) {
+          mediaNames = historyExtendedInfo.mediaNames.split(',');
         }
       }
 
@@ -748,10 +825,14 @@ export class DbService {
         reply: JSON.parse(localHistory.S_REPLY),
         uploadedFlag: localHistory.I_UPLOADEDFLAG,
         taskDetail,
-        mediaIds
+        mediaNames
       };
     } catch (e) {
       console.error(e);
     }
+  }
+
+  private toMediaInsertSql(media: Media): string {
+    return `INSERT INTO GD_MULTIMEDIAS VALUES (null, ${media.userId}, '${media.taskId}', ${media.fileType}, '${media.fileName}', ${media.uploadedFlag}, '${media.fileId ? media.fileId : null}', null);`
   }
 }

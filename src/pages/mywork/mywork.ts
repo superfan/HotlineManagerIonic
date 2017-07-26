@@ -10,6 +10,13 @@ import {GoInfo} from "../../model/GoInfo";
 import {ArriveInfo} from "../../model/ArriveInfo";
 import {RejectInfo} from "../../model/RejectInfo";
 import {DelayInfo} from "../../model/DelayInfo";
+import {CancelInfo} from "../../model/CancelInfo";
+
+enum FromWhere {
+  Download,
+  CancelOrReject,
+  Search
+}
 
 @Component({
   selector: 'page-mywork',
@@ -32,7 +39,8 @@ export class MyWorkPage implements OnInit, OnDestroy {
   items: TaskEx[] = [];
   private since: number = this.globalService.taskSinceDefault;
   private count: number = this.globalService.taskCountDefault10;
-  private isDownloadFinished: boolean = true;
+  private isOperationBusy: boolean = false;
+  private key: string = '';
 
   constructor(public navCtrl: NavController,
               private dataService: DataService,
@@ -47,7 +55,8 @@ export class MyWorkPage implements OnInit, OnDestroy {
   ngOnInit(): void {
     console.log(this.tag, 'ngOnInit');
     this.subscribeEvent(this.events);
-    this.getTasks(this.since, this.count)
+    this.showFab = false;
+    this.getTasks(this.since, this.count, this.key)
       .then(data => {
         this.infiniteScroll.enable(data);
         this.getTaskCount();
@@ -70,8 +79,14 @@ export class MyWorkPage implements OnInit, OnDestroy {
    */
   doRefresh(refresher): void {
     console.log(this.tag, 'doRefresh');
-    this.isDownloadFinished = this.dataService.downloadTasksAndDetails();
-    if (this.isDownloadFinished) {
+
+    // if (this.showToolbar) {
+    //   this.showToolbar = false;
+    //   this.content.resize();
+    // }
+    this.key = '';
+
+    if (this.dataService.downloadTasksAndDetails()) {
       this.refresher.complete();
     }
   }
@@ -85,9 +100,8 @@ export class MyWorkPage implements OnInit, OnDestroy {
 
     setTimeout(() => {
       this.since += this.count;
-      this.getTasks(this.since, this.count)
+      this.getTasks(this.since, this.count, this.key)
         .then(data => {
-          this.showFab = true;
           if (!data) {
             infiniteScroll.enable(false);
           } else {
@@ -98,6 +112,9 @@ export class MyWorkPage implements OnInit, OnDestroy {
         .catch(error => {
           console.error(error);
           infiniteScroll.complete();
+        })
+        .then(() => {
+          this.showFab = this.items.length > this.count;
         });
     }, 100);
   }
@@ -143,8 +160,31 @@ export class MyWorkPage implements OnInit, OnDestroy {
     this.content.resize();
   }
 
-  getItems(ev: any): void {
+  /**
+   * 搜索
+   * @param ev
+   */
+  onInput(ev: any): void {
+    if (this.isOperationBusy) {
+      return this.globalService.showToast('后台繁忙...');
+    }
 
+    // set val to the value of the ev target
+    let val = ev.target.value;
+    if (val && val.trim() != '') {
+      this.key = val;
+    } else {
+      this.key = '';
+    }
+    this.resetTasks(FromWhere.Search);
+  }
+
+  /**
+   *
+   * @param ev
+   */
+  onCancel(ev: any): void {
+    console.log(this.tag, 'onCancel');
   }
 
   /**
@@ -168,10 +208,11 @@ export class MyWorkPage implements OnInit, OnDestroy {
    * 获取任务列表
    * @param since
    * @param count
-   * @returns {Promise<T>}
+   * @param key
+   * @returns {Promise<boolean>}
    */
-  private getTasks(since: number, count: number): Promise<boolean> {
-    return this.dataService.getTasks(since, count)
+  private getTasks(since: number, count: number, key: string): Promise<boolean> {
+    return this.dataService.getTasks(since, count, key)
       .then(tasks => {
         console.log(this.tag + "getTasks: " + tasks.length);
 
@@ -495,6 +536,8 @@ export class MyWorkPage implements OnInit, OnDestroy {
           //processEx.cancel.show = false;
           taskEx.lastProcess = 'reject';
           taskEx.state = TaskState.Reject;
+
+          this.events.publish(this.globalService.myWorkUpdateEvent, {type: 'reject'});
         })
         .catch(error => {
           console.error(this.tag + error);
@@ -584,7 +627,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
     if (!processEx.cancel.done) {
       let time = new Date();
       let cancelExtend: CancelExtend = processEx.cancel.extend as CancelExtend;
-      this.dataService.cancel({
+      let cancelInfo: CancelInfo = {
         destroyTime: time.getTime(),
         destroyRemark: cancelExtend.remark,
         location: {
@@ -594,24 +637,28 @@ export class MyWorkPage implements OnInit, OnDestroy {
         },
         taskId: taskEx.id,
         userId: this.globalService.userId
-      }).then(data => {
-        processEx.cancel.time = time;
-        processEx.cancel.color = this.disableColor;
-        processEx.cancel.done = true;
+      }
+      let task: Task = transform2Task(cancelInfo, taskEx, processEx);
+      this.dataService.cancel(cancelInfo, task)
+        .then(data => {
+          processEx.cancel.time = time;
+          processEx.cancel.color = this.disableColor;
+          processEx.cancel.done = true;
 
-        processEx.go.show = processEx.go.done;
-        processEx.arrive.show = processEx.arrive.done;
-        processEx.reply.show = processEx.reply.done;
-        processEx.reject.show = processEx.reject.done;
-        processEx.delay.show = processEx.delay.done;
-        taskEx.lastProcess = 'cancel';
-        taskEx.state = TaskState.Cancel;
+          processEx.go.show = processEx.go.done;
+          processEx.arrive.show = processEx.arrive.done;
+          processEx.reply.show = processEx.reply.done;
+          processEx.reject.show = processEx.reject.done;
+          processEx.delay.show = processEx.delay.done;
+          taskEx.lastProcess = 'cancel';
+          taskEx.state = TaskState.Cancel;
 
-        this.events.publish(this.globalService.myWorkUpdateEvent, {type: 'cancel'});
-      }).catch(error => {
-        console.error(this.tag + error);
-        this.globalService.showToast(error);
-      });
+          this.events.publish(this.globalService.myWorkUpdateEvent, {type: 'cancel'});
+        })
+        .catch(error => {
+          console.error(this.tag + error);
+          this.globalService.showToast(error);
+        });
     }
   }
 
@@ -892,16 +939,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
    */
   private subscribeEvent(events: Events): void {
     events.subscribe(this.globalService.myWorkDownloadFinishEvent, () => {
-      this.since = this.globalService.taskSinceDefault;
-      while (this.items.shift());
-      this.getTasks(this.since, this.count)
-        .then(data => this.infiniteScroll.enable(data))
-        .catch(error => console.error(error))
-        .then(() => {
-          this.isDownloadFinished = true;
-          this.refresher.complete();
-          this.getTaskCount();
-        });
+      this.resetTasks(FromWhere.Download);
     });
 
     events.subscribe(this.globalService.myWorkUpdateEvent, (myWorkUpdateEvent: MyWorkUpdateEvent) => {
@@ -921,129 +959,39 @@ export class MyWorkPage implements OnInit, OnDestroy {
         processEx.cancel.show = true;
         myWorkUpdateEvent.taskEx.lastProcess = 'reply';
         myWorkUpdateEvent.taskEx.state = TaskState.Reply;
-      } else if (myWorkUpdateEvent.type === 'cancel') {
-        this.since = this.globalService.taskSinceDefault;
-        while (this.items.shift());
-        this.getTasks(this.since, this.count);
+      } else if (myWorkUpdateEvent.type === 'cancel' || myWorkUpdateEvent.type === 'reject') {
+        this.resetTasks(FromWhere.CancelOrReject);
       }
     });
   }
 
   /**
-   *
-   * @param info
-   * @param taskEx
-   * @param processEx
-   * @returns {any}
+   * 重置list
+   * @param fromWhere
    */
-  // private toTask(info: any, taskEx: TaskEx, processEx: ProcessEx): Task {
-  //   if (info instanceof AcceptInfo) {
-  //     let acceptInfo: AcceptInfo = info as AcceptInfo;
-  //     return {
-  //       acceptTime: acceptInfo.acceptTime,
-  //       arrivedTime: processEx.arrive.time.getTime(),
-  //       assignTime: processEx.dispatch.time.getTime(),
-  //       compltedTime: 0,
-  //       createTime: processEx.create.time.getTime(),
-  //       desc: taskEx.describe,
-  //       goTime: processEx.go.time.getTime(),
-  //       location: {
-  //         type: taskEx.location.type,
-  //         lng: taskEx.location.lng,
-  //         lat: taskEx.location.lat
-  //       },
-  //       replyTime: processEx.reply.time.getTime(),
-  //       source: taskEx.source,
-  //       state: TaskState.Accept,
-  //       taskId: taskEx.id,
-  //       taskType: taskEx.type
-  //     };
-  //   } else if (info instanceof GoInfo) {
-  //     let goInfo: GoInfo = info as GoInfo;
-  //     return {
-  //       acceptTime: processEx.accept.time.getTime(),
-  //       arrivedTime: processEx.arrive.time.getTime(),
-  //       assignTime: processEx.dispatch.time.getTime(),
-  //       compltedTime: 0,
-  //       createTime: processEx.create.time.getTime(),
-  //       desc: taskEx.describe,
-  //       goTime: goInfo.goTime,
-  //       location: {
-  //         type: taskEx.location.type,
-  //         lng: taskEx.location.lng,
-  //         lat: taskEx.location.lat
-  //       },
-  //       replyTime: processEx.reply.time.getTime(),
-  //       source: taskEx.source,
-  //       state: TaskState.Go,
-  //       taskId: taskEx.id,
-  //       taskType: taskEx.type
-  //     };
-  //   } else if (info instanceof ArriveInfo) {
-  //     let arriveInfo: ArriveInfo = info as ArriveInfo;
-  //     return {
-  //       acceptTime: processEx.accept.time.getTime(),
-  //       arrivedTime: arriveInfo.arrivedTime,
-  //       assignTime: processEx.dispatch.time.getTime(),
-  //       compltedTime: 0,
-  //       createTime: processEx.create.time.getTime(),
-  //       desc: taskEx.describe,
-  //       goTime: processEx.go.time.getTime(),
-  //       location: {
-  //         type: taskEx.location.type,
-  //         lng: taskEx.location.lng,
-  //         lat: taskEx.location.lat
-  //       },
-  //       replyTime: processEx.reply.time.getTime(),
-  //       source: taskEx.source,
-  //       state: TaskState.Arrived,
-  //       taskId: taskEx.id,
-  //       taskType: taskEx.type
-  //     };
-  //   } else if (info instanceof RejectInfo) {
-  //     let rejectInfo: RejectInfo = info as RejectInfo;
-  //     return {
-  //       acceptTime: processEx.accept.time.getTime(),
-  //       arrivedTime: processEx.arrive.time.getTime(),
-  //       assignTime: processEx.dispatch.time.getTime(),
-  //       compltedTime: 0, //rejectInfo.rejectTime,
-  //       createTime: processEx.create.time.getTime(),
-  //       desc: taskEx.describe,
-  //       goTime: processEx.go.time.getTime(),
-  //       location: {
-  //         type: taskEx.location.type,
-  //         lng: taskEx.location.lng,
-  //         lat: taskEx.location.lat
-  //       },
-  //       replyTime: processEx.reply.time.getTime(),
-  //       source: taskEx.source,
-  //       state: TaskState.Reject,
-  //       taskId: taskEx.id,
-  //       taskType: taskEx.type
-  //     };
-  //   } else if (info instanceof DelayInfo) {
-  //     let delayInfo: DelayInfo = info as DelayInfo;
-  //     return {
-  //       acceptTime: processEx.accept.time.getTime(),
-  //       arrivedTime: processEx.arrive.time.getTime(),
-  //       assignTime: processEx.dispatch.time.getTime(),
-  //       compltedTime: 0, //rejectInfo.rejectTime,
-  //       createTime: processEx.create.time.getTime(),
-  //       desc: taskEx.describe,
-  //       goTime: processEx.go.time.getTime(),
-  //       location: {
-  //         type: taskEx.location.type,
-  //         lng: taskEx.location.lng,
-  //         lat: taskEx.location.lat
-  //       },
-  //       replyTime: processEx.reply.time.getTime(),
-  //       source: taskEx.source,
-  //       state: TaskState.Reject,
-  //       taskId: taskEx.id,
-  //       taskType: taskEx.type
-  //     };
-  //   } else {
-  //     return new Task();
-  //   }
-  // }
+  private resetTasks(fromWhere: FromWhere): void {
+    this.isOperationBusy = true;
+    this.since = this.globalService.taskSinceDefault;
+    while (this.items.shift());
+    this.showFab = false;
+    this.getTasks(this.since, this.count, this.key)
+      .then(data => this.infiniteScroll.enable(data))
+      .catch(error => console.error(error))
+      .then(() => {
+        this.isOperationBusy = false;
+        switch (fromWhere) {
+          case FromWhere.Download:
+            this.refresher.complete();
+            this.getTaskCount();
+            break;
+          case FromWhere.CancelOrReject:
+            this.getTaskCount();
+            break;
+          case FromWhere.Search:
+            break;
+          default:
+            break;
+        }
+      });
+  }
 }

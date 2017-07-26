@@ -17,5 +17,5 @@ export interface History {
   reply: AcceptInfo | ArriveInfo | CancelInfo | DelayInfo | GoInfo | RejectInfo | ReplyInfo;
   uploadedFlag: number;
   taskDetail?: TaskDetail;
-  mediaIds?: Array<number>;
+  mediaNames?: Array<string>;
 }

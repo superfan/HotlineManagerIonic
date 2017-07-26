@@ -44,6 +44,9 @@ import {SQLitePorter} from "@ionic-native/sqlite-porter";
 import {DbService} from "../providers/DbService";
 import {IonicStorageModule} from "@ionic/storage";
 import {Device} from "@ionic-native/device";
+import {ValueValidPipe} from "../pipes/ValueValidPipe";
+import {Camera} from "@ionic-native/camera";
+import {AndroidPermissions} from "@ionic-native/android-permissions";
 
 @NgModule({
   declarations: [
@@ -61,7 +64,8 @@ import {Device} from "@ionic-native/device";
     SearchPage,
     SearchResultPage,
     SearchDetailsPage,
-    SettingPage
+    SettingPage,
+    ValueValidPipe
   ],
   imports: [
     BrowserModule,
@@ -111,6 +115,8 @@ import {Device} from "@ionic-native/device";
     GlobalService,
     DbService,
     Device,
+    Camera,
+    AndroidPermissions,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     {provide: Http, useFactory: httpFactory, deps: [HttpInterceptorBackend, RequestOptions]},
   ]
