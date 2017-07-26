@@ -44,6 +44,7 @@ import {SQLitePorter} from "@ionic-native/sqlite-porter";
 import {DbService} from "../providers/DbService";
 import {IonicStorageModule} from "@ionic/storage";
 import {Device} from "@ionic-native/device";
+import {MapPage} from "../pages/map/map";
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import {Device} from "@ionic-native/device";
     SearchPage,
     SearchResultPage,
     SearchDetailsPage,
-    SettingPage
+    SettingPage,
+    MapPage
   ],
   imports: [
     BrowserModule,
@@ -85,7 +87,8 @@ import {Device} from "@ionic-native/device";
     SearchPage,
     SearchResultPage,
     SearchDetailsPage,
-    SettingPage
+    SettingPage,
+    MapPage
   ],
   providers: [
     StatusBar,

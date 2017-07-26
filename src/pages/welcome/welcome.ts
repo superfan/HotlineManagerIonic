@@ -77,6 +77,7 @@ export class WelcomePage {
         this.jump2Login();
       })
       .catch(error => {
+        this.loading.dismiss();
         console.log(this.tag + 'checkUpdate:' + error);
       })
   }

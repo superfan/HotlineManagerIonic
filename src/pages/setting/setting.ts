@@ -8,7 +8,6 @@ import {GlobalService} from "../../providers/GlobalService";
 import {StorageService} from "../../providers/StorageService";
 import {FileService} from "../../providers/FileService";
 import {Storage} from "@ionic/storage";
-import {errorObject} from "rxjs/util/errorObject";
 
 @Component({
   selector: 'page-setting',

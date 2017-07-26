@@ -9,6 +9,7 @@ import {SettingPage} from "../setting/setting";
 import {GlobalService, MainUpdateEvent} from "../../providers/GlobalService";
 import {DbService} from "../../providers/DbService";
 import {ConfigService} from "../../providers/ConfigService";
+import {MapPage} from "../map/map";
 
 enum ItemId {
   MyWork,
@@ -57,7 +58,6 @@ export class MainPage implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     console.log(this.tag, "ngOnInit");
-
     this.initListItem();
     this.initGirdItems();
     this.subscribeEvent(this.events);
@@ -109,6 +109,7 @@ export class MainPage implements OnInit, OnDestroy {
       case ItemId.History:
         break;
       case ItemId.Map:
+        this.navCtrl.push(MapPage);
         break;
       case ItemId.Search:
         this.navCtrl.push(SearchPage);
