@@ -40,6 +40,9 @@
         "cordova-plugin-file-transfer": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
+        "cordova-plugin-media": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
         "cordova-plugin-media-capture": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
@@ -68,9 +71,6 @@
             "PACKAGE_NAME": "io.ionic.starter"
         },
         "uk.co.workingedge.cordova.plugin.sqliteporter": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-media": {
             "PACKAGE_NAME": "io.ionic.starter"
         }
     },
