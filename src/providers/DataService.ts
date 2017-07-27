@@ -27,6 +27,7 @@ import {History} from "../model/History";
 import {Camera, CameraOptions} from "@ionic-native/camera";
 import {FileService} from "./FileService";
 import {MediaType} from "../model/Media";
+import {Media, MediaObject} from "@ionic-native/media";
 
 @Injectable()
 export class DataService {
@@ -50,6 +51,7 @@ export class DataService {
               private dbService: DbService,
               private events: Events,
               private camera: Camera,
+              private media: Media,
               private fileService: FileService) {
   }
 
@@ -729,8 +731,42 @@ export class DataService {
         uploadedFlag: this.globalService.uploadedFlagForLocal
       })
         .then(result => result
-          ? Promise.resolve({filePath: `${this.fileService.getImageDir()}/${fileName}`, fileName})
+          ? Promise.resolve({filePath: `${this.fileService.getImagesDir()}/${fileName}`, fileName})
           : Promise.reject('failure to save the db')));
+  }
+
+  /**
+   *
+   * @param taskId
+   * @returns {Promise<T>}
+   */
+  public recordAudio(taskId: string): Promise<any> {
+    const error: string = 'failure to record audio';
+    return new Promise((resolve, reject) => {
+      let file: MediaObject;
+      try {
+        // Create a Media instance.  Expects path to file or url as argument
+        // We can optionally pass a second argument to track the status of the media
+        let name: string = `${this.fileService.getSoundsDir()}/${new Date().getTime()}.mp3`;
+        file = this.media.create(name);
+        if (!file) {
+          return reject(error);
+        }
+
+        file.startRecord();
+
+        setTimeout(function () {
+          file.stopRecord();
+          file.release();
+        }, 10000);
+      }
+      catch (err) {
+        console.error(err);
+        if (file) {
+          file.release();
+        }
+      }
+    });
   }
 
   /**

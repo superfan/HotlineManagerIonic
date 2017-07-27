@@ -42,8 +42,16 @@ export class FileService {
    * 获取images路径
    * @returns {string}
    */
-  public getImageDir(): string {
+  public getImagesDir(): string {
     return `${this.dirPath}${this.dirRoot}/${this.dir}/images`;
+  }
+
+  /**
+   * 获取sounds路径
+   * @returns {string}
+   */
+  public getSoundsDir(): string {
+    return `${this.dirPath}${this.dirRoot}/${this.dir}/sounds`;
   }
 
   /**
@@ -201,7 +209,7 @@ export class FileService {
     }
 
     return this.file.checkFile(srcPath, fileName)
-      .then(result => this.file.moveFile(srcPath, fileName, this.getImageDir(), fileName))
+      .then(result => this.file.moveFile(srcPath, fileName, this.getImagesDir(), fileName))
       .then(entry => entry ? Promise.resolve(fileName) : Promise.reject(error));
   }
 

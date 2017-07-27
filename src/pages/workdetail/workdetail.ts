@@ -271,7 +271,7 @@ export class WorkDetailPage implements OnInit {
    * 录音
    * @param ev
    */
-  onRecord(ev: any): void {
+  onRecordAudio(ev: any): void {
 
   }
 
