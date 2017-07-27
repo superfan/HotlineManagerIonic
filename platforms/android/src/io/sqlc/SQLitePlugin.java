@@ -200,7 +200,7 @@ public class SQLitePlugin extends CordovaPlugin {
             // ASSUMPTION: no db (connection/handle) is already stored in the map
             // [should be true according to the code in DBRunner.run()]
 
-            File dbfile = this.cordova.getActivity().getDatabasePath(dbname);
+            File dbfile = getDbPath(dbname);
 
             if (!dbfile.exists()) {
                 dbfile.getParentFile().mkdirs();
@@ -290,9 +290,9 @@ public class SQLitePlugin extends CordovaPlugin {
      * @return true if successful or false if an exception was encountered
      */
     private boolean deleteDatabaseNow(String dbname) {
-        File dbfile = this.cordova.getActivity().getDatabasePath(dbname);
+      File dbfile = getDbPath(dbname);
 
-        try {
+      try {
             return cordova.getActivity().deleteDatabase(dbfile.getAbsolutePath());
         } catch (Exception e) {
             Log.e(SQLitePlugin.class.getSimpleName(), "couldn't delete database", e);
@@ -300,7 +300,19 @@ public class SQLitePlugin extends CordovaPlugin {
         }
     }
 
-    private class DBRunner implements Runnable {
+  private File getDbPath(String dbname) {
+    File dbfile;
+    String str = "file://";
+    if (dbname.startsWith(str)) {
+      dbfile = new File(dbname.substring(str.length()));
+    } else {
+      dbfile = this.cordova.getActivity().getDatabasePath(dbname);
+    }
+
+    return dbfile;
+  }
+
+  private class DBRunner implements Runnable {
         final String dbname;
         private boolean oldImpl;
         private boolean bugWorkaround;
@@ -368,7 +380,7 @@ public class SQLitePlugin extends CordovaPlugin {
                             Log.e(SQLitePlugin.class.getSimpleName(), "couldn't delete database", e);
                             dbq.cbc.error("couldn't delete database: " + e);
                         }
-                    }                    
+                    }
                 } catch (Exception e) {
                     Log.e(SQLitePlugin.class.getSimpleName(), "couldn't close database", e);
                     if (dbq.cbc != null) {
