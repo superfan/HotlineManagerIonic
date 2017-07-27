@@ -69,6 +69,12 @@
         },
         "uk.co.workingedge.cordova.plugin.sqliteporter": {
             "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "cordova-plugin-baidumaplocation": {
+            "ANDROID_KEY": "zr5fvLYYgiOoLzZFQxcbLyIwCdaphwMo",
+            "IOS_KEY": "zr5fvLYYgiOoLzZFQxcbLyIwCdaphwMo",
+            "IOS_LOCATION_DESC": "请点击'好'以允许访问。",
+            "PACKAGE_NAME": "io.ionic.starter"
         }
     },
     "dependent_plugins": {

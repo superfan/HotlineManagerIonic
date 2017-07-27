@@ -39,7 +39,6 @@ export class DownloadService extends BaseService {
       this.configService.getServerBaseUri()
         .then(data => {
           let url = `${data}wap/v1/mobile/task/user/${userId}/task?taskType=all&completed=0&count=${count}&since=${since}`;
-
           return this.http.get(url, this.getOptions())
             .toPromise()
             .then(data => {
@@ -68,7 +67,6 @@ export class DownloadService extends BaseService {
       this.configService.getServerBaseUri()
         .then(data => {
           let url = `${data}wap/v1/mobile/hotline/task/${taskId}/detail`;
-
           return this.http.get(url, this.getOptions())
             .toPromise()
             .then(data => {
@@ -97,7 +95,6 @@ export class DownloadService extends BaseService {
       this.configService.getServerBaseUri()
         .then(data => {
           let url = `${data}wap/v1/mobile/resource/wordNew?group=${group}`;
-
           return this.http.get(url, this.getOptions())
             .toPromise()
             .then(data => {
@@ -128,7 +125,6 @@ export class DownloadService extends BaseService {
       this.configService.getServerBaseUri()
         .then(data => {
           let url = `${data}wap/v1/mobile/tasksearch/${userId}/unDispatchedTasks?count=${count}&since=${since}`;
-
           return this.http.get(url, this.getOptions())
             .toPromise()
             .then(data => {
@@ -160,7 +156,6 @@ export class DownloadService extends BaseService {
       this.configService.getServerBaseUri()
         .then(data => {
           let url = `${data}wap/v1/mobile/tasksearch/${userId}/dispatchedTasks/${minutes}?count=${count}&since=${since}`;
-
           return this.http.get(url, this.getOptions())
             .toPromise()
             .then(data => {

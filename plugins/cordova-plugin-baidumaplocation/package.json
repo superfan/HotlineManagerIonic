@@ -1,0 +1,104 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "cordova-plugin-baidumaplocation@3.0.1",
+        "scope": null,
+        "escapedName": "cordova-plugin-baidumaplocation",
+        "name": "cordova-plugin-baidumaplocation",
+        "rawSpec": "3.0.1",
+        "spec": "3.0.1",
+        "type": "version"
+      },
+      "E:\\ionic\\new\\HotlineManagerIonic\\node_modules"
+    ]
+  ],
+  "_from": "cordova-plugin-baidumaplocation@3.0.1",
+  "_id": "cordova-plugin-baidumaplocation@3.0.1",
+  "_inCache": true,
+  "_location": "/cordova-plugin-baidumaplocation",
+  "_nodeVersion": "6.9.5",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/cordova-plugin-baidumaplocation-3.0.1.tgz_1499565342261_0.5703767975792289"
+  },
+  "_npmUser": {
+    "name": "aruis",
+    "email": "lovearuis@gmail.com"
+  },
+  "_npmVersion": "3.10.10",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "cordova-plugin-baidumaplocation@3.0.1",
+    "scope": null,
+    "escapedName": "cordova-plugin-baidumaplocation",
+    "name": "cordova-plugin-baidumaplocation",
+    "rawSpec": "3.0.1",
+    "spec": "3.0.1",
+    "type": "version"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-baidumaplocation/-/cordova-plugin-baidumaplocation-3.0.1.tgz",
+  "_shasum": "1bfa7fa423fc9ea3b97b239e7ce721c6e8790544",
+  "_shrinkwrap": null,
+  "_spec": "cordova-plugin-baidumaplocation@3.0.1",
+  "_where": "E:\\ionic\\new\\HotlineManagerIonic\\node_modules",
+  "author": {
+    "name": "aruis"
+  },
+  "bugs": {
+    "url": "https://github.com/aruis/cordova-plugin-baidumaplocation/issues"
+  },
+  "cordova": {
+    "id": "cordova-plugin-baidumaplocation",
+    "platforms": [
+      "android"
+    ]
+  },
+  "dependencies": {},
+  "description": "Cordova Geolocation Plugin,use Baidu Map SDK",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "1bfa7fa423fc9ea3b97b239e7ce721c6e8790544",
+    "tarball": "https://registry.npmjs.org/cordova-plugin-baidumaplocation/-/cordova-plugin-baidumaplocation-3.0.1.tgz"
+  },
+  "engines": {
+    "cordovaDependencies": {
+      "2.0.3": {
+        "cordova-android": ">=5.0.0"
+      }
+    }
+  },
+  "gitHead": "2866ac6eaab28f7c2922380701682d59eed6b304",
+  "homepage": "https://github.com/aruis/cordova-plugin-baidumaplocation#readme",
+  "keywords": [
+    "cordova",
+    "baidu",
+    "location",
+    "geolocation",
+    "device",
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "license": "Apache-2.0",
+  "maintainers": [
+    {
+      "name": "aruis",
+      "email": "lovearuis@gmail.com"
+    }
+  ],
+  "name": "cordova-plugin-baidumaplocation",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aruis/cordova-plugin-baidumaplocation.git"
+  },
+  "scripts": {},
+  "version": "3.0.1"
+}

@@ -41,7 +41,8 @@ export class WelcomePage {
       this.fileService.createDirRoot()
         .then((result) => {
           console.log(this.tag + 'onDidEnter:' + result);
-          this.getVersionCode();
+          // this.getVersionCode();
+          this.jump2Login();
         })
         .catch(err => {
           console.log("initial files failed" + err);
@@ -59,6 +60,7 @@ export class WelcomePage {
   private getVersionCode() {
     this.appVersion.getVersionCode()
       .then(versionCode => {
+        console.log(versionCode);
         this.checkUpdate(versionCode);
       })
       .catch(err => {

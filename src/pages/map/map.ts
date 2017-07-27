@@ -1,6 +1,8 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
-import {NavController, Platform} from "ionic-angular";
+import {NavController} from "ionic-angular";
+import {GlobalService} from "../../providers/GlobalService";
 declare var BMap;
+declare var baidumap_location;
 /**
  * Created by zhangjing on 2017/7/21.
  */
@@ -12,42 +14,69 @@ declare var BMap;
 export class MapPage {
   public map: any;
   @ViewChild('map') mapElement: ElementRef;
+  public isChrome: boolean;
+  public isMark: boolean = true;//是否要采集坐标
 
-  constructor(public navCtrl: NavController) {
+  constructor(public navCtrl: NavController,
+              private globalService: GlobalService) {
   }
 
   ionViewDidLoad() {
     this.loadMap();
   }
 
+  /**
+   * 加载地图
+   */
   private loadMap() {
     let map = this.map = new BMap.Map(this.mapElement.nativeElement, {enableMapClick: true});
     map.enableScrollWheelZoom();//启动滚轮放大缩小，默认禁用
     map.enableContinuousZoom();//连续缩放效果，默认禁用
-
-    // this.showInfo();
-    // let geolocation = new BMap.Geolocation();
-    // geolocation.getCurrentPosition((position) => {
-    //   if (geolocation.getStatus() == 0) {
-    //     //经度
-    //     let longitude = position.longitude;
-    //     //纬度
-    //     let latitude = position.latitude;
-    //     let pPoint = new BMap.Point(longitude, latitude);
-    //     this.map.centerAndZoom(pPoint, 20);//设置中心和地图显示级别
-    //   } else {
-    //     console.log(position);
-    //   }
-    // });
-    let point = new BMap.Point(121.524577, 31.281003);
+    let point = new BMap.Point(120.524577, 31.281003);
     map.centerAndZoom(point, 16);//设置中心和地图显示级别
+    let isChrome = this.isChrome = this.globalService.isChrome;
+    let isMark = this.isMark;
+    if (!isMark) {
+      this.showInfo();
+    } else {
+      this.markMap(map);
+    }
     map.addEventListener("tilesloaded", function () {
       map.addControl(new BMap.NavigationControl());
-      map.addControl(new BMap.GeolocationControl());
       map.addControl(new BMap.OverviewMapControl());
+      if (isChrome) {
+        map.addControl(new BMap.GeolocationControl());
+      }
+    });
+    if(!isChrome){
+      this.getCurrentLocation(map);
+    }
+  }
+
+  /**
+   * 定位
+   */
+  private getCurrentLocation(map: any) {
+    // 进行定位
+    console.log("getCurrentLocation");
+    baidumap_location.getCurrentPosition(function (result) {
+      console.log(result);
+      let latitude = result.latitude;
+      let lontitude = result.longitude;
+      let point = new BMap.Point(lontitude, latitude);
+      this.map.centerAndZoom(point, 16);//设置中心和地图显示级别
+    }, function (error) {
+      console.log(error);
     });
   }
 
+  /**
+   * 确定坐标
+   */
+  private markLocation() {
+    let center = this.map.getCenter();
+    alert("选定坐标:" + center.lat + "," + center.lng);
+  }
 
   /**
    * 展示弹框信息
@@ -60,16 +89,19 @@ export class MapPage {
     this.map.centerAndZoom(point, 16);//设置中心和地图显示级别
   }
 
-  private markMap() {
+  /**
+   * 采集坐标
+   */
+  private markMap(map: any) {
     let myIcon = new BMap.Icon("assets/img/ic_map_center_location.png", new BMap.Size(23, 25));
     this.map.addEventListener("dragend", function (e) {
-      this.map.clearOverlays();
-      let center = this.map.getCenter();
+      map.clearOverlays();
+      let center = map.getCenter();
       let marker = new BMap.Marker(center, {icon: myIcon});
-      this.map.addOverlay(marker);
+      map.addOverlay(marker);
       marker.enableDragging();
       marker.addEventListener("dragend", function (e) {
-        this.map.centerAndZoom(e.point, 16);
+        map.centerAndZoom(e.point, 16);
       })
     });
   }
