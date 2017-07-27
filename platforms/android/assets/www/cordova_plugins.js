@@ -17,6 +17,14 @@ module.exports = [
         ]
     },
     {
+        "id": "cordova-plugin-app-version.AppVersionPlugin",
+        "file": "plugins/cordova-plugin-app-version/www/AppVersionPlugin.js",
+        "pluginId": "cordova-plugin-app-version",
+        "clobbers": [
+            "cordova.getAppVersion"
+        ]
+    },
+    {
         "id": "cordova-plugin-broadcaster.broadcaster",
         "file": "plugins/cordova-plugin-broadcaster/www/broadcaster.js",
         "pluginId": "cordova-plugin-broadcaster",
@@ -254,6 +262,30 @@ module.exports = [
         "runs": true
     },
     {
+        "id": "cordova-plugin-file-opener2.FileOpener2",
+        "file": "plugins/cordova-plugin-file-opener2/www/plugins.FileOpener2.js",
+        "pluginId": "cordova-plugin-file-opener2",
+        "clobbers": [
+            "cordova.plugins.fileOpener2"
+        ]
+    },
+    {
+        "id": "cordova-plugin-file-transfer.FileTransferError",
+        "file": "plugins/cordova-plugin-file-transfer/www/FileTransferError.js",
+        "pluginId": "cordova-plugin-file-transfer",
+        "clobbers": [
+            "window.FileTransferError"
+        ]
+    },
+    {
+        "id": "cordova-plugin-file-transfer.FileTransfer",
+        "file": "plugins/cordova-plugin-file-transfer/www/FileTransfer.js",
+        "pluginId": "cordova-plugin-file-transfer",
+        "clobbers": [
+            "window.FileTransfer"
+        ]
+    },
+    {
         "id": "cordova-plugin-media-capture.CaptureAudioOptions",
         "file": "plugins/cordova-plugin-media-capture/www/CaptureAudioOptions.js",
         "pluginId": "cordova-plugin-media-capture",
@@ -322,6 +354,23 @@ module.exports = [
         "runs": true
     },
     {
+        "id": "cordova-plugin-network-information.network",
+        "file": "plugins/cordova-plugin-network-information/www/network.js",
+        "pluginId": "cordova-plugin-network-information",
+        "clobbers": [
+            "navigator.connection",
+            "navigator.network.connection"
+        ]
+    },
+    {
+        "id": "cordova-plugin-network-information.Connection",
+        "file": "plugins/cordova-plugin-network-information/www/Connection.js",
+        "pluginId": "cordova-plugin-network-information",
+        "clobbers": [
+            "Connection"
+        ]
+    },
+    {
         "id": "cordova-plugin-splashscreen.SplashScreen",
         "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
         "pluginId": "cordova-plugin-splashscreen",
@@ -351,6 +400,22 @@ module.exports = [
         "pluginId": "cordova-plugin-x-toast"
     },
     {
+        "id": "cordova-plugin-zip.Zip",
+        "file": "plugins/cordova-plugin-zip/zip.js",
+        "pluginId": "cordova-plugin-zip",
+        "clobbers": [
+            "zip"
+        ]
+    },
+    {
+        "id": "cordova-sqlite-storage.SQLitePlugin",
+        "file": "plugins/cordova-sqlite-storage/www/SQLitePlugin.js",
+        "pluginId": "cordova-sqlite-storage",
+        "clobbers": [
+            "SQLitePlugin"
+        ]
+    },
+    {
         "id": "ionic-plugin-keyboard.keyboard",
         "file": "plugins/ionic-plugin-keyboard/www/android/keyboard.js",
         "pluginId": "ionic-plugin-keyboard",
@@ -365,71 +430,6 @@ module.exports = [
         "pluginId": "uk.co.workingedge.cordova.plugin.sqliteporter",
         "clobbers": [
             "cordova.plugins.sqlitePorter"
-        ]
-    },
-    {
-        "id": "cordova-plugin-file-transfer.FileTransferError",
-        "file": "plugins/cordova-plugin-file-transfer/www/FileTransferError.js",
-        "pluginId": "cordova-plugin-file-transfer",
-        "clobbers": [
-            "window.FileTransferError"
-        ]
-    },
-    {
-        "id": "cordova-plugin-file-transfer.FileTransfer",
-        "file": "plugins/cordova-plugin-file-transfer/www/FileTransfer.js",
-        "pluginId": "cordova-plugin-file-transfer",
-        "clobbers": [
-            "window.FileTransfer"
-        ]
-    },
-    {
-        "id": "cordova-plugin-app-version.AppVersionPlugin",
-        "file": "plugins/cordova-plugin-app-version/www/AppVersionPlugin.js",
-        "pluginId": "cordova-plugin-app-version",
-        "clobbers": [
-            "cordova.getAppVersion"
-        ]
-    },
-    {
-        "id": "cordova-plugin-zip.Zip",
-        "file": "plugins/cordova-plugin-zip/zip.js",
-        "pluginId": "cordova-plugin-zip",
-        "clobbers": [
-            "zip"
-        ]
-    },
-    {
-        "id": "cordova-plugin-file-opener2.FileOpener2",
-        "file": "plugins/cordova-plugin-file-opener2/www/plugins.FileOpener2.js",
-        "pluginId": "cordova-plugin-file-opener2",
-        "clobbers": [
-            "cordova.plugins.fileOpener2"
-        ]
-    },
-    {
-        "id": "cordova-plugin-network-information.network",
-        "file": "plugins/cordova-plugin-network-information/www/network.js",
-        "pluginId": "cordova-plugin-network-information",
-        "clobbers": [
-            "navigator.connection",
-            "navigator.network.connection"
-        ]
-    },
-    {
-        "id": "cordova-plugin-network-information.Connection",
-        "file": "plugins/cordova-plugin-network-information/www/Connection.js",
-        "pluginId": "cordova-plugin-network-information",
-        "clobbers": [
-            "Connection"
-        ]
-    },
-    {
-        "id": "cordova-sqlite-storage.SQLitePlugin",
-        "file": "plugins/cordova-sqlite-storage/www/SQLitePlugin.js",
-        "pluginId": "cordova-sqlite-storage",
-        "clobbers": [
-            "SQLitePlugin"
         ]
     },
     {
@@ -454,6 +454,7 @@ module.exports.metadata =
 {
     "cordova-plugin-android-permissions": "0.11.0",
     "cordova-plugin-app-preferences": "0.99.3",
+    "cordova-plugin-app-version": "0.1.9",
     "cordova-plugin-broadcaster": "2.2.1",
     "cordova-plugin-camera": "1.1.0",
     "cordova-plugin-compat": "1.0.0",
@@ -461,20 +462,22 @@ module.exports.metadata =
     "cordova-plugin-device": "1.1.4",
     "cordova-plugin-dialogs": "1.3.3",
     "cordova-plugin-file": "4.3.3",
+    "cordova-plugin-file-opener2": "2.0.19",
+    "cordova-plugin-file-transfer": "1.6.3",
     "cordova-plugin-media-capture": "1.4.3",
+    "cordova-plugin-network-information": "1.3.3",
     "cordova-plugin-splashscreen": "4.0.3",
     "cordova-plugin-statusbar": "2.2.2",
     "cordova-plugin-whitelist": "1.3.1",
     "cordova-plugin-x-toast": "2.6.0",
-    "ionic-plugin-keyboard": "2.2.1",
-    "uk.co.workingedge.cordova.plugin.sqliteporter": "0.1.5",
-    "cordova-plugin-file-transfer": "1.6.3",
-    "cordova-plugin-app-version": "0.1.9",
     "cordova-plugin-zip": "3.1.0",
     "cordova-plugin-file-opener2": "2.0.19",
     "cordova-plugin-network-information": "1.3.3",
     "cordova-sqlite-storage": "2.0.4",
     "cordova-plugin-media": "3.0.1"
+    "cordova-sqlite-storage": "2.0.4",
+    "ionic-plugin-keyboard": "2.2.1",
+    "uk.co.workingedge.cordova.plugin.sqliteporter": "0.1.5"
 };
 // BOTTOM OF METADATA
 });

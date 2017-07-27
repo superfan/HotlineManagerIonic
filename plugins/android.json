@@ -13,6 +13,9 @@
         "cordova-plugin-app-preferences": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
+        "cordova-plugin-app-version": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
         "cordova-plugin-broadcaster": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
@@ -31,7 +34,16 @@
         "cordova-plugin-file": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
+        "cordova-plugin-file-opener2": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "cordova-plugin-file-transfer": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
         "cordova-plugin-media-capture": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "cordova-plugin-network-information": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
         "cordova-plugin-splashscreen": {
@@ -46,28 +58,16 @@
         "cordova-plugin-x-toast": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
+        "cordova-plugin-zip": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "cordova-sqlite-storage": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
         "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
         "uk.co.workingedge.cordova.plugin.sqliteporter": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-file-transfer": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-app-version": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-zip": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-file-opener2": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-network-information": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-sqlite-storage": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
         "cordova-plugin-media": {

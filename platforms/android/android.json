@@ -17,6 +17,10 @@
                             "count": 1
                         },
                         {
+                            "xml": "<feature name=\"AppVersion\"><param name=\"android-package\" value=\"uk.co.whiteoctober.cordova.AppVersion\" /></feature>",
+                            "count": 1
+                        },
+                        {
                             "xml": "<feature name=\"broadcaster\"><param name=\"android-package\" value=\"org.bsc.cordova.CDVBroadcaster\" /></feature>",
                             "count": 1
                         },
@@ -41,7 +45,19 @@
                             "count": 1
                         },
                         {
+                            "xml": "<feature name=\"FileOpener2\"><param name=\"android-package\" value=\"io.github.pwlin.cordova.plugins.fileopener2.FileOpener2\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"FileTransfer\"><param name=\"android-package\" value=\"org.apache.cordova.filetransfer.FileTransfer\" /></feature>",
+                            "count": 1
+                        },
+                        {
                             "xml": "<feature name=\"Capture\"><param name=\"android-package\" value=\"org.apache.cordova.mediacapture.Capture\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"NetworkStatus\"><param name=\"android-package\" value=\"org.apache.cordova.networkinformation.NetworkManager\" /></feature>",
                             "count": 1
                         },
                         {
@@ -61,27 +77,11 @@
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"Keyboard\"><param name=\"android-package\" value=\"io.ionic.keyboard.IonicKeyboard\" /><param name=\"onload\" value=\"true\" /></feature>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"FileTransfer\"><param name=\"android-package\" value=\"org.apache.cordova.filetransfer.FileTransfer\" /></feature>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"AppVersion\"><param name=\"android-package\" value=\"uk.co.whiteoctober.cordova.AppVersion\" /></feature>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"FileOpener2\"><param name=\"android-package\" value=\"io.github.pwlin.cordova.plugins.fileopener2.FileOpener2\" /></feature>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"NetworkStatus\"><param name=\"android-package\" value=\"org.apache.cordova.networkinformation.NetworkManager\" /></feature>",
-                            "count": 1
-                        },
-                        {
                             "xml": "<feature name=\"SQLitePlugin\"><param name=\"android-package\" value=\"io.sqlc.SQLitePlugin\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Keyboard\"><param name=\"android-package\" value=\"io.ionic.keyboard.IonicKeyboard\" /><param name=\"onload\" value=\"true\" /></feature>",
                             "count": 1
                         },
                         {
@@ -115,16 +115,16 @@
                             "count": 5
                         },
                         {
+                            "xml": "<uses-permission android:name=\"android.permission.READ_EXTERNAL_STORAGE\" />",
+                            "count": 2
+                        },
+                        {
                             "xml": "<uses-permission android:name=\"android.permission.RECORD_AUDIO\" />",
                             "count": 2
                         },
                         {
                             "xml": "<uses-permission android:name=\"android.permission.RECORD_VIDEO\" />",
                             "count": 1
-                        },
-                        {
-                            "xml": "<uses-permission android:name=\"android.permission.READ_EXTERNAL_STORAGE\" />",
-                            "count": 2
                         },
                         {
                             "xml": "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />",
@@ -150,6 +150,9 @@
         "cordova-plugin-app-preferences": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
+        "cordova-plugin-app-version": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
         "cordova-plugin-broadcaster": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
@@ -171,7 +174,16 @@
         "cordova-plugin-file": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
+        "cordova-plugin-file-opener2": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "cordova-plugin-file-transfer": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
         "cordova-plugin-media-capture": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "cordova-plugin-network-information": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
         "cordova-plugin-splashscreen": {
@@ -186,28 +198,16 @@
         "cordova-plugin-x-toast": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
+        "cordova-plugin-zip": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "cordova-sqlite-storage": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
         "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
         "uk.co.workingedge.cordova.plugin.sqliteporter": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-file-transfer": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-app-version": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-zip": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-file-opener2": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-network-information": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-sqlite-storage": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
         "cordova-plugin-media": {
@@ -230,6 +230,14 @@
             "pluginId": "cordova-plugin-app-preferences",
             "clobbers": [
                 "plugins.appPreferences"
+            ]
+        },
+        {
+            "id": "cordova-plugin-app-version.AppVersionPlugin",
+            "file": "plugins/cordova-plugin-app-version/www/AppVersionPlugin.js",
+            "pluginId": "cordova-plugin-app-version",
+            "clobbers": [
+                "cordova.getAppVersion"
             ]
         },
         {
@@ -470,6 +478,30 @@
             "runs": true
         },
         {
+            "id": "cordova-plugin-file-opener2.FileOpener2",
+            "file": "plugins/cordova-plugin-file-opener2/www/plugins.FileOpener2.js",
+            "pluginId": "cordova-plugin-file-opener2",
+            "clobbers": [
+                "cordova.plugins.fileOpener2"
+            ]
+        },
+        {
+            "id": "cordova-plugin-file-transfer.FileTransferError",
+            "file": "plugins/cordova-plugin-file-transfer/www/FileTransferError.js",
+            "pluginId": "cordova-plugin-file-transfer",
+            "clobbers": [
+                "window.FileTransferError"
+            ]
+        },
+        {
+            "id": "cordova-plugin-file-transfer.FileTransfer",
+            "file": "plugins/cordova-plugin-file-transfer/www/FileTransfer.js",
+            "pluginId": "cordova-plugin-file-transfer",
+            "clobbers": [
+                "window.FileTransfer"
+            ]
+        },
+        {
             "id": "cordova-plugin-media-capture.CaptureAudioOptions",
             "file": "plugins/cordova-plugin-media-capture/www/CaptureAudioOptions.js",
             "pluginId": "cordova-plugin-media-capture",
@@ -538,6 +570,23 @@
             "runs": true
         },
         {
+            "id": "cordova-plugin-network-information.network",
+            "file": "plugins/cordova-plugin-network-information/www/network.js",
+            "pluginId": "cordova-plugin-network-information",
+            "clobbers": [
+                "navigator.connection",
+                "navigator.network.connection"
+            ]
+        },
+        {
+            "id": "cordova-plugin-network-information.Connection",
+            "file": "plugins/cordova-plugin-network-information/www/Connection.js",
+            "pluginId": "cordova-plugin-network-information",
+            "clobbers": [
+                "Connection"
+            ]
+        },
+        {
             "id": "cordova-plugin-splashscreen.SplashScreen",
             "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
             "pluginId": "cordova-plugin-splashscreen",
@@ -567,6 +616,22 @@
             "pluginId": "cordova-plugin-x-toast"
         },
         {
+            "id": "cordova-plugin-zip.Zip",
+            "file": "plugins/cordova-plugin-zip/zip.js",
+            "pluginId": "cordova-plugin-zip",
+            "clobbers": [
+                "zip"
+            ]
+        },
+        {
+            "id": "cordova-sqlite-storage.SQLitePlugin",
+            "file": "plugins/cordova-sqlite-storage/www/SQLitePlugin.js",
+            "pluginId": "cordova-sqlite-storage",
+            "clobbers": [
+                "SQLitePlugin"
+            ]
+        },
+        {
             "id": "ionic-plugin-keyboard.keyboard",
             "file": "plugins/ionic-plugin-keyboard/www/android/keyboard.js",
             "pluginId": "ionic-plugin-keyboard",
@@ -581,71 +646,6 @@
             "pluginId": "uk.co.workingedge.cordova.plugin.sqliteporter",
             "clobbers": [
                 "cordova.plugins.sqlitePorter"
-            ]
-        },
-        {
-            "id": "cordova-plugin-file-transfer.FileTransferError",
-            "file": "plugins/cordova-plugin-file-transfer/www/FileTransferError.js",
-            "pluginId": "cordova-plugin-file-transfer",
-            "clobbers": [
-                "window.FileTransferError"
-            ]
-        },
-        {
-            "id": "cordova-plugin-file-transfer.FileTransfer",
-            "file": "plugins/cordova-plugin-file-transfer/www/FileTransfer.js",
-            "pluginId": "cordova-plugin-file-transfer",
-            "clobbers": [
-                "window.FileTransfer"
-            ]
-        },
-        {
-            "id": "cordova-plugin-app-version.AppVersionPlugin",
-            "file": "plugins/cordova-plugin-app-version/www/AppVersionPlugin.js",
-            "pluginId": "cordova-plugin-app-version",
-            "clobbers": [
-                "cordova.getAppVersion"
-            ]
-        },
-        {
-            "id": "cordova-plugin-zip.Zip",
-            "file": "plugins/cordova-plugin-zip/zip.js",
-            "pluginId": "cordova-plugin-zip",
-            "clobbers": [
-                "zip"
-            ]
-        },
-        {
-            "id": "cordova-plugin-file-opener2.FileOpener2",
-            "file": "plugins/cordova-plugin-file-opener2/www/plugins.FileOpener2.js",
-            "pluginId": "cordova-plugin-file-opener2",
-            "clobbers": [
-                "cordova.plugins.fileOpener2"
-            ]
-        },
-        {
-            "id": "cordova-plugin-network-information.network",
-            "file": "plugins/cordova-plugin-network-information/www/network.js",
-            "pluginId": "cordova-plugin-network-information",
-            "clobbers": [
-                "navigator.connection",
-                "navigator.network.connection"
-            ]
-        },
-        {
-            "id": "cordova-plugin-network-information.Connection",
-            "file": "plugins/cordova-plugin-network-information/www/Connection.js",
-            "pluginId": "cordova-plugin-network-information",
-            "clobbers": [
-                "Connection"
-            ]
-        },
-        {
-            "id": "cordova-sqlite-storage.SQLitePlugin",
-            "file": "plugins/cordova-sqlite-storage/www/SQLitePlugin.js",
-            "pluginId": "cordova-sqlite-storage",
-            "clobbers": [
-                "SQLitePlugin"
             ]
         },
         {
@@ -668,6 +668,7 @@
     "plugin_metadata": {
         "cordova-plugin-android-permissions": "0.11.0",
         "cordova-plugin-app-preferences": "0.99.3",
+        "cordova-plugin-app-version": "0.1.9",
         "cordova-plugin-broadcaster": "2.2.1",
         "cordova-plugin-camera": "1.1.0",
         "cordova-plugin-compat": "1.0.0",
@@ -675,19 +676,21 @@
         "cordova-plugin-device": "1.1.4",
         "cordova-plugin-dialogs": "1.3.3",
         "cordova-plugin-file": "4.3.3",
+        "cordova-plugin-file-opener2": "2.0.19",
+        "cordova-plugin-file-transfer": "1.6.3",
         "cordova-plugin-media-capture": "1.4.3",
+        "cordova-plugin-network-information": "1.3.3",
         "cordova-plugin-splashscreen": "4.0.3",
         "cordova-plugin-statusbar": "2.2.2",
         "cordova-plugin-whitelist": "1.3.1",
         "cordova-plugin-x-toast": "2.6.0",
-        "ionic-plugin-keyboard": "2.2.1",
-        "uk.co.workingedge.cordova.plugin.sqliteporter": "0.1.5",
-        "cordova-plugin-file-transfer": "1.6.3",
-        "cordova-plugin-app-version": "0.1.9",
         "cordova-plugin-zip": "3.1.0",
         "cordova-plugin-file-opener2": "2.0.19",
         "cordova-plugin-network-information": "1.3.3",
         "cordova-sqlite-storage": "2.0.4",
         "cordova-plugin-media": "3.0.1"
+        "cordova-sqlite-storage": "2.0.4",
+        "ionic-plugin-keyboard": "2.2.1",
+        "uk.co.workingedge.cordova.plugin.sqliteporter": "0.1.5"
     }
 }

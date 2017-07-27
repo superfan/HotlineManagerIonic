@@ -193,14 +193,14 @@ public class SQLitePlugin extends CordovaPlugin {
     /**
      * Open a database.
      *
-     * @param dbname   The name of the database file
+     * @param dbName   The name of the database file
      */
     private SQLiteAndroidDatabase openDatabase(String dbname, CallbackContext cbc, boolean old_impl) throws Exception {
         try {
             // ASSUMPTION: no db (connection/handle) is already stored in the map
             // [should be true according to the code in DBRunner.run()]
 
-            File dbfile = getDbPath(dbname);
+            File dbfile = this.cordova.getActivity().getDatabasePath(dbname);
 
             if (!dbfile.exists()) {
                 dbfile.getParentFile().mkdirs();
@@ -225,7 +225,7 @@ public class SQLitePlugin extends CordovaPlugin {
     /**
      * Close a database (in another thread).
      *
-     * @param dbname   The name of the database file
+     * @param dbName   The name of the database file
      */
     private void closeDatabase(String dbname, CallbackContext cbc) {
         DBRunner r = dbrmap.get(dbname);
@@ -285,12 +285,12 @@ public class SQLitePlugin extends CordovaPlugin {
     /**
      * Delete a database.
      *
-     * @param dbname   The name of the database file
+     * @param dbName   The name of the database file
      *
      * @return true if successful or false if an exception was encountered
      */
     private boolean deleteDatabaseNow(String dbname) {
-        File dbfile = getDbPath(dbname);
+        File dbfile = this.cordova.getActivity().getDatabasePath(dbname);
 
         try {
             return cordova.getActivity().deleteDatabase(dbfile.getAbsolutePath());
@@ -298,18 +298,6 @@ public class SQLitePlugin extends CordovaPlugin {
             Log.e(SQLitePlugin.class.getSimpleName(), "couldn't delete database", e);
             return false;
         }
-    }
-
-    private File getDbPath(String dbname) {
-      File dbfile;
-      String str = "file://";
-      if (dbname.startsWith(str)) {
-        dbfile = new File(dbname.substring(str.length()));
-      } else {
-        dbfile = this.cordova.getActivity().getDatabasePath(dbname);
-      }
-
-      return dbfile;
     }
 
     private class DBRunner implements Runnable {
@@ -380,7 +368,7 @@ public class SQLitePlugin extends CordovaPlugin {
                             Log.e(SQLitePlugin.class.getSimpleName(), "couldn't delete database", e);
                             dbq.cbc.error("couldn't delete database: " + e);
                         }
-                    }
+                    }                    
                 } catch (Exception e) {
                     Log.e(SQLitePlugin.class.getSimpleName(), "couldn't close database", e);
                     if (dbq.cbc != null) {

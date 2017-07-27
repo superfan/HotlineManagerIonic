@@ -2,10 +2,13 @@
  * Created by zhangjing on 2017/6/29.
  */
 import {Component, OnInit} from "@angular/core";
-import {ActionSheetController, AlertController, NavController} from "ionic-angular";
+import {ActionSheetController, AlertController, Events, NavController} from "ionic-angular";
 import {ConfigService} from "../../providers/ConfigService";
 import {GlobalService} from "../../providers/GlobalService";
 import {StorageService} from "../../providers/StorageService";
+import {FileService} from "../../providers/FileService";
+import {Storage} from "@ionic/storage";
+import {errorObject} from "rxjs/util/errorObject";
 
 @Component({
   selector: 'page-setting',
@@ -15,7 +18,7 @@ import {StorageService} from "../../providers/StorageService";
 export class SettingPage implements OnInit {
   private readonly tag: string = "[SettingPage]";
   title: string = '系统参数';
-  isGrid: boolean;//是否是九宫格样式
+  public isGrid: boolean;//是否是九宫格样式
   isOuterNet: boolean;//是否是外网
   netWorkUri: string;//数据地址
   keepAlive: number;//心跳频率
@@ -27,27 +30,58 @@ export class SettingPage implements OnInit {
               public actionsheetCtrl: ActionSheetController,
               public configService: ConfigService,
               public globalService: GlobalService,
-              public storageService: StorageService) {
+              public storageService: StorageService,
+              public storage: Storage,
+              public fileService: FileService,
+              public events: Events) {
   }
 
   ngOnInit() {
-    this.isChrome = this.globalService.isChrome;
-    this.isGridStyle();
-    this.isOuterNetwork();
-    this.getNetworkUri();
-    this.getKeepAlive();
-    this.getAlermStyle();
+    if (this.globalService.isChrome) {
+      this.storage.get(this.configService.systemStorageName)
+        .then(result => {
+          if (result) {
+            let jsonObject = ConfigService.transform2SystemConfig(result);
+            this.isGrid = jsonObject.isGridStyle;
+            this.isOuterNet = jsonObject.isOuterNetwork;
+            this.isOuterNet ? this.netWorkUri = jsonObject.outerBaseUri : this.netWorkUri = jsonObject.innerBaseUri;
+            this.keepAlive = jsonObject.keepAliveInterval;
+          } else {
+            this.readDataFromFile();
+          }
+        })
+      return;
+    }
+    this.readDataFromFile();
   }
 
+  /**
+   * 从文件中读取参数
+   */
+  private readDataFromFile() {
+    Promise.all([this.isGridStyleFromFile(), this.isOuterNetFromFile(), this.getKeepAliveFromFile()])
+      .catch(error => {
+        console.log(this.tag + 'readDataFromFile:' + error);
+      })
+  }
 
   /**
    * 切换九宫格
    */
   private notifyIsGrid() {
     console.log(this.tag + "Toggled:" + this.isGrid);
-    if (this.isChrome) {
-      this.storageService.write('isGridStyle', this.isGrid);
-    }
+    this.configService.setGridStyle(this.isGrid)
+      .then(result => {
+        if (result) {
+          let gridStyle = this.isGrid;
+          this.events.publish(this.globalService.mainUpdateEvent, {type: 'gridStyle', gridStyle});
+        } else {
+          this.isGrid = !this.isGrid;
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   /**
@@ -55,21 +89,17 @@ export class SettingPage implements OnInit {
    */
   private notifyIsOutNet() {
     console.log(this.tag + "Toggled:" + this.isOuterNet);
-    if (this.isChrome) {
-      this.storageService.write('isOuterNet', this.isOuterNet);
-    }
-  }
-
-  /**
-   * 是否是九宫格样式
-   */
-  private isGridStyle() {
-    if (this.isChrome) {
-      (this.storageService.read('isGridStyle') == null || undefined) ?
-        this.isGridStyleFromFile() : this.isGrid = this.storageService.read<boolean>('isGridStyle');
-      return;
-    }
-    this.isGridStyleFromFile();
+    this.configService.setIsOuterNet(this.isOuterNet)
+      .then(result => {
+        if (!result) {
+          this.isOuterNet = !this.isOuterNet;
+        } else {
+          this.getNetworkUriFromFile();
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      })
   }
 
   /**
@@ -86,41 +116,17 @@ export class SettingPage implements OnInit {
   }
 
   /**
-   * 是否是外网
-   */
-  private isOuterNetwork() {
-    if (this.isChrome) {
-      (this.storageService.read('isOuterNet') == null || undefined) ?
-        this.isOuterNetFromFile() : this.isOuterNet = this.storageService.read<boolean>('isOuterNet');
-      return;
-    }
-    this.isOuterNetFromFile();
-  }
-
-  /**
    * 从文件中读取是否是外网
    */
   private isOuterNetFromFile() {
     this.configService.isOuterNetwork()
       .then(data => {
-        console.log(this.tag + data);
         this.isOuterNet = data;
+        this.getNetworkUriFromFile();
       })
       .catch(err => {
         console.log(this.tag + err);
       })
-  }
-
-  /**
-   * 获取数据地址
-   */
-  private getNetworkUri() {
-    if (this.isChrome) {
-      (this.storageService.read('netWorkUri') == null || undefined) ?
-        this.getNetworkUriFromFile() : this.netWorkUri = this.storageService.read<string>('netWorkUri');
-      return;
-    }
-    this.getNetworkUriFromFile();
   }
 
   /**
@@ -135,18 +141,6 @@ export class SettingPage implements OnInit {
       .catch(err => {
         console.log(this.tag + err);
       })
-  }
-
-  /**
-   * 获得心跳频率
-   */
-  private getKeepAlive() {
-    if (this.isChrome) {
-      (this.storageService.read('keepAlive') == null || undefined) ?
-        this.getKeepAliveFromFile() : this.keepAlive = this.storageService.read<number>('keepAlive');
-      return;
-    }
-    this.getKeepAliveFromFile();
   }
 
   /**
@@ -183,6 +177,7 @@ export class SettingPage implements OnInit {
       message: '数据访问地址',
       inputs: [
         {
+          name: 'netWorkUri',
           value: this.netWorkUri,
           placeholder: '数据访问地址',
         }
@@ -197,10 +192,15 @@ export class SettingPage implements OnInit {
         {
           text: '保存',
           handler: data => {
-            if (this.isChrome) {
-              this.storageService.write('netWorkUri', data)
-            }
-            console.log(this.tag + data);
+            this.configService.setSystemUrl(data.netWorkUri)
+              .then(result => {
+                if (result) {
+                  this.netWorkUri = data.netWorkUri;
+                }
+              })
+              .catch(error => {
+                console.log(this.tag + 'showNetwork:' + error);
+              })
           }
         }
       ]
@@ -232,11 +232,13 @@ export class SettingPage implements OnInit {
         {
           text: '保存',
           handler: data => {
-            this.keepAlive = data.heartBeat;
-            console.log(this.tag + 'showHeartSetting' + data.heartBeat);
-            if (this.isChrome) {
-              this.storageService.write('keepAlive', this.keepAlive);
-            }
+            this.configService.setKeepAlive(data.heartBeat)
+              .then(result => {
+                this.keepAlive = data.heartBeat;
+              })
+              .catch(error => {
+                console.log(this.tag + 'showHeartSetting:' + error);
+              })
           }
         }
       ]
@@ -310,6 +312,7 @@ export class SettingPage implements OnInit {
         {
           text: '确定',
           handler: () => {
+            this.storage.clear();//浏览器清除storage
             console.log(this.tag + '保存 clicked');
           }
         }
