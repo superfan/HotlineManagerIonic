@@ -1,11 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {NavController, NavParams, AlertController, ToastController, Events} from 'ionic-angular';
-import {TaskEx} from "../../model/Task";
+import {NavController, NavParams, AlertController, Events} from 'ionic-angular';
+import {Task, TaskEx, transform2ProcessEx, transform2Task} from "../../model/Task";
 import {DataService} from "../../providers/DataService";
 import {TaskDetail} from "../../model/TaskDetail";
 import {ReplyInfo} from "../../model/ReplyInfo";
 import {GlobalService} from "../../providers/GlobalService";
 import {Word} from "../../model/Word";
+import {ProcessEx} from "../../model/Process";
 
 interface Detail {
   name: string;
@@ -46,6 +47,9 @@ export class WorkDetailPage implements OnInit {
   private readonly optResultDefaultValue: string = '请选择处理结果';
   private readonly optRemarkDefaultValue: string = '备注可为空';
 
+  private readonly picturePlaceHolder: string = 'assets/img/ic_photo_default.png';
+  private readonly pictureMaxCount: number = 3;
+
   title: string = '工单处理';
   segmentName: string = "detailInfo";
 
@@ -79,11 +83,13 @@ export class WorkDetailPage implements OnInit {
     {name: this.optRemarkName, value: this.optRemarkDefaultValue, isActive: true, color: this.enableColor}
   ];
 
-  people: any[] = [
-    {picture: 'assets/img/ic_mywork.png', name: 'abc'},
-    {picture: 'assets/img/ic_mywork.png', name: 'bcd'},
-    {picture: 'assets/img/ic_mywork.png', name: 'efd'},
+  pictures: string[] = [
+    this.picturePlaceHolder,
+    this.picturePlaceHolder,
+    this.picturePlaceHolder
   ];
+
+  mediaNames: string[] = [];
 
   private isPreview: boolean;
   private taskEx: TaskEx;
@@ -95,11 +101,11 @@ export class WorkDetailPage implements OnInit {
   private optReasons: Array<Word>;
   private optSolutions: Array<Word>;
   private optResults: Array<Word>;
+  private picCount: number = 0;
 
   constructor(public navCtrl: NavController,
               private navParams: NavParams,
               private alertCtrl: AlertController,
-              private toastCtrl: ToastController,
               private events: Events,
               private dataService: DataService,
               private globalService: GlobalService) {
@@ -110,7 +116,7 @@ export class WorkDetailPage implements OnInit {
   /**
    * 初始化
    */
-  ngOnInit() {
+  ngOnInit(): void {
     console.log(this.tag + 'ngOnInit');
     this.dataService.getTaskDetail(this.taskEx.id)
       .then(taskDetail => {
@@ -141,6 +147,10 @@ export class WorkDetailPage implements OnInit {
     };
   }
 
+  /**
+   * 定位
+   * @param ev
+   */
   onLocate(ev: any): void {
 
   }
@@ -155,10 +165,17 @@ export class WorkDetailPage implements OnInit {
       || !this.replyInfo.reason
       || !this.replyInfo.solution
       || !this.replyInfo.result) {
-      return this.showToast("数据填写不完整!");
+      return this.globalService.showToast("数据填写不完整!");
     }
 
-    this.dataService.reply(this.replyInfo)
+    let processEx: ProcessEx = new ProcessEx();
+    if (!transform2ProcessEx(this.taskEx, processEx)
+      || processEx.reply.done) {
+      return this.globalService.showToast("数据转换失败!");
+    }
+
+    let task: Task = transform2Task(this.replyInfo, this.taskEx, processEx);
+    this.dataService.reply(this.replyInfo, task, this.taskDetail, this.mediaNames)
       .then(date => {
         console.log("success");
         this.events.publish(this.globalService.myWorkUpdateEvent, {
@@ -170,7 +187,7 @@ export class WorkDetailPage implements OnInit {
       })
       .catch(error => {
         console.error(error);
-        this.showToast("回填失败!");
+        this.globalService.showToast("回填失败!");
       });
   }
 
@@ -193,6 +210,10 @@ export class WorkDetailPage implements OnInit {
     }
   }
 
+  /**
+   * 选择item
+   * @param item
+   */
   itemSelected(item: Reply): void {
     if (this.isPreview) {
       return;
@@ -221,17 +242,37 @@ export class WorkDetailPage implements OnInit {
   }
 
   /**
-   * toast
-   * @param message
+   * 拍照
+   * @param ev
    */
-  private showToast(message: string): void {
-    let toast = this.toastCtrl.create({
-      message: message,
-      duration: 2000,
-      position: 'bottom'
-    });
+  onTakePicture(ev: any): void {
+    if (this.globalService.isChrome) {
+      return;
+    }
 
-    toast.present(toast);
+    if (this.picCount >= this.pictureMaxCount) {
+      return this.globalService.showToast('照片已满');
+    }
+
+    this.dataService.takePicture(this.taskEx.id)
+      .then(result => {
+        let {filePath, fileName} = result;
+        console.log(filePath);
+        console.log(fileName);
+        if (filePath && fileName) {
+          this.pictures[this.picCount++] = filePath;
+          this.mediaNames.push(fileName);
+        }
+      })
+      .catch(error => console.error(error));
+  }
+
+  /**
+   * 录音
+   * @param ev
+   */
+  onRecordAudio(ev: any): void {
+
   }
 
   /**
@@ -254,7 +295,7 @@ export class WorkDetailPage implements OnInit {
   }
 
   /**
-   *
+   * 设置回复信息
    */
   private setReplyInfo(): void {
     this.reply[0].value = this.globalService.getFormatTime(new Date());
@@ -377,7 +418,7 @@ export class WorkDetailPage implements OnInit {
    */
   private popupOptTypeAlert(): void {
     if (!this.optTypes || this.optTypes.length <= 0) {
-      return this.showToast("处理类别为空!")
+      return this.globalService.showToast("处理类别为空!")
     }
 
     this.popupAlert(this.optTypes, this.optTypeName, this.reply[3], this.replyInfo, "opLeiBie");
@@ -388,7 +429,7 @@ export class WorkDetailPage implements OnInit {
    */
   private popupOptContentAlert(): void {
     if (!this.optContents || this.optContents.length <= 0) {
-      return this.showToast("处理内容为空!")
+      return this.globalService.showToast("处理内容为空!")
     }
 
     this.popupAlert(this.optContents, this.optContentName, this.reply[4], this.replyInfo, "opContent");
@@ -399,7 +440,7 @@ export class WorkDetailPage implements OnInit {
    */
   private popupOptReasonAlert(): void {
     if (!this.optReasons || this.optReasons.length <= 0) {
-      return this.showToast("发生原因为空!")
+      return this.globalService.showToast("发生原因为空!")
     }
 
     this.popupAlert(this.optReasons, this.optReasonName, this.reply[5], this.replyInfo, "reason");
@@ -410,7 +451,7 @@ export class WorkDetailPage implements OnInit {
    */
   private popupOptSolutionAlert(): void {
     if (!this.optSolutions || this.optSolutions.length <= 0) {
-      return this.showToast("解决措施为空!")
+      return this.globalService.showToast("解决措施为空!")
     }
 
     this.popupAlert(this.optSolutions, this.optSolutionName, this.reply[6], this.replyInfo, "solution");
@@ -421,7 +462,7 @@ export class WorkDetailPage implements OnInit {
    */
   private popupOptResultAlert(): void {
     if (!this.optResults || this.optResults.length <= 0) {
-      return this.showToast("处理结果为空!")
+      return this.globalService.showToast("处理结果为空!")
     }
 
     this.popupAlert(this.optResults, this.optResultName, this.reply[7], this.replyInfo, "result");

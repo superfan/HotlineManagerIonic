@@ -5,6 +5,7 @@ import {FileService} from "../../providers/FileService";
 import {AppVersion} from "@ionic-native/app-version";
 import {GlobalService} from "../../providers/GlobalService";
 import {DataService} from "../../providers/DataService";
+import {AndroidPermissions} from "@ionic-native/android-permissions";
 
 @Component({
   selector: 'page-welcome',
@@ -20,9 +21,27 @@ export class WelcomePage {
               public platform: Platform,
               public fileService: FileService,
               private appVersion: AppVersion,
+              private androidPermissions: AndroidPermissions,
               private globalService: GlobalService,
               private dataService: DataService) {
-    this.platform.ready().then(readySource => this.onDidEnter());
+    this.platform.ready().then(readySource => this.checkPermissions());
+  }
+
+  checkPermissions(): void {
+    if (this.globalService.isChrome) {
+      this.onDidEnter();
+    } else {
+      this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.CAMERA)
+        .then(
+          success => console.log('Permission granted'),
+          err => this.androidPermissions.requestPermissions(this.androidPermissions.PERMISSION.CAMERA)
+        )
+        .then(() => this.onDidEnter())
+        .catch(error => {
+          console.error(error);
+          this.globalService.showToast(error);
+        });
+    }
   }
 
   /**

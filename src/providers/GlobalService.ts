@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {ToastController} from "ionic-angular";
+import {ToastController, LoadingController, Loading} from "ionic-angular";
 import {TaskEx} from "../model/Task";
 
 export interface MainUpdateEvent {
@@ -9,7 +9,7 @@ export interface MainUpdateEvent {
 }
 
 export interface MyWorkUpdateEvent {
-  type: 'reply' | 'cancel',
+  type: 'reply' | 'cancel' | 'reject',
   taskEx?: TaskEx;
   time?: number;
 }
@@ -19,21 +19,34 @@ export class GlobalService {
   readonly isChrome: boolean = true;
   readonly httpCode: number = 0;
   readonly httpSuccessStatusCode: number = 200;
+  readonly taskSinceDefault: number = 0;
+  readonly taskCountDefault10: number = 10;
+  readonly taskCountDefault100: number = 100;
+  readonly uploadedFlagForLocal: number = 0;
+  readonly uploadedFlagForUploading: number = 1;
+  readonly uploadedFlagForUploaded: number = 2;
   userName: string = "sh3h";//"王超";
   userId: number = 1;//60;5005
   department: string = "东河营业分公司";//"滨河营业分公司";
   departmentId: number = 10;
   isWorker: boolean;//是否是外勤人员
   readonly mainUpdateEvent: string = "main:update";
-  readonly myWorkDownloadEvent: string = "mywork:download";
+  readonly myWorkDownloadFinishEvent: string = "mywork:download:finish";
   readonly myWorkUpdateEvent: string = "mywork:update";
   readonly stationWorkUpdateEvent: string = "stationwork:update";
+  private loading: Loading;
 
-  constructor(private toastCtrl: ToastController) {
+  constructor(private toastCtrl: ToastController,
+              private loadingCtrl: LoadingController) {
 
   }
 
-  getFormatTime(date: Date): string {
+  /**
+   * 转换时间格式
+   * @param date
+   * @returns {string}
+   */
+  public getFormatTime(date: Date): string {
     let year = date.getFullYear().toString();
     let month = this.padLeftZero((date.getMonth() + 1).toString());
     let day = this.padLeftZero(date.getDate().toString());
@@ -48,7 +61,7 @@ export class GlobalService {
    * toast
    * @param message
    */
-  showToast(message: string): void {
+  public showToast(message: string): void {
     let toast = this.toastCtrl.create({
       message: message,
       duration: 2000,
@@ -56,6 +69,29 @@ export class GlobalService {
     });
 
     toast.present(toast);
+  }
+
+  /**
+   * 显示加载对话框
+   * @param content
+   * @param duration
+   */
+  public showLoading(content: string, duration?: number): void {
+    if (this.loading) {
+      this.loading.dismissAll();
+    }
+    this.loading = duration > 0 ? this.loadingCtrl.create({content, duration}) : this.loadingCtrl.create({content});
+    this.loading.present();
+  }
+
+  /**
+   * 隐藏加载对话框
+   */
+  public hideLoading() {
+    if (this.loading) {
+      this.loading.dismiss();
+    }
+    this.loading = undefined;
   }
 
   private padLeftZero(name: string): string {

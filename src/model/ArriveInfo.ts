@@ -1,6 +1,6 @@
 import {Location} from "./Location";
 
-export class ArriveInfo {
+export interface ArriveInfo {
   arrivedTime: number;
   location: Location;
   taskId: string;

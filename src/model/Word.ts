@@ -1,6 +1,6 @@
 
 
-export class Word {
+export interface Word {
   wid: number;
   wName: string;
   wValue: string;
