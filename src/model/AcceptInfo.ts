@@ -1,13 +1,13 @@
 import {Location} from "./Location";
 
-export class AcceptInfo {
+export interface AcceptInfo {
   acceptTime: number;
   location: Location;
   taskId: string;
   userId: number;
 }
 
-export class AcceptExInfo {
+export interface AcceptExInfo {
   acceptOperator: number;
   acceptTime: number;
   taskId: string;

@@ -28,7 +28,7 @@ export class FileService {
    * @returns {string}
    */
   public getDbDir(): string {
-    return `${this.dirPath}/${this.dirRoot}/${this.dir}/data`;
+    return `${this.dirPath}${this.dirRoot}/${this.dir}/data`;
   }
 
   /**
@@ -36,7 +36,23 @@ export class FileService {
    * @returns {string}
    */
   public getConfigDir(): string {
-    return `${this.dirPath}/${this.dirRoot}/${this.dir}/config`;
+    return `${this.dirPath}${this.dirRoot}/${this.dir}/config`;
+  }
+
+  /**
+   * 获取images路径
+   * @returns {string}
+   */
+  public getImagesDir(): string {
+    return `${this.dirPath}${this.dirRoot}/${this.dir}/images`;
+  }
+
+  /**
+   * 获取sounds路径
+   * @returns {string}
+   */
+  public getSoundsDir(): string {
+    return `${this.dirPath}${this.dirRoot}/${this.dir}/sounds`;
   }
 
   /**
@@ -165,6 +181,37 @@ export class FileService {
           reject(err);
         })
     });
+  }
+
+  /**
+   *
+   * @param srcFilePath
+   * @returns {any}
+   */
+  public movePicture(srcFilePath: string): Promise<any> {
+    const error: string = `failure to move ${srcFilePath}`;
+    if (!srcFilePath) {
+      return Promise.reject(error);
+    }
+
+    let index: number = srcFilePath.lastIndexOf('/');
+    if (index <= 0) {
+      return Promise.reject(error);
+    }
+
+    let srcPath: string = srcFilePath.substring(0, index + 1);
+    if (!srcPath) {
+      return Promise.reject(error);
+    }
+
+    let fileName: string = srcFilePath.substring(index + 1);
+    if (!fileName) {
+      return Promise.reject(error);
+    }
+
+    return this.file.checkFile(srcPath, fileName)
+      .then(result => this.file.moveFile(srcPath, fileName, this.getImagesDir(), fileName))
+      .then(entry => entry ? Promise.resolve(fileName) : Promise.reject(error));
   }
 
   /**

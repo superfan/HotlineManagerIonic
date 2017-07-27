@@ -286,6 +286,22 @@ module.exports = [
         ]
     },
     {
+        "id": "cordova-plugin-media.MediaError",
+        "file": "plugins/cordova-plugin-media/www/MediaError.js",
+        "pluginId": "cordova-plugin-media",
+        "clobbers": [
+            "window.MediaError"
+        ]
+    },
+    {
+        "id": "cordova-plugin-media.Media",
+        "file": "plugins/cordova-plugin-media/www/Media.js",
+        "pluginId": "cordova-plugin-media",
+        "clobbers": [
+            "window.Media"
+        ]
+    },
+    {
         "id": "cordova-plugin-media-capture.CaptureAudioOptions",
         "file": "plugins/cordova-plugin-media-capture/www/CaptureAudioOptions.js",
         "pluginId": "cordova-plugin-media-capture",
@@ -456,6 +472,7 @@ module.exports.metadata =
     "cordova-plugin-file": "4.3.3",
     "cordova-plugin-file-opener2": "2.0.19",
     "cordova-plugin-file-transfer": "1.6.3",
+    "cordova-plugin-media": "3.0.1",
     "cordova-plugin-media-capture": "1.4.3",
     "cordova-plugin-network-information": "1.3.3",
     "cordova-plugin-splashscreen": "4.0.3",

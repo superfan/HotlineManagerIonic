@@ -49,9 +49,11 @@ import android.graphics.Matrix;
 import android.media.MediaScannerConnection;
 import android.media.MediaScannerConnection.MediaScannerConnectionClient;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.util.Base64;
 import android.util.Log;
 import android.content.pm.PackageManager;
@@ -79,7 +81,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
     private static final String GET_PICTURE = "Get Picture";
     private static final String GET_VIDEO = "Get Video";
     private static final String GET_All = "Get All";
-    
+
     private static final String LOG_TAG = "CameraLauncher";
 
     //Where did this come from?
@@ -159,11 +161,11 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
                 callbackContext.sendPluginResult(r);
                 return true;
             }
-             
+
             PluginResult r = new PluginResult(PluginResult.Status.NO_RESULT);
             r.setKeepCallback(true);
             callbackContext.sendPluginResult(r);
-            
+
             return true;
         }
         return false;
@@ -214,15 +216,20 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
 
         // Specify file so that large image is captured and returned
         File photo = createCaptureFile(encodingType);
-        intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
         this.imageUri = Uri.fromFile(photo);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+          Uri uri = FileProvider.getUriForFile(this.cordova.getActivity(),
+            this.cordova.getActivity().getPackageName() + ".opener.provider", photo);
+          intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, uri);
+        } else {
+          intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, this.imageUri);
+        }
 
         if (this.cordova != null) {
             // Let's check to make sure the camera is actually installed. (Legacy Nexus 7 code)
             PackageManager mPm = this.cordova.getActivity().getPackageManager();
             if(intent.resolveActivity(mPm) != null)
             {
-
                 this.cordova.startActivityForResult((CordovaPlugin) this, intent, (CAMERA + 1) * 16 + returnType + 1);
             }
             else
@@ -260,7 +267,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
      * @param quality           Compression quality hint (0-100: 0=low quality & high compression, 100=compress of max quality)
      * @param srcType           The album to get image from.
      * @param returnType        Set the type of image to return.
-     * @param encodingType 
+     * @param encodingType
      */
     // TODO: Images selected from SDCARD don't display correctly, but from CAMERA ALBUM do!
     // TODO: Images from kitkat filechooser not going into crop function
@@ -311,7 +318,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
 
   /**
    * Brings up the UI to perform crop on passed image URI
-   * 
+   *
    * @param picUri
    */
   private void performCrop(Uri picUri, int destType, Intent cameraIntent) {
@@ -403,7 +410,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
                 // Try to get the bitmap from intent.
                 bitmap = (Bitmap)intent.getExtras().get("data");
             }
-            
+
             // Double-check the bitmap.
             if (bitmap == null) {
                 Log.d(LOG_TAG, "I either have a null image path or bitmap");
@@ -436,7 +443,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
             }
 
             // If all this is true we shouldn't compress the image.
-            if (this.targetHeight == -1 && this.targetWidth == -1 && this.mQuality == 100 && 
+            if (this.targetHeight == -1 && this.targetWidth == -1 && this.mQuality == 100 &&
                     !this.correctOrientation) {
                 writeUncompressedImage(uri);
 
@@ -621,7 +628,7 @@ private String ouputModifiedBitmap(Bitmap bitmap, Uri uri) throws IOException {
             }
         }
     }
-    
+
     /**
      * Called when the camera view exits.
      *
@@ -819,7 +826,7 @@ private String ouputModifiedBitmap(Bitmap bitmap, Uri uri) throws IOException {
      *
      * @param imagePath
      * @return
-     * @throws IOException 
+     * @throws IOException
      */
     private Bitmap getScaledBitmap(String imageUrl) throws IOException {
         // If no new width or height were specified return the original bitmap
@@ -857,13 +864,13 @@ private String ouputModifiedBitmap(Bitmap bitmap, Uri uri) throws IOException {
                 }
             }
         }
-        
+
         //CB-2292: WTF? Why is the width null?
         if(options.outWidth == 0 || options.outHeight == 0)
         {
             return null;
         }
-        
+
         // determine the correct aspect ratio
         int[] widthHeight = calculateAspectRatio(options.outWidth, options.outHeight);
 

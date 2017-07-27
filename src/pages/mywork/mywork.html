@@ -11,7 +11,7 @@
   </ion-navbar>
 
   <ion-toolbar color="primary" *ngIf="showToolbar">
-    <ion-searchbar (input)="getItems($event)"></ion-searchbar>
+    <ion-searchbar [(ngModel)]="key" (ionInput)="onInput($event)" (ionCancel)="onCancel($event)"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
@@ -34,15 +34,15 @@
         <ion-avatar item-start>
           <img src="assets/img/ic_mywork_avatar.png">
         </ion-avatar>
-        <div><h2 class="card-header-label-hint">任务编号 </h2><h2 class="card-header-label-content">{{item.id}}</h2></div>
-        <div><h2 class="card-header-label-hint">任务类型 </h2><h2 class="card-header-label-content">{{item.type}}</h2></div>
+        <div><h2 class="card-header-label-hint">任务编号 </h2><h2 class="card-header-label-content">{{item.id | valueValid}}</h2></div>
+        <div><h2 class="card-header-label-hint">任务类型 </h2><h2 class="card-header-label-content">{{item.type | valueValid}}</h2></div>
       </ion-item>
 
       <ion-list>
         <ion-list-header>
           <ion-row>
             <ion-col col-auto>任务描述</ion-col>
-            <ion-col>{{item.describe}}</ion-col>
+            <ion-col>{{item.describe | valueValid}}</ion-col>
           </ion-row>
         </ion-list-header>
 
@@ -125,12 +125,12 @@
           </button>
         </ion-col>
 
-        <ion-col>
-          <button ion-button icon-left clear small color="gray">
-            <ion-icon name="videocam"></ion-icon>
-            <div>{{item.videoCount}}</div>
-          </button>
-        </ion-col>
+        <!--<ion-col>-->
+          <!--<button ion-button icon-left clear small color="gray">-->
+            <!--<ion-icon name="videocam"></ion-icon>-->
+            <!--<div>{{item.videoCount}}</div>-->
+          <!--</button>-->
+        <!--</ion-col>-->
 
         <ion-col>
           <button ion-button icon-left clear small>

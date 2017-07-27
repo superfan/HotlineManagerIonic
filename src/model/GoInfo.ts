@@ -1,6 +1,6 @@
 import {Location} from "./Location";
 
-export class GoInfo {
+export interface GoInfo {
   goTime: number;
   location: Location;
   taskId: string;

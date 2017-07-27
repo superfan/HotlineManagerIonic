@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Http} from "@angular/http";
 import {ConfigService} from "./ConfigService";
-import {Task} from "../model/Task";
+import {Task, TaskEx} from "../model/Task";
 import {GlobalService} from "./GlobalService";
 import {BaseService} from "./BaseService";
 import {TaskDetail} from "../model/TaskDetail";
@@ -46,7 +46,12 @@ export class DownloadService extends BaseService {
               if (body.Code === this.globalService.httpCode
                 && body.StatusCode === this.globalService.httpSuccessStatusCode
                 && body.Data instanceof Array) {
-                resolve(body.Data);
+                let tasks: Array<Task> = body.Data;
+                tasks.map(task => {
+                  task.state = TaskEx.convertState(task.state);
+                  return task;
+                });
+                resolve(tasks);
               } else {
                 reject(body.Message ? body.Message : "failure to get tasks");
               }

@@ -1,6 +1,6 @@
 import {Location} from "./Location";
 
-export class ReplyInfo {
+export interface ReplyInfo {
   opTime: number;
   opDepartment: number;
   opPerson: number;

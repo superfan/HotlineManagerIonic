@@ -1,19 +1,23 @@
 import {Location} from './Location';
-import {Process} from "./Process";
+import {Process, ProcessEx} from "./Process";
+import {ReplyInfo} from "./ReplyInfo";
+import {AcceptInfo} from "./AcceptInfo";
+import {GoInfo} from "./GoInfo";
+import {ArriveInfo} from "./ArriveInfo";
 
 export enum TaskState {
-  Dispatch,
-  Accept,
-  Go,
-  Arrived,
-  Reply,
-  Reject,
-  Delay,
-  Cancel,
-  Continue
+  Dispatch,   // 0
+  Accept,     // 1
+  Go,         // 2
+  Arrived,    // 3
+  Reply,      // 4
+  Reject,     // 5
+  Delay,      // 6
+  Cancel,     // 7
+  Continue    // 8
 }
 
-export class Task {
+export interface Task {
   acceptTime: number;
   arrivedTime: number;
   assignTime: number;
@@ -27,6 +31,7 @@ export class Task {
   state: number;
   taskId: string;
   taskType: string;
+  extendedInfo?: string;
 }
 
 export class TaskEx {
@@ -34,18 +39,27 @@ export class TaskEx {
   type: string;
   state: TaskState;
   describe: string;
+  location: Location;
+  source: string;
   processes: Process[];
   lastProcess: string;
   photoCount: number;
   audioCount: number;
   videoCount: number;
   isPreview: boolean;
+  extendedInfo?: string;
 
   constructor(task: Task) {
     this.id = task.taskId;
     this.type = '热线工单';//task.taskType;
-    this.state = TaskEx.convertState(task.state);
+    this.state = task.state;//TaskEx.convertState(task.state);
     this.describe = task.desc;
+    this.location = {
+      type: task.location.type,
+      lng: task.location.lng,
+      lat: task.location.lat
+    };
+    this.source = task.source;
     this.lastProcess = '';
     this.photoCount = 0;
     this.audioCount = 0;
@@ -155,7 +169,7 @@ export class TaskEx {
     return utc > 0 ? new Date(utc) : undefined;
   }
 
-  private static convertState(state: number): TaskState {
+  public static convertState(state: number): TaskState {
     let taskState: TaskState;
 
     switch (state) {
@@ -187,5 +201,219 @@ export class TaskEx {
     }
 
     return taskState;
+  }
+}
+
+/**
+ * 处理步骤数组转对象
+ * @param taskEx
+ * @param processEx
+ * @returns {boolean}
+ */
+export function transform2ProcessEx(taskEx: TaskEx, processEx: ProcessEx): boolean {
+  if (!taskEx && !processEx) {
+    return false;
+  }
+
+  for (let i of taskEx.processes) {
+    switch (i.event) {
+      case 'create':
+        processEx.create = i;
+        break;
+      case 'dispatch':
+        processEx.dispatch = i;
+        break;
+      case 'accept':
+        processEx.accept = i;
+        break;
+      case 'go':
+        processEx.go = i;
+        break;
+      case 'arrive':
+        processEx.arrive = i;
+        break;
+      case 'reply':
+        processEx.reply = i;
+        break;
+      case 'reject':
+        processEx.reject = i;
+        break;
+      case 'delay':
+        processEx.delay = i;
+        break;
+      case 'cancel':
+        processEx.cancel = i;
+        break;
+      default:
+        console.error(this.tag, i.event);
+        break;
+    }
+  }
+
+  return !!(processEx && processEx.create && processEx.dispatch && processEx.accept && processEx.go
+  && processEx.arrive && processEx.reply && processEx.reject && processEx.delay && processEx.cancel);
+}
+
+function getTime(date: Date): number {
+  return date ? date.getTime() : 0;
+}
+
+/**
+ *
+ * @param info
+ * @param taskEx
+ * @param processEx
+ * @returns {any}
+ */
+export function transform2Task(info: any, taskEx: TaskEx, processEx: ProcessEx): Task {
+  if (info.hasOwnProperty('acceptTime')) {
+    let acceptInfo: AcceptInfo = info as AcceptInfo;
+    return {
+      acceptTime: acceptInfo.acceptTime,
+      arrivedTime: getTime(processEx.arrive.time),
+      assignTime: getTime(processEx.dispatch.time),
+      compltedTime: 0,
+      createTime: getTime(processEx.create.time),
+      desc: taskEx.describe,
+      goTime: getTime(processEx.go.time),
+      location: {
+        type: taskEx.location.type,
+        lng: taskEx.location.lng,
+        lat: taskEx.location.lat
+      },
+      replyTime: getTime(processEx.reply.time),
+      source: taskEx.source,
+      state: TaskState.Accept,
+      taskId: taskEx.id,
+      taskType: taskEx.type
+    };
+  } else if (info.hasOwnProperty('goTime')) {
+    let goInfo: GoInfo = info as GoInfo;
+    return {
+      acceptTime: getTime(processEx.accept.time),
+      arrivedTime: getTime(processEx.arrive.time),
+      assignTime: getTime(processEx.dispatch.time),
+      compltedTime: 0,
+      createTime: getTime(processEx.create.time),
+      desc: taskEx.describe,
+      goTime: goInfo.goTime,
+      location: {
+        type: taskEx.location.type,
+        lng: taskEx.location.lng,
+        lat: taskEx.location.lat
+      },
+      replyTime: getTime(processEx.reply.time),
+      source: taskEx.source,
+      state: TaskState.Go,
+      taskId: taskEx.id,
+      taskType: taskEx.type
+    };
+  } else if (info.hasOwnProperty('arrivedTime')) {
+    let arriveInfo: ArriveInfo = info as ArriveInfo;
+    return {
+      acceptTime: getTime(processEx.accept.time),
+      arrivedTime: arriveInfo.arrivedTime,
+      assignTime: getTime(processEx.dispatch.time),
+      compltedTime: 0,
+      createTime: getTime(processEx.create.time),
+      desc: taskEx.describe,
+      goTime: getTime(processEx.go.time),
+      location: {
+        type: taskEx.location.type,
+        lng: taskEx.location.lng,
+        lat: taskEx.location.lat
+      },
+      replyTime: getTime(processEx.reply.time),
+      source: taskEx.source,
+      state: TaskState.Arrived,
+      taskId: taskEx.id,
+      taskType: taskEx.type
+    };
+  } else if (info.hasOwnProperty('rejectTime')) {
+    //let rejectInfo: RejectInfo = info as RejectInfo;
+    return {
+      acceptTime: getTime(processEx.accept.time),
+      arrivedTime: getTime(processEx.arrive.time),
+      assignTime: getTime(processEx.dispatch.time),
+      compltedTime: 0, //rejectInfo.rejectTime,
+      createTime: getTime(processEx.create.time),
+      desc: taskEx.describe,
+      goTime: getTime(processEx.go.time),
+      location: {
+        type: taskEx.location.type,
+        lng: taskEx.location.lng,
+        lat: taskEx.location.lat
+      },
+      replyTime: getTime(processEx.reply.time),
+      source: taskEx.source,
+      state: TaskState.Reject,
+      taskId: taskEx.id,
+      taskType: taskEx.type
+    };
+  } else if (info.hasOwnProperty('delayTime')) {
+    //let delayInfo: DelayInfo = info as DelayInfo;
+    return {
+      acceptTime: getTime(processEx.accept.time),
+      arrivedTime: getTime(processEx.arrive.time),
+      assignTime: getTime(processEx.dispatch.time),
+      compltedTime: 0, //rejectInfo.rejectTime,
+      createTime: getTime(processEx.create.time),
+      desc: taskEx.describe,
+      goTime: getTime(processEx.go.time),
+      location: {
+        type: taskEx.location.type,
+        lng: taskEx.location.lng,
+        lat: taskEx.location.lat
+      },
+      replyTime: getTime(processEx.reply.time),
+      source: taskEx.source,
+      state: TaskState.Delay,
+      taskId: taskEx.id,
+      taskType: taskEx.type
+    };
+  } else if (info.hasOwnProperty('opTime')) {
+    let replyInfo: ReplyInfo = info as ReplyInfo;
+    return {
+      acceptTime: getTime(processEx.accept.time),
+      arrivedTime: getTime(processEx.arrive.time),
+      assignTime: getTime(processEx.dispatch.time),
+      compltedTime: 0,
+      createTime: getTime(processEx.create.time),
+      desc: taskEx.describe,
+      goTime: getTime(processEx.go.time),
+      location: {
+        type: taskEx.location.type,
+        lng: taskEx.location.lng,
+        lat: taskEx.location.lat
+      },
+      replyTime: replyInfo.opTime,
+      source: taskEx.source,
+      state: TaskState.Reply,
+      taskId: taskEx.id,
+      taskType: taskEx.type
+    };
+  } else if (info.hasOwnProperty('destroyTime')) {
+    //let cancelInfo: CancelInfo = info as CancelInfo;
+    return {
+      acceptTime: getTime(processEx.accept.time),
+      arrivedTime: getTime(processEx.arrive.time),
+      assignTime: getTime(processEx.dispatch.time),
+      compltedTime: 0,
+      createTime: getTime(processEx.create.time),
+      desc: taskEx.describe,
+      goTime: getTime(processEx.go.time),
+      location: {
+        type: taskEx.location.type,
+        lng: taskEx.location.lng,
+        lat: taskEx.location.lat
+      },
+      replyTime: getTime(processEx.reply.time),
+      source: taskEx.source,
+      state: TaskState.Cancel,
+      taskId: taskEx.id,
+      taskType: taskEx.type
+    };
+  } else {
+    return null;
   }
 }

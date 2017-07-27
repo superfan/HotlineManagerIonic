@@ -1,5 +1,5 @@
 
-export class DispatchInfo {
+export interface DispatchInfo {
   taskId: string;
   dispatchOperator: number;
   beDispatchedPerson: number;

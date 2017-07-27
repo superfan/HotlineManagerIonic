@@ -1,6 +1,6 @@
 import {Location} from "./Location";
 
-export class RejectInfo {
+export interface RejectInfo {
   rejectTime: number;
   rejectReason: string;
   location: Location;
