@@ -47,6 +47,7 @@ import {Device} from "@ionic-native/device";
 import {ValueValidPipe} from "../pipes/ValueValidPipe";
 import {Camera} from "@ionic-native/camera";
 import {AndroidPermissions} from "@ionic-native/android-permissions";
+import {Media} from "@ionic-native/media";
 
 @NgModule({
   declarations: [
@@ -117,6 +118,7 @@ import {AndroidPermissions} from "@ionic-native/android-permissions";
     Device,
     Camera,
     AndroidPermissions,
+    Media,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     {provide: Http, useFactory: httpFactory, deps: [HttpInterceptorBackend, RequestOptions]},
   ]
