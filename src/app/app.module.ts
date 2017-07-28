@@ -67,7 +67,7 @@ import {MapPage} from "../pages/map/map";
     SearchResultPage,
     SearchDetailsPage,
     SettingPage,
-    MapPage
+    MapPage,
     SettingPage,
     ValueValidPipe
   ],

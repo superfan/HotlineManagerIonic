@@ -321,9 +321,14 @@ export class ConfigService {
           }
         });
     } else {
+      console.log("start readAsText:" + this.fileService.getConfigDir() + ":" + this.systemFileName);
       return this.file.readAsText(this.fileService.getConfigDir(), this.systemFileName)
         .then(result => {
+          console.log("readAsText" + result);
           return ConfigService.transform2SystemConfig(result);
+        })
+        .catch(error => {
+          console.log(error);
         });
     }
   }

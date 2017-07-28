@@ -48,23 +48,24 @@ export class MapPage {
         map.addControl(new BMap.GeolocationControl());
       }
     });
-    if(!isChrome){
-      this.getCurrentLocation(map);
+    if (!isChrome) {
+      this.getCurrentLocation();
     }
   }
 
   /**
    * 定位
    */
-  private getCurrentLocation(map: any) {
+  private getCurrentLocation() {
     // 进行定位
     console.log("getCurrentLocation");
+    let map = this.map;
     baidumap_location.getCurrentPosition(function (result) {
       console.log(result);
       let latitude = result.latitude;
       let lontitude = result.longitude;
       let point = new BMap.Point(lontitude, latitude);
-      this.map.centerAndZoom(point, 16);//设置中心和地图显示级别
+      map.centerAndZoom(point, 16);//设置中心和地图显示级别
     }, function (error) {
       console.log(error);
     });

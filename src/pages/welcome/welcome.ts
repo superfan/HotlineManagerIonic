@@ -60,8 +60,8 @@ export class WelcomePage {
       this.fileService.createDirRoot()
         .then((result) => {
           console.log(this.tag + 'onDidEnter:' + result);
-          // this.getVersionCode();
-          this.jump2Login();
+          this.getVersionCode();
+          // this.jump2Login();
         })
         .catch(err => {
           console.log("initial files failed" + err);
