@@ -1,4 +1,4 @@
-import {Task, TaskState} from "./Task";
+import {Task} from "./Task";
 import {AcceptInfo} from "./AcceptInfo";
 import {ArriveInfo} from "./ArriveInfo";
 import {CancelInfo} from "./CancelInfo";
@@ -35,6 +35,7 @@ export class HistoryEx {
   audioCount: number;
 
   constructor(history: History) {
+    debugger;
     this.userId = history.userId;
     this.taskId = history.taskId;
     this.state = history.state;
@@ -43,8 +44,14 @@ export class HistoryEx {
     this.uploadedFlag = history.uploadedFlag;
     this.taskDetail = history.taskDetail;
     this.mediaNames = history.mediaNames;
-    this.isRejected = history.state === TaskState.Reject;
-    this.isCanceled = history.state === TaskState.Cancel;
+    this.isRejected = history.state == 5;
+    this.isCanceled = history.state == 7;
+    if (history.mediaNames && history.mediaNames.length > 0) {
+      this.photoCount = history.mediaNames.length;
+    } else {
+      this.photoCount = 0;
+    }
+    this.audioCount = 0;  //todo 录音的数量
   }
 
   static transformToHistoryEx(historyEx: Array<HistoryEx>, historys: Array<History>) {

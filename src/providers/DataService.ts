@@ -888,6 +888,7 @@ export class DataService {
     if (this.globalService.isChrome) {
       return Promise.reject('chrome');
     } else {
+      debugger;
       return this.dbService.getHistory(this.globalService.userId, since, count, key, 2,
         [TaskState.Reject, TaskState.Cancel]);
     }

@@ -411,7 +411,6 @@ export class DbService {
             sql += ` AND I_UPLOADEDFLAG = ${uploadedFlag}`;
           }
           sql += ' ORDER BY ID;';
-
           return db.executeSql(sql, {});
         })
         .then(data => {
@@ -844,7 +843,7 @@ export class DbService {
    * @param {TaskState[]} taskStates 工单状态
    */
   getHistory(userId: number, since: number, count: number,
-             key: string, uploadFlag: number, taskStates: TaskState[]):Promise<Array<History>>{
+             key: string, uploadFlag: number, taskStates: TaskState[]): Promise<Array<History>> {
     if (this.globalService.isChrome) {
       return Promise.reject('chrome');
     } else {
@@ -852,21 +851,22 @@ export class DbService {
         .then(db => {
           let sql: string = `SELECT * FROM GD_HISTORIES WHERE I_USERID=${userId}`;
           if (taskStates && taskStates.length > 0) {
-            sql += `AND I_STATE IN (${taskStates.join(',')})}`;
+            sql += ` AND I_STATE IN (${taskStates.join(',')})`;
           }
           if (key && key !== '') {
             sql += ` AND S_TASKID LIKE '%${key}%'`;
           }
           if (uploadFlag > 0) {
-            sql += `AND I_UPLOADEDFLAG=${uploadFlag}`
+            sql += ` AND I_UPLOADEDFLAG=${uploadFlag}`
           }
           sql += ` ORDER BY ID LIMIT ${count} OFFSET ${since};`;
+          debugger;
           return db.executeSql(sql, {})
             .then(data => {
               let rows: any = data.rows;
               let historys: Array<History> = [];
-              if (rows && rows.length() > 0) {
-                for (let i = 0; i < rows.length(); i++) {
+              if (rows && rows.length > 0) {
+                for (let i = 0; i < rows.length; i++) {
                   let localHistory: LocalHistory = rows.item(i) as LocalHistory;
                   if (!localHistory || !localHistory.S_TASKID) {
                     continue;
