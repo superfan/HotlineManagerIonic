@@ -61,6 +61,7 @@ export class WelcomePage {
         .then((result) => {
           console.log(this.tag + 'onDidEnter:' + result);
           this.getVersionCode();
+          // this.jump2Login();
         })
         .catch(err => {
           console.log("initial files failed" + err);
@@ -78,6 +79,7 @@ export class WelcomePage {
   private getVersionCode() {
     this.appVersion.getVersionCode()
       .then(versionCode => {
+        console.log(versionCode);
         this.checkUpdate(versionCode);
       })
       .catch(err => {
@@ -96,6 +98,7 @@ export class WelcomePage {
         this.jump2Login();
       })
       .catch(error => {
+        this.loading.dismiss();
         console.log(this.tag + 'checkUpdate:' + error);
       })
   }

@@ -49,6 +49,7 @@ import {ValueValidPipe} from "../pipes/ValueValidPipe";
 import {Camera} from "@ionic-native/camera";
 import {AndroidPermissions} from "@ionic-native/android-permissions";
 import {Media} from "@ionic-native/media";
+import {MapPage} from "../pages/map/map";
 
 @NgModule({
   declarations: [
@@ -66,9 +67,11 @@ import {Media} from "@ionic-native/media";
     SearchPage,
     SearchResultPage,
     SearchDetailsPage,
-    SettingPage,
     ValueValidPipe,
-    MyHistory
+    MyHistory,
+    MapPage,
+    SettingPage,
+    ValueValidPipe
   ],
   imports: [
     BrowserModule,
@@ -93,7 +96,8 @@ import {Media} from "@ionic-native/media";
     SearchResultPage,
     SearchDetailsPage,
     SettingPage,
-    MyHistory
+     MyHistory,
+    MapPage
   ],
   providers: [
     StatusBar,
