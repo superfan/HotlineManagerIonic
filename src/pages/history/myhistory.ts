@@ -1,6 +1,9 @@
 import {Component, ViewChild, OnInit, OnDestroy} from '@angular/core';
 import {NavController, Content, InfiniteScroll} from "ionic-angular";
-import {Task, TaskEx} from '../../model/Task';
+import {DataService} from '../../providers/DataService';
+import {HistoryEx} from "../../model/History";
+import {RejectInfo} from "../../model/RejectInfo";
+import {CancelInfo} from "../../model/CancelInfo";
 
 @Component({
   selector: 'page-myhistory',
@@ -14,34 +17,15 @@ export class MyHistory implements OnInit, OnDestroy {
   @ViewChild(Content) content: Content;
   @ViewChild(InfiniteScroll) infiniteScroll: InfiniteScroll;
 
-  tasks: Task[] = [{
-    acceptTime: 12345678, arrivedTime: 34512790, assignTime: 26378940, compltedTime: 87654238,
-    createTime: 87654238, desc: 'asdf', goTime: 12345678, location: {type: 'qwe', lng: '12.45', lat: '15.80'},
-    replyTime: 87654238, source: '热线', state: 1, taskId: '12345678sdf', taskType: '热线'
-  }, {
-    acceptTime: 12345678, arrivedTime: 34512790, assignTime: 26378940, compltedTime: 87654238,
-    createTime: 87654238, desc: 'asdf', goTime: 12345678, location: {type: 'qwe', lng: '12.45', lat: '15.80'},
-    replyTime: 87654238, source: '热线', state: 1, taskId: '12345678sdf', taskType: '热线'
-  }, {
-    acceptTime: 12345678, arrivedTime: 34512790, assignTime: 26378940, compltedTime: 87654238,
-    createTime: 87654238, desc: 'asdf', goTime: 12345678, location: {type: 'qwe', lng: '12.45', lat: '15.80'},
-    replyTime: 87654238, source: '热线', state: 1, taskId: '12345678sdf', taskType: '热线'
-  }, {
-    acceptTime: 12345678, arrivedTime: 34512790, assignTime: 26378940, compltedTime: 87654238,
-    createTime: 87654238, desc: 'asdf', goTime: 12345678, location: {type: 'qwe', lng: '12.45', lat: '15.80'},
-    replyTime: 87654238, source: '热线', state: 1, taskId: '12345678sdf', taskType: '热线'
-  }, {
-    acceptTime: 12345678, arrivedTime: 34512790, assignTime: 26378940, compltedTime: 87654238,
-    createTime: 87654238, desc: 'asdf', goTime: 12345678, location: {type: 'qwe', lng: '12.45', lat: '15.80'},
-    replyTime: 87654238, source: '热线', state: 1, taskId: '12345678sdf', taskType: '热线'
-  }];
 
   title: string = '历史记录';
   showToolbar: boolean = false;
   showFab: boolean = false;
-  items: TaskEx[] = [];
+  items: HistoryEx[] = [];
   private since: number = 1;
   private isDownloadFinished: boolean = true;
+  count: number = 0;
+  searchKey: string = '';
 
   ngOnDestroy(): void {
     console.log(this.tag, 'ngOnDestroy');
@@ -49,16 +33,21 @@ export class MyHistory implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     console.log(this.tag, 'ngOnInit');
-    TaskEx.transformCompletedData(this.tasks, this.items);
     this.since = this.items.length;
+    //todo
+    this.getHistory(this.since, this.count, this.searchKey)
+      .then(flag => {
+        this.infiniteScroll.enable(flag);
+      })
+      .catch(error => console.error(error));
   }
 
-  constructor(public navCtrl: NavController) {
+  constructor(public navCtrl: NavController,
+              private dataService: DataService) {
   }
 
   //搜索
   getItems(ev: any) {
-
   }
 
   /**
@@ -77,7 +66,7 @@ export class MyHistory implements OnInit, OnDestroy {
     setTimeout(() => {
       this.isDownloadFinished = false;
       this.showFab = false;
-      TaskEx.transformCompletedData(this.tasks, this.items);
+      //todo
       infiniteScroll.complete();
       this.isDownloadFinished = true;
       this.showFab = true;
@@ -96,5 +85,29 @@ export class MyHistory implements OnInit, OnDestroy {
   toggleToolbar(ev: any) {
     this.showToolbar = !this.showToolbar;
     this.content.resize();
+  }
+
+  private getHistory(since: number, count: number, key: string): Promise<boolean> {
+    return this.dataService
+      .getHistory(since, count, key)
+      .then(historys => {
+        console.log(this.tag + "getHistory" + historys.length);
+        if (historys.length < 0) {
+          return Promise.resolve(false);
+        }
+        else {
+          HistoryEx.transformToHistoryEx(this.items, historys);
+          since = this.items.length;
+          return Promise.resolve(true);
+        }
+      });
+  }
+
+  toRejectedInfo(item: any): RejectInfo {
+    return <RejectInfo>item;
+  }
+
+  toReplyInfo(item: any): CancelInfo {
+    return <CancelInfo>item;
   }
 }

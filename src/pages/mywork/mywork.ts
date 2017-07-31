@@ -337,7 +337,6 @@ export class MyWorkPage implements OnInit, OnDestroy {
           default:
             break;
         }
-
         result = true;
       }
 

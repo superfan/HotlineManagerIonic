@@ -14,6 +14,10 @@
     border: 1px #e6e9ee;
   }
 
+  .gray-text{
+    color: gray;
+  }
+
   .card-content-col-hint {
     color: #5d81c1;
     //font-family: "Microsoft YaHei", "微软雅黑";
@@ -35,11 +39,9 @@
     justify-content: center;
     align-items: center;
   }
-
   ion-card img {
 
   }
-
   .col-content {
     display: flex;
     align-items: center;

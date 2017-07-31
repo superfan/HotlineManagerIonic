@@ -44,59 +44,51 @@
         </ion-list-header>
 
         <!--创建时间-->
-        <button ion-item [style.color]="item.processes[0].color" *ngIf="item.processes[0].show">
+        <button ion-item class="gray-text">
           <ion-icon name='icon-vline' item-start></ion-icon>
-          {{item.processes[0].name}} {{item.processes[0].time | date:'y-MM-dd HH:mm:ss'}}
-          <!--<ion-icon name='ios-arrow-forward' item-end></ion-icon>-->
+          创建时间{{item.task.acceptTime| date:'y-MM-dd HH:mm:ss'}}
         </button>
 
         <!--派发时间-->
-        <button ion-item [style.color]="item.processes[1].color" *ngIf="item.processes[1].show">
+        <button ion-item class="gray-text">
           <ion-icon name='icon-vline' item-start></ion-icon>
-          {{item.processes[1].name}} {{item.processes[1].time | date:'y-MM-dd HH:mm:ss'}}
-          <!--<ion-icon name='ios-arrow-forward' item-end></ion-icon>-->
+          派发时间 {{item.task.assignTime | date:'y-MM-dd HH:mm:ss'}}
         </button>
 
         <!--接单时间 -->
-        <button ion-item  [style.color]="item.processes[2].color" *ngIf="item.processes[2].show">
+        <button ion-item class="gray-text">
           <ion-icon name='icon-vline' item-start color="{{item.processes[2].color}}"></ion-icon>
-          {{item.processes[2].name}} {{item.processes[2].time | date:'y-MM-dd HH:mm:ss'}}
+          接单时间 {{item.task.acceptTime | date:'y-MM-dd HH:mm:ss'}}
         </button>
 
         <!--出发时间-->
-        <button ion-item [style.color]="item.processes[3].color" *ngIf="item.processes[3].show">
+        <button ion-item class="gray-text" *ngIf="item.isCanceled">
           <ion-icon name='icon-vline' item-start color="{{item.processes[3].color}}"></ion-icon>
-          {{item.processes[3].name}} {{item.processes[3].time | date:'y-MM-dd HH:mm:ss'}}
+          出发时间 {{item.task.goTime| date:'y-MM-dd HH:mm:ss'}}
         </button>
 
         <!--到场时间-->
-        <button ion-item [style.color]="item.processes[4].color" *ngIf="item.processes[4].show">
+        <button ion-item class="gray-text" *ngIf="item.isCanceled">
           <ion-icon name='icon-vline' item-start color="{{item.processes[4].color}}"></ion-icon>
-          {{item.processes[4].name}} {{item.processes[4].time | date:'y-MM-dd HH:mm:ss'}}
+          到场时间 {{item.task.arrivedTime | date:'y-MM-dd HH:mm:ss'}}
         </button>
 
         <!--回复时间-->
-        <button ion-item [style.color]="item.processes[5].color" *ngIf="item.processes[5].show">
+        <button ion-item [style.color]="item.processes[5].color" *ngIf="item.isCanceled">
           <ion-icon name='icon-vline' item-start color="{{item.processes[5].color}}"></ion-icon>
-          {{item.processes[5].name}} {{item.processes[5].time | date:'y-MM-dd HH:mm:ss'}}
+          回复时间 {{item.task.compltedTime | date:'y-MM-dd HH:mm:ss'}}
         </button>
 
         <!--退单时间-->
-        <button ion-item [style.color]="item.processes[6].color" *ngIf="item.processes[6].show">
+        <button ion-item [style.color]="item.processes[6].color" *ngIf="item.isRejected">
           <ion-icon name='icon-vline' item-start color="{{item.processes[6].color}}"></ion-icon>
-          {{item.processes[6].name}} {{item.processes[6].time | date:'y-MM-dd HH:mm:ss'}}
-        </button>
-
-        <!--延迟时间-->
-        <button ion-item [style.color]="item.processes[7].color" *ngIf="item.processes[7].show">
-          <ion-icon name='icon-vline' item-start color="{{item.processes[7].color}}"></ion-icon>
-          {{item.processes[7].name}} {{item.processes[7].time | date:'y-MM-dd HH:mm:ss'}}
+          退单时间 {{ toRejectedInfo(item.reply).rejectTime| date:'y-MM-dd HH:mm:ss'}}
         </button>
 
         <!--销单时间-->
-        <button ion-item [style.color]="item.processes[8].color" *ngIf="item.processes[8].show">
+        <button ion-item [style.color]="item.processes[8].color" *ngIf="item.isCanceled">
           <ion-icon name='icon-vline' item-start color="{{item.processes[8].color}}"></ion-icon>
-          {{item.processes[8].name}} {{item.processes[8].time | date:'y-MM-dd HH:mm:ss'}}
+          销单时间{{toReplyInfo(item.reply).destroyTime| date:'y-MM-dd HH:mm:ss'}}
         </button>
       </ion-list>
       <ion-row>
@@ -127,13 +119,12 @@
             <div>地图</div>
           </button>
         </ion-col>
-
       </ion-row>
     </ion-card>
   </ion-list>
 
   <!--infinite scroll-->
-  <ion-infinite-scroll (ionInfinite)="doInfinite($event)"  immediate-check="false" distance=1%>
+  <ion-infinite-scroll (ionInfinite)="doInfinite($event)" immediate-check="false" distance=1%>
     <ion-infinite-scroll-content></ion-infinite-scroll-content>
   </ion-infinite-scroll>
 

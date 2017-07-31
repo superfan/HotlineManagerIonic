@@ -4,7 +4,7 @@ import {SQLitePorter} from '@ionic-native/sqlite-porter';
 import {GlobalService} from "./GlobalService";
 import {FileService} from "./FileService";
 import {Word} from "../model/Word";
-import {Task} from "../model/Task";
+import {Task, TaskState} from "../model/Task";
 import {TaskDetail} from "../model/TaskDetail";
 import {History} from "../model/History";
 import {Media} from "../model/Media";
@@ -387,7 +387,6 @@ export class DbService {
               } else {
                 sql = this.toHistoryInsertSql(history);
               }
-
               return db.executeSql(sql, {});
             });
         });
@@ -816,7 +815,6 @@ export class DbService {
           mediaNames = historyExtendedInfo.mediaNames.split(',');
         }
       }
-
       return {
         userId: localHistory.I_USERID,
         taskId: localHistory.S_TASKID,
@@ -834,5 +832,51 @@ export class DbService {
 
   private toMediaInsertSql(media: Media): string {
     return `INSERT INTO GD_MULTIMEDIAS VALUES (null, ${media.userId}, '${media.taskId}', ${media.fileType}, '${media.fileName}', ${media.uploadedFlag}, '${media.fileId ? media.fileId : null}', null);`
+  }
+
+  /**
+   * 历史工单获取记录
+   * @param {number} userId
+   * @param {number} since
+   * @param {number} count
+   * @param {string} key  搜索关键字
+   * @param {number} uploadFlag 上传标志
+   * @param {TaskState[]} taskStates 工单状态
+   */
+  getHistory(userId: number, since: number, count: number,
+             key: string, uploadFlag: number, taskStates: TaskState[]):Promise<Array<History>>{
+    if (this.globalService.isChrome) {
+      return Promise.reject('chrome');
+    } else {
+      return this.openDb()
+        .then(db => {
+          let sql: string = `SELECT * FROM GD_HISTORIES WHERE I_USERID=${userId}`;
+          if (taskStates && taskStates.length > 0) {
+            sql += `AND I_STATE IN (${taskStates.join(',')})}`;
+          }
+          if (key && key !== '') {
+            sql += ` AND S_TASKID LIKE '%${key}%'`;
+          }
+          if (uploadFlag > 0) {
+            sql += `AND I_UPLOADEDFLAG=${uploadFlag}`
+          }
+          sql += ` ORDER BY ID LIMIT ${count} OFFSET ${since};`;
+          return db.executeSql(sql, {})
+            .then(data => {
+              let rows: any = data.rows;
+              let historys: Array<History> = [];
+              if (rows && rows.length() > 0) {
+                for (let i = 0; i < rows.length(); i++) {
+                  let localHistory: LocalHistory = rows.item(i) as LocalHistory;
+                  if (!localHistory || !localHistory.S_TASKID) {
+                    continue;
+                  }
+                  historys.push(this.toHistory(localHistory));
+                }
+              }
+              return Promise.resolve(historys);
+            });
+        })
+    }
   }
 }
