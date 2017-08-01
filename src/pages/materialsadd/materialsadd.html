@@ -1,0 +1,67 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>
+      {{title}}
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-list>
+    <form [formGroup]="addMaterialsForm">
+      <ion-item>
+        <ion-label>材料型号：</ion-label>
+        <ion-select okText="确定" cancelText="取消" formControlName="materialsType">
+          <ion-option *ngFor="let type of types" value={{type.value}}>{{type.name}}</ion-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>材料规格：</ion-label>
+        <ion-select okText="确定" cancelText="取消" formControlName="materialsSize">
+          <ion-option *ngFor="let type of types" value={{type.value}}>{{type.name}}</ion-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>生产厂家：</ion-label>
+        <ion-select okText="确定" cancelText="取消" formControlName="materialsProduct">
+          <ion-option *ngFor="let type of types" value={{type.value}}>{{type.name}}</ion-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>单位：</ion-label>
+        <ion-select okText="确定" cancelText="取消" formControlName="materialsUnit">
+          <ion-option *ngFor="let type of types" value={{type.value}}>{{type.name}}</ion-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <button item-left ion-button color="primary" clear icon-only (click)="reduceAccount()">
+          <ion-icon name='remove-circle' is-active="false"></ion-icon>
+        </button>
+        <ion-label class="account">{{count}}</ion-label>
+        <button item-right ion-button color="primary" clear icon-only (click)="addAccount()">
+          <ion-icon name='add-circle' is-active="false"></ion-icon>
+        </button>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>备注：</ion-label>
+        <ion-input formControlName="remark" type="text"></ion-input>
+      </ion-item>
+    </form>
+  </ion-list>
+
+  <ion-row>
+    <ion-col>
+      <div class="add-button">
+        <button ion-button [disabled]="!addMaterialsForm.valid || account==0"
+                type="submit" block (click)="addClick(addMaterialsForm.value)">{{buttonStr}}
+        </button>
+      </div>
+    </ion-col>
+  </ion-row>
+</ion-content>

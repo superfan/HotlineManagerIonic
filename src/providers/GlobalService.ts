@@ -16,7 +16,7 @@ export interface MyWorkUpdateEvent {
 
 @Injectable()
 export class GlobalService {
-  readonly isChrome: boolean = false;
+  readonly isChrome: boolean = true;
   readonly httpCode: number = 0;
   readonly httpSuccessStatusCode: number = 200;
   readonly taskSinceDefault: number = 0;
@@ -34,6 +34,7 @@ export class GlobalService {
   readonly myWorkDownloadFinishEvent: string = "mywork:download:finish";
   readonly myWorkUpdateEvent: string = "mywork:update";
   readonly stationWorkUpdateEvent: string = "stationwork:update";
+  readonly materialsUpdateEvent: string = "addMaterials:update";
   private loading: Loading;
 
   constructor(private toastCtrl: ToastController,

@@ -1,0 +1,119 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>
+      {{title}}
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only color="white" (click)="addMaterials()">
+        <ion-icon name="add-circle"></ion-icon>
+      </button>
+      <button ion-button icon-only color="white" (click)="saveMaterials()">
+        <ion-icon name="checkmark-circle"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+  <ion-segment [(ngModel)]="segmentName">
+    <ion-segment-button value="basicInfo">
+      基本信息
+    </ion-segment-button>
+    <ion-segment-button value="materialsList">
+      材料清单
+    </ion-segment-button>
+  </ion-segment>
+</ion-header>hammer
+
+<ion-content>
+  <div [ngSwitch]="segmentName">
+    <!--基本信息-->
+
+    <ion-list *ngSwitchCase="'basicInfo'">
+      <ion-item>
+        <ion-label color="label">工单编号：</ion-label>
+        <ion-input type="text" clearInput></ion-input>
+        <button item-end ion-button color="primary" clear icon-only (click)="searchTask()">
+          <ion-icon name='search' is-active="false"></ion-icon>
+        </button>
+      </ion-item>
+
+      <ion-item *ngFor="let detail of details">
+        <ion-label fixed class="label-name">
+          {{detail.name}}
+        </ion-label>
+        <div item-content>
+          {{detail.value}}
+        </div>
+      </ion-item>
+    </ion-list>
+
+    <!--材料清单-->
+    <ion-list *ngSwitchCase="'materialsList'">
+      <ion-card *ngFor="let item of items">
+        <ion-item>
+          <ion-label fixed class="label-name">
+            材料型号：
+          </ion-label>
+          <div item-content>
+            {{item.type}}
+          </div>
+        </ion-item>
+
+        <ion-item>
+          <ion-label fixed class="label-name">
+            材料规格：
+          </ion-label>
+          <div item-content>
+            {{item.size}}
+          </div>
+        </ion-item>
+
+        <ion-item>
+          <ion-label fixed class="label-name">
+            生产厂家：
+          </ion-label>
+          <div item-content>
+            {{item.productor}}
+          </div>
+        </ion-item>
+
+        <ion-item>
+          <ion-label fixed class="label-name">
+            单位：
+          </ion-label>
+          <div item-content>
+            {{item.unit}}
+          </div>
+        </ion-item>
+
+        <ion-item>
+          <ion-label fixed class="label-name">
+            数量：
+          </ion-label>
+          <div item-content>
+            {{item.count}}
+          </div>
+        </ion-item>
+
+        <ion-item>
+          <ion-label fixed class="label-name">
+            备注：
+          </ion-label>
+          <div item-content>
+            {{item.remark}}
+          </div>
+        </ion-item>
+
+        <ion-item>
+          <button item-right ion-button icon-left clear small color="danger" (click)="deleteMaterials(item)">
+            <ion-icon name="trash"></ion-icon>
+            <div>删除</div>
+          </button>
+          <button item-right ion-button icon-left clear small (click)="editMaterials(item)">
+            <ion-icon name="create"></ion-icon>
+            <div>修改</div>
+          </button>
+        </ion-item>
+      </ion-card>
+    </ion-list>
+  </div>
+</ion-content>

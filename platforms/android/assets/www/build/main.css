@@ -49204,6 +49204,31 @@ page-map .scroll {
   height: 100%;
 }
 
+page-materials .label-name {
+  color: #5d81c1;
+  font-size: 1.0em;
+}
+
+page-materialsadd .label-name {
+  color: #5d81c1;
+  font-size: 1.0em;
+}
+
+page-materialsadd .account {
+  text-align: center;
+}
+
+page-materialsadd .add-button {
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-top: 30px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 30px;
+  text-align: center;
+  border: 1px solid #fff;
+}
+
 .page-mywork .card-header-label-hint {
   display: inline;
   color: #5d81c1;

@@ -49,6 +49,8 @@ import {Camera} from "@ionic-native/camera";
 import {AndroidPermissions} from "@ionic-native/android-permissions";
 import {Media} from "@ionic-native/media";
 import {MapPage} from "../pages/map/map";
+import {MaterialsPage} from "../pages/materials/materials";
+import {MaterialsAddPage} from "../pages/materialsadd/materialsadd";
 
 @NgModule({
   declarations: [
@@ -69,6 +71,8 @@ import {MapPage} from "../pages/map/map";
     SettingPage,
     MapPage,
     SettingPage,
+    MaterialsPage,
+    MaterialsAddPage,
     ValueValidPipe
   ],
   imports: [
@@ -94,7 +98,9 @@ import {MapPage} from "../pages/map/map";
     SearchResultPage,
     SearchDetailsPage,
     SettingPage,
-    MapPage
+    MapPage,
+    MaterialsPage,
+    MaterialsAddPage
   ],
   providers: [
     StatusBar,
