@@ -882,4 +882,15 @@ export class DataService {
     }
     return false;
   }
+
+  //历史工单获取记录
+  public getHistory(since: number, count: number, key: string): Promise<Array<History>> {
+    if (this.globalService.isChrome) {
+      return Promise.reject('chrome');
+    } else {
+      debugger;
+      return this.dbService.getHistory(this.globalService.userId, since, count, key, 2,
+        [TaskState.Reject, TaskState.Cancel]);
+    }
+  }
 }

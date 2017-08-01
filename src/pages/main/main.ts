@@ -6,6 +6,7 @@ import {StationWorkPage} from "../stationwork/stationwork";
 import {SearchPage} from "../search/search";
 import {DataService} from "../../providers/DataService";
 import {SettingPage} from "../setting/setting";
+import {MyHistory} from '../history/myhistory';
 import {GlobalService, MainUpdateEvent} from "../../providers/GlobalService";
 import {ConfigService} from "../../providers/ConfigService";
 import {MapPage} from "../map/map";
@@ -84,6 +85,7 @@ export class MainPage implements OnInit, OnDestroy {
         this.navCtrl.push(MyWorkPage);
         break;
       case ItemId.History:
+        this.navCtrl.push(MyHistory);
         break;
       case ItemId.Map:
         this.navCtrl.push(MapPage);

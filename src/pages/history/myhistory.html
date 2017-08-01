@@ -1,0 +1,137 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>
+      {{title}}
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only color="white" (click)="toggleToolbar($event)">
+        <ion-icon name="search"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+  <ion-toolbar color="primary" *ngIf="showToolbar">
+    <ion-searchbar (input)="onInput($event)" (ionCancel)="onCancel($event)"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="page-myhistory">
+  <!-- <ion-refresher (ionRefresh)="doRefresh($event)">
+     <ion-refresher-content
+       pullingIcon="arrow_dropdown"
+       pullingText="Pull to refresh"
+       refreshingSpinner="circles"
+       refreshingText="Refreshing...">
+     </ion-refresher-content>
+   </ion-refresher>-->
+  <ion-list>
+    <ion-card *ngFor="let item of items">
+      <ion-item>
+        <ion-avatar item-start>
+          <img src="assets/img/ic_mywork_avatar.png">
+        </ion-avatar>
+        <div><h2 class="card-header-label-hint">任务编号 </h2>
+          <h2 class="card-header-label-content">{{item.taskId | valueValid}}</h2></div>
+        <div><h2 class="card-header-label-hint">任务类型 </h2>
+          <h2 class="card-header-label-content">{{item.task.taskType | valueValid}}</h2></div>
+      </ion-item>
+
+      <ion-list>
+        <ion-list-header>
+          <ion-row>
+            <ion-col col-auto>任务描述</ion-col>
+            <ion-col>{{item.task.desc| valueValid}}</ion-col>
+          </ion-row>
+        </ion-list-header>
+
+        <!--创建时间-->
+        <button ion-item class="gray-text">
+          <ion-icon name='icon-vline' item-start></ion-icon>
+          创建时间 {{item.task.createTime| date:'y-MM-dd HH:mm:ss'}}
+        </button>
+
+        <!--派发时间-->
+        <button ion-item class="gray-text">
+          <ion-icon name='icon-vline' item-start></ion-icon>
+          派发时间 {{item.task.assignTime | date:'y-MM-dd HH:mm:ss'}}
+        </button>
+
+        <!--接单时间 -->
+        <button ion-item class="gray-text">
+          <ion-icon name='icon-vline' item-start></ion-icon>
+          接单时间 {{item.task.acceptTime | date:'y-MM-dd HH:mm:ss'}}
+        </button>
+
+        <!--出发时间-->
+        <button ion-item class="gray-text" *ngIf="item.isCanceled">
+          <ion-icon name='icon-vline' item-start></ion-icon>
+          出发时间 {{item.task.goTime| date:'y-MM-dd HH:mm:ss'}}
+        </button>
+
+        <!--到场时间-->
+        <button ion-item class="gray-text" *ngIf="item.isCanceled">
+          <ion-icon name='icon-vline' item-start></ion-icon>
+          到场时间 {{item.task.arrivedTime | date:'y-MM-dd HH:mm:ss'}}
+        </button>
+
+        <!--回复时间-->
+        <button ion-item class="gray-text" *ngIf="item.isCanceled">
+          <ion-icon name='icon-vline' item-start></ion-icon>
+          回复时间 {{item.task.compltedTime | date:'y-MM-dd HH:mm:ss'}}
+        </button>
+
+        <!--退单时间-->
+        <button ion-item class="gray-text" *ngIf="item.isRejected">
+          <ion-icon name='icon-vline' item-start></ion-icon>
+          退单时间 {{ toRejectedInfo(item.reply).rejectTime| date:'y-MM-dd HH:mm:ss'}}
+        </button>
+
+        <!--销单时间-->
+        <button ion-item class="gray-text" *ngIf="item.isCanceled">
+          <ion-icon name='icon-vline' item-start></ion-icon>
+          销单时间{{toReplyInfo(item.reply).destroyTime| date:'y-MM-dd HH:mm:ss'}}
+        </button>
+      </ion-list>
+      <ion-row>
+        <ion-col>
+          <button ion-button icon-left clear small color="gray">
+            <ion-icon name="images"></ion-icon>
+            <div>{{item.photoCount}}</div>
+          </button>
+        </ion-col>
+
+        <ion-col>
+          <button ion-button icon-left clear small color="gray">
+            <ion-icon name="musical-notes"></ion-icon>
+            <div>{{item.audioCount}}</div>
+          </button>
+        </ion-col>
+
+        <!-- <ion-col>
+           <button ion-button icon-left clear small color="gray">
+             <ion-icon name="videocam"></ion-icon>
+             <div>{{item.videoCount}}</div>
+           </button>
+         </ion-col>-->
+
+        <ion-col>
+          <button ion-button icon-left clear small>
+            <ion-icon name="map"></ion-icon>
+            <div>地图</div>
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+  </ion-list>
+
+  <!--infinite scroll-->
+  <ion-infinite-scroll (ionInfinite)="doInfinite($event)" immediate-check="false" distance=1%>
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+  <!--fab-->
+  <ion-fab right bottom *ngIf="showFab">
+    <button ion-fab color="primary" (click)="doScroll2Top($event)">
+      <ion-icon name="arrow-dropup"></ion-icon>
+    </button>
+  </ion-fab>
+</ion-content>

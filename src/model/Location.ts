@@ -1,4 +1,3 @@
-
 export interface Location {
   type: string;
   lng: string;

@@ -49081,6 +49081,53 @@ ion-nav {
   font-family: "Microsoft YaHei", "微软雅黑";
 }
 
+.page-myhistory .card-header-label-hint {
+  display: inline;
+  color: #5d81c1;
+}
+
+.page-myhistory .card-header-label-content {
+  display: inline;
+  color: black;
+}
+
+.page-myhistory ion-grid {
+  border: 1px #e6e9ee;
+}
+
+.page-myhistory .gray-text {
+  color: gray;
+}
+
+.page-myhistory .card-content-col-hint {
+  color: #5d81c1;
+}
+
+.page-myhistory .card-content-col-content {
+  color: black;
+}
+
+.page-myhistory .card-bottom-btn {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.page-myhistory .col-content {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
 page-login .login-logo {
   width: 150px;
   margin-top: 120px;
@@ -49202,6 +49249,31 @@ page-map .markMap {
 
 page-map .scroll {
   height: 100%;
+}
+
+page-materials .label-name {
+  color: #5d81c1;
+  font-size: 1.0em;
+}
+
+page-materialsadd .label-name {
+  color: #5d81c1;
+  font-size: 1.0em;
+}
+
+page-materialsadd .account {
+  text-align: center;
+}
+
+page-materialsadd .add-button {
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-top: 30px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 30px;
+  text-align: center;
+  border: 1px solid #fff;
 }
 
 .page-mywork .card-header-label-hint {

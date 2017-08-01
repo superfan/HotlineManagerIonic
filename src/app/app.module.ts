@@ -14,6 +14,7 @@ import {NewsPage} from "../pages/news/news";
 import {WorkDetailPage} from "../pages/workdetail/workdetail";
 import {StationWorkPage} from "../pages/stationwork/stationwork";
 import {WorkInfoPage} from "../pages/workinfo/workinfo";
+import {MyHistory} from '../pages/history/myhistory';
 
 
 import {File} from "@ionic-native/file";
@@ -68,7 +69,8 @@ import {MaterialsAddPage} from "../pages/materialsadd/materialsadd";
     SearchPage,
     SearchResultPage,
     SearchDetailsPage,
-    SettingPage,
+    ValueValidPipe,
+    MyHistory,
     MapPage,
     SettingPage,
     MaterialsPage,
@@ -99,6 +101,7 @@ import {MaterialsAddPage} from "../pages/materialsadd/materialsadd";
     SearchDetailsPage,
     SettingPage,
     MapPage,
+     MyHistory,
     MaterialsPage,
     MaterialsAddPage
   ],
