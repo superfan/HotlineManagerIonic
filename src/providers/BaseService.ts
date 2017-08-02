@@ -4,7 +4,6 @@ import {Headers, RequestOptions} from "@angular/http";
 @Injectable()
 export abstract class BaseService {
   constructor() {
-
   }
 
   /**

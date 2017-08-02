@@ -85,10 +85,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
     //   this.content.resize();
     // }
     this.key = '';
-
-    if (this.dataService.downloadTasksAndDetails()) {
-      this.refresher.complete();
-    }
+    this.dataService.downloadTasksAndDetails()
   }
 
   /**

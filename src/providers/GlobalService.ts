@@ -31,9 +31,11 @@ export class GlobalService {
   departmentId: number = 10;
   isWorker: boolean;//是否是外勤人员
   readonly mainUpdateEvent: string = "main:update";
-  readonly myWorkDownloadFinishEvent: string = "mywork:download:finish";
+  readonly myWorkDownloadFinishEvent: string = "mywork:download:finish"; // task & detail
+  readonly historyUploadFinishEvent: string = "history:upload:finish"; // history & media
   readonly myWorkUpdateEvent: string = "mywork:update";
   readonly stationWorkUpdateEvent: string = "stationwork:update";
+  readonly recordAudioFinishEvent: string = "record:audio:finish";
   private loading: Loading;
 
   constructor(private toastCtrl: ToastController,

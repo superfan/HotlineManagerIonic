@@ -48,6 +48,9 @@ import {ValueValidPipe} from "../pipes/ValueValidPipe";
 import {Camera} from "@ionic-native/camera";
 import {AndroidPermissions} from "@ionic-native/android-permissions";
 import {Media} from "@ionic-native/media";
+import {MediaService} from "../providers/MediaService";
+import {PopoverRecordPage} from "../pages/record/PopoverRecordPage";
+import {FileTransfer} from '@ionic-native/file-transfer';
 
 @NgModule({
   declarations: [
@@ -66,7 +69,8 @@ import {Media} from "@ionic-native/media";
     SearchResultPage,
     SearchDetailsPage,
     SettingPage,
-    ValueValidPipe
+    ValueValidPipe,
+    PopoverRecordPage
   ],
   imports: [
     BrowserModule,
@@ -90,7 +94,8 @@ import {Media} from "@ionic-native/media";
     SearchPage,
     SearchResultPage,
     SearchDetailsPage,
-    SettingPage
+    SettingPage,
+    PopoverRecordPage
   ],
   providers: [
     StatusBar,
@@ -119,6 +124,8 @@ import {Media} from "@ionic-native/media";
     Camera,
     AndroidPermissions,
     Media,
+    MediaService,
+    FileTransfer,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     {provide: Http, useFactory: httpFactory, deps: [HttpInterceptorBackend, RequestOptions]},
   ]

@@ -82,6 +82,7 @@ export class MainPage implements OnInit, OnDestroy {
         this.navCtrl.push(MyWorkPage);
         break;
       case ItemId.History:
+        this.dataService.uploadHistoriesAndMedias();
         break;
       case ItemId.Map:
         break;

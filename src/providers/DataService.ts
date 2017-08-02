@@ -1,16 +1,10 @@
 import {Injectable} from '@angular/core';
 import {DownloadService} from "./DownloadService";
-import {Events} from "ionic-angular";
 import {TaskState, Task} from "../model/Task";
 import {GlobalService} from "./GlobalService";
-import {AcceptInfo, AcceptExInfo} from "../model/AcceptInfo";
+import {AcceptExInfo} from "../model/AcceptInfo";
 import {UploadService} from "./UploadService";
-import {GoInfo} from "../model/GoInfo";
-import {ArriveInfo} from "../model/ArriveInfo";
-import {ReplyInfo} from "../model/ReplyInfo";
-import {RejectInfo} from "../model/RejectInfo";
-import {DelayInfo} from "../model/DelayInfo";
-import {CancelInfo, CancelExInfo} from "../model/CancelInfo";
+import {CancelExInfo} from "../model/CancelInfo";
 import {TaskDetail} from "../model/TaskDetail";
 import {Word} from "../model/Word";
 import {SearchTask} from "../model/SearchTask";
@@ -23,18 +17,13 @@ import {UserResult} from "../model/UserResult";
 import {Personnel} from "../model/Personnel";
 import {DispatchInfo} from "../model/DispatchInfo";
 import {DbService} from "./DbService";
-import {History} from "../model/History";
-import {Camera, CameraOptions} from "@ionic-native/camera";
-import {FileService} from "./FileService";
+import {MediaService} from "./MediaService";
 import {MediaType} from "../model/Media";
-import {Media, MediaObject} from "@ionic-native/media";
+import {SyncService, MsgType} from "./SyncService";
+import {Events} from "ionic-angular";
 
 @Injectable()
-export class DataService {
-  private downloadTaskEvent: string = 'task:download';
-  private downloadTaskDetailEvent: string = 'task:detail:download';
-  private uploadHistoryEvent: string = 'history:upload';
-  private uploadMediaEvent: string = 'media:upload';
+export class DataService extends SyncService {
   private optTypes: Array<Word>;
   private optContents: Array<Word>;
   private optReasons: Array<Word>;
@@ -43,16 +32,14 @@ export class DataService {
   private reflectTypes: Array<Word>;
   private reflectContents: Array<Word>;
   private personnels: Array<Personnel>;
-  private isDownloadTaskAndDetailFinished: boolean;
 
-  constructor(private downloadService: DownloadService,
-              private uploadService: UploadService,
-              private globalService: GlobalService,
-              private dbService: DbService,
-              private events: Events,
-              private camera: Camera,
-              private media: Media,
-              private fileService: FileService) {
+  constructor(downloadService: DownloadService,
+              uploadService: UploadService,
+              globalService: GlobalService,
+              dbService: DbService,
+              mediaService: MediaService,
+              events: Events) {
+    super(downloadService, uploadService, globalService, dbService, mediaService, events);
   }
 
   /**
@@ -60,8 +47,7 @@ export class DataService {
    * @returns {Promise<boolean>}
    */
   public init(): Promise<boolean> {
-    this.isDownloadTaskAndDetailFinished = true;
-    this.subscribeEvent();
+    super.init();
     return this.dbService.init();
   }
 
@@ -69,25 +55,33 @@ export class DataService {
    * 销毁
    */
   public destroy(): void {
-    this.events.unsubscribe(this.downloadTaskEvent);
-    this.events.unsubscribe(this.downloadTaskDetailEvent);
-    this.events.unsubscribe(this.uploadHistoryEvent);
-    this.events.unsubscribe(this.uploadMediaEvent);
+    super.destroy();
     this.dbService.destroy();
   }
 
   /**
    * 下载所有任务和详情
-   * @returns {boolean}
    */
-  public downloadTasksAndDetails(): boolean {
-    if (this.isDownloadTaskAndDetailFinished) {
-      this.isDownloadTaskAndDetailFinished = false;
-      this.events.publish(this.downloadTaskEvent, this.globalService.taskSinceDefault,
-        this.globalService.taskCountDefault100);
-    }
+  public downloadTasksAndDetails(): void {
+    super.sendMsg({msgType: MsgType.DownloadTasksAndDetails});
+  }
 
-    return this.isDownloadTaskAndDetailFinished;
+  /**
+   * 上传历史工单和多媒体信息
+   */
+  public uploadHistoriesAndMedias(): void {
+    super.sendMsg({msgType: MsgType.UploadHistoriesAndMedias});
+  }
+
+  /**
+   * 上传一条任务的多媒体信息
+   * @param taskId
+   */
+  public uploadMediasOfOneTask(taskId: string): void {
+    super.sendMsg({
+      msgType: MsgType.UploadMediasOfHistory,
+      taskId
+    });
   }
 
   /**
@@ -158,276 +152,6 @@ export class DataService {
    */
   public getDispatchedTasks(since: number, count: number, minutes: number): Promise<Array<SearchTask>> {
     return this.downloadService.getDispatchedTasks(this.globalService.userId, since, count, minutes);
-  }
-
-  /**
-   * 接收
-   * @param acceptInfo
-   * @param task
-   * @returns {Promise<boolean>}
-   */
-  public accept(acceptInfo: AcceptInfo, task: Task): Promise<boolean> {
-    if (this.globalService.isChrome) {
-      return this.uploadService.accept(acceptInfo);
-    } else {
-      return this.dbService.getHistories(acceptInfo.userId, acceptInfo.taskId)
-        .then(histories => {
-          if (this.isExistingNotUploadedHistory(histories)) { // only save to local db
-            return this.dbService.saveHistory({
-              userId: acceptInfo.userId,
-              taskId: acceptInfo.taskId,
-              state: TaskState.Accept,
-              task,
-              reply: acceptInfo,
-              uploadedFlag: this.globalService.uploadedFlagForLocal
-            }).then(result => this.dbService.saveTask(task));
-          } else { // send to the server and save to local db
-            return this.uploadService.accept(acceptInfo)
-              .catch(error => console.error(error))
-              .then(result => this.dbService.saveHistory({
-                userId: acceptInfo.userId,
-                taskId: acceptInfo.taskId,
-                state: TaskState.Accept,
-                task,
-                reply: acceptInfo,
-                uploadedFlag: result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal
-              }))
-              .then(result => this.dbService.saveTask(task));
-          }
-        });
-    }
-  }
-
-  /**
-   * 出发
-   * @param goInfo
-   * @param task
-   * @returns {Promise<boolean>}
-   */
-  public go(goInfo: GoInfo, task: Task): Promise<boolean> {
-    if (this.globalService.isChrome) {
-      return this.uploadService.go(goInfo);
-    } else {
-      return this.dbService.getHistories(goInfo.userId, goInfo.taskId)
-        .then(histories => {
-          if (this.isExistingNotUploadedHistory(histories)) { // only save to local db
-            return this.dbService.saveHistory({
-              userId: goInfo.userId,
-              taskId: goInfo.taskId,
-              state: TaskState.Go,
-              task,
-              reply: goInfo,
-              uploadedFlag: this.globalService.uploadedFlagForLocal
-            }).then(result => this.dbService.saveTask(task));
-          } else { // send to the server and save to local db
-            return this.uploadService.go(goInfo)
-              .catch(error => console.error(error))
-              .then((result) => this.dbService.saveHistory({
-                userId: goInfo.userId,
-                taskId: goInfo.taskId,
-                state: TaskState.Go,
-                task,
-                reply: goInfo,
-                uploadedFlag: result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal
-              }))
-              .then(result => this.dbService.saveTask(task));
-          }
-        });
-    }
-  }
-
-  /**
-   * 到场
-   * @param arriveInfo
-   * @param task
-   * @returns {Promise<boolean>}
-   */
-  public arrive(arriveInfo: ArriveInfo, task: Task): Promise<boolean> {
-    if (this.globalService.isChrome) {
-      return this.uploadService.arrive(arriveInfo);
-    } else {
-      return this.dbService.getHistories(arriveInfo.userId, arriveInfo.taskId)
-        .then(histories => {
-          if (this.isExistingNotUploadedHistory(histories)) { // only save to local db
-            return this.dbService.saveHistory({
-              userId: arriveInfo.userId,
-              taskId: arriveInfo.taskId,
-              state: TaskState.Arrived,
-              task,
-              reply: arriveInfo,
-              uploadedFlag: this.globalService.uploadedFlagForLocal
-            }).then(result => this.dbService.saveTask(task));
-          } else { // send to the server and save to local db
-            return this.uploadService.arrive(arriveInfo)
-              .catch(error => console.error(error))
-              .then((result) => this.dbService.saveHistory({
-                userId: arriveInfo.userId,
-                taskId: arriveInfo.taskId,
-                state: TaskState.Arrived,
-                task,
-                reply: arriveInfo,
-                uploadedFlag: result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal
-              }))
-              .then(result => this.dbService.saveTask(task));
-          }
-        });
-    }
-  }
-
-  /**
-   * 回复
-   * @param replyInfo
-   * @param task
-   * @param taskDetail
-   * @param mediaNames
-   * @returns {any}
-   */
-  public reply(replyInfo: ReplyInfo, task: Task, taskDetail: TaskDetail, mediaNames: Array<string>): Promise<boolean> {
-    if (this.globalService.isChrome) {
-      return this.uploadService.reply(replyInfo);
-    } else {
-      return this.dbService.getHistories(replyInfo.userId, replyInfo.taskId)
-        .then(histories => {
-          if (this.isExistingNotUploadedHistory(histories)) { // only save to local db
-            return this.dbService.saveHistory({
-              userId: replyInfo.userId,
-              taskId: replyInfo.taskId,
-              state: TaskState.Reply,
-              task,
-              reply: replyInfo,
-              uploadedFlag: this.globalService.uploadedFlagForLocal
-            }).then(result => this.dbService.saveTask(task));
-          } else { // send to the server and save to local db
-            return this.uploadService.reply(replyInfo)
-              .catch(error => console.error(error))
-              .then((result) => this.dbService.saveHistory({
-                userId: replyInfo.userId,
-                taskId: replyInfo.taskId,
-                state: TaskState.Reply,
-                task,
-                reply: replyInfo,
-                uploadedFlag: result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal,
-                taskDetail,
-                mediaNames
-              }))
-              .then(result => this.dbService.saveTask(task));
-          }
-        });
-    }
-  }
-
-  /**
-   * 退单
-   * @param rejectInfo
-   * @param task
-   * @returns {Promise<boolean>}
-   */
-  public reject(rejectInfo: RejectInfo, task: Task) {
-    if (this.globalService.isChrome) {
-      return this.uploadService.reject(rejectInfo);
-    } else {
-      return this.dbService.getHistories(rejectInfo.userId, rejectInfo.taskId)
-        .then(histories => {
-          if (this.isExistingNotUploadedHistory(histories)) { // only save to local db
-            return this.dbService.saveHistory({
-              userId: rejectInfo.userId,
-              taskId: rejectInfo.taskId,
-              state: TaskState.Reject,
-              task,
-              reply: rejectInfo,
-              uploadedFlag: this.globalService.uploadedFlagForLocal
-            }).then(result => this.dbService.saveTask(task));
-          } else { // send to the server and save to local db
-            return this.uploadService.reject(rejectInfo)
-              .catch(error => console.error(error))
-              .then((result) => this.dbService.saveHistory({
-                userId: rejectInfo.userId,
-                taskId: rejectInfo.taskId,
-                state: TaskState.Reject,
-                task,
-                reply: rejectInfo,
-                uploadedFlag: result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal
-              }))
-              .then(result => this.dbService.saveTask(task));
-          }
-        });
-    }
-  }
-
-  /**
-   * 延期
-   * @param delayInfo
-   * @param task
-   * @returns {Promise<boolean>}
-   */
-  public delay(delayInfo: DelayInfo, task: Task): Promise<boolean> {
-    if (this.globalService.isChrome) {
-      return this.uploadService.delay(delayInfo);
-    } else {
-      return this.dbService.getHistories(delayInfo.userId, delayInfo.taskId)
-        .then(histories => {
-          if (this.isExistingNotUploadedHistory(histories)) { // only save to local db
-            return this.dbService.saveHistory({
-              userId: delayInfo.userId,
-              taskId: delayInfo.taskId,
-              state: TaskState.Delay,
-              task,
-              reply: delayInfo,
-              uploadedFlag: this.globalService.uploadedFlagForLocal
-            }).then(result => this.dbService.saveTask(task));
-          } else { // send to the server and save to local db
-            return this.uploadService.delay(delayInfo)
-              .catch(error => console.error(error))
-              .then((result) => this.dbService.saveHistory({
-                userId: delayInfo.userId,
-                taskId: delayInfo.taskId,
-                state: TaskState.Delay,
-                task,
-                reply: delayInfo,
-                uploadedFlag: result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal
-              }))
-              .then(result => this.dbService.saveTask(task));
-          }
-        });
-    }
-  }
-
-  /**
-   *
-   * @param cancelInfo
-   * @param task
-   * @returns {any}
-   */
-  public cancel(cancelInfo: CancelInfo, task: Task): Promise<boolean> {
-    if (this.globalService.isChrome) {
-      return this.uploadService.cancel(cancelInfo);
-    } else {
-      return this.dbService.getHistories(cancelInfo.userId, cancelInfo.taskId)
-        .then(histories => {
-          if (this.isExistingNotUploadedHistory(histories)) { // only save to local db
-            return this.dbService.saveHistory({
-              userId: cancelInfo.userId,
-              taskId: cancelInfo.taskId,
-              state: TaskState.Cancel,
-              task,
-              reply: cancelInfo,
-              uploadedFlag: this.globalService.uploadedFlagForLocal
-            }).then(result => this.dbService.saveTask(task));
-          } else { // send to the server and save to local db
-            return this.uploadService.cancel(cancelInfo)
-              .catch(error => console.error(error))
-              .then((result) => this.dbService.saveHistory({
-                userId: cancelInfo.userId,
-                taskId: cancelInfo.taskId,
-                state: TaskState.Cancel,
-                task,
-                reply: cancelInfo,
-                uploadedFlag: result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal
-              }))
-              .then(result => this.dbService.saveTask(task));
-          }
-        });
-    }
   }
 
   /**
@@ -693,80 +417,49 @@ export class DataService {
   }
 
   /**
-   *
+   * 拍照
    * @param taskId
-   * @returns {Promise<TResult>}
+   * @returns {Promise<any>}
    */
   public takePicture(taskId: string): Promise<any> {
-    const options: CameraOptions = {
-      quality: 50,
-      destinationType: this.camera.DestinationType.FILE_URI,
-      encodingType: this.camera.EncodingType.JPEG,
-      mediaType: this.camera.MediaType.PICTURE
-    };
-
-    return this.camera.getPicture(options)
-      .then((imageUri) => {
-        // imageData is either a base64 encoded string or a file URI
-        // If it's base64:
-        //let base64Image = 'data:image/jpeg;base64,' + imageData;
-        console.log(imageUri);
-        //const startName: string = 'file://';
-        let path: string = imageUri.toString();
-        // if (path.indexOf(startName) === 0 && startName.length < path.length) {
-        //   path = path.substring(startName.length);
-        // }
-        return Promise.resolve(path);
-      }, (err) => {
-        // Handle error
-        console.error(err);
-        return Promise.reject(err);
-      })
-      .then(path => this.fileService.movePicture(path))
-      .then(fileName => this.dbService.saveMedia({
-        userId: this.globalService.userId,
-        taskId,
-        fileType: MediaType.Picture,
-        fileName,
-        uploadedFlag: this.globalService.uploadedFlagForLocal
-      })
-        .then(result => result
-          ? Promise.resolve({filePath: `${this.fileService.getImagesDir()}/${fileName}`, fileName})
-          : Promise.reject('failure to save the db')));
+    return this.mediaService.takePicture(taskId);
   }
 
   /**
-   *
-   * @param taskId
-   * @returns {Promise<T>}
+   * 开始录音
+   * @returns {Promise<any>}
    */
-  public recordAudio(taskId: string): Promise<any> {
-    const error: string = 'failure to record audio';
-    return new Promise((resolve, reject) => {
-      let file: MediaObject;
-      try {
-        // Create a Media instance.  Expects path to file or url as argument
-        // We can optionally pass a second argument to track the status of the media
-        let name: string = `${this.fileService.getSoundsDir()}/${new Date().getTime()}.mp3`;
-        file = this.media.create(name);
-        if (!file) {
-          return reject(error);
-        }
+  public startRecordAudio(): Promise<any> {
+    return this.mediaService.startRecordAudio();
+  }
 
-        file.startRecord();
+  /**
+   * 结束录音
+   * @param file
+   * @returns {Promise<boolean>}
+   */
+  public endRecordAudio(file: any): Promise<boolean> {
+    return this.mediaService.endRecordAudio(file);
+  }
 
-        setTimeout(function () {
-          file.stopRecord();
-          file.release();
-        }, 10000);
-      }
-      catch (err) {
-        console.error(err);
-        if (file) {
-          file.release();
-        }
-      }
-    });
+  /**
+   * 保存录音到数据库
+   * @param taskId
+   * @param fileName
+   * @returns {Promise<boolean>}
+   */
+  public saveAudio(taskId: string, fileName: string): Promise<boolean> {
+    if (taskId && fileName) {
+      return this.dbService.saveMedia({
+        userId: this.globalService.userId,
+        taskId,
+        fileType: MediaType.Audio,
+        fileName,
+        uploadedFlag: this.globalService.uploadedFlagForLocal
+      });
+    } else {
+      return Promise.reject('taskId or fileName is error');
+    }
   }
 
   /**
@@ -805,81 +498,5 @@ export class DataService {
     let newWords: Array<Word> = [];
     find(words, newWords, rootWord);
     return newWords;
-  }
-
-  /**
-   * 订阅事件
-   */
-  private subscribeEvent() {
-    // download all tasks
-    this.events.subscribe(this.downloadTaskEvent, (since: number, count: number) => {
-      if (this.globalService.isChrome) {
-        this.isDownloadTaskAndDetailFinished = true;
-        this.events.publish(this.globalService.myWorkDownloadFinishEvent);
-      } else {
-        this.downloadService.getTasks(this.globalService.userId, since, count)
-          .then(tasks => this.dbService.saveTasks(this.globalService.userId, tasks))
-          .then(result => {
-            this.events.publish(this.downloadTaskEvent,
-              this.globalService.taskSinceDefault + this.globalService.taskCountDefault100,
-              this.globalService.taskCountDefault100);
-          })
-          .catch(error => {
-            console.error(error);
-            this.dbService.getNoDetailTaskIds(this.globalService.userId)
-              .then(taskIds => {
-                this.events.publish(this.downloadTaskDetailEvent, taskIds);
-              })
-              .catch(error => {
-                console.error(error);
-                this.isDownloadTaskAndDetailFinished = true;
-                this.events.publish(this.globalService.myWorkDownloadFinishEvent);
-              });
-          });
-      }
-    });
-
-    // download task detail
-    this.events.subscribe(this.downloadTaskDetailEvent, (taskIds: Array<string>) => {
-      if (taskIds && taskIds.length > 0) {
-        let taskId: string = taskIds.shift();
-        if (taskId) {
-          this.downloadService.getTaskDetail(taskId)
-            .then(detail => this.dbService.saveTaskDetail(detail))
-            .catch(error => console.error(error))
-            .then((result) => this.events.publish(this.downloadTaskDetailEvent, taskIds));
-          return;
-        }
-      }
-
-      this.isDownloadTaskAndDetailFinished = true;
-      this.events.publish(this.globalService.myWorkDownloadFinishEvent);
-    });
-
-    // upload histories
-    this.events.subscribe(this.uploadHistoryEvent, (taskIds: Array<string>) => {
-
-    });
-
-    // upload media
-    this.events.subscribe(this.uploadMediaEvent, (taskIds: Array<string>) => {
-
-    });
-  }
-
-  /**
-   * 检查是否存在未上传的历史记录
-   * @param histories
-   * @returns {boolean}
-   */
-  private isExistingNotUploadedHistory(histories: Array<History>): boolean {
-    if (histories && histories.length > 0) {
-      for (let history of histories) {
-        if (history.uploadedFlag != this.globalService.uploadedFlagForUploaded) {
-          return true;
-        }
-      }
-    }
-    return false;
   }
 }

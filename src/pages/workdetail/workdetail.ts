@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {NavController, NavParams, AlertController, Events} from 'ionic-angular';
+import {Component, OnInit, OnDestroy} from '@angular/core';
+import {NavController, NavParams, AlertController, Events, PopoverController} from 'ionic-angular';
 import {Task, TaskEx, transform2ProcessEx, transform2Task} from "../../model/Task";
 import {DataService} from "../../providers/DataService";
 import {TaskDetail} from "../../model/TaskDetail";
@@ -7,6 +7,7 @@ import {ReplyInfo} from "../../model/ReplyInfo";
 import {GlobalService} from "../../providers/GlobalService";
 import {Word} from "../../model/Word";
 import {ProcessEx} from "../../model/Process";
+import {PopoverRecordPage} from "../record/PopoverRecordPage";
 
 interface Detail {
   name: string;
@@ -28,7 +29,7 @@ interface Reply {
   templateUrl: 'workdetail.html'
 })
 
-export class WorkDetailPage implements OnInit {
+export class WorkDetailPage implements OnInit, OnDestroy {
   private readonly tag: string = "[WorkDetailPage]";
   private readonly disableColor: string = '#808080';
   private readonly enableColor: string = '#5d81c1';
@@ -47,8 +48,10 @@ export class WorkDetailPage implements OnInit {
   private readonly optResultDefaultValue: string = '请选择处理结果';
   private readonly optRemarkDefaultValue: string = '备注可为空';
 
-  private readonly picturePlaceHolder: string = 'assets/img/ic_photo_default.png';
+  //private readonly picturePlaceHolder: string = 'assets/img/ic_photo_default.png';
   private readonly pictureMaxCount: number = 3;
+  public readonly audioPlaceHolder: string = 'assets/img/ic_audio_default.png';
+  private readonly audioMaxCount: number = 3;
 
   title: string = '工单处理';
   segmentName: string = "detailInfo";
@@ -84,9 +87,15 @@ export class WorkDetailPage implements OnInit {
   ];
 
   pictures: string[] = [
-    this.picturePlaceHolder,
-    this.picturePlaceHolder,
-    this.picturePlaceHolder
+    '',
+    '',
+    ''
+  ];
+
+  audios: {name: string, time: number}[] = [
+    {name: '', time: 0},
+    {name: '', time: 0},
+    {name: '', time: 0}
   ];
 
   mediaNames: string[] = [];
@@ -102,13 +111,15 @@ export class WorkDetailPage implements OnInit {
   private optSolutions: Array<Word>;
   private optResults: Array<Word>;
   private picCount: number = 0;
+  private audioCount: number = 0;
 
   constructor(public navCtrl: NavController,
               private navParams: NavParams,
               private alertCtrl: AlertController,
               private events: Events,
               private dataService: DataService,
-              private globalService: GlobalService) {
+              private globalService: GlobalService,
+              private popoverCtrl: PopoverController) {
     this.taskEx = navParams.data as TaskEx;
     this.isPreview = this.taskEx.isPreview;
   }
@@ -145,6 +156,15 @@ export class WorkDetailPage implements OnInit {
       taskId: this.taskEx.id,
       userId: this.globalService.userId
     };
+
+    this.subscribeEvent(this.events);
+  }
+
+  /**
+   * 销毁
+   */
+  ngOnDestroy(): void {
+    this.events.unsubscribe(this.globalService.recordAudioFinishEvent);
   }
 
   /**
@@ -178,6 +198,7 @@ export class WorkDetailPage implements OnInit {
     this.dataService.reply(this.replyInfo, task, this.taskDetail, this.mediaNames)
       .then(date => {
         console.log("success");
+        this.dataService.uploadMediasOfOneTask(task.taskId);
         this.events.publish(this.globalService.myWorkUpdateEvent, {
           type: 'reply',
           taskEx: this.taskEx,
@@ -272,7 +293,22 @@ export class WorkDetailPage implements OnInit {
    * @param ev
    */
   onRecordAudio(ev: any): void {
+    console.log(this.tag, 'onRecordAudio');
 
+    if (this.globalService.isChrome) {
+      return;
+    }
+
+    if (this.audioCount >= this.audioMaxCount) {
+      return this.globalService.showToast('录音已满');
+    }
+
+    this.popoverCtrl.create(PopoverRecordPage, {
+      taskId: this.taskEx.id
+    }, {
+      showBackdrop: true,
+      enableBackdropDismiss: false
+    }).present();
   }
 
   /**
@@ -543,6 +579,17 @@ export class WorkDetailPage implements OnInit {
 
     alert.present().then(() => {
       //this.testRadioOpen = true;
+    });
+  }
+
+  private subscribeEvent(events: Events): void {
+    events.subscribe(this.globalService.recordAudioFinishEvent, (name: string, time: number) => {
+      console.log(name);
+      if (name && time > 0) {
+        this.audios[this.audioCount].name = name;
+        this.audios[this.audioCount++].time = Number.parseInt((time / 1000).toString());
+        this.mediaNames.push(name);
+      }
     });
   }
 }

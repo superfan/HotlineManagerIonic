@@ -19,4 +19,20 @@
     align-items: center;
     //border: 1px solid #e6e9ee;
   }
+
+  .picture {
+    width: 80px;
+    height: 80px;
+  }
+
+  .audio {
+    width: 150px;
+    height: 30px;
+    background: #34D48E;
+    border:1px solid #34D48E;
+    border-radius:10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
