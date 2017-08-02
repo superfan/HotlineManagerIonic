@@ -49,6 +49,16 @@
     <!--材料清单-->
     <ion-list *ngSwitchCase="'materialsList'">
       <ion-card *ngFor="let item of items">
+
+        <ion-item>
+          <ion-label fixed class="label-name">
+            材料类别：
+          </ion-label>
+          <div item-content>
+            {{item.category}}
+          </div>
+        </ion-item>
+
         <ion-item>
           <ion-label fixed class="label-name">
             材料型号：

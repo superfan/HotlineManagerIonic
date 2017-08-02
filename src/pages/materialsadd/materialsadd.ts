@@ -33,6 +33,7 @@ export class MaterialsAddPage implements OnInit {
       {name: '中', value: '中'},
       {name: '小', value: '小'}];
     this.addMaterialsForm = this.formBuilder.group({
+      'materialsCategory': ['', Validators.compose([Validators.required])],
       'materialsType': ['', Validators.compose([Validators.required])],
       'materialsSize': ['', Validators.compose([Validators.required])],
       'materialsProduct': ['', Validators.compose([Validators.required])],
@@ -42,6 +43,7 @@ export class MaterialsAddPage implements OnInit {
     if (this.navParams.get('edit')) {
       let materials = this.navParams.get('edit');
       this.addMaterialsForm.setValue({
+        materialsCategory: materials.category,
         materialsType: materials.type,
         materialsSize: materials.size, materialsProduct: materials.productor,
         materialsUnit: materials.unit, remark: materials.remark
@@ -83,6 +85,7 @@ export class MaterialsAddPage implements OnInit {
           text: '确定',
           handler: () => {
             let materials = new MaterialsInfo();
+            materials.category = materialsInfo['materialsCategory'];
             materials.type = materialsInfo['materialsType'];
             materials.size = materialsInfo['materialsSize'];
             materials.productor = materialsInfo['materialsProduct'];

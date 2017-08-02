@@ -106,8 +106,43 @@ export class MaterialsPage implements OnInit, OnDestroy {
   /**
    * 保存
    */
-  private saveMaterials(){
+  private saveMaterials() {
+    if (this.items.length == 0) {
+      let alert = this.alertCtrl.create({
+        title: '提示',
+        subTitle: '请先添加材料',
+        buttons: ['确认']
+      });
+      alert.present();
+      this.segmentName = 'materialsList';
+      return;
+    }
 
+    let prompt = this.alertCtrl.create({
+      title: '提示',
+      message: "请填写备注信息：",
+      inputs: [
+        {
+          name: '备注',
+          placeholder: '备注'
+        },
+      ],
+      buttons: [
+        {
+          text: '取消',
+          handler: data => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: '保存',
+          handler: data => {
+            console.log('Saved clicked');
+          }
+        }
+      ]
+    });
+    prompt.present();
   }
 }
 

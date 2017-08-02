@@ -175,7 +175,7 @@ export class MainPage implements OnInit, OnDestroy {
 
     this.listItems.push({
       id: ItemId.Materials,
-      src: 'assets/img/ic_news.png',
+      src: 'assets/img/ic_add_materials.png',
       name: '材料登记',
       active: true,
       count: 0
