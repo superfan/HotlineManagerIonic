@@ -252,7 +252,7 @@ export class DbService {
           if (states && states.length > 0) {
             sql += ` AND I_STATE IN (${states.join(',')})`;
           }
-          if (key && key !== '') {
+          if (key) {
             sql += ` AND S_TASKID LIKE '%${key}%'`;
           }
           sql += ` ORDER BY ID LIMIT ${count} OFFSET ${since};`;
@@ -405,7 +405,6 @@ export class DbService {
               } else {
                 sql = this.toHistoryInsertSql(history);
               }
-
               return db.executeSql(sql, {});
             });
         });
@@ -416,11 +415,15 @@ export class DbService {
    * 获取历史记录
    * @param userId
    * @param taskId
-   * @param state
+   * @param states
    * @param uploadedFlags
+   * @param key
+   * @param since
+   * @param count
    * @returns {any}
    */
-  public getHistories(userId: number, taskId?: string, state?: number, uploadedFlags?: Array<number>): Promise<Array<History>> {
+  public getHistories(userId: number, taskId?: string, states?: Array<number>, uploadedFlags?: Array<number>,
+                      key?: string, since?: number, count?: number): Promise<Array<History>> {
     if (this.globalService.isChrome) {
       return Promise.reject(this.paramError);
     } else {
@@ -431,15 +434,23 @@ export class DbService {
             sql += ` AND S_TASKID = '${taskId}'`;
           }
 
-          if (state != undefined && state != null) {
-            sql += ` AND I_STATE = ${state}`;
+          if (states && states.length > 0) {
+            sql += ` AND I_STATE IN (${states.join(',')})`;
           }
 
           if (uploadedFlags && uploadedFlags.length > 0) {
             sql += ` AND I_UPLOADEDFLAG IN (${uploadedFlags.join(',')})`;
           }
-          sql += ' ORDER BY ID;';
 
+          if (key) {
+            sql += ` AND S_TASKID LIKE '%${key}%'`;
+          }
+
+          if (since !== undefined && since !== null && count !== undefined && count !== null) {
+            sql += ` ORDER BY ID LIMIT ${count} OFFSET ${since};`;
+          } else {
+            sql += ' ORDER BY ID;';
+          }
           return db.executeSql(sql, {});
         })
         .then(data => {
@@ -897,7 +908,6 @@ export class DbService {
           mediaNames = historyExtendedInfo.mediaNames.split(',');
         }
       }
-
       return {
         userId: localHistory.I_USERID,
         taskId: localHistory.S_TASKID,

@@ -21,6 +21,7 @@ import {MediaService} from "./MediaService";
 import {MediaType} from "../model/Media";
 import {SyncService, MsgType} from "./SyncService";
 import {Events} from "ionic-angular";
+import {History} from "../model/History";
 
 @Injectable()
 export class DataService extends SyncService {
@@ -130,6 +131,22 @@ export class DataService extends SyncService {
               .then(detail => this.dbService.saveTaskDetail(detail))
               .then(result => this.dbService.getTaskDetail(taskId));
         });
+    }
+  }
+
+  /**
+   * 历史工单获取记录
+   * @param since
+   * @param count
+   * @param key
+   * @returns {any}
+   */
+  public getHistories(since: number, count: number, key: string): Promise<Array<History>> {
+    if (this.globalService.isChrome) {
+      return Promise.reject('chrome');
+    } else {
+      return this.dbService.getHistories(this.globalService.userId, undefined,
+        [TaskState.Reject, TaskState.Cancel], [], key, since, count);
     }
   }
 

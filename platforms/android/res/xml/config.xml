@@ -63,6 +63,9 @@
         <param name="android-package" value="io.ionic.keyboard.IonicKeyboard" />
         <param name="onload" value="true" />
     </feature>
+    <feature name="BaiduMapLocation">
+        <param name="android-package" value="com.aruistar.cordova.baidumap.BaiduMapLocation" />
+    </feature>
     <feature name="Zip">
         <param name="android-package" value="org.apache.cordova.Zip" />
     </feature>
@@ -108,4 +111,5 @@
     <preference name="SplashShowOnlyFirstTime" value="false" />
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashScreenDelay" value="3000" />
+    <preference name="loadUrlTimeoutValue" value="70000" />
 </widget>

@@ -212,7 +212,6 @@ export class MyWorkPage implements OnInit, OnDestroy {
     return this.dataService.getTasks(since, count, key)
       .then(tasks => {
         console.log(this.tag + "getTasks: " + tasks.length);
-
         if (tasks.length <= 0) {
           return Promise.resolve(false)
         } else {
@@ -334,7 +333,6 @@ export class MyWorkPage implements OnInit, OnDestroy {
           default:
             break;
         }
-
         result = true;
       }
 
@@ -969,7 +967,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
   private resetTasks(fromWhere: FromWhere): void {
     this.isOperationBusy = true;
     this.since = this.globalService.taskSinceDefault;
-    while (this.items.shift());
+    while (this.items.shift()) ;
     this.showFab = false;
     this.getTasks(this.since, this.count, this.key)
       .then(data => this.infiniteScroll.enable(data))

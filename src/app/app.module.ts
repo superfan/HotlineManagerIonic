@@ -14,7 +14,7 @@ import {NewsPage} from "../pages/news/news";
 import {WorkDetailPage} from "../pages/workdetail/workdetail";
 import {StationWorkPage} from "../pages/stationwork/stationwork";
 import {WorkInfoPage} from "../pages/workinfo/workinfo";
-
+import {MyHistory} from '../pages/history/myhistory';
 
 import {File} from "@ionic-native/file";
 import {FileService} from "../providers/FileService";
@@ -51,6 +51,8 @@ import {Media} from "@ionic-native/media";
 import {MediaService} from "../providers/MediaService";
 import {PopoverRecordPage} from "../pages/record/PopoverRecordPage";
 import {FileTransfer} from '@ionic-native/file-transfer';
+import {MapPage} from "../pages/map/map";
+
 
 @NgModule({
   declarations: [
@@ -68,6 +70,9 @@ import {FileTransfer} from '@ionic-native/file-transfer';
     SearchPage,
     SearchResultPage,
     SearchDetailsPage,
+    ValueValidPipe,
+    MyHistory,
+    MapPage,
     SettingPage,
     ValueValidPipe,
     PopoverRecordPage
@@ -95,7 +100,9 @@ import {FileTransfer} from '@ionic-native/file-transfer';
     SearchResultPage,
     SearchDetailsPage,
     SettingPage,
-    PopoverRecordPage
+    PopoverRecordPage,
+    MyHistory,
+    MapPage
   ],
   providers: [
     StatusBar,

@@ -447,6 +447,14 @@ module.exports = [
         "clobbers": [
             "cordova.plugins.sqlitePorter"
         ]
+    },
+    {
+        "id": "cordova-plugin-baidumaplocation.baidumap_location",
+        "file": "plugins/cordova-plugin-baidumaplocation/www/baidumap_location.js",
+        "pluginId": "cordova-plugin-baidumaplocation",
+        "clobbers": [
+            "baidumap_location"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -474,7 +482,8 @@ module.exports.metadata =
     "cordova-plugin-zip": "3.1.0",
     "cordova-sqlite-storage": "2.0.4",
     "ionic-plugin-keyboard": "2.2.1",
-    "uk.co.workingedge.cordova.plugin.sqliteporter": "0.1.5"
+    "uk.co.workingedge.cordova.plugin.sqliteporter": "0.1.5",
+    "cordova-plugin-baidumaplocation": "3.0.1"
 };
 // BOTTOM OF METADATA
 });

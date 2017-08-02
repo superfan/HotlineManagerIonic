@@ -568,7 +568,7 @@ export abstract class SyncService {
       this.next();
       this.events.publish(this.globalService.historyUploadFinishEvent);
     } else {
-      this.dbService.getHistories(this.globalService.userId, taskId, TaskState.Reply, [])
+      this.dbService.getHistories(this.globalService.userId, taskId, [TaskState.Reply], [])
         .catch(error => console.error(error))
         .then(histories => this.events.publish(this.uploadMediaEvent, msgType, histories));
     }

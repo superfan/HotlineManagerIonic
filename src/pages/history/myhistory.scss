@@ -1,0 +1,49 @@
+.page-myhistory {
+  .card-header-label-hint {
+    display: inline;
+    color: #5d81c1;
+    //font-family: "Microsoft YaHei", "微软雅黑";
+  }
+  .card-header-label-content {
+    display: inline;
+    color: black;
+    //font-family: "Microsoft YaHei", "微软雅黑";
+  }
+
+  ion-grid {
+    border: 1px #e6e9ee;
+  }
+
+  .gray-text{
+    color: gray;
+  }
+
+  .card-content-col-hint {
+    color: #5d81c1;
+    //font-family: "Microsoft YaHei", "微软雅黑";
+  }
+
+  .card-content-col-content {
+    color: black;
+  }
+
+  //ion-item-divider {
+  //  height: 1px;
+  //  min-height: 1px;
+  //}
+
+  .card-bottom-btn {
+    //background-color: #f0f5ff;
+    //border: 1px solid #e6e9ee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  ion-card img {
+
+  }
+  .col-content {
+    display: flex;
+    align-items: center;
+  }
+}
