@@ -14,6 +14,7 @@ export class NewsPage implements OnInit {
   private readonly tag: string = "[NewsPage]";
   title: string = '系统公告';
   items: any[] = [];
+  isShow: boolean;
 
   constructor(public navCtrl: NavController,
               public alertCtrl: AlertController,
@@ -34,7 +35,8 @@ export class NewsPage implements OnInit {
           this.transFormNews(news);
           return Promise.resolve(true);
         }
-      });
+      })
+      .then(result => this.isShow = result);
   }
 
   /**

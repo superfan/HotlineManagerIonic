@@ -111,14 +111,14 @@
       </ion-list>
 
       <ion-row>
-        <ion-col>
+        <ion-col class="card-bottom-btn">
           <button ion-button icon-left clear small color="gray">
             <ion-icon name="images"></ion-icon>
             <div>{{item.photoCount}}</div>
           </button>
         </ion-col>
 
-        <ion-col>
+        <ion-col class="card-bottom-btn">
           <button ion-button icon-left clear small color="gray">
             <ion-icon name="musical-notes"></ion-icon>
             <div>{{item.audioCount}}</div>
@@ -132,14 +132,14 @@
           <!--</button>-->
         <!--</ion-col>-->
 
-        <ion-col>
-          <button ion-button icon-left clear small>
+        <ion-col class="card-bottom-btn" *ngIf="item.isLocationValid">
+          <button ion-button icon-left clear small (click)="onLocate(item)">
             <ion-icon name="map"></ion-icon>
             <div>地图</div>
           </button>
         </ion-col>
 
-        <ion-col>
+        <ion-col class="card-bottom-btn">
           <button ion-button icon-left clear small (click)="onPreview(item)">
             <ion-icon name="information-circle"></ion-icon>
             <div>预览</div>

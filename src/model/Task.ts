@@ -47,6 +47,7 @@ export class TaskEx {
   audioCount: number;
   videoCount: number;
   isPreview: boolean;
+  isLocationValid: boolean;
   extendedInfo?: string;
 
   constructor(task: Task) {
@@ -56,8 +57,8 @@ export class TaskEx {
     this.describe = task.desc;
     this.location = {
       type: task.location.type,
-      lng: task.location.lng,
-      lat: task.location.lat
+      lng: '121.524808',//task.location.lng,
+      lat: '31.280823'//task.location.lat
     };
     this.source = task.source;
     this.lastProcess = '';
@@ -65,6 +66,7 @@ export class TaskEx {
     this.audioCount = 0;
     this.videoCount = 0;
     this.isPreview = false;
+    this.isLocationValid = TaskEx.checkLocation(this.location);
 
     this.processes = [];
     this.processes.push({
@@ -158,7 +160,7 @@ export class TaskEx {
     });
   }
 
-  static transform(tasks: Array<Task>, taskExs: Array<TaskEx>) {
+  public static transform(tasks: Array<Task>, taskExs: Array<TaskEx>) {
     for (let task of tasks) {
       let taskEx = new TaskEx(task);
       taskExs.push(taskEx);
@@ -167,6 +169,16 @@ export class TaskEx {
 
   private static utc2Date(utc: number): Date {
     return utc > 0 ? new Date(utc) : undefined;
+  }
+
+  private static checkLocation(location: Location): boolean {
+    let lng: number;
+    let lat: number;
+    if (location && location.lng && location.lat) {
+      lng = Number.parseFloat(location.lng);
+      lat = Number.parseFloat(location.lat);
+    }
+    return !!lng && !!lat;
   }
 
   public static convertState(state: number): TaskState {

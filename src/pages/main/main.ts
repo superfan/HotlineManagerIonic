@@ -10,6 +10,7 @@ import {MyHistory} from '../history/myhistory';
 import {GlobalService, MainUpdateEvent} from "../../providers/GlobalService";
 import {ConfigService} from "../../providers/ConfigService";
 import {MapPage} from "../map/map";
+import {MapParam, MapType} from "../../model/MapParam";
 
 enum ItemId {
   MyWork,
@@ -86,7 +87,7 @@ export class MainPage implements OnInit, OnDestroy {
         this.navCtrl.push(MyHistory);
         break;
       case ItemId.Map:
-        this.navCtrl.push(MapPage);
+        this.navCtrl.push(MapPage, new MapParam(MapType.View, undefined, undefined));
         break;
       case ItemId.Search:
         this.navCtrl.push(SearchPage);

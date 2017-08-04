@@ -8,6 +8,8 @@ import {GlobalService} from "../../providers/GlobalService";
 import {Word} from "../../model/Word";
 import {ProcessEx} from "../../model/Process";
 import {PopoverRecordPage} from "../record/PopoverRecordPage";
+import {MapPage} from "../map/map";
+import {MapParam, MapType} from "../../model/MapParam";
 
 interface Detail {
   name: string;
@@ -100,7 +102,8 @@ export class WorkDetailPage implements OnInit, OnDestroy {
 
   mediaNames: string[] = [];
 
-  private isPreview: boolean;
+  isPreview: boolean;
+  isLocationValid: boolean;
   private taskEx: TaskEx;
   private taskDetail: TaskDetail;
   private replyInfo: ReplyInfo;
@@ -122,6 +125,7 @@ export class WorkDetailPage implements OnInit, OnDestroy {
               private popoverCtrl: PopoverController) {
     this.taskEx = navParams.data as TaskEx;
     this.isPreview = this.taskEx.isPreview;
+    this.isLocationValid = this.taskEx.isLocationValid;
   }
 
   /**
@@ -172,7 +176,7 @@ export class WorkDetailPage implements OnInit, OnDestroy {
    * @param ev
    */
   onLocate(ev: any): void {
-
+    this.navCtrl.push(MapPage, new MapParam(MapType.Locate, this.taskEx.location, this.taskEx.id));
   }
 
   /**

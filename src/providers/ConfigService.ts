@@ -430,9 +430,9 @@ export class ConfigService {
    * @param mapConfig
    * @returns {string}
    */
-  private static transform2MapString(mapConfig: MapConfig): string {
-    return JSON.stringify({
-      "map.server.url": mapConfig.mapServerUrl
-    });
-  }
+  // private static transform2MapString(mapConfig: MapConfig): string {
+  //   return JSON.stringify({
+  //     "map.server.url": mapConfig.mapServerUrl
+  //   });
+  // }
 }

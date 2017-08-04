@@ -5,7 +5,7 @@
     </ion-title>
 
     <ion-buttons end>
-      <button ion-button icon-only color="white" (click)="onDeleteAll($event)">
+      <button ion-button icon-only color="white" *ngIf="isShow" (click)="onDeleteAll($event)">
         <ion-icon name="trash"></ion-icon>
       </button>
     </ion-buttons>

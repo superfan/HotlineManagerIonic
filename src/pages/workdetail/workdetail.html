@@ -5,8 +5,8 @@
     </ion-title>
 
     <ion-buttons end *ngIf="!isPreview">
-      <button ion-button icon-only color="white" (click)="onLocate($event)">
-        <ion-icon name="locate"></ion-icon>
+      <button ion-button icon-only color="white" *ngIf="isLocationValid" (click)="onLocate($event)">
+        <ion-icon name="map"></ion-icon>
       </button>
 
       <button ion-button icon-only color="white" (click)="onReply($event)">

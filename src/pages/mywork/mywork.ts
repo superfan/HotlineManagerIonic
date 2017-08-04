@@ -11,6 +11,8 @@ import {ArriveInfo} from "../../model/ArriveInfo";
 import {RejectInfo} from "../../model/RejectInfo";
 import {DelayInfo} from "../../model/DelayInfo";
 import {CancelInfo} from "../../model/CancelInfo";
+import {MapPage} from "../map/map";
+import {MapParam, MapType} from "../../model/MapParam";
 
 enum FromWhere {
   Download,
@@ -85,7 +87,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
     //   this.content.resize();
     // }
     this.key = '';
-    this.dataService.downloadTasksAndDetails()
+    this.dataService.downloadTasksAndDetails();
   }
 
   /**
@@ -190,6 +192,14 @@ export class MyWorkPage implements OnInit, OnDestroy {
    */
   doScroll2Top(ev: any): void {
     this.content.scrollToTop();
+  }
+
+  /**
+   * 定位地图
+   * @param taskEx
+   */
+  onLocate(taskEx: TaskEx): void {
+    this.navCtrl.push(MapPage, new MapParam(MapType.Locate, taskEx.location, taskEx.id));
   }
 
   /**

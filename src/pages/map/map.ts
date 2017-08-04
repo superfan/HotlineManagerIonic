@@ -1,8 +1,20 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
-import {NavController} from "ionic-angular";
+import {Component, ElementRef, ViewChild, OnInit, OnDestroy} from '@angular/core';
+import {NavController, NavParams} from "ionic-angular";
 import {GlobalService} from "../../providers/GlobalService";
+import {MapParam, MapType} from "../../model/MapParam";
 declare var BMap;
 declare var baidumap_location;
+
+enum MapStatus {
+  LOADING,
+  LOADED
+}
+
+interface MapObjct {
+  status: MapStatus,
+  callbacks: Function[]
+}
+
 /**
  * Created by zhangjing on 2017/7/21.
  */
@@ -11,52 +23,98 @@ declare var baidumap_location;
   templateUrl: 'map.html'
 })
 
-export class MapPage {
-  public map: any;
+export class MapPage implements OnInit, OnDestroy {
   @ViewChild('map') mapElement: ElementRef;
-  public isChrome: boolean;
-  public isMark: boolean = true;//是否要采集坐标
+
+  private readonly ZoomMaxLevel: number = 16;
+  private map: any;
+  private mapParam: MapParam;
+  private isInitSuccess: boolean;
+  isMark: boolean;
 
   constructor(public navCtrl: NavController,
+              private navParams: NavParams,
               private globalService: GlobalService) {
-  }
-
-  ionViewDidLoad() {
-    this.loadMap();
-  }
-
-  /**
-   * 加载地图
-   */
-  private loadMap() {
-    let map = this.map = new BMap.Map(this.mapElement.nativeElement, {enableMapClick: true});
-    map.enableScrollWheelZoom();//启动滚轮放大缩小，默认禁用
-    map.enableContinuousZoom();//连续缩放效果，默认禁用
-    let point = new BMap.Point(120.524577, 31.281003);
-    map.centerAndZoom(point, 16);//设置中心和地图显示级别
-    let isChrome = this.isChrome = this.globalService.isChrome;
-    let isMark = this.isMark;
-    if (!isMark) {
-      this.showInfo();
+    if (navParams.data instanceof MapParam) {
+      this.mapParam = navParams.data as MapParam;
     } else {
-      this.markMap(map);
+      this.mapParam = new MapParam(MapType.View, undefined, undefined);
     }
-    map.addEventListener("tilesloaded", function () {
-      map.addControl(new BMap.NavigationControl());
-      map.addControl(new BMap.OverviewMapControl());
-      if (isChrome) {
-        map.addControl(new BMap.GeolocationControl());
-      }
-    });
-    if (!isChrome) {
-      this.getCurrentLocation();
+    this.isMark = false;
+  }
+
+  ngOnInit(): void {
+    //this.loadMap();
+    this.isInitSuccess = false;
+    this.loadJScript(this._init.bind(this));
+  }
+
+  private loadJScript(callback: Function): void {
+    let win: any = (<any>window);
+    let baiduMap: MapObjct = win['baiduMap'];
+    if (baiduMap && baiduMap.status === MapStatus.LOADING) {
+      //baiduMap.callbacks.push(callback);
+      return;
     }
+
+    if (baiduMap && baiduMap.status === MapStatus.LOADED) {
+      return callback();
+    }
+
+    win['baiduMap'] = {status: MapStatus.LOADING, callbacks: []};
+    win['baidumapinit'] = function () {
+      win['baiduMap'].status = MapStatus.LOADED;
+      callback();
+      win['baiduMap'].callbacks.forEach((cb: Function) => cb());
+      win['baiduMap'].callbacks = [];
+    };
+
+    let script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = "http://api.map.baidu.com/api?v=2.0&ak=Gsi66vGBjiuX3dlunDogoQYtHjbolbMi&callback=baidumapinit";
+    script.onerror = function (err) {
+      console.error(err);
+    };
+    document.body.appendChild(script);
+  }
+
+  _init(): void {
+    this.map = new BMap.Map(this.mapElement.nativeElement, {enableMapClick: true});
+    this.map.enableScrollWheelZoom();//启动滚轮放大缩小，默认禁用
+    this.map.enableContinuousZoom();//连续缩放效果，默认禁用
+    switch (this.mapParam.mapType) {
+      case MapType.Locate:
+        this.showInfo();
+        break;
+      case MapType.Mark:
+        this.markMap();
+        break;
+      case MapType.View:
+      default:
+        this.viewMap();
+        break;
+    }
+
+    this.map.addControl(new BMap.NavigationControl());
+    this.map.addControl(new BMap.OverviewMapControl());
+    if (this.globalService.isChrome) {
+      this.map.addControl(new BMap.GeolocationControl());
+    }
+    this.isInitSuccess = true;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy();
   }
 
   /**
    * 定位
    */
-  private getCurrentLocation() {
+  getCurrentLocation(): void {
+    if (this.globalService.isChrome) {
+      return;
+    }
+
     // 进行定位
     console.log("getCurrentLocation");
     let map = this.map;
@@ -65,7 +123,7 @@ export class MapPage {
       let latitude = result.latitude;
       let lontitude = result.longitude;
       let point = new BMap.Point(lontitude, latitude);
-      map.centerAndZoom(point, 16);//设置中心和地图显示级别
+      map.centerAndZoom(point, this.ZoomMaxLevel);//设置中心和地图显示级别
     }, function (error) {
       console.log(error);
     });
@@ -74,7 +132,7 @@ export class MapPage {
   /**
    * 确定坐标
    */
-  private markLocation() {
+  markLocation(): void {
     let center = this.map.getCenter();
     alert("选定坐标:" + center.lat + "," + center.lng);
   }
@@ -82,28 +140,58 @@ export class MapPage {
   /**
    * 展示弹框信息
    */
-  private showInfo() {
-    let point = new BMap.Point(121.524577, 31.281003);
-    let infoWindow = new BMap.InfoWindow("控江路1555号上海信息技术大厦");
-    infoWindow.disableCloseOnClick();//关闭点击地图关闭信息窗口
-    this.map.openInfoWindow(infoWindow, point);
-    this.map.centerAndZoom(point, 16);//设置中心和地图显示级别
+  private showInfo(): void {
+    let point = new BMap.Point(this.mapParam.lng, this.mapParam.lat);
+    if (!this.mapParam.content) {
+      let marker = new BMap.Marker(point);  // 创建标注
+      this.map.addOverlay(marker);         // 将标注添加到地图中
+    }
+    this.map.centerAndZoom(point, this.ZoomMaxLevel);//设置中心和地图显示级别
+    if (this.mapParam.content) {
+      let opts = {
+        width: 100,     // 信息窗口宽度
+        height: 50,     // 信息窗口高度
+        title: "任务编号",  // 信息窗口标题
+        //enableAutoPan: false,
+        enableCloseOnClick: false //关闭点击地图关闭信息窗口
+      };
+      let infoWindow = new BMap.InfoWindow(this.mapParam.content, opts);
+      this.map.openInfoWindow(infoWindow, point);
+    }
   }
 
   /**
    * 采集坐标
    */
-  private markMap(map: any) {
+  private markMap(): void {
     let myIcon = new BMap.Icon("assets/img/ic_map_center_location.png", new BMap.Size(23, 25));
     this.map.addEventListener("dragend", function (e) {
-      map.clearOverlays();
-      let center = map.getCenter();
+      this.map.clearOverlays();
+      let center = this.map.getCenter();
       let marker = new BMap.Marker(center, {icon: myIcon});
-      map.addOverlay(marker);
+      this.map.addOverlay(marker);
       marker.enableDragging();
       marker.addEventListener("dragend", function (e) {
-        map.centerAndZoom(e.point, 16);
+        this.map.centerAndZoom(e.point, this.ZoomMaxLevel);
       })
     });
+    this.isMark = true;
+  }
+
+  /**
+   * 浏览地图
+   */
+  private viewMap(): void {
+    let point = new BMap.Point(this.mapParam.lng, this.mapParam.lat);
+    this.map.centerAndZoom(point, this.ZoomMaxLevel);//设置中心和地图显示级别
+  }
+
+  private destroy() {
+    if (this.isInitSuccess) {
+      if (this.mapParam.mapType === MapType.Locate) {
+        this.map.closeInfoWindow();
+        this.map.clearOverlays();
+      }
+    }
   }
 }
