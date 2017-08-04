@@ -16,7 +16,6 @@ import {StationWorkPage} from "../pages/stationwork/stationwork";
 import {WorkInfoPage} from "../pages/workinfo/workinfo";
 import {MyHistory} from '../pages/history/myhistory';
 
-
 import {File} from "@ionic-native/file";
 import {FileService} from "../providers/FileService";
 import {Transfer} from "@ionic-native/transfer";
@@ -49,9 +48,13 @@ import {ValueValidPipe} from "../pipes/ValueValidPipe";
 import {Camera} from "@ionic-native/camera";
 import {AndroidPermissions} from "@ionic-native/android-permissions";
 import {Media} from "@ionic-native/media";
+import {MediaService} from "../providers/MediaService";
+import {PopoverRecordPage} from "../pages/record/PopoverRecordPage";
+import {FileTransfer} from '@ionic-native/file-transfer';
 import {MapPage} from "../pages/map/map";
 import {MaterialsPage} from "../pages/materials/materials";
 import {MaterialsAddPage} from "../pages/materialsadd/materialsadd";
+
 
 @NgModule({
   declarations: [
@@ -73,9 +76,11 @@ import {MaterialsAddPage} from "../pages/materialsadd/materialsadd";
     MyHistory,
     MapPage,
     SettingPage,
+    ValueValidPipe,
     MaterialsPage,
     MaterialsAddPage,
-    ValueValidPipe
+    ValueValidPipe,
+    PopoverRecordPage
   ],
   imports: [
     BrowserModule,
@@ -100,8 +105,7 @@ import {MaterialsAddPage} from "../pages/materialsadd/materialsadd";
     SearchResultPage,
     SearchDetailsPage,
     SettingPage,
-    MapPage,
-     MyHistory,
+    PopoverRecordPage,    MapPage,
     MaterialsPage,
     MaterialsAddPage
   ],
@@ -132,6 +136,8 @@ import {MaterialsAddPage} from "../pages/materialsadd/materialsadd";
     Camera,
     AndroidPermissions,
     Media,
+    MediaService,
+    FileTransfer,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     {provide: Http, useFactory: httpFactory, deps: [HttpInterceptorBackend, RequestOptions]},
   ]

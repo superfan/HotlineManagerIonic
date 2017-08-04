@@ -49597,6 +49597,28 @@ page-welcome .welcome-info {
   align-items: center;
 }
 
+.page-workdetail .picture {
+  width: 80px;
+  height: 80px;
+}
+
+.page-workdetail .audio {
+  width: 150px;
+  height: 30px;
+  background: #34D48E;
+  border: 1px solid #34D48E;
+  border-radius: 10px;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
 .page-workinfo .label-name {
   color: #5d81c1;
 }

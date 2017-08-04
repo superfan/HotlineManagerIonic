@@ -4,7 +4,7 @@ import {SQLitePorter} from '@ionic-native/sqlite-porter';
 import {GlobalService} from "./GlobalService";
 import {FileService} from "./FileService";
 import {Word} from "../model/Word";
-import {Task, TaskState} from "../model/Task";
+import {Task} from "../model/Task";
 import {TaskDetail} from "../model/TaskDetail";
 import {History} from "../model/History";
 import {Media} from "../model/Media";
@@ -65,10 +65,22 @@ interface HistoryExtendedInfo {
   mediaNames?: string;
 }
 
+interface LocalMedia {
+  ID: number;
+  I_USERID: number;
+  S_TASKID: string;
+  I_FILETYPE: number;
+  S_FILENAME: string;
+  I_UPLOADEDFLAG: number;
+  S_FILEID: string;
+  S_EXTENDEDINFO: string;
+}
+
 @Injectable()
 export class DbService {
   private readonly dbName: string = 'main.db';
   //private readonly dbVersion: string = '1.0';
+  private readonly paramError: string = 'param is error';
   private dbPath: string;
 
   constructor(private sqlite: SQLite,
@@ -109,7 +121,7 @@ export class DbService {
    * @returns {any}
    */
   public saveWords(words: Array<Word>): Promise<boolean> {
-    if (this.globalService.isChrome || words.length <= 0) {
+    if (this.globalService.isChrome || !words || words.length <= 0) {
       return Promise.resolve(false);
     } else {
       return this.openDb()
@@ -124,17 +136,18 @@ export class DbService {
   }
 
   /**
-   *
+   * 获取词语
    * @param group
    * @returns {any}
    */
   public getWords(group: string): Promise<Array<Word>> {
-    if (this.globalService.isChrome) {
-      return Promise.reject('chrome');
+    if (this.globalService.isChrome || !group) {
+      return Promise.reject(this.paramError);
     } else {
       return this.openDb()
         .then(db => {
-          return db.executeSql(`SELECT * FROM GD_WORDS WHERE S_WGROUP = '${group}';`, {})
+          let sql: string = `SELECT * FROM GD_WORDS WHERE S_WGROUP = '${group}';`;
+          return db.executeSql(sql, {})
             .then(data => {
               let rows: any = data.rows;
               let words: Array<Word> = [];
@@ -160,12 +173,13 @@ export class DbService {
    * @returns {any}
    */
   public saveTasks(userId: number, serverTasks: Array<Task>): Promise<any> {
-    if (this.globalService.isChrome || serverTasks.length <= 0) {
-      return Promise.reject('chrome');
+    if (this.globalService.isChrome || !serverTasks || serverTasks.length <= 0) {
+      return Promise.reject(this.paramError);
     } else {
       return this.openDb()
         .then(db => {
-          return db.executeSql(`SELECT * FROM GD_TASKS WHERE I_USERID = ${userId};`, {})
+          let sql: string = `SELECT * FROM GD_TASKS WHERE I_USERID = ${userId};`;
+          return db.executeSql(sql, {})
             .then(data => {
               let rows: any = data.rows;
               let sql: string = '';
@@ -203,13 +217,13 @@ export class DbService {
   }
 
   /**
-   * 更新任务
+   * 保存任务
    * @param task
    * @returns {any}
    */
   public saveTask(task: Task): Promise<any> {
-    if (this.globalService.isChrome) {
-      return Promise.reject('chrome');
+    if (this.globalService.isChrome || !task) {
+      return Promise.reject(this.paramError);
     } else {
       return this.openDb()
         .then(db => {
@@ -230,7 +244,7 @@ export class DbService {
    */
   public getTasks(userId: number, since: number, count: number, states?: Array<number>, key?: string): Promise<Array<Task>> {
     if (this.globalService.isChrome) {
-      return Promise.reject('chrome');
+      return Promise.reject(this.paramError);
     } else {
       return this.openDb()
         .then(db => {
@@ -238,7 +252,7 @@ export class DbService {
           if (states && states.length > 0) {
             sql += ` AND I_STATE IN (${states.join(',')})`;
           }
-          if (key && key !== '') {
+          if (key) {
             sql += ` AND S_TASKID LIKE '%${key}%'`;
           }
           sql += ` ORDER BY ID LIMIT ${count} OFFSET ${since};`;
@@ -268,11 +282,12 @@ export class DbService {
    */
   public getTaskCount(userId: number): Promise<number> {
     if (this.globalService.isChrome) {
-      return Promise.reject('chrome');
+      return Promise.reject(this.paramError);
     } else {
       return this.openDb()
         .then(db => {
-          return db.executeSql(`SELECT COUNT(*) FROM GD_TASKS WHERE I_USERID = ${userId};`, {})
+          let sql: string = `SELECT COUNT(*) FROM GD_TASKS WHERE I_USERID = ${userId};`;
+          return db.executeSql(sql, {})
             .then(data => {
               return Promise.resolve(data);
             });
@@ -286,12 +301,13 @@ export class DbService {
    * @returns {any}
    */
   public saveTaskDetail(taskDetail: TaskDetail): Promise<boolean> {
-    if (this.globalService.isChrome) {
-      return Promise.reject('chrome');
+    if (this.globalService.isChrome || !taskDetail) {
+      return Promise.reject(this.paramError);
     } else {
       return this.openDb()
         .then(db => {
-          return db.executeSql(`SELECT * FROM GD_TASKDETAILS WHERE S_TASKID = '${taskDetail.taskId}';`, {})
+          let sql: string = `SELECT * FROM GD_TASKDETAILS WHERE S_TASKID = '${taskDetail.taskId}';`;
+          return db.executeSql(sql, {})
             .then(data => {
               let rows: any = data.rows;
               let sql: string;
@@ -312,12 +328,13 @@ export class DbService {
    * @returns {any}
    */
   public getTaskDetail(taskId: string): Promise<TaskDetail> {
-    if (this.globalService.isChrome) {
-      return Promise.reject('chrome');
+    if (this.globalService.isChrome || !taskId) {
+      return Promise.reject(this.paramError);
     } else {
       return this.openDb()
         .then(db => {
-          return db.executeSql(`SELECT * FROM GD_TASKDETAILS WHERE S_TASKID = '${taskId}';`, {})
+          let sql: string = `SELECT * FROM GD_TASKDETAILS WHERE S_TASKID = '${taskId}';`;
+          return db.executeSql(sql, {})
             .then(data => {
               let rows: any = data.rows;
               let taskDetail: TaskDetail;
@@ -343,11 +360,12 @@ export class DbService {
    */
   public getNoDetailTaskIds(userId: number): Promise<Array<string>> {
     if (this.globalService.isChrome) {
-      return Promise.reject('chrome');
+      return Promise.reject(this.paramError);
     } else {
       return this.openDb()
         .then(db => {
-          return db.executeSql(`SELECT S_TASKID FROM GD_TASKS WHERE I_USERID = ${userId} AND S_TASKID NOT IN (SELECT S_TASKID FROM GD_TASKDETAILS);`, {})
+          let sql: string = `SELECT S_TASKID FROM GD_TASKS WHERE I_USERID = ${userId} AND S_TASKID NOT IN (SELECT S_TASKID FROM GD_TASKDETAILS);`;
+          return db.executeSql(sql, {})
             .then(data => {
               let rows: any = data.rows;
               let taskIds: Array<string> = [];
@@ -371,8 +389,8 @@ export class DbService {
    * @returns {any}
    */
   public saveHistory(history: History): Promise<boolean> {
-    if (this.globalService.isChrome) {
-      return Promise.reject('chrome');
+    if (this.globalService.isChrome || !history) {
+      return Promise.reject(this.paramError);
     } else {
       return this.openDb()
         .then(db => {
@@ -397,20 +415,42 @@ export class DbService {
    * 获取历史记录
    * @param userId
    * @param taskId
-   * @param uploadedFlag
+   * @param states
+   * @param uploadedFlags
+   * @param key
+   * @param since
+   * @param count
    * @returns {any}
    */
-  public getHistories(userId: number, taskId: string, uploadedFlag?: number): Promise<Array<History>> {
+  public getHistories(userId: number, taskId?: string, states?: Array<number>, uploadedFlags?: Array<number>,
+                      key?: string, since?: number, count?: number): Promise<Array<History>> {
     if (this.globalService.isChrome) {
-      return Promise.reject('chrome');
+      return Promise.reject(this.paramError);
     } else {
       return this.openDb()
         .then(db => {
-          let sql = `SELECT * FROM GD_HISTORIES WHERE I_USERID = ${userId} AND S_TASKID = '${taskId}'`;
-          if (uploadedFlag != undefined && uploadedFlag != null) {
-            sql += ` AND I_UPLOADEDFLAG = ${uploadedFlag}`;
+          let sql = `SELECT * FROM GD_HISTORIES WHERE I_USERID = ${userId}`;
+          if (taskId != undefined && taskId != null) {
+            sql += ` AND S_TASKID = '${taskId}'`;
           }
-          sql += ' ORDER BY ID;';
+
+          if (states && states.length > 0) {
+            sql += ` AND I_STATE IN (${states.join(',')})`;
+          }
+
+          if (uploadedFlags && uploadedFlags.length > 0) {
+            sql += ` AND I_UPLOADEDFLAG IN (${uploadedFlags.join(',')})`;
+          }
+
+          if (key) {
+            sql += ` AND S_TASKID LIKE '%${key}%'`;
+          }
+
+          if (since !== undefined && since !== null && count !== undefined && count !== null) {
+            sql += ` ORDER BY ID LIMIT ${count} OFFSET ${since};`;
+          } else {
+            sql += ' ORDER BY ID;';
+          }
           return db.executeSql(sql, {});
         })
         .then(data => {
@@ -436,32 +476,86 @@ export class DbService {
    * @param taskId
    * @returns {any}
    */
-  public deleteTaskAndDetail(userId: number, taskId: string) {
-    if (this.globalService.isChrome) {
-      return Promise.reject('chrome');
+  // public deleteTaskAndDetail(userId: number, taskId: string) {
+  //   if (this.globalService.isChrome) {
+  //     return Promise.reject('chrome');
+  //   } else {
+  //     return this.openDb()
+  //       .then(db => {
+  //         let sql = `DELETE FROM GD_TASKS WHERE I_USERID = ${userId} AND S_TASKID = '${taskId}';`
+  //           + `DELETE FROM GD_TASKDETAILS WHERE S_TASKID = '${taskId}';`;
+  //         return this.sqlitePorter.importSqlToDb(db, sql);
+  //       });
+  //   }
+  // }
+
+  /**
+   * 保存多媒体信息
+   * @param media
+   * @returns {any}
+   */
+  public saveMedia(media: Media): Promise<boolean> {
+    if (this.globalService.isChrome || !media) {
+      return Promise.reject(this.paramError);
     } else {
       return this.openDb()
         .then(db => {
-          let sql = `DELETE FROM GD_TASKS WHERE I_USERID = ${userId} AND S_TASKID = '${taskId}';`
-            + `DELETE FROM GD_TASKDETAILS WHERE S_TASKID = '${taskId}';`;
-          return this.sqlitePorter.importSqlToDb(db, sql);
+          let sql: string = `SELECT * FROM GD_MULTIMEDIAS WHERE I_USERID = ${media.userId} AND S_TASKID = '${media.taskId}' AND I_FILETYPE = ${media.fileType} AND S_FILENAME = '${media.fileName}';`;
+          return db.executeSql(sql, {})
+            .then(data => {
+              let rows: any = data.rows;
+              if (rows && rows.length > 0) {
+                let localMedia: LocalMedia = rows[0] as LocalMedia;
+                sql = this.toMediaUpdateSql(media, localMedia);
+              } else {
+                sql = this.toMediaInsertSql(media);
+              }
+              return db.executeSql(sql, {});
+            });
         });
     }
   }
 
   /**
-   *
-   * @param media
+   * 获取多媒体列表
+   * @param userId
+   * @param taskId
+   * @param fileNames
+   * @param uploadedFlags
    * @returns {any}
    */
-  public saveMedia(media: Media): Promise<boolean> {
-    if (this.globalService.isChrome) {
-      return Promise.reject('chrome');
+  public getMediaList(userId: number, taskId: string, fileNames: Array<string>, uploadedFlags?: Array<number>): Promise<Array<Media>> {
+    if (this.globalService.isChrome || !taskId) {
+      return Promise.reject(this.paramError);
+    } else if (fileNames.length <= 0) {
+      return Promise.reject([]);
     } else {
       return this.openDb()
         .then(db => {
-          let sql: string = this.toMediaInsertSql(media);
-          return this.sqlitePorter.importSqlToDb(db, sql);
+          let names: Array<string> = fileNames.map(name => `\'${name}\'`);
+          let sql: string = `SELECT * FROM GD_MULTIMEDIAS WHERE I_USERID = ${userId} AND S_TASKID = '${taskId}'
+           AND S_FILENAME IN (${names.join(',')})`;
+
+          if (uploadedFlags && uploadedFlags.length > 0) {
+            sql += ` AND I_UPLOADEDFLAG IN (${uploadedFlags.join(',')})`;
+          }
+          sql += ' ORDER BY ID;';
+
+          return db.executeSql(sql, {})
+        })
+        .then(data => {
+          let rows: any = data.rows;
+          let mediaList: Array<Media> = [];
+          if (rows && rows.length > 0) {
+            for (let i = 0; i < rows.length; i++) {
+              let localMedia: LocalMedia = rows.item(i) as LocalMedia;
+              if (!localMedia) {
+                continue;
+              }
+              mediaList.push(this.toMedia(localMedia));
+            }
+          }
+          return Promise.resolve(mediaList);
         });
     }
   }
@@ -829,54 +923,51 @@ export class DbService {
     }
   }
 
+  /**
+   *
+   * @param media
+   * @returns {string}
+   */
   private toMediaInsertSql(media: Media): string {
     return `INSERT INTO GD_MULTIMEDIAS VALUES (null, ${media.userId}, '${media.taskId}', ${media.fileType}, '${media.fileName}', ${media.uploadedFlag}, '${media.fileId ? media.fileId : null}', null);`
   }
 
   /**
-   * 历史工单获取记录
-   * @param {number} userId
-   * @param {number} since
-   * @param {number} count
-   * @param {string} key  搜索关键字
-   * @param {number} uploadFlag 上传标志
-   * @param {TaskState[]} taskStates 工单状态
+   *
+   * @param media
+   * @param localMedia
+   * @returns {string}
    */
-  getHistory(userId: number, since: number, count: number,
-             key: string, uploadFlag: number, taskStates: TaskState[]): Promise<Array<History>> {
-    if (this.globalService.isChrome) {
-      return Promise.reject('chrome');
+  private toMediaUpdateSql(media: Media, localMedia: LocalMedia): string {
+    if (localMedia) {
+      let sql: string = `UPDATE GD_MULTIMEDIAS SET I_UPLOADEDFLAG = ${media.uploadedFlag}`;
+      if (media.fileId) {
+        sql += `, S_FILEID = '${media.fileId}'`;
+      }
+      if (media.extendedInfo) {
+        sql += `, S_EXTENDEDINFO = '${media.extendedInfo}'`;
+      }
+      sql += ` WHERE ID = ${localMedia.ID};`;
+      return sql;
     } else {
-      return this.openDb()
-        .then(db => {
-          let sql: string = `SELECT * FROM GD_HISTORIES WHERE I_USERID=${userId}`;
-          if (taskStates && taskStates.length > 0) {
-            sql += ` AND I_STATE IN (${taskStates.join(',')})`;
-          }
-          if (key && key !== '') {
-            sql += ` AND S_TASKID LIKE '%${key}%'`;
-          }
-          if (uploadFlag > 0) {
-            sql += ` AND I_UPLOADEDFLAG=${uploadFlag}`
-          }
-          sql += ` ORDER BY ID LIMIT ${count} OFFSET ${since};`;
-          debugger;
-          return db.executeSql(sql, {})
-            .then(data => {
-              let rows: any = data.rows;
-              let historys: Array<History> = [];
-              if (rows && rows.length > 0) {
-                for (let i = 0; i < rows.length; i++) {
-                  let localHistory: LocalHistory = rows.item(i) as LocalHistory;
-                  if (!localHistory || !localHistory.S_TASKID) {
-                    continue;
-                  }
-                  historys.push(this.toHistory(localHistory));
-                }
-              }
-              return Promise.resolve(historys);
-            });
-        })
+      return this.toMediaInsertSql(media);
     }
+  }
+
+  /**
+   *
+   * @param localMedia
+   * @returns {{userId: number, taskId: string, fileType: number, fileName: string, uploadedFlag: number, fileId: string, extendedInfo: string}}
+   */
+  private toMedia(localMedia: LocalMedia): Media {
+    return {
+      userId: localMedia.I_USERID,
+      taskId: localMedia.S_TASKID,
+      fileType: localMedia.I_FILETYPE,
+      fileName: localMedia.S_FILENAME,
+      uploadedFlag: localMedia.I_UPLOADEDFLAG,
+      fileId: localMedia.S_FILEID,
+      extendedInfo: localMedia.S_EXTENDEDINFO
+    };
   }
 }

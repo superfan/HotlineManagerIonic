@@ -43,6 +43,9 @@ export class ConfigService {
               private file: File,
               private globalService: GlobalService,
               private fileService: FileService) {
+    if (this.globalService.isChrome) {
+      this.storage.clear();
+    }
   }
 
   /**

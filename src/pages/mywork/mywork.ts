@@ -85,10 +85,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
     //   this.content.resize();
     // }
     this.key = '';
-
-    if (this.dataService.downloadTasksAndDetails()) {
-      this.refresher.complete();
-    }
+    this.dataService.downloadTasksAndDetails()
   }
 
   /**
@@ -215,7 +212,6 @@ export class MyWorkPage implements OnInit, OnDestroy {
     return this.dataService.getTasks(since, count, key)
       .then(tasks => {
         console.log(this.tag + "getTasks: " + tasks.length);
-        debugger;
         if (tasks.length <= 0) {
           return Promise.resolve(false)
         } else {

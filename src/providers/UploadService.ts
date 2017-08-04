@@ -11,13 +11,20 @@ import {DelayInfo} from "../model/DelayInfo";
 import {ReplyInfo} from "../model/ReplyInfo";
 import {CancelInfo, CancelExInfo} from "../model/CancelInfo";
 import {DispatchInfo} from "../model/DispatchInfo";
+import {FileTransfer, FileUploadOptions, FileTransferObject} from '@ionic-native/file-transfer';
+import {File} from '@ionic-native/file';
+import {Media, MediaType} from "../model/Media";
+import {FileService} from "./FileService";
 
 @Injectable()
 export class UploadService extends BaseService {
 
   constructor(private http: Http,
               private configService: ConfigService,
-              private globalService: GlobalService) {
+              private globalService: GlobalService,
+              private transfer: FileTransfer,
+              private file: File,
+              private fileService: FileService) {
     super();
   }
 
@@ -293,6 +300,93 @@ export class UploadService extends BaseService {
                 resolve(body.Data);
               } else {
                 reject(body.Message ? body.Message : "failure to cancel for station task");
+              }
+            })
+            .catch(this.handleError);
+        })
+        .catch(error => reject(error));
+    });
+  }
+
+  /**
+   * 上传多媒体文件
+   * @param media
+   * @returns {Promise<T>}
+   */
+  public uploadMedia(media: Media): Promise<string> {
+    return new Promise((resolve, reject) => {
+      this.configService.getServerBaseUri()
+        .then(data => {
+          let url: string = `${data}wap/v1/mobile/resource/upload`;
+          let fileUrl: string;
+          let fileType: string;
+          switch (media.fileType) {
+            case MediaType.Picture:
+              fileUrl = this.fileService.getImagesDir();
+              fileType = 'IMAGE';
+              break;
+            case MediaType.Audio:
+              fileUrl = this.fileService.getSoundsDir();
+              fileType = 'SOUND';
+              break;
+            case MediaType.Vedio:
+            default:
+              return reject('type is error');
+          }
+          fileUrl = `${fileUrl}/${media.fileName}`;
+          url = `${url}?userId=${media.userId}&fileType=${fileType}&fileName=${media.fileName}`;
+
+          const fileTransfer: FileTransferObject = this.transfer.create();
+          let options: FileUploadOptions = {
+            fileKey: 'file',
+            fileName: `${media.fileName}`,
+            params: {
+              userId: media.userId,
+              fileType,
+              fileName: media.fileName
+            }
+          };
+
+          fileTransfer.upload(fileUrl, url, options)
+            .then((data) => {
+              // success
+              console.log(data);
+              resolve(data);
+            }, (err) => {
+              // error
+              console.error(err);
+              reject(err);
+            });
+        })
+        .catch(error => reject(error));
+    });
+  }
+
+  /**
+   * 上传文件关联
+   * @param taskId
+   * @param files
+   * @returns {Promise<T>}
+   */
+  public uploadMediaIds(taskId: string, files: string): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this.configService.getServerBaseUri()
+        .then(data => {
+          let url = `${data}wap/v1/mobile/task/${taskId}/files/upload`;
+          let content = {
+            taskId,
+            files
+          };
+          return this.http.put(url, JSON.stringify(content), this.getOptions())
+            .toPromise()
+            .then(data => {
+              let body = data.json();
+              if (body.Code === this.globalService.httpCode
+                && body.StatusCode === this.globalService.httpSuccessStatusCode
+                && body.Data) {
+                resolve(body.Data);
+              } else {
+                reject(body.Message ? body.Message : "failure to uploadMediaIds");
               }
             })
             .catch(this.handleError);

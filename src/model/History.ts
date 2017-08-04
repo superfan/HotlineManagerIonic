@@ -35,7 +35,6 @@ export class HistoryEx {
   audioCount: number;
 
   constructor(history: History) {
-    debugger;
     this.userId = history.userId;
     this.taskId = history.taskId;
     this.state = history.state;

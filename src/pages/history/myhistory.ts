@@ -49,7 +49,6 @@ export class MyHistory implements OnInit, OnDestroy {
 
   //搜索
   onInput(ev: any): void {
-    debugger;
     if (this.isOperationBusy) {
       return this.globalService.showToast('后台繁忙...');
     }
@@ -63,7 +62,6 @@ export class MyHistory implements OnInit, OnDestroy {
     this.since = this.globalService.taskSinceDefault;
     while (this.items.shift()) ;
     this.showFab = false;
-    debugger;
     this.getHistory(this.since, this.count, this.searchKey)
       .then(data => {
         this.infiniteScroll.enable(data);
@@ -132,13 +130,12 @@ export class MyHistory implements OnInit, OnDestroy {
 
   private getHistory(since: number, count: number, key: string): Promise<boolean> {
     return this.dataService
-      .getHistory(since, count, key)
+      .getHistories(since, count, key)
       .then(historys => {
         console.log(this.tag + "getHistory" + historys.length);
         if (historys.length <= 0) {
           return Promise.resolve(false);
         } else {
-          debugger;
           HistoryEx.transformToHistoryEx(this.items, historys);
           this.since = this.items.length;
           return Promise.resolve(true);

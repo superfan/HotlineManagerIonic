@@ -30,6 +30,7 @@
         "@ionic-native/dialogs": "^3.10.3",
         "@ionic-native/file": "^3.10.3",
         "@ionic-native/file-opener": "^3.12.1",
+        "@ionic-native/file-transfer": "^4.1.0",
         "@ionic-native/media": "^4.1.0",
         "@ionic-native/media-capture": "^3.10.3",
         "@ionic-native/network": "^3.12.1",
