@@ -6,7 +6,6 @@ import {AppVersion} from "@ionic-native/app-version";
 import {GlobalService} from "../../providers/GlobalService";
 import {DataService} from "../../providers/DataService";
 import {AndroidPermissions} from "@ionic-native/android-permissions";
-import {MaterialsPage} from "../materials/materials";
 declare let cordova: any;
 
 @Component({
