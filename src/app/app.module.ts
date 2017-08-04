@@ -105,7 +105,9 @@ import {MaterialsAddPage} from "../pages/materialsadd/materialsadd";
     SearchResultPage,
     SearchDetailsPage,
     SettingPage,
-    PopoverRecordPage,    MapPage,
+    PopoverRecordPage,
+    MyHistory,
+    MapPage,
     MaterialsPage,
     MaterialsAddPage
   ],
