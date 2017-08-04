@@ -52,6 +52,8 @@ import {MediaService} from "../providers/MediaService";
 import {PopoverRecordPage} from "../pages/record/PopoverRecordPage";
 import {FileTransfer} from '@ionic-native/file-transfer';
 import {MapPage} from "../pages/map/map";
+import {MaterialsPage} from "../pages/materials/materials";
+import {MaterialsAddPage} from "../pages/materialsadd/materialsadd";
 
 
 @NgModule({
@@ -74,6 +76,9 @@ import {MapPage} from "../pages/map/map";
     MyHistory,
     MapPage,
     SettingPage,
+    ValueValidPipe,
+    MaterialsPage,
+    MaterialsAddPage,
     ValueValidPipe,
     PopoverRecordPage
   ],
@@ -100,9 +105,9 @@ import {MapPage} from "../pages/map/map";
     SearchResultPage,
     SearchDetailsPage,
     SettingPage,
-    PopoverRecordPage,
-    MyHistory,
-    MapPage
+    PopoverRecordPage,    MapPage,
+    MaterialsPage,
+    MaterialsAddPage
   ],
   providers: [
     StatusBar,

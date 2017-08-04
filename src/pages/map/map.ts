@@ -48,7 +48,7 @@ export class MapPage implements OnInit, OnDestroy {
     this.isInitSuccess = false;
     this.loadJScript(this._init.bind(this));
   }
-
+  
   private loadJScript(callback: Function): void {
     let win: any = (<any>window);
     let baiduMap: MapObjct = win['baiduMap'];

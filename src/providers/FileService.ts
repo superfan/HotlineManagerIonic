@@ -14,7 +14,6 @@ export class FileService {
   private readonly dir: string = 'hotlinemanager';
   private readonly arrDirs: string[] = ['config', 'data', 'images', 'log', 'sounds', 'update', 'user'];
   private readonly apkName: string = "/TaskManager.apk";
-  private configFileUrl = this.dirPath + this.dirRoot + '/' + this.dir + '/config';
 
   constructor(private file: File,
               private transfer: Transfer,

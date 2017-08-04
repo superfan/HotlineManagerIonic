@@ -1,7 +1,7 @@
 /**
  * Created by zhangjing on 2017/6/29.
  */
-import {Component, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {ActionSheetController, AlertController, Events, NavController} from "ionic-angular";
 import {ConfigService} from "../../providers/ConfigService";
 import {GlobalService} from "../../providers/GlobalService";
@@ -14,7 +14,8 @@ import {Storage} from "@ionic/storage";
   templateUrl: 'setting.html'
 })
 
-export class SettingPage implements OnInit {
+export class SettingPage implements OnInit, OnDestroy {
+
   private readonly tag: string = "[SettingPage]";
   title: string = '系统参数';
   public isGrid: boolean;//是否是九宫格样式
@@ -52,6 +53,10 @@ export class SettingPage implements OnInit {
       return;
     }
     this.readDataFromFile();
+  }
+
+  ngOnDestroy(): void {
+    this.events.unsubscribe(this.globalService.materialsUpdateEvent);
   }
 
   /**

@@ -104,6 +104,7 @@
     <plugin name="cordova-plugin-x-toast" spec="^2.6.0" />
     <plugin name="cordova-plugin-zip" spec="^3.1.0" />
     <plugin name="cordova-sqlite-storage" spec="^2.0.4" />
+    <plugin name="cordova.plugin.MyPlugin" spec="E:\ionic\new\MyPlugin" />
     <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
     <plugin name="uk.co.workingedge.cordova.plugin.sqliteporter" spec="^0.1.5" />
 </widget>

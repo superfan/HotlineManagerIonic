@@ -35,6 +35,7 @@ export class GlobalService {
   readonly historyUploadFinishEvent: string = "history:upload:finish"; // history & media
   readonly myWorkUpdateEvent: string = "mywork:update";
   readonly stationWorkUpdateEvent: string = "stationwork:update";
+  readonly materialsUpdateEvent: string = "addMaterials:update";
   readonly recordAudioFinishEvent: string = "record:audio:finish";
   private loading: Loading;
 

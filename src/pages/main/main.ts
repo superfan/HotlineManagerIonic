@@ -11,6 +11,7 @@ import {GlobalService, MainUpdateEvent} from "../../providers/GlobalService";
 import {ConfigService} from "../../providers/ConfigService";
 import {MapPage} from "../map/map";
 import {MapParam, MapType} from "../../model/MapParam";
+import {MaterialsPage} from "../materials/materials";
 
 enum ItemId {
   MyWork,
@@ -18,7 +19,8 @@ enum ItemId {
   Map,
   StationWork,
   Search,
-  News
+  News,
+  Materials
 }
 
 interface Item {
@@ -98,6 +100,9 @@ export class MainPage implements OnInit, OnDestroy {
       case ItemId.News:
         this.navCtrl.push(NewsPage);
         break;
+      case ItemId.Materials:
+        this.navCtrl.push(MaterialsPage);
+        break;
       default:
         break;
     }
@@ -168,6 +173,14 @@ export class MainPage implements OnInit, OnDestroy {
       active: true,
       count: 0
     });
+
+    this.listItems.push({
+      id: ItemId.Materials,
+      src: 'assets/img/ic_add_materials.png',
+      name: '材料登记',
+      active: true,
+      count: 0
+    })
   }
 
   /**
