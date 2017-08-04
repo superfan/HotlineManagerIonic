@@ -34,23 +34,29 @@ export class MapPage {
     map.enableContinuousZoom();//连续缩放效果，默认禁用
     let point = new BMap.Point(120.524577, 31.281003);
     map.centerAndZoom(point, 16);//设置中心和地图显示级别
-    let isChrome = this.isChrome = this.globalService.isChrome;
-    let isMark = this.isMark;
-    if (!isMark) {
-      this.showInfo();
-    } else {
-      this.markMap(map);
-    }
-    map.addEventListener("tilesloaded", function () {
+    // let isChrome = this.isChrome = this.globalService.isChrome;
+    // let isMark = this.isMark;
+    map.addEventListener("tilesloaded", () => {
       map.addControl(new BMap.NavigationControl());
       map.addControl(new BMap.OverviewMapControl());
-      if (isChrome) {
+      if (this.globalService.isChrome) {
         map.addControl(new BMap.GeolocationControl());
+      } else {
+        this.getCurrentLocation();
+      }
+      if (!this.isMark) {
+        this.showInfo();
+      } else {
+        this.markMap(map);
       }
     });
-    if (!isChrome) {
-      this.getCurrentLocation();
-    }
+    // map.addEventListener("tilesloaded", function () {
+    //   map.addControl(new BMap.NavigationControl());
+    //   map.addControl(new BMap.OverviewMapControl());
+    //   if (isChrome) {
+    //     map.addControl(new BMap.GeolocationControl());
+    //   }
+    // });
   }
 
   /**

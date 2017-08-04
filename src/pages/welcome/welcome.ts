@@ -6,6 +6,10 @@ import {AppVersion} from "@ionic-native/app-version";
 import {GlobalService} from "../../providers/GlobalService";
 import {DataService} from "../../providers/DataService";
 import {AndroidPermissions} from "@ionic-native/android-permissions";
+import {MaterialsPage} from "../materials/materials";
+import {NewsPage} from "../news/news";
+import {MapPage} from "../map/map";
+declare let cordova: any;
 
 @Component({
   selector: 'page-welcome',
@@ -60,7 +64,12 @@ export class WelcomePage {
       this.fileService.createDirRoot()
         .then((result) => {
           console.log(this.tag + 'onDidEnter:' + result);
-          this.getVersionCode();
+          cordova.plugins.MyPlugin.onGetNavUrl(result => {
+            if (result == 'addMaterials') {
+              this.navCtrl.push(MaterialsPage, {});
+            }
+          }, error => alert(error));
+          // this.getVersionCode();
           // this.jump2Login();
         })
         .catch(err => {

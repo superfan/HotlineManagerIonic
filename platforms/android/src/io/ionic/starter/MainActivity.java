@@ -20,14 +20,18 @@
 package io.ionic.starter;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import org.apache.cordova.*;
+
+import cordova.plugin.MyPlugin.MyPlugin;
+
 
 public class MainActivity extends CordovaActivity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
+    Log.i("MainActivity","onCreate");
     // enable Cordova apps to be started in the background
     Bundle extras = getIntent().getExtras();
     if (extras != null && extras.getBoolean("cdvStartInBackground", false)) {
@@ -41,5 +45,13 @@ public class MainActivity extends CordovaActivity {
   @Override
   protected void onResume() {
     super.onResume();
+    Log.i("MainActivity","onResume");
+    MyPlugin.setLoadUrl("addMaterials");
+  }
+
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    Log.i("MainActivity", "onDestroy");
   }
 }

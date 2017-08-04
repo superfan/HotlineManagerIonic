@@ -1,0 +1,57 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "E:\\ionic\\new\\MyPlugin",
+        "scope": null,
+        "escapedName": null,
+        "name": null,
+        "rawSpec": "E:\\ionic\\new\\MyPlugin",
+        "spec": "E:\\ionic\\new\\MyPlugin",
+        "type": "directory"
+      },
+      "E:\\ionic\\new\\HotlineManagerIonic\\node_modules"
+    ]
+  ],
+  "_from": "..\\MyPlugin",
+  "_id": "MyPlugin@0.0.1",
+  "_inCache": true,
+  "_location": "/MyPlugin",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "E:\\ionic\\new\\MyPlugin",
+    "scope": null,
+    "escapedName": null,
+    "name": null,
+    "rawSpec": "E:\\ionic\\new\\MyPlugin",
+    "spec": "E:\\ionic\\new\\MyPlugin",
+    "type": "directory"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "file:..\\MyPlugin",
+  "_shasum": "7b8ff54a1f04f9223d4c06103ac6f4f73cbf3077",
+  "_shrinkwrap": null,
+  "_spec": "E:\\ionic\\new\\MyPlugin",
+  "_where": "E:\\ionic\\new\\HotlineManagerIonic\\node_modules",
+  "author": "",
+  "cordova": {
+    "id": "cordova.plugin.MyPlugin",
+    "platforms": [
+      "android"
+    ]
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "license": "ISC",
+  "name": "MyPlugin",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "version": "0.0.1"
+}

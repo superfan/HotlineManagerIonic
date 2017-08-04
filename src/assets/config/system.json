@@ -1,6 +1,6 @@
 {
-  "server.outer.baseuri":"http://128.1.3.102:8105/",
-  "server.inner.baseuri":"http://128.1.3.102:8105/",
+  "server.outer.baseuri":"http://128.1.3.154:6001/",
+  "server.inner.baseuri":"http://128.1.3.154:6001/",
   "sys.connect.outer.network": true,
   "sys.grid.style" : true,
   "sys.debug.mode": true,
