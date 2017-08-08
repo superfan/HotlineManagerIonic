@@ -6,7 +6,6 @@ import {AppVersion} from "@ionic-native/app-version";
 import {GlobalService} from "../../providers/GlobalService";
 import {DataService} from "../../providers/DataService";
 import {AndroidPermissions} from "@ionic-native/android-permissions";
-declare let cordova: any;
 
 @Component({
   selector: 'page-welcome',
