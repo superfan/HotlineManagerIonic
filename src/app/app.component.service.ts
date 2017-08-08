@@ -1,67 +1,39 @@
 import {Injectable} from "@angular/core";
-import {Platform} from "ionic-angular";
 import {AndroidPermissions} from "@ionic-native/android-permissions";
-import {GlobalService} from "../../providers/GlobalService";
-import {FileService} from "../../providers/FileService";
-import {MyPlugin, PageIntent} from "@ionic-native/my-plugin";
-import {Page} from "ionic-angular/navigation/nav-util";
-import {MyHistory} from "../history/myhistory";
-import {MapPage} from "../map/map";
-import {SearchPage} from "../search/search";
-import {StationWorkPage} from "../stationwork/stationwork";
-import {NewsPage} from "../news/news";
-import {MaterialsPage} from "../materials/materials";
-import {SettingPage} from "../setting/setting";
-import {MyWorkPage} from "../mywork/mywork";
-import {UserDetailInfo} from "../../model/UserDetailInfo";
-
-class MyPluginMock extends MyPlugin {
-  getPageIntent(): Promise<PageIntent> {
-    let pageIntent: PageIntent = {
-      account: 'ss1',
-      userId: 3,
-      userName: 'ss1',
-      departmentAndId: '上水#1',
-      role: 'work',
-      params: 'MyHistory'
-
-    };
-    return Promise.resolve(pageIntent);
-  }
-
-  getLocation(): Promise<any> {
-    return Promise.reject('err');
-  }
-}
+import {GlobalService} from "../providers/GlobalService";
+import {FileService} from "../providers/FileService";
+import {MyPlugin} from "@ionic-native/my-plugin";
+import {MyHistory} from "../pages/history/myhistory";
+import {MapPage} from "../pages/map/map";
+import {SearchPage} from "../pages/search/search";
+import {StationWorkPage} from "../pages/stationwork/stationwork";
+import {NewsPage} from "../pages/news/news";
+import {MaterialsPage} from "../pages/materials/materials";
+import {SettingPage} from "../pages/setting/setting";
+import {MyWorkPage} from "../pages/mywork/mywork";
+import {UserDetailInfo} from "../model/UserDetailInfo";
 
 @Injectable()
-export class LauncherService {
-  constructor(private platform: Platform,
-              private androidPermissions: AndroidPermissions,
+export class AppComponentService {
+  constructor(private androidPermissions: AndroidPermissions,
               private globalService: GlobalService,
               private fileService: FileService,
               private myPlugin: MyPlugin) {
   }
 
   /**
-   *
+   * 获取界面
    * @returns {Promise<any>}
    */
-  public getPage(): Promise<any> {
+  public getRootPage(): Promise<any> {
     if (this.globalService.isChrome) {
-      this.myPlugin = new MyPluginMock();
-    }
-
-    let promise: Promise<any> = this.platform.ready();
-    if (this.globalService.isChrome) {
-      promise.then(readySource => this.checkPage());
+      this.myPlugin = this.globalService.getMyPluginMock();
+      return this.getPage();
     } else {
-      promise
-        .then(readySource => this.checkPermissions())
+      return this.checkPermissions()
         .then(result => this.fileService.createDirRoot())
-        .then(result => this.checkPage())
+        .then(result => this.getPage());
     }
-    return promise;
   }
 
   /**
@@ -75,10 +47,10 @@ export class LauncherService {
   }
 
   /**
-   *
+   * 获取界面
    * @returns {Promise<Page>|Promise<PageIntent>|Promise<TResult2|Page>}
    */
-  private checkPage(): Promise<any> {
+  private getPage(): Promise<any> {
     return this.myPlugin.getPageIntent()
       .then(pageIntent => {
         if (!pageIntent.account
@@ -107,7 +79,7 @@ export class LauncherService {
         return this.globalService.saveUserDetailInfo(userDetailInfo)
           .then(result => {
             let params: string[] = pageIntent.params.split('#');
-            let page: Page;
+            let page: any;
             switch (params[0]) {
               case 'MyHistory':
                 page = MyHistory;

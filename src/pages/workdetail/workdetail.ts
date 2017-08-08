@@ -199,7 +199,11 @@ export class WorkDetailPage implements OnInit, OnDestroy {
     }
 
     let task: Task = transform2Task(this.replyInfo, this.taskEx, processEx);
-    this.dataService.reply(this.replyInfo, task, this.taskDetail, this.mediaNames)
+    this.globalService.getLocation()
+      .then(location => {
+        this.replyInfo.location = location;
+        return this.dataService.reply(this.replyInfo, task, this.taskDetail, this.mediaNames);
+      })
       .then(date => {
         console.log("success");
         this.dataService.uploadMediasOfOneTask(task.taskId);
@@ -212,7 +216,7 @@ export class WorkDetailPage implements OnInit, OnDestroy {
       })
       .catch(error => {
         console.error(error);
-        this.globalService.showToast("回填失败!");
+        this.globalService.showToast(error);
       });
   }
 

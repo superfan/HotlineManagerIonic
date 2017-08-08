@@ -23,6 +23,11 @@ export class PageIntent {
   accessToken?: string;
 }
 
+export class MyLocation {
+  lng: number;
+  lat: number;
+}
+
 /**
  * @name My Plugin
  * @description
@@ -67,7 +72,7 @@ export class MyPlugin extends IonicNativePlugin {
    * 获取位置信息
    */
   @Cordova()
-  getLocation(): Promise<any> {
+  getLocation(): Promise<MyLocation> {
     return; // We add return; here to avoid any IDE / Compiler errors
   }
 

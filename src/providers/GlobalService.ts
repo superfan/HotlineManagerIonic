@@ -3,6 +3,8 @@ import {ToastController, LoadingController, Loading} from "ionic-angular";
 import {TaskEx} from "../model/Task";
 import {UserDetailInfo} from "../model/UserDetailInfo";
 import {Storage} from '@ionic/storage';
+import {MyPlugin, PageIntent} from "@ionic-native/my-plugin";
+import {Location, LocationEx} from "../model/Location";
 
 export interface MainUpdateEvent {
   type: 'myWorkCount' | 'newsCount' | 'stationWorkCount' | 'gridStyle';
@@ -14,6 +16,28 @@ export interface MyWorkUpdateEvent {
   type: 'reply' | 'cancel' | 'reject',
   taskEx?: TaskEx;
   time?: number;
+}
+
+export class MyPluginMock extends MyPlugin {
+  getPageIntent(): Promise<PageIntent> {
+    let pageIntent: PageIntent = {
+      account: 'ss1',
+      userId: 3,
+      userName: 'ss1',
+      departmentAndId: '上水#1',
+      role: 'worker',
+      params: 'MyWorkPage'
+
+    };
+    return Promise.resolve(pageIntent);
+  }
+
+  getLocation(): Promise<any> {
+    return Promise.resolve({
+      lng: 121.524808,
+      lat: 31.280823
+    });
+  }
 }
 
 @Injectable()
@@ -42,11 +66,17 @@ export class GlobalService {
   readonly recordAudioFinishEvent: string = "record:audio:finish";
   private loading: Loading;
   private readonly userDetailInfoStorageName: string = 'userDetailInfo';
+  readonly locationType: string = 'bd09ll';
+  private myPluginMock: MyPluginMock;
 
   constructor(private toastCtrl: ToastController,
               private loadingCtrl: LoadingController,
-              private storage: Storage) {
+              private storage: Storage,
+              private myPlugin: MyPlugin) {
+  }
 
+  public getMyPluginMock(): MyPluginMock {
+    return this.myPluginMock ? this.myPluginMock : this.myPluginMock = new MyPluginMock();
   }
 
   public saveUserDetailInfo(userDetailInfo: UserDetailInfo): Promise<any> {
@@ -62,6 +92,50 @@ export class GlobalService {
           return Promise.resolve(result);
         })
       : Promise.reject('userDetailInfo is error');
+  }
+
+  public getLocationEx(): Promise<LocationEx> {
+    if (this.isChrome) {
+      this.myPlugin = this.getMyPluginMock();
+    }
+
+    return this.myPlugin.getLocation()
+      .then(location => ({
+        type: this.locationType,
+        lng: location.lng,
+        lat: location.lat
+      }))
+      .catch(error => {
+        console.error(error);
+        return this.myPluginMock.getLocation()
+          .then(location => ({
+            type: this.locationType,
+            lng: location.lng,
+            lat: location.lat
+          }));
+      });
+  }
+
+  public getLocation(): Promise<Location> {
+    if (this.isChrome) {
+      this.myPlugin = this.getMyPluginMock();
+    }
+
+    return this.myPlugin.getLocation()
+      .then(location => ({
+        type: this.locationType,
+        lng: location.lng.toString(),
+        lat: location.lat.toString()
+      }))
+      .catch(error => {
+        console.error(error);
+        return this.myPluginMock.getLocation()
+          .then(location => ({
+            type: this.locationType,
+            lng: location.lng.toString(),
+            lat: location.lat.toString()
+          }));
+      });
   }
 
   /**
