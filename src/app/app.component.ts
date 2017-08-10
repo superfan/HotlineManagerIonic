@@ -17,18 +17,22 @@ export class MyApp {
               splashScreen: SplashScreen,
               private appComponentService: AppComponentService,
               private globalService: GlobalService) {
-    platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
-      statusBar.styleDefault();
-      splashScreen.hide();
-      appComponentService.getRootPage()
-        .then(page => this.rootPage = page)
-        .catch(error => {
-          console.error(error);
-          globalService.showToast(error);
-        });
-    });
+    this.rootPage = undefined;
+    this.globalService.showLoading();
+    platform.ready()
+      .then(() => {
+        // Okay, so the platform is ready and our plugins are available.
+        // Here you can do any higher level native things you might need.
+        statusBar.styleDefault();
+        splashScreen.hide();
+        return appComponentService.getRootPage();
+      })
+      .then(page => this.rootPage = page)
+      .catch(error => {
+        console.error(error);
+        this.globalService.showToast(error);
+      })
+      .then(() => this.globalService.hideLoading());
   }
 }
 

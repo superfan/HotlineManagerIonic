@@ -85,7 +85,7 @@ import {MyPlugin} from "@ionic-native/my-plugin";
   ],
   imports: [
     BrowserModule,
-    [HttpModule],
+    HttpModule,
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot()
   ],

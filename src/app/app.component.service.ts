@@ -12,12 +12,14 @@ import {MaterialsPage} from "../pages/materials/materials";
 import {SettingPage} from "../pages/setting/setting";
 import {MyWorkPage} from "../pages/mywork/mywork";
 import {UserDetailInfo} from "../model/UserDetailInfo";
+import {DataService} from "../providers/DataService";
 
 @Injectable()
 export class AppComponentService {
   constructor(private androidPermissions: AndroidPermissions,
               private globalService: GlobalService,
               private fileService: FileService,
+              private dataService: DataService,
               private myPlugin: MyPlugin) {
   }
 
@@ -28,10 +30,14 @@ export class AppComponentService {
   public getRootPage(): Promise<any> {
     if (this.globalService.isChrome) {
       this.myPlugin = this.globalService.getMyPluginMock();
-      return this.getPage();
+      return this.dataService.init()
+        .then(result => this.dataService.downloadWords())
+        .then(result => this.getPage());
     } else {
       return this.checkPermissions()
         .then(result => this.fileService.createDirRoot())
+        .then(result => this.dataService.init())
+        .then(result => this.dataService.downloadWords())
         .then(result => this.getPage());
     }
   }
