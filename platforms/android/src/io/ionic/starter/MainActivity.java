@@ -19,11 +19,14 @@
 
 package io.ionic.starter;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 
 import org.apache.cordova.*;
+
+import io.ionic.MainApplication;
 
 
 public class MainActivity extends CordovaActivity {
@@ -39,5 +42,17 @@ public class MainActivity extends CordovaActivity {
 
     // Set by <content src="index.html" /> in config.xml
     loadUrl(launchUrl);
+
+    MainApplication mainApplication = ((MainApplication)getApplication());
+    Intent intent = getIntent();
+    if (savedInstanceState != null) {
+      mainApplication.setBundle(savedInstanceState);
+    } else if (intent != null) {
+      mainApplication.setBundle(intent.getExtras());
+    } else {
+      mainApplication.setBundle(null);
+    }
+
+    mainApplication.bindHostService();
   }
 }

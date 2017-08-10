@@ -13,15 +13,15 @@ public class PageIntent {
   private String params; // 'page#...'
   private String accessToken;
 
-  public PageIntent() {
-    this.account = "ss1";
-    this.userId = 3;
-    this.userName = "ss1";
-    this.departmentAndId = "上水#1";
-    this.role = "worker";
-    this.params = "MyWorkPage";
-    this.accessToken = "123456";
-  }
+//  public PageIntent() {
+//    this.account = "ss1";
+//    this.userId = 3;
+//    this.userName = "ss1";
+//    this.departmentAndId = "上水#1";
+//    this.role = "worker";
+//    this.params = "MyWorkPage";
+//    this.accessToken = "123456";
+//  }
 
   public PageIntent(String account, int userId, String userName, String departmentAndId, String role, String params, String accessToken) {
     this.account = account;
@@ -91,13 +91,13 @@ public class PageIntent {
 
   public JSONObject toJson() throws JSONException {
     JSONObject jsonObject = new JSONObject();
-    jsonObject.put("account", this.account);
+    jsonObject.put("account", this.account != null ? this.account : "");
     jsonObject.put("userId", this.userId);
-    jsonObject.put("userName", this.userName);
-    jsonObject.put("departmentAndId", this.departmentAndId);
-    jsonObject.put("role", this.role);
-    jsonObject.put("params", this.params);
-    jsonObject.put("accessToken", this.accessToken);
+    jsonObject.put("userName", this.userName != null ? this.account : "");
+    jsonObject.put("departmentAndId", this.departmentAndId != null ? this.departmentAndId : "");
+    jsonObject.put("role", this.role != null ? this.role : "");
+    jsonObject.put("params", this.params != null ? this.params : "");
+    jsonObject.put("accessToken", this.accessToken != null ? this.accessToken : "");
     return jsonObject;
   }
 }

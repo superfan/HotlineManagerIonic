@@ -47,9 +47,43 @@ export class AppComponentService {
    * @returns {Promise<Promise<any>|void>|Promise<void>|Promise<TResult>|Promise<any>}
    */
   private checkPermissions(): Promise<any> {
-    return this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.CAMERA)
-      .then(success => console.log('Permission granted'),
-        err => this.androidPermissions.requestPermissions(this.androidPermissions.PERMISSION.CAMERA));
+    let permissions: string[] = [
+      this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION,
+      this.androidPermissions.PERMISSION.ACCESS_FINE_LOCATION,
+      this.androidPermissions.PERMISSION.ACCESS_WIFI_STATE,
+      this.androidPermissions.PERMISSION.CHANGE_WIFI_STATE,
+      this.androidPermissions.PERMISSION.READ_PHONE_STATE,
+      this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE,
+      this.androidPermissions.PERMISSION.INTERNET,
+      this.androidPermissions.PERMISSION.CAMERA,
+      this.androidPermissions.PERMISSION.RECORD_AUDIO
+    ];
+
+    let promise: Promise<any>;
+    for (let permission of permissions) {
+      if (!permission) {
+        continue;
+      }
+
+      if (promise) {
+        promise.then(() => this.androidPermissions.checkPermission(permission))
+          .then(success => console.log('Permission granted'),
+            err => this.androidPermissions.requestPermission(permission))
+          .catch(error => console.error(error));
+      } else {
+        promise =
+          this.androidPermissions.checkPermission(permission)
+            .then(success => console.log('Permission granted'),
+              err => this.androidPermissions.requestPermission(permission))
+            .catch(error => console.error(error));
+      }
+    }
+
+    // return this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.CAMERA)
+    //   .then(success => console.log('Permission granted'),
+    //     err => this.androidPermissions.requestPermissions(this.androidPermissions.PERMISSION.CAMERA));
+
+    return promise;
   }
 
   /**

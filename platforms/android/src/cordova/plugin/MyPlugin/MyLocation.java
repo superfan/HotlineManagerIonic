@@ -11,11 +11,6 @@ public class MyLocation {
   private double lng;
   private double lat;
 
-  public MyLocation() {
-    this.lng = 121.524808;
-    this.lat = 31.280823;
-  }
-
   public MyLocation(double lng, double lat) {
     this.lng = lng;
     this.lat = lat;
