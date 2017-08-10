@@ -3,9 +3,6 @@ package cordova.plugin.MyPlugin;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by zangwei on 2017/8/8.
- */
 
 public class MyLocation {
   private double lng;

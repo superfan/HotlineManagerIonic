@@ -59,31 +59,29 @@ export class AppComponentService {
       this.androidPermissions.PERMISSION.RECORD_AUDIO
     ];
 
-    let promise: Promise<any>;
-    for (let permission of permissions) {
-      if (!permission) {
-        continue;
-      }
+    // let promise: Promise<any>;
+    // for (let permission of permissions) {
+    //   if (!permission) {
+    //     continue;
+    //   }
+    //
+    //   if (promise) {
+    //     promise.then(() => this.androidPermissions.checkPermission(permission))
+    //       .then(success => console.log('Permission granted'),
+    //         err => this.androidPermissions.requestPermission(permission))
+    //       .catch(error => console.error(error));
+    //   } else {
+    //     promise =
+    //       this.androidPermissions.checkPermission(permission)
+    //         .then(success => console.log('Permission granted'),
+    //           err => this.androidPermissions.requestPermission(permission))
+    //         .catch(error => console.error(error));
+    //   }
+    // }
 
-      if (promise) {
-        promise.then(() => this.androidPermissions.checkPermission(permission))
-          .then(success => console.log('Permission granted'),
-            err => this.androidPermissions.requestPermission(permission))
-          .catch(error => console.error(error));
-      } else {
-        promise =
-          this.androidPermissions.checkPermission(permission)
-            .then(success => console.log('Permission granted'),
-              err => this.androidPermissions.requestPermission(permission))
-            .catch(error => console.error(error));
-      }
-    }
-
-    // return this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.CAMERA)
-    //   .then(success => console.log('Permission granted'),
-    //     err => this.androidPermissions.requestPermissions(this.androidPermissions.PERMISSION.CAMERA));
-
-    return promise;
+    return this.androidPermissions.requestPermissions(permissions)
+      .then(success => console.log('Permission granted'),
+        err => console.error(err));
   }
 
   /**

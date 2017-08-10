@@ -44,21 +44,13 @@ var getPromisedCordovaExec = function (command, success, fail) {
 function MyApi() {
 }
 
-MyApi.prototype.getPageIntent = function () {
+MyApi.prototype.getPageIntent = function (success, fail) {
   return getPromisedCordovaExec('getPageIntent', success, fail);
 };
 
-MyApi.prototype.getLocation = function () {
+MyApi.prototype.getLocation = function (success, fail) {
   return getPromisedCordovaExec('getLocation', success, fail);
 };
-//
-// myAPI.coolMethod = function (arg0, success, error) {
-//   exec(success, error, "MyPlugin", "coolMethod", [arg0]);
-// };
-//
-// myAPI.onGetNavUrl = function (success, error) {
-//   exec(success, error, "MyPlugin", "navUrl");
-// };
 
 module.exports = new MyApi();
 

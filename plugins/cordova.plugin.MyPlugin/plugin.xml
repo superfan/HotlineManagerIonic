@@ -11,9 +11,37 @@
         <param name="android-package" value="cordova.plugin.MyPlugin.MyPlugin"/>
       </feature>
     </config-file>
-    <config-file parent="/*" target="AndroidManifest.xml"></config-file>
+    <config-file parent="/*" target="AndroidManifest.xml">
+      <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+      <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+      <uses-permission android:name="android.permission.RECORD_AUDIO" />
+      <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+      <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+      <uses-permission android:name="android.permission.RECORD_VIDEO" />
+      <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+      <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+      <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+      <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+      <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+      <uses-permission android:name="android.permission.INTERNET" />
+      <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+      <uses-permission android:name="android.permission.CAMERA" />
+    </config-file>
     <source-file src="src/android/MyPlugin.java" target-dir="src/cordova/plugin/MyPlugin"/>
     <source-file src="src/android/MyLocation.java" target-dir="src/cordova/plugin/MyPlugin"/>
     <source-file src="src/android/PageIntent.java" target-dir="src/cordova/plugin/MyPlugin"/>
+
+    <source-file src="src/io/ionic/CrashHandler.java" target-dir="src/io/ionic"/>
+    <source-file src="src/io/ionic/MainApplication.java" target-dir="src/io/ionic"/>
+
+    <source-file src="src/aidl/com/sh3h/ipc/location/MyLocation.aidl" target-dir="aidl/com/sh3h/ipc/location"/>
+    <source-file src="src/aidl/com/sh3h/ipc/module/MyModule.aidl" target-dir="aidl/com/sh3h/ipc/module"/>
+    <source-file src="src/aidl/com/sh3h/ipc/IMainService.aidl" target-dir="aidl/com/sh3h/ipc"/>
+    <source-file src="src/aidl/com/sh3h/ipc/IRemoteService.aidl" target-dir="aidl/com/sh3h/ipc"/>
+    <source-file src="src/aidl/com/sh3h/ipc/IRemoteServiceCallback.aidl" target-dir="aidl/com/sh3h/ipc"/>
+
+    <source-file src="src/com/sh3h/ipc/location/MyLocation.java" target-dir="src/com/sh3h/ipc/location"/>
+    <source-file src="src/com/sh3h/ipc/module/MyModule.java" target-dir="src/com/sh3h/ipc/module"/>
+
   </platform>
 </plugin>
