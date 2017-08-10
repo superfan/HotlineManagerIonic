@@ -94,7 +94,7 @@
                         },
                         {
                             "xml": "<feature name=\"MyPlugin\"><param name=\"android-package\" value=\"cordova.plugin.MyPlugin.MyPlugin\" /></feature>",
-                            "count": 2
+                            "count": 1
                         }
                     ],
                     "/widget": [

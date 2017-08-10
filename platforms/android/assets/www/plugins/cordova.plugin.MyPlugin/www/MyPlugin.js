@@ -1,15 +1,65 @@
 cordova.define("cordova.plugin.MyPlugin.MyPlugin", function(require, exports, module) {
-var exec = require('cordova/exec');
-var myAPI={}
 
-myAPI.coolMethod = function(arg0, success, error) {
-    exec(success, error, "MyPlugin", "coolMethod", [arg0]);
+"use strict";
+
+var getPromisedCordovaExec = function (command, success, fail) {
+  var toReturn, deferred, injector, $q;
+  if (success === undefined) {
+    if (window.jQuery) {
+      deferred = jQuery.Deferred();
+      success = deferred.resolve;
+      fail = deferred.reject;
+      toReturn = deferred;
+    } else if (window.angular) {
+      injector = angular.injector(["ng"]);
+      $q = injector.get("$q");
+      deferred = $q.defer();
+      success = deferred.resolve;
+      fail = deferred.reject;
+      toReturn = deferred.promise;
+    } else if (window.when && window.when.promise) {
+      deferred = when.defer();
+      success = deferred.resolve;
+      fail = deferred.reject;
+      toReturn = deferred.promise;
+    } else if (window.Promise) {
+      toReturn = new Promise(function(c, e) {
+        success = c;
+        fail = e;
+      });
+    } else if (window.WinJS && window.WinJS.Promise) {
+      toReturn = new WinJS.Promise(function(c, e) {
+        success = c;
+        fail = e;
+      });
+    } else {
+      return console.error('AppVersion either needs a success callback, or jQuery/AngularJS/Promise/WinJS.Promise defined for using promises');
+    }
+  }
+  // 5th param is NOT optional. must be at least empty array
+  cordova.exec(success, fail, "MyPlugin", command, []);
+  return toReturn;
 };
 
-myAPI.onGetNavUrl = function(success, error) {
-  exec(success, error, "MyPlugin", "navUrl");
+function MyApi() {
+}
+
+MyApi.prototype.getPageIntent = function (success, fail) {
+  return getPromisedCordovaExec('getPageIntent', success, fail);
 };
 
-module.exports=myAPI;
+MyApi.prototype.getLocation = function (success, fail) {
+  return getPromisedCordovaExec('getLocation', success, fail);
+};
+//
+// myAPI.coolMethod = function (arg0, success, error) {
+//   exec(success, error, "MyPlugin", "coolMethod", [arg0]);
+// };
+//
+// myAPI.onGetNavUrl = function (success, error) {
+//   exec(success, error, "MyPlugin", "navUrl");
+// };
+
+module.exports = new MyApi();
 
 });

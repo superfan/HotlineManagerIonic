@@ -21,10 +21,9 @@ package io.ionic.starter;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 
 import org.apache.cordova.*;
-
-import cordova.plugin.MyPlugin.MyPlugin;
 
 
 public class MainActivity extends CordovaActivity {
@@ -46,12 +45,21 @@ public class MainActivity extends CordovaActivity {
   protected void onResume() {
     super.onResume();
     Log.i("MainActivity","onResume");
-    MyPlugin.setLoadUrl("addMaterials");
   }
 
   @Override
   public void onDestroy() {
     super.onDestroy();
     Log.i("MainActivity", "onDestroy");
+  }
+
+  @Override
+  public boolean onKeyDown(int keyCode, KeyEvent event) {
+//    if (keyCode == KeyEvent.KEYCODE_BACK
+//      && event.getAction() == KeyEvent.ACTION_DOWN) {
+//      return true;
+//    }
+
+    return super.onKeyDown(keyCode, event);
   }
 }
