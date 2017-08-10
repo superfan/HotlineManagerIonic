@@ -40,26 +40,4 @@ public class MainActivity extends CordovaActivity {
     // Set by <content src="index.html" /> in config.xml
     loadUrl(launchUrl);
   }
-
-  @Override
-  protected void onResume() {
-    super.onResume();
-    Log.i("MainActivity","onResume");
-  }
-
-  @Override
-  public void onDestroy() {
-    super.onDestroy();
-    Log.i("MainActivity", "onDestroy");
-  }
-
-  @Override
-  public boolean onKeyDown(int keyCode, KeyEvent event) {
-//    if (keyCode == KeyEvent.KEYCODE_BACK
-//      && event.getAction() == KeyEvent.ACTION_DOWN) {
-//      return true;
-//    }
-
-    return super.onKeyDown(keyCode, event);
-  }
 }

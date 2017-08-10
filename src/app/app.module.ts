@@ -55,6 +55,7 @@ import {MapPage} from "../pages/map/map";
 import {MaterialsPage} from "../pages/materials/materials";
 import {MaterialsAddPage} from "../pages/materialsadd/materialsadd";
 import {MyPlugin} from "@ionic-native/my-plugin";
+import {TabsPage} from "../pages/tabs/tabs";
 
 
 @NgModule({
@@ -81,7 +82,8 @@ import {MyPlugin} from "@ionic-native/my-plugin";
     MaterialsPage,
     MaterialsAddPage,
     ValueValidPipe,
-    PopoverRecordPage
+    PopoverRecordPage,
+    TabsPage
   ],
   imports: [
     BrowserModule,
@@ -110,7 +112,8 @@ import {MyPlugin} from "@ionic-native/my-plugin";
     MyHistory,
     MapPage,
     MaterialsPage,
-    MaterialsAddPage
+    MaterialsAddPage,
+    TabsPage
   ],
   providers: [
     StatusBar,

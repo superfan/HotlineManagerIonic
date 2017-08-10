@@ -4,6 +4,7 @@ import {StatusBar} from '@ionic-native/status-bar';
 import {SplashScreen} from '@ionic-native/splash-screen';
 import {AppComponentService} from "./app.component.service";
 import {GlobalService} from "../providers/GlobalService";
+import {TabsPage} from "../pages/tabs/tabs";
 
 @Component({
   templateUrl: 'app.html',
@@ -25,9 +26,9 @@ export class MyApp {
         // Here you can do any higher level native things you might need.
         statusBar.styleDefault();
         splashScreen.hide();
-        return appComponentService.getRootPage();
+        return appComponentService.init();
       })
-      .then(page => this.rootPage = page)
+      .then(page => this.rootPage = TabsPage)
       .catch(error => {
         console.error(error);
         this.globalService.showToast(error);

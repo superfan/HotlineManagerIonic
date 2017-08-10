@@ -1,5 +1,6 @@
 <ion-tabs>
-  <ion-tab [root]="tab1Root" tabTitle="Home" tabIcon="home"></ion-tab>
-  <ion-tab [root]="tab2Root" tabTitle="About" tabIcon="information-circle"></ion-tab>
-  <ion-tab [root]="tab3Root" tabTitle="Contact" tabIcon="contacts"></ion-tab>
+  <ion-tab [root]="tabsInfo[0].page" tabTitle="{{tabsInfo[0].title}}" tabIcon="{{tabsInfo[0].icon}}"></ion-tab>
+  <ion-tab [root]="tabsInfo[1].page" tabTitle="{{tabsInfo[1].title}}" tabIcon="{{tabsInfo[1].icon}}"></ion-tab>
+  <ion-tab [root]="tabsInfo[2].page" tabTitle="{{tabsInfo[2].title}}" tabIcon="{{tabsInfo[2].icon}}"></ion-tab>
+  <ion-tab [root]="tabsInfo[3].page" tabTitle="{{tabsInfo[3].title}}" tabIcon="{{tabsInfo[3].icon}}"></ion-tab>
 </ion-tabs>

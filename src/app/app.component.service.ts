@@ -24,21 +24,21 @@ export class AppComponentService {
   }
 
   /**
-   * 获取界面
+   * 初始化
    * @returns {Promise<any>}
    */
-  public getRootPage(): Promise<any> {
+  public init(): Promise<any> {
     if (this.globalService.isChrome) {
       this.myPlugin = this.globalService.getMyPluginMock();
       return this.dataService.init()
         .then(result => this.dataService.downloadWords())
-        .then(result => this.getPage());
+        .then(result => this.parsePageIntent());
     } else {
       return this.checkPermissions()
         .then(result => this.fileService.createDirRoot())
         .then(result => this.dataService.init())
         .then(result => this.dataService.downloadWords())
-        .then(result => this.getPage());
+        .then(result => this.parsePageIntent());
     }
   }
 
@@ -53,10 +53,10 @@ export class AppComponentService {
   }
 
   /**
-   * 获取界面
+   * 解析参数
    * @returns {Promise<Page>|Promise<PageIntent>|Promise<TResult2|Page>}
    */
-  private getPage(): Promise<any> {
+  private parsePageIntent(): Promise<any> {
     return this.myPlugin.getPageIntent()
       .then(pageIntent => {
         if (!pageIntent.account
