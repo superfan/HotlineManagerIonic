@@ -66,8 +66,8 @@ export class WelcomePage {
           //     this.navCtrl.push(MaterialsPage, {});
           //   }
           // }, error => alert(error));
-          this.getVersionCode();
-          // this.jump2Login();
+          // this.getVersionCode();
+          this.jump2Login();
         })
         .catch(err => {
           console.log("initial files failed" + err);
