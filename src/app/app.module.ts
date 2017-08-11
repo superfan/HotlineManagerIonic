@@ -54,6 +54,8 @@ import {FileTransfer} from '@ionic-native/file-transfer';
 import {MapPage} from "../pages/map/map";
 import {MaterialsPage} from "../pages/materials/materials";
 import {MaterialsAddPage} from "../pages/materialsadd/materialsadd";
+import {MyPlugin} from "@ionic-native/my-plugin";
+import {TabsPage} from "../pages/tabs/tabs";
 
 
 @NgModule({
@@ -80,11 +82,12 @@ import {MaterialsAddPage} from "../pages/materialsadd/materialsadd";
     MaterialsPage,
     MaterialsAddPage,
     ValueValidPipe,
-    PopoverRecordPage
+    PopoverRecordPage,
+    TabsPage
   ],
   imports: [
     BrowserModule,
-    [HttpModule],
+    HttpModule,
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot()
   ],
@@ -109,7 +112,8 @@ import {MaterialsAddPage} from "../pages/materialsadd/materialsadd";
     MyHistory,
     MapPage,
     MaterialsPage,
-    MaterialsAddPage
+    MaterialsAddPage,
+    TabsPage
   ],
   providers: [
     StatusBar,
@@ -140,6 +144,7 @@ import {MaterialsAddPage} from "../pages/materialsadd/materialsadd";
     Media,
     MediaService,
     FileTransfer,
+    MyPlugin,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     {provide: Http, useFactory: httpFactory, deps: [HttpInterceptorBackend, RequestOptions]},
   ]

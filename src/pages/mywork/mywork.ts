@@ -13,6 +13,7 @@ import {DelayInfo} from "../../model/DelayInfo";
 import {CancelInfo} from "../../model/CancelInfo";
 import {MapPage} from "../map/map";
 import {MapParam, MapType} from "../../model/MapParam";
+import {Location} from "../../model/Location";
 
 enum FromWhere {
   Download,
@@ -125,29 +126,36 @@ export class MyWorkPage implements OnInit, OnDestroy {
    */
   itemSelected(taskEx: TaskEx, index: number): void {
     console.log(this.tag, "Selected Item " + index);
-    switch (taskEx.processes[index].event) {
-      case 'accept':
-        this.accept(taskEx);
-        break;
-      case 'go':
-        this.go(taskEx);
-        break;
-      case 'arrive':
-        this.arrive(taskEx);
-        break;
-      case 'reply':
-        this.reply(taskEx);
-        break;
-      case 'reject':
-        this.rejectPrompt(taskEx);
-        break;
-      case 'delay':
-        this.delayPrompt(taskEx);
-        break;
-      case 'cancel':
-        this.cancelPrompt(taskEx);
-        break;
-    }
+    this.globalService.getLocation()
+      .then(location => {
+        switch (taskEx.processes[index].event) {
+          case 'accept':
+            this.accept(taskEx, location);
+            break;
+          case 'go':
+            this.go(taskEx, location);
+            break;
+          case 'arrive':
+            this.arrive(taskEx, location);
+            break;
+          case 'reply':
+            this.reply(taskEx, location);
+            break;
+          case 'reject':
+            this.rejectPrompt(taskEx, location);
+            break;
+          case 'delay':
+            this.delayPrompt(taskEx, location);
+            break;
+          case 'cancel':
+            this.cancelPrompt(taskEx, location);
+            break;
+        }
+      })
+      .catch(error => {
+        console.error(error);
+        this.globalService.showToast(error);
+      });
   }
 
   /**
@@ -364,8 +372,9 @@ export class MyWorkPage implements OnInit, OnDestroy {
   /**
    * 接单
    * @param taskEx
+   * @param location
    */
-  private accept(taskEx: TaskEx): void {
+  private accept(taskEx: TaskEx, location: Location): void {
     let processEx: ProcessEx = new ProcessEx();
     if (!transform2ProcessEx(taskEx, processEx)) {
       return;
@@ -375,11 +384,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
       let time = new Date();
       let acceptInfo: AcceptInfo = {
         acceptTime: time.getTime(),
-        location: {
-          type: "bd09ll",
-          lng: "121.525766",
-          lat: "31.280693"
-        },
+        location,
         taskId: taskEx.id,
         userId: this.globalService.userId
       };
@@ -406,8 +411,9 @@ export class MyWorkPage implements OnInit, OnDestroy {
   /**
    * 出发
    * @param taskEx
+   * @param location
    */
-  private go(taskEx: TaskEx): void {
+  private go(taskEx: TaskEx, location: Location): void {
     let processEx: ProcessEx = new ProcessEx();
     if (!transform2ProcessEx(taskEx, processEx)) {
       return;
@@ -417,11 +423,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
       let time = new Date();
       let goInfo: GoInfo = {
         goTime: time.getTime(),
-        location: {
-          type: "bd09ll",
-          lng: "121.525766",
-          lat: "31.280693"
-        },
+        location,
         taskId: taskEx.id,
         userId: this.globalService.userId
       };
@@ -448,8 +450,9 @@ export class MyWorkPage implements OnInit, OnDestroy {
   /**
    * 到场
    * @param taskEx
+   * @param location
    */
-  private arrive(taskEx: TaskEx): void {
+  private arrive(taskEx: TaskEx, location: Location): void {
     let processEx: ProcessEx = new ProcessEx();
     if (!transform2ProcessEx(taskEx, processEx)) {
       return;
@@ -459,11 +462,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
       let time = new Date();
       let arriveInfo: ArriveInfo = {
         arrivedTime: time.getTime(),
-        location: {
-          type: "bd09ll",
-          lng: "121.525766",
-          lat: "31.280693"
-        },
+        location,
         taskId: taskEx.id,
         userId: this.globalService.userId
       };
@@ -490,8 +489,9 @@ export class MyWorkPage implements OnInit, OnDestroy {
   /**
    * 回复
    * @param taskEx
+   * @param location
    */
-  private reply(taskEx: TaskEx): void {
+  private reply(taskEx: TaskEx, location: Location): void {
     let processEx: ProcessEx = new ProcessEx();
     if (!transform2ProcessEx(taskEx, processEx)) {
       return;
@@ -506,8 +506,9 @@ export class MyWorkPage implements OnInit, OnDestroy {
   /**
    * 退单
    * @param taskEx
+   * @param location
    */
-  private reject(taskEx: TaskEx): void {
+  private reject(taskEx: TaskEx, location: Location): void {
     let processEx: ProcessEx = new ProcessEx();
     if (!transform2ProcessEx(taskEx, processEx)) {
       return;
@@ -519,11 +520,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
       let rejectInfo: RejectInfo = {
         rejectTime: time.getTime(),
         rejectReason: rejectExtend.reason,
-        location: {
-          type: "bd09ll",
-          lng: "121.525766",
-          lat: "31.280693"
-        },
+        location,
         taskId: taskEx.id,
         userId: this.globalService.userId
       };
@@ -554,8 +551,9 @@ export class MyWorkPage implements OnInit, OnDestroy {
   /**
    * 延迟
    * @param taskEx
+   * @param location
    */
-  private delay(taskEx: TaskEx): void {
+  private delay(taskEx: TaskEx, location: Location): void {
     let processEx: ProcessEx = new ProcessEx();
     if (!transform2ProcessEx(taskEx, processEx)) {
       return;
@@ -594,11 +592,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
           delayTime: time.getTime(),
           deadline: delayExtend.deadline.getTime(),
           comment: delayExtend.comment,
-          location: {
-            type: "bd09ll",
-            lng: "121.525766",
-            lat: "31.280693"
-          },
+          location,
           taskId: taskEx.id,
           userId: this.globalService.userId
         };
@@ -622,8 +616,9 @@ export class MyWorkPage implements OnInit, OnDestroy {
   /**
    * 销单
    * @param taskEx
+   * @param location
    */
-  private cancel(taskEx: TaskEx): void {
+  private cancel(taskEx: TaskEx, location: Location): void {
     let processEx: ProcessEx = new ProcessEx();
     if (!transform2ProcessEx(taskEx, processEx)) {
       return;
@@ -635,11 +630,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
       let cancelInfo: CancelInfo = {
         destroyTime: time.getTime(),
         destroyRemark: cancelExtend.remark,
-        location: {
-          type: "bd09ll",
-          lng: "121.525766",
-          lat: "31.280693"
-        },
+        location,
         taskId: taskEx.id,
         userId: this.globalService.userId
       }
@@ -764,8 +755,9 @@ export class MyWorkPage implements OnInit, OnDestroy {
   /**
    * 退单对话框
    * @param taskEx
+   * @param location
    */
-  private rejectPrompt(taskEx: TaskEx): void {
+  private rejectPrompt(taskEx: TaskEx, location: Location): void {
     let processEx: ProcessEx = new ProcessEx();
     if (!transform2ProcessEx(taskEx, processEx) || processEx.reject.done) {
       return;
@@ -798,7 +790,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
               reason: data.reason
             };
 
-            this.reject(taskEx);
+            this.reject(taskEx, location);
           }
         }
       ]
@@ -809,8 +801,9 @@ export class MyWorkPage implements OnInit, OnDestroy {
   /**
    * 延迟对话框
    * @param taskEx
+   * @param location
    */
-  private delayPrompt(taskEx: TaskEx): void {
+  private delayPrompt(taskEx: TaskEx, location: Location): void {
     let processEx: ProcessEx = new ProcessEx();
     if (!transform2ProcessEx(taskEx, processEx) || processEx.delay.done) {
       return;
@@ -884,7 +877,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
                 comment: data.reason,
                 deadline
               };
-              this.delay(taskEx);
+              this.delay(taskEx, location);
             }
           }
         }
@@ -896,8 +889,9 @@ export class MyWorkPage implements OnInit, OnDestroy {
   /**
    * 销单对话框
    * @param taskEx
+   * @param location
    */
-  private cancelPrompt(taskEx: TaskEx): void {
+  private cancelPrompt(taskEx: TaskEx, location: Location): void {
     let processEx: ProcessEx = new ProcessEx();
     if (!transform2ProcessEx(taskEx, processEx) || processEx.cancel.done) {
       return;
@@ -930,7 +924,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
               remark: data.remark
             };
 
-            this.cancel(taskEx);
+            this.cancel(taskEx, location);
           }
         }
       ]

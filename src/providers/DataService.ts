@@ -33,6 +33,7 @@ export class DataService extends SyncService {
   private reflectTypes: Array<Word>;
   private reflectContents: Array<Word>;
   private personnels: Array<Personnel>;
+  private isInitialized: boolean;
 
   constructor(downloadService: DownloadService,
               uploadService: UploadService,
@@ -41,6 +42,7 @@ export class DataService extends SyncService {
               mediaService: MediaService,
               events: Events) {
     super(downloadService, uploadService, globalService, dbService, mediaService, events);
+    this.isInitialized = false;
   }
 
   /**
@@ -48,16 +50,23 @@ export class DataService extends SyncService {
    * @returns {Promise<boolean>}
    */
   public init(): Promise<boolean> {
-    super.init();
-    return this.dbService.init();
+    if (this.isInitialized) {
+      return Promise.resolve(true);
+    } else {
+      super.init();
+      return this.dbService.init()
+        .then(result => this.isInitialized = result);
+    }
   }
 
   /**
    * 销毁
    */
   public destroy(): void {
-    super.destroy();
-    this.dbService.destroy();
+    if (this.isInitialized) {
+      super.destroy();
+      this.dbService.destroy();
+    }
   }
 
   /**
@@ -204,7 +213,12 @@ export class DataService extends SyncService {
    */
   public downloadWords(): Promise<boolean> {
     return this.downloadService.getAllWords('all')
-      .then(words => this.dbService.saveWords(words));
+      .then(words => this.dbService.saveWords(words))
+      .catch(error => {
+        console.error(error);
+        this.globalService.showToast(error);
+        return Promise.resolve(false);
+      });
   }
 
   /**

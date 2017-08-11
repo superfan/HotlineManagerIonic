@@ -1,6 +1,10 @@
 import {Injectable} from '@angular/core';
 import {ToastController, LoadingController, Loading} from "ionic-angular";
 import {TaskEx} from "../model/Task";
+import {UserDetailInfo} from "../model/UserDetailInfo";
+import {Storage} from '@ionic/storage';
+import {MyPlugin, PageIntent} from "@ionic-native/my-plugin";
+import {Location, LocationEx} from "../model/Location";
 
 export interface MainUpdateEvent {
   type: 'myWorkCount' | 'newsCount' | 'stationWorkCount' | 'gridStyle';
@@ -14,6 +18,28 @@ export interface MyWorkUpdateEvent {
   time?: number;
 }
 
+export class MyPluginMock extends MyPlugin {
+  getPageIntent(): Promise<PageIntent> {
+    let pageIntent: PageIntent = {
+      account: 'ss1',
+      userId: 3,
+      userName: 'ss1',
+      departmentAndId: '上水#1',
+      role: 'worker',
+      params: 'MyWorkPage'
+
+    };
+    return Promise.resolve(pageIntent);
+  }
+
+  getLocation(): Promise<any> {
+    return Promise.resolve({
+      lng: 121.524808,
+      lat: 31.280823
+    });
+  }
+}
+
 @Injectable()
 export class GlobalService {
   readonly isChrome: boolean = true;
@@ -25,11 +51,12 @@ export class GlobalService {
   readonly uploadedFlagForLocal: number = 0;
   readonly uploadedFlagForUploading: number = 1;
   readonly uploadedFlagForUploaded: number = 2;
-  userName: string = "sh3h";//"王超";
-  userId: number = 1;//60;5005
-  department: string = "东河营业分公司";//"滨河营业分公司";
-  departmentId: number = 10;
-  isWorker: boolean;//是否是外勤人员
+  account: string = "admin";
+  userName: string = "admin";
+  userId: number = 1;
+  department: string = "上海三高";
+  departmentId: number = 1;
+  isWorker: boolean = false;//是否是外勤人员
   readonly mainUpdateEvent: string = "main:update";
   readonly myWorkDownloadFinishEvent: string = "mywork:download:finish"; // task & detail
   readonly historyUploadFinishEvent: string = "history:upload:finish"; // history & media
@@ -38,10 +65,77 @@ export class GlobalService {
   readonly materialsUpdateEvent: string = "addMaterials:update";
   readonly recordAudioFinishEvent: string = "record:audio:finish";
   private loading: Loading;
+  private readonly userDetailInfoStorageName: string = 'userDetailInfo';
+  readonly locationType: string = 'bd09ll';
+  private myPluginMock: MyPluginMock;
 
   constructor(private toastCtrl: ToastController,
-              private loadingCtrl: LoadingController) {
+              private loadingCtrl: LoadingController,
+              private storage: Storage,
+              private myPlugin: MyPlugin) {
+  }
 
+  public getMyPluginMock(): MyPluginMock {
+    return this.myPluginMock ? this.myPluginMock : this.myPluginMock = new MyPluginMock();
+  }
+
+  public saveUserDetailInfo(userDetailInfo: UserDetailInfo): Promise<any> {
+    return userDetailInfo && userDetailInfo.account && userDetailInfo.userName && userDetailInfo.role && userDetailInfo.department
+      ? this.storage.set(this.userDetailInfoStorageName, JSON.stringify(userDetailInfo))
+        .then(result => {
+          this.account = userDetailInfo.account;
+          this.userId = userDetailInfo.userId;
+          this.userName = userDetailInfo.userName;
+          this.isWorker = userDetailInfo.role === 'worker';
+          this.department = userDetailInfo.department;
+          this.departmentId = userDetailInfo.departmentId;
+          return Promise.resolve(result);
+        })
+      : Promise.reject('userDetailInfo is error');
+  }
+
+  public getLocationEx(): Promise<LocationEx> {
+    if (this.isChrome) {
+      this.myPlugin = this.getMyPluginMock();
+    }
+
+    return this.myPlugin.getLocation()
+      .then(location => ({
+        type: this.locationType,
+        lng: location.lng,
+        lat: location.lat
+      }))
+      .catch(error => {
+        console.error(error);
+        return this.myPluginMock.getLocation()
+          .then(location => ({
+            type: this.locationType,
+            lng: location.lng,
+            lat: location.lat
+          }));
+      });
+  }
+
+  public getLocation(): Promise<Location> {
+    if (this.isChrome) {
+      this.myPlugin = this.getMyPluginMock();
+    }
+
+    return this.myPlugin.getLocation()
+      .then(location => ({
+        type: this.locationType,
+        lng: location.lng.toString(),
+        lat: location.lat.toString()
+      }))
+      .catch(error => {
+        console.error(error);
+        return this.myPluginMock.getLocation()
+          .then(location => ({
+            type: this.locationType,
+            lng: location.lng.toString(),
+            lat: location.lat.toString()
+          }));
+      });
   }
 
   /**
@@ -79,7 +173,7 @@ export class GlobalService {
    * @param content
    * @param duration
    */
-  public showLoading(content: string, duration?: number): void {
+  public showLoading(content: string = '加载中...', duration?: number): void {
     if (this.loading) {
       this.loading.dismissAll();
     }
@@ -95,6 +189,15 @@ export class GlobalService {
       this.loading.dismiss();
     }
     this.loading = undefined;
+  }
+
+  public static string2Int(value: string): number {
+    try {
+      return Number.parseInt(value);
+    } catch (e) {
+      console.error(e);
+      return 0;
+    }
   }
 
   private padLeftZero(name: string): string {
