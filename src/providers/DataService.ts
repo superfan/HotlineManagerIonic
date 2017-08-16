@@ -222,6 +222,22 @@ export class DataService extends SyncService {
   }
 
   /**
+   *
+   * @returns {Promise<boolean>}
+   */
+  public checkIfDownloadWords(): Promise<boolean> {
+    return this.dbService.getWordsCount()
+      .then(count => count > 0
+        ? Promise.resolve(true)
+        : this.downloadService.getAllWords('all').then(words => this.dbService.saveWords(words)))
+      .catch(error => {
+        console.error(error);
+        this.globalService.showToast(error);
+        return Promise.resolve(false);
+      });
+  }
+
+  /**
    * 获取处理类别
    * @returns {Promise<Array<Word>>|Promise<TResult>}
    */

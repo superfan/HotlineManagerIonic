@@ -167,6 +167,23 @@ export class DbService {
   }
 
   /**
+   * 获取词语数目
+   * @returns {any}
+   */
+  public getWordsCount(): Promise<number> {
+    if (this.globalService.isChrome) {
+      return Promise.resolve(0);
+    } else {
+      return this.openDb()
+        .then(db => {
+          let sql: string = `SELECT COUNT(*) FROM GD_WORDS;`;
+          return db.executeSql(sql, {})
+            .then(data => data.rows ? data.rows.length : 0);
+        });
+    }
+  }
+
+  /**
    * 保存任务列表
    * @param userId
    * @param serverTasks

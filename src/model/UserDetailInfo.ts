@@ -4,7 +4,7 @@ export interface UserDetailInfo {
   account: string;
   userId: number;
   userName: string;
-  role: string;
+  roles: string;
   department: string;
   departmentId: number;
 }

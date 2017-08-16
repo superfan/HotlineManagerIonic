@@ -108,7 +108,8 @@ public class CoreAndroid extends CordovaPlugin {
                 this.overrideBackbutton(args.getBoolean(0));
             }
             else if (action.equals("exitApp")) {
-                this.exitApp();
+                //this.exitApp();
+              this.cordova.getActivity().moveTaskToBack(true);
             }
 			else if (action.equals("messageChannel")) {
                 synchronized(messageChannelLock) {

@@ -15,12 +15,14 @@ import { Plugin, Cordova, IonicNativePlugin } from '@ionic-native/core';
 
 export class PageIntent {
   account: string;
+  password: string;
   userId: number;
   userName: string;
   departmentAndId: string; // '...#...'
-  role: string; // '1,2,3,....'
+  roles: string; // '1,2,3,....'
   params: string; // 'page#...'
-  accessToken?: string;
+  accessToken: string;
+  extendedInfo: string;
 }
 
 export class MyLocation {

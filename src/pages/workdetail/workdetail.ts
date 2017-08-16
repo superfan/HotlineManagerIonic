@@ -143,7 +143,7 @@ export class WorkDetailPage implements OnInit, OnDestroy {
 
     this.replyInfo = {
       opTime: new Date().getTime(),
-      opDepartment: this.globalService.departmentId,
+      opDepartment: this.globalService.department,
       opPerson: this.globalService.userId,
       opLeiBie: 0,
       opContent: 0,

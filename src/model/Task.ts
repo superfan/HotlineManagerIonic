@@ -57,8 +57,8 @@ export class TaskEx {
     this.describe = task.desc;
     this.location = {
       type: task.location.type,
-      lng: '121.524808',//task.location.lng,
-      lat: '31.280823'//task.location.lat
+      lng: task.location.lng,
+      lat: task.location.lat
     };
     this.source = task.source;
     this.lastProcess = '';
