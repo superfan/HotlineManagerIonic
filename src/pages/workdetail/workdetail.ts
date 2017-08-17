@@ -1,6 +1,6 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {NavController, NavParams, AlertController, Events, PopoverController} from 'ionic-angular';
-import {Task, TaskEx, transform2ProcessEx, transform2Task} from "../../model/Task";
+import {TaskState, Task, TaskEx, transform2ProcessEx, transform2Task} from "../../model/Task";
 import {DataService} from "../../providers/DataService";
 import {TaskDetail} from "../../model/TaskDetail";
 import {ReplyInfo} from "../../model/ReplyInfo";
@@ -10,6 +10,8 @@ import {ProcessEx} from "../../model/Process";
 import {PopoverRecordPage} from "../record/PopoverRecordPage";
 import {MapPage} from "../map/map";
 import {MapParam, MapType} from "../../model/MapParam";
+import {History} from "../../model/History";
+import {FileService} from "../../providers/FileService";
 
 interface Detail {
   name: string;
@@ -105,6 +107,7 @@ export class WorkDetailPage implements OnInit, OnDestroy {
   isPreview: boolean;
   isLocationValid: boolean;
   private taskEx: TaskEx;
+  private history: History;
   private taskDetail: TaskDetail;
   private replyInfo: ReplyInfo;
 
@@ -122,8 +125,9 @@ export class WorkDetailPage implements OnInit, OnDestroy {
               private events: Events,
               private dataService: DataService,
               private globalService: GlobalService,
-              private popoverCtrl: PopoverController) {
-    this.taskEx = navParams.data as TaskEx;
+              private popoverCtrl: PopoverController,
+              private fileService: FileService) {
+    [this.taskEx, this.history] = navParams.data;
     this.isPreview = this.taskEx.isPreview;
     this.isLocationValid = this.taskEx.isLocationValid;
   }
@@ -141,25 +145,31 @@ export class WorkDetailPage implements OnInit, OnDestroy {
       })
       .catch(error => console.error(error));
 
-    this.replyInfo = {
-      opTime: new Date().getTime(),
-      opDepartment: this.globalService.department,
-      opPerson: this.globalService.userId,
-      opLeiBie: 0,
-      opContent: 0,
-      reason: 0,
-      solution: 0,
-      result: 0,
-      replayComment: '',
-      files: '',
-      location: {
-        type: "bd09ll",
-        lng: "121.525766",
-        lat: "31.280693"
-      },
-      taskId: this.taskEx.id,
-      userId: this.globalService.userId
-    };
+    if (this.history && this.history.reply) {
+      this.replyInfo = this.history.reply as ReplyInfo;
+    }
+
+    if (!this.replyInfo) {
+      this.replyInfo = {
+        opTime: 0,
+        opDepartment: this.globalService.department,
+        opPerson: this.globalService.userId,
+        opLeiBie: 0,
+        opContent: 0,
+        reason: 0,
+        solution: 0,
+        result: 0,
+        replayComment: '',
+        files: '',
+        location: {
+          type: "bd09ll",
+          lng: "121.525766",
+          lat: "31.280693"
+        },
+        taskId: this.taskEx.id,
+        userId: this.globalService.userId
+      };
+    }
 
     this.subscribeEvent(this.events);
   }
@@ -206,11 +216,26 @@ export class WorkDetailPage implements OnInit, OnDestroy {
       })
       .then(date => {
         console.log("success");
+
+        this.taskEx.photoCount = this.picCount;
+        this.taskEx.audioCount = this.audioCount;
+
+        let history: History = {
+          userId: this.globalService.userId,
+          taskId: task.taskId,
+          state: TaskState.Reply,
+          task: task,
+          reply: this.replyInfo,
+          uploadedFlag: undefined,
+          taskDetail: this.taskDetail,
+          mediaNames: this.mediaNames
+        };
+
         this.dataService.uploadMediasOfOneTask(task.taskId);
         this.events.publish(this.globalService.myWorkUpdateEvent, {
           type: 'reply',
           taskEx: this.taskEx,
-          time: this.replyInfo.opTime
+          history
         });
         this.navCtrl.pop();
       })
@@ -233,6 +258,7 @@ export class WorkDetailPage implements OnInit, OnDestroy {
         this.setReplyInfo();
         break;
       case 'mediaInfo':
+        this.setMediaInfo();
         break;
       default:
         return;
@@ -275,7 +301,7 @@ export class WorkDetailPage implements OnInit, OnDestroy {
    * @param ev
    */
   onTakePicture(ev: any): void {
-    if (this.globalService.isChrome) {
+    if (this.globalService.isChrome || this.isPreview) {
       return;
     }
 
@@ -303,7 +329,7 @@ export class WorkDetailPage implements OnInit, OnDestroy {
   onRecordAudio(ev: any): void {
     console.log(this.tag, 'onRecordAudio');
 
-    if (this.globalService.isChrome) {
+    if (this.globalService.isChrome || this.isPreview) {
       return;
     }
 
@@ -342,37 +368,53 @@ export class WorkDetailPage implements OnInit, OnDestroy {
    * 设置回复信息
    */
   private setReplyInfo(): void {
-    this.reply[0].value = this.globalService.getFormatTime(new Date());
+    if (this.replyInfo.opTime === 0) {
+      this.replyInfo.opTime = new Date().getTime();
+    }
+    this.reply[0].value = this.globalService.getFormatTime(new Date(this.replyInfo.opTime));
     // department
-    this.reply[1].value = this.globalService.department;
+    this.reply[1].value = this.replyInfo.opDepartment;
     // person
     this.reply[2].value = this.globalService.userName;
     // operation type
-    this.getOptTypes();
+    this.getOptTypes(this.replyInfo.opLeiBie, this.replyInfo.opContent);
     // operation reason
-    this.getOptReasons();
+    this.getOptReasons(this.replyInfo.reason);
     // operation solution
-    this.getOptSolutions();
+    this.getOptSolutions(this.replyInfo.solution);
     // operation result
-    this.getOptResults();
+    this.getOptResults(this.replyInfo.result);
     // remark
     this.reply[8].isActive = !this.isPreview;
+    this.reply[8].value = this.replyInfo.replayComment;
   }
 
   /**
    * 获取处理类别
+   * @param typeId
+   * @param contentId
    */
-  private getOptTypes(): void {
+  private getOptTypes(typeId?: number, contentId?: number): void {
     this.dataService.getOptTypes()
       .then(words => {
         console.log(this.tag, "getOptTypes");
         this.optTypes = words;
         if (this.optTypes.length > 0) {
-          this.reply[3].value = this.optTypes[0].wName;
+          let word: Word;
+          if (typeId) {
+            word = this.optTypes.find(word => word.wid === typeId);
+          }
+
+          if (!word) {
+            word = this.optTypes[0];
+            contentId = undefined;
+          }
+
+          this.reply[3].value = word.wName;
           this.reply[3].isActive = !this.isPreview;
-          this.reply[3].remark = this.optTypes[0].wRemark;
-          this.replyInfo.opLeiBie = this.optTypes[0].wid;
-          this.getOptContents(Number.parseInt(this.optTypes[0].wRemark));
+          this.reply[3].remark = word.wRemark;
+          this.replyInfo.opLeiBie = word.wid;
+          this.getOptContents(Number.parseInt(word.wRemark), contentId);
         }
       })
       .catch(error => console.error(error));
@@ -381,17 +423,27 @@ export class WorkDetailPage implements OnInit, OnDestroy {
   /**
    * 获取处理内容
    * @param parentId
+   * @param contentId
    */
-  private getOptContents(parentId: number): void {
+  private getOptContents(parentId: number, contentId?: number): void {
     this.dataService.getOptContents(parentId)
       .then(words => {
         console.log(this.tag, "getOptContents");
         this.optContents = words;
         if (this.optContents.length > 0) {
-          this.reply[4].value = this.optContents[0].wName;
-          this.reply[4].remark = this.optContents[0].wRemark;
+          let word: Word;
+          if (contentId) {
+            word = this.optContents.find(word => word.wid === contentId);
+          }
+
+          if (!word) {
+            word = this.optContents[0];
+          }
+
+          this.reply[4].value = word.wName;
+          this.reply[4].remark = word.wRemark;
           this.reply[4].color = this.enableColor;
-          this.replyInfo.opContent = this.optContents[0].wid;
+          this.replyInfo.opContent = word.wid;
         } else {
           this.reply[4].value = "请选择处理内容";
           this.reply[4].remark = "";
@@ -406,16 +458,25 @@ export class WorkDetailPage implements OnInit, OnDestroy {
   /**
    * 获取发生原因
    */
-  private getOptReasons(): void {
+  private getOptReasons(id?: number): void {
     this.dataService.getOptReasons()
       .then(words => {
         console.log(this.tag, "getOptReasons");
         this.optReasons = words;
         if (this.optReasons.length > 0) {
-          this.reply[5].value = this.optReasons[0].wName;
+          let word: Word;
+          if (id) {
+            word = this.optReasons.find(word => word.wid === id);
+          }
+
+          if (!word) {
+            word = this.optReasons[0];
+          }
+
+          this.reply[5].value = word.wName;
           this.reply[5].isActive = !this.isPreview;
-          this.reply[5].remark = this.optReasons[0].wRemark;
-          this.replyInfo.reason = this.optReasons[0].wid;
+          this.reply[5].remark = word.wRemark;
+          this.replyInfo.reason = word.wid;
         }
       })
       .catch(error => console.error(error));
@@ -424,16 +485,25 @@ export class WorkDetailPage implements OnInit, OnDestroy {
   /**
    * 获取解决措施
    */
-  private getOptSolutions(): void {
+  private getOptSolutions(id?: number): void {
     this.dataService.getOptSolutions()
       .then(words => {
         console.log(this.tag, "getOptSolutions");
         this.optSolutions = words;
         if (this.optSolutions.length > 0) {
-          this.reply[6].value = this.optSolutions[0].wName;
+          let word: Word;
+          if (id) {
+            word = this.optSolutions.find(word => word.wid === id);
+          }
+
+          if (!word) {
+            word = this.optSolutions[0];
+          }
+
+          this.reply[6].value = word.wName;
           this.reply[6].isActive = !this.isPreview;
-          this.reply[6].remark = this.optSolutions[0].wRemark;
-          this.replyInfo.solution = this.optSolutions[0].wid;
+          this.reply[6].remark = word.wRemark;
+          this.replyInfo.solution = word.wid;
         }
       })
       .catch(error => console.error(error));
@@ -442,16 +512,25 @@ export class WorkDetailPage implements OnInit, OnDestroy {
   /**
    * 获取处理结果
    */
-  private getOptResults(): void {
+  private getOptResults(id?: number): void {
     this.dataService.getOptResults()
       .then(words => {
         console.log(this.tag, "getOptResult");
         this.optResults = words;
         if (this.optResults.length > 0) {
-          this.reply[7].value = this.optResults[0].wName;
+          let word: Word;
+          if (id) {
+            word = this.optResults.find(word => word.wid === id);
+          }
+
+          if (!word) {
+            word = this.optResults[0];
+          }
+
+          this.reply[7].value = word.wName;
           this.reply[7].isActive = !this.isPreview;
-          this.reply[7].remark = this.optResults[0].wRemark;
-          this.replyInfo.result = this.optResults[0].wid;
+          this.reply[7].remark = word.wRemark;
+          this.replyInfo.result = word.wid;
         }
       })
       .catch(error => console.error(error));
@@ -594,11 +673,37 @@ export class WorkDetailPage implements OnInit, OnDestroy {
     events.subscribe(this.globalService.recordAudioFinishEvent, (name: string, time: number) => {
       console.log(name);
       if (name && time > 0) {
-        this.audios[this.audioCount].name = name;
-        this.audios[this.audioCount++].time = Number.parseInt((time / 1000).toString());
-        this.mediaNames.push(name);
+        time = Number.parseInt((time / 1000).toString());
+        this.audios[this.audioCount].name = `${name}#${time}`;
+        this.audios[this.audioCount++].time = time;
+        this.mediaNames.push(`${name}#${time}`);
       }
     });
+  }
+
+  private setMediaInfo(): void {
+    if (this.history
+      && this.history.mediaNames
+      && this.history.mediaNames.length > 0) {
+      this.picCount = 0;
+      this.audioCount = 0;
+      this.mediaNames = [];
+      for (let name of this.history.mediaNames) {
+        if (name.lastIndexOf(this.globalService.photoSuffix) !== -1) {
+          this.pictures[this.picCount++] = `${this.fileService.getImagesDir()}/${name}`;
+          this.mediaNames.push(name);
+        } else if (name.lastIndexOf(this.globalService.audioSuffix) !== -1) {
+          this.audios[this.audioCount].name = name;
+          let values: string[] = name.split('#');
+          if (values && values.length === 2) {
+            this.audios[this.audioCount++].time = Number.parseInt(values[1]);
+          } else {
+            this.audios[this.audioCount++].time = 10;
+          }
+          this.mediaNames.push(name);
+        }
+      }
+    }
   }
 }
 

@@ -14,6 +14,8 @@ import {CancelInfo} from "../../model/CancelInfo";
 import {MapPage} from "../map/map";
 import {MapParam, MapType} from "../../model/MapParam";
 import {Location} from "../../model/Location";
+import {History} from "../../model/History";
+import {ReplyInfo} from "../../model/ReplyInfo";
 
 enum FromWhere {
   Download,
@@ -44,6 +46,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
   private count: number = this.globalService.taskCountDefault10;
   private isOperationBusy: boolean = false;
   private key: string = '';
+  private replyHistories: History[] = [];
 
   constructor(public navCtrl: NavController,
               private dataService: DataService,
@@ -216,7 +219,8 @@ export class MyWorkPage implements OnInit, OnDestroy {
    */
   onPreview(taskEx: TaskEx): void {
     taskEx.isPreview = true;
-    this.navCtrl.push(WorkDetailPage, taskEx);
+    let history: History = this.findReplyHistory(taskEx.id);
+    this.navCtrl.push(WorkDetailPage, [taskEx, history]);
   }
 
   /**
@@ -234,7 +238,31 @@ export class MyWorkPage implements OnInit, OnDestroy {
           return Promise.resolve(false)
         } else {
           TaskEx.transform(tasks, this.items);
-          return this.setProcesses(this.items);
+          return this.setProcesses(this.items)
+            .then(() => tasks.filter(task => task.state === TaskState.Reply))
+            .then(tasks => tasks.map(task => task.taskId))
+            .then(taskIds => this.dataService.getReplyHistories(taskIds))
+            .then(histories => {
+              let result: boolean = false;
+              try {
+                this.replyHistories.push(...histories);
+                this.replyHistories.forEach(history => {
+                  if (history.mediaNames && history.mediaNames.length > 0) {
+                    let taskEx: TaskEx = this.items.find(taskEx => taskEx.id === history.taskId);
+                    if (taskEx) {
+                      let mediaNames = history.mediaNames;
+                      taskEx.photoCount = mediaNames.filter(name => name.lastIndexOf(this.globalService.photoSuffix) !== -1).length;
+                      taskEx.audioCount = mediaNames.filter(name => name.lastIndexOf(this.globalService.audioSuffix) !== -1).length;
+                    }
+                  }
+                });
+                result = true;
+              } catch (err) {
+                console.error(err);
+              }
+
+              return Promise.resolve(result);
+            });
         }
       });
   }
@@ -499,7 +527,8 @@ export class MyWorkPage implements OnInit, OnDestroy {
 
     if (!processEx.reply.done) {
       taskEx.isPreview = false;
-      this.navCtrl.push(WorkDetailPage, taskEx);
+      let history: History = this.findReplyHistory(taskEx.id);
+      this.navCtrl.push(WorkDetailPage, [taskEx, history]);
     }
   }
 
@@ -944,13 +973,19 @@ export class MyWorkPage implements OnInit, OnDestroy {
     events.subscribe(this.globalService.myWorkUpdateEvent, (myWorkUpdateEvent: MyWorkUpdateEvent) => {
       console.log("my work need to update");
 
-      if (myWorkUpdateEvent.type === 'reply' && myWorkUpdateEvent.taskEx && myWorkUpdateEvent.time) {
+      if (myWorkUpdateEvent.type === 'reply'
+        && myWorkUpdateEvent.taskEx
+        && myWorkUpdateEvent.history
+        && myWorkUpdateEvent.history.task
+        && myWorkUpdateEvent.history.reply
+        && myWorkUpdateEvent.history.taskDetail) {
         let processEx: ProcessEx = new ProcessEx();
         if (!transform2ProcessEx(myWorkUpdateEvent.taskEx, processEx)) {
           return;
         }
 
-        processEx.reply.time = new Date(myWorkUpdateEvent.time);
+        let replyInfo: ReplyInfo = myWorkUpdateEvent.history.reply as ReplyInfo;
+        processEx.reply.time = replyInfo && replyInfo.opTime ? new Date(replyInfo.opTime) : new Date();
         processEx.reply.color = this.disableColor;
         processEx.reply.done = true;
         processEx.reject.show = false;
@@ -958,6 +993,23 @@ export class MyWorkPage implements OnInit, OnDestroy {
         processEx.cancel.show = true;
         myWorkUpdateEvent.taskEx.lastProcess = 'reply';
         myWorkUpdateEvent.taskEx.state = TaskState.Reply;
+
+        let history: History = this.findReplyHistory(myWorkUpdateEvent.taskEx.id);
+        if (history) {
+          history = {
+            userId: this.globalService.userId,
+            taskId: myWorkUpdateEvent.taskEx.id,
+            state: myWorkUpdateEvent.history.state,
+            task: myWorkUpdateEvent.history.task,
+            reply: myWorkUpdateEvent.history.reply,
+            uploadedFlag: myWorkUpdateEvent.history.uploadedFlag,
+            taskDetail: myWorkUpdateEvent.history.taskDetail,
+            mediaNames: myWorkUpdateEvent.history.mediaNames
+          };
+        } else {
+          this.replyHistories.push(myWorkUpdateEvent.history);
+        }
+
       } else if (myWorkUpdateEvent.type === 'cancel' || myWorkUpdateEvent.type === 'reject') {
         this.resetTasks(FromWhere.CancelOrReject);
       }
@@ -972,6 +1024,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
     this.isOperationBusy = true;
     this.since = this.globalService.taskSinceDefault;
     while (this.items.shift()) ;
+    this.replyHistories = [];
     this.showFab = false;
     this.getTasks(this.since, this.count, this.key)
       .then(data => this.infiniteScroll.enable(data))
@@ -992,5 +1045,9 @@ export class MyWorkPage implements OnInit, OnDestroy {
             break;
         }
       });
+  }
+
+  private findReplyHistory(taskId: string): History {
+    return this.replyHistories.find(history => history.taskId === taskId);
   }
 }

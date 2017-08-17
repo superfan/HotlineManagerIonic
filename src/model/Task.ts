@@ -171,7 +171,7 @@ export class TaskEx {
     return utc > 0 ? new Date(utc) : undefined;
   }
 
-  private static checkLocation(location: Location): boolean {
+  public static checkLocation(location: Location): boolean {
     let lng: number;
     let lat: number;
     if (location && location.lng && location.lat) {

@@ -127,6 +127,10 @@ export class AppComponentService {
   private setUserDetailInfo(pageIntent: PageIntent): Promise<any> {
     return this.globalService.getUserDetailInfo()
       .then(userDetailInfo => {
+        // userId passed from main shell is not same as saved id
+        // it will be changed in future
+        pageIntent.userId = userDetailInfo.userId;
+
         if (pageIntent.account === userDetailInfo.account
           && pageIntent.userId === userDetailInfo.userId
           && pageIntent.userName === userDetailInfo.userName) {
@@ -143,7 +147,7 @@ export class AppComponentService {
           role: pageIntent.roles
         }).then(userResult => this.globalService.saveUserDetailInfo({
           account: pageIntent.account,
-          userId: pageIntent.userId,
+          userId: userResult.userId,
           userName: pageIntent.userName,
           roles: pageIntent.roles,
           department: userResult.Department,

@@ -1,4 +1,4 @@
-import {Task} from "./Task";
+import {Task, TaskState, TaskEx} from "./Task";
 import {AcceptInfo} from "./AcceptInfo";
 import {ArriveInfo} from "./ArriveInfo";
 import {CancelInfo} from "./CancelInfo";
@@ -33,6 +33,7 @@ export class HistoryEx {
   isCanceled: boolean;  //是否销单
   photoCount: number;
   audioCount: number;
+  isLocationValid: boolean;
 
   constructor(history: History) {
     this.userId = history.userId;
@@ -43,14 +44,15 @@ export class HistoryEx {
     this.uploadedFlag = history.uploadedFlag;
     this.taskDetail = history.taskDetail;
     this.mediaNames = history.mediaNames;
-    this.isRejected = history.state == 5;
-    this.isCanceled = history.state == 7;
+    this.isRejected = history.state === TaskState.Reject;
+    this.isCanceled = history.state === TaskState.Cancel;
     if (history.mediaNames && history.mediaNames.length > 0) {
       this.photoCount = history.mediaNames.length;
     } else {
       this.photoCount = 0;
     }
     this.audioCount = 0;  //todo 录音的数量
+    this.isLocationValid = TaskEx.checkLocation(this.task.location);
   }
 
   static transformToHistoryEx(historyEx: Array<HistoryEx>, historys: Array<History>) {

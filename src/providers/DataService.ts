@@ -159,6 +159,14 @@ export class DataService extends SyncService {
     }
   }
 
+  public getReplyHistories(taskIds: Array<string>): Promise<Array<History>> {
+    if (this.globalService.isChrome) {
+      return Promise.resolve([]);
+    } else {
+      return this.dbService.getSpecialHistories(taskIds, TaskState.Reply);
+    }
+  }
+
   /**
    * 获取未派工任务
    * @param since

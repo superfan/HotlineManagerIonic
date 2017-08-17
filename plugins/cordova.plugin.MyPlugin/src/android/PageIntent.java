@@ -115,7 +115,7 @@ public class PageIntent {
     jsonObject.put("account", this.account != null ? this.account : "");
     jsonObject.put("password", this.password != null ? this.password : "");
     jsonObject.put("userId", this.userId);
-    jsonObject.put("userName", this.userName != null ? this.account : "");
+    jsonObject.put("userName", this.userName != null ? this.userName : "");
     jsonObject.put("departmentAndId", this.departmentAndId != null ? this.departmentAndId : "");
     jsonObject.put("roles", this.roles != null ? this.roles : "");
     jsonObject.put("params", this.params != null ? this.params : "");

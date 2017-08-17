@@ -498,6 +498,10 @@ export abstract class SyncService {
         let history: History = histories.shift();
         let mediaNames: Array<string> = history.mediaNames;
         if (mediaNames && mediaNames.length > 0) {
+          for (let i: number = 0; i < mediaNames.length; i++) {
+            mediaNames[i] = mediaNames[i].replace(/#\d*/, '');
+          }
+
           this.dbService.getMediaList(this.globalService.userId, history.taskId, mediaNames,
             [this.globalService.uploadedFlagForLocal, this.globalService.uploadedFlagForUploading])
             .then(mediaList => this.uploadMediaList(mediaList))

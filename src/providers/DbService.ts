@@ -178,7 +178,7 @@ export class DbService {
         .then(db => {
           let sql: string = `SELECT COUNT(*) FROM GD_WORDS;`;
           return db.executeSql(sql, {})
-            .then(data => data.rows ? data.rows.length : 0);
+            .then(data => data.rows && data.rows.length > 0 ? data.rows.item(0)["COUNT(*)"] : 0);
         });
     }
   }
@@ -468,6 +468,39 @@ export class DbService {
           } else {
             sql += ' ORDER BY ID;';
           }
+          return db.executeSql(sql, {});
+        })
+        .then(data => {
+          let rows: any = data.rows;
+          let histories: Array<History> = [];
+          if (rows && rows.length > 0) {
+            for (let i = 0; i < rows.length; i++) {
+              let localHistory: LocalHistory = rows.item(i) as LocalHistory;
+              if (!localHistory) {
+                continue;
+              }
+              histories.push(this.toHistory(localHistory));
+            }
+          }
+          return Promise.resolve(histories);
+        });
+    }
+  }
+
+  /**
+   *
+   * @param taskIds
+   * @param state
+   * @returns {any}
+   */
+  public getSpecialHistories(taskIds: Array<string>, state: number): Promise<Array<History>> {
+    if (this.globalService.isChrome || !taskIds || taskIds.length <= 0) {
+      return Promise.resolve([]);
+    } else {
+      return this.openDb()
+        .then(db => {
+          let ids: Array<string> = taskIds.map(id => `\'${id}\'`);
+          let sql = `SELECT * FROM GD_HISTORIES WHERE S_TASKID IN (${ids.join(',')}) AND I_STATE = ${state};`;
           return db.executeSql(sql, {});
         })
         .then(data => {

@@ -5,6 +5,7 @@ import {UserDetailInfo} from "../model/UserDetailInfo";
 import {Storage} from '@ionic/storage';
 import {MyPlugin, PageIntent, MyLocation} from "@ionic-native/my-plugin";
 import {Location, LocationEx} from "../model/Location";
+import {History} from "../model/History";
 
 export interface MainUpdateEvent {
   type: 'myWorkCount' | 'newsCount' | 'stationWorkCount' | 'gridStyle';
@@ -15,7 +16,7 @@ export interface MainUpdateEvent {
 export interface MyWorkUpdateEvent {
   type: 'reply' | 'cancel' | 'reject',
   taskEx?: TaskEx;
-  time?: number;
+  history?: History;
 }
 
 export class MyPluginMock extends MyPlugin {
@@ -74,6 +75,8 @@ export class GlobalService {
   readonly locationType: string = 'bd09ll';
   private myPluginMock: MyPluginMock;
   readonly worker: string = 'worker';
+  readonly photoSuffix: string = '.jpg';
+  readonly audioSuffix: string = '.mp3';
 
   constructor(private toastCtrl: ToastController,
               private loadingCtrl: LoadingController,
