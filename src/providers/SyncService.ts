@@ -16,6 +16,7 @@ import {History} from "../model/History";
 import {DbService} from "./DbService";
 import {Media} from "../model/Media";
 import {MediaService} from "./MediaService";
+import {ConfigService} from "./ConfigService";
 
 export enum MsgType {
   DownloadTasksAndDetails,
@@ -47,7 +48,8 @@ export abstract class SyncService {
               protected globalService: GlobalService,
               protected dbService: DbService,
               protected mediaService: MediaService,
-              protected events: Events) {
+              protected events: Events,
+              protected configService: ConfigService) {
   }
 
   /**
@@ -84,9 +86,15 @@ export abstract class SyncService {
    * 接收
    * @param acceptInfo
    * @param task
-   * @returns {Promise<boolean>}
+   * @param output
+   * @returns {any}
    */
-  public accept(acceptInfo: AcceptInfo, task: Task): Promise<boolean> {
+  public accept(acceptInfo: AcceptInfo, task: Task,
+                output: {uploadedFlag: number} = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
+    if (this.configService.isDebugMode()) {
+      debugger;
+    }
+
     if (!acceptInfo || !task) {
       return Promise.reject('param is error');
     } else if (this.globalService.isChrome) {
@@ -101,7 +109,7 @@ export abstract class SyncService {
               state: TaskState.Accept,
               task,
               reply: acceptInfo,
-              uploadedFlag: this.globalService.uploadedFlagForLocal
+              uploadedFlag: output.uploadedFlag = this.globalService.uploadedFlagForLocal
             }).then(result => this.dbService.saveTask(task));
           } else { // send to the server and save to local db
             return this.uploadService.accept(acceptInfo)
@@ -112,7 +120,7 @@ export abstract class SyncService {
                 state: TaskState.Accept,
                 task,
                 reply: acceptInfo,
-                uploadedFlag: result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal
+                uploadedFlag: output.uploadedFlag = result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal
               }))
               .then(result => this.dbService.saveTask(task));
           }
@@ -124,9 +132,15 @@ export abstract class SyncService {
    * 出发
    * @param goInfo
    * @param task
-   * @returns {Promise<boolean>}
+   * @param output
+   * @returns {any}
    */
-  public go(goInfo: GoInfo, task: Task): Promise<boolean> {
+  public go(goInfo: GoInfo, task: Task,
+            output: {uploadedFlag: number} = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
+    if (this.configService.isDebugMode()) {
+      debugger;
+    }
+
     if (!goInfo || !task) {
       return Promise.reject('param is error');
     } else if (this.globalService.isChrome) {
@@ -141,7 +155,7 @@ export abstract class SyncService {
               state: TaskState.Go,
               task,
               reply: goInfo,
-              uploadedFlag: this.globalService.uploadedFlagForLocal
+              uploadedFlag: output.uploadedFlag = this.globalService.uploadedFlagForLocal
             }).then(result => this.dbService.saveTask(task));
           } else { // send to the server and save to local db
             return this.uploadService.go(goInfo)
@@ -152,7 +166,7 @@ export abstract class SyncService {
                 state: TaskState.Go,
                 task,
                 reply: goInfo,
-                uploadedFlag: result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal
+                uploadedFlag: output.uploadedFlag = result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal
               }))
               .then(result => this.dbService.saveTask(task));
           }
@@ -164,9 +178,15 @@ export abstract class SyncService {
    * 到场
    * @param arriveInfo
    * @param task
-   * @returns {Promise<boolean>}
+   * @param output
+   * @returns {any}
    */
-  public arrive(arriveInfo: ArriveInfo, task: Task): Promise<boolean> {
+  public arrive(arriveInfo: ArriveInfo, task: Task,
+                output: {uploadedFlag: number} = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
+    if (this.configService.isDebugMode()) {
+      debugger;
+    }
+
     if (!arriveInfo || !task) {
       return Promise.reject('param is error');
     } else if (this.globalService.isChrome) {
@@ -181,7 +201,7 @@ export abstract class SyncService {
               state: TaskState.Arrived,
               task,
               reply: arriveInfo,
-              uploadedFlag: this.globalService.uploadedFlagForLocal
+              uploadedFlag: output.uploadedFlag = this.globalService.uploadedFlagForLocal
             }).then(result => this.dbService.saveTask(task));
           } else { // send to the server and save to local db
             return this.uploadService.arrive(arriveInfo)
@@ -192,7 +212,7 @@ export abstract class SyncService {
                 state: TaskState.Arrived,
                 task,
                 reply: arriveInfo,
-                uploadedFlag: result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal
+                uploadedFlag: output.uploadedFlag = result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal
               }))
               .then(result => this.dbService.saveTask(task));
           }
@@ -201,14 +221,20 @@ export abstract class SyncService {
   }
 
   /**
-   * 回复
+   *
    * @param replyInfo
    * @param task
    * @param taskDetail
    * @param mediaNames
+   * @param output
    * @returns {any}
    */
-  public reply(replyInfo: ReplyInfo, task: Task, taskDetail: TaskDetail, mediaNames: Array<string>): Promise<boolean> {
+  public reply(replyInfo: ReplyInfo, task: Task, taskDetail: TaskDetail, mediaNames: Array<string>,
+               output: {uploadedFlag: number} = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
+    if (this.configService.isDebugMode()) {
+      debugger;
+    }
+
     if (!replyInfo || !task || !taskDetail || !mediaNames) {
       return Promise.reject('param is error');
     } else if (this.globalService.isChrome) {
@@ -223,7 +249,7 @@ export abstract class SyncService {
               state: TaskState.Reply,
               task,
               reply: replyInfo,
-              uploadedFlag: this.globalService.uploadedFlagForLocal,
+              uploadedFlag: output.uploadedFlag = this.globalService.uploadedFlagForLocal,
               taskDetail,
               mediaNames
             }).then(result => this.dbService.saveTask(task));
@@ -236,7 +262,7 @@ export abstract class SyncService {
                 state: TaskState.Reply,
                 task,
                 reply: replyInfo,
-                uploadedFlag: result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal,
+                uploadedFlag: output.uploadedFlag = result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal,
                 taskDetail,
                 mediaNames
               }))
@@ -250,9 +276,15 @@ export abstract class SyncService {
    * 退单
    * @param rejectInfo
    * @param task
-   * @returns {Promise<boolean>}
+   * @param output
+   * @returns {any}
    */
-  public reject(rejectInfo: RejectInfo, task: Task) {
+  public reject(rejectInfo: RejectInfo, task: Task,
+                output: {uploadedFlag: number} = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
+    if (this.configService.isDebugMode()) {
+      debugger;
+    }
+
     if (!rejectInfo || !task) {
       return Promise.reject('param is error');
     } else if (this.globalService.isChrome) {
@@ -267,7 +299,7 @@ export abstract class SyncService {
               state: TaskState.Reject,
               task,
               reply: rejectInfo,
-              uploadedFlag: this.globalService.uploadedFlagForLocal
+              uploadedFlag: output.uploadedFlag = this.globalService.uploadedFlagForLocal
             }).then(result => this.dbService.saveTask(task));
           } else { // send to the server and save to local db
             return this.uploadService.reject(rejectInfo)
@@ -278,7 +310,7 @@ export abstract class SyncService {
                 state: TaskState.Reject,
                 task,
                 reply: rejectInfo,
-                uploadedFlag: result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal
+                uploadedFlag: output.uploadedFlag = result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal
               }))
               .then(result => this.dbService.saveTask(task));
           }
@@ -290,9 +322,15 @@ export abstract class SyncService {
    * 延期
    * @param delayInfo
    * @param task
-   * @returns {Promise<boolean>}
+   * @param output
+   * @returns {any}
    */
-  public delay(delayInfo: DelayInfo, task: Task): Promise<boolean> {
+  public delay(delayInfo: DelayInfo, task: Task,
+               output: {uploadedFlag: number} = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
+    if (this.configService.isDebugMode()) {
+      debugger;
+    }
+
     if (!delayInfo || !task) {
       return Promise.reject('param is error');
     } else if (this.globalService.isChrome) {
@@ -307,7 +345,7 @@ export abstract class SyncService {
               state: TaskState.Delay,
               task,
               reply: delayInfo,
-              uploadedFlag: this.globalService.uploadedFlagForLocal
+              uploadedFlag: output.uploadedFlag = this.globalService.uploadedFlagForLocal
             }).then(result => this.dbService.saveTask(task));
           } else { // send to the server and save to local db
             return this.uploadService.delay(delayInfo)
@@ -318,7 +356,7 @@ export abstract class SyncService {
                 state: TaskState.Delay,
                 task,
                 reply: delayInfo,
-                uploadedFlag: result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal
+                uploadedFlag: output.uploadedFlag = result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal
               }))
               .then(result => this.dbService.saveTask(task));
           }
@@ -327,12 +365,18 @@ export abstract class SyncService {
   }
 
   /**
-   *
+   * 销单
    * @param cancelInfo
    * @param task
+   * @param output
    * @returns {any}
    */
-  public cancel(cancelInfo: CancelInfo, task: Task): Promise<boolean> {
+  public cancel(cancelInfo: CancelInfo, task: Task,
+                output: {uploadedFlag: number} = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
+    if (this.configService.isDebugMode()) {
+      debugger;
+    }
+
     if (!cancelInfo || !task) {
       return Promise.reject('param is error');
     } else if (this.globalService.isChrome) {
@@ -347,7 +391,7 @@ export abstract class SyncService {
               state: TaskState.Cancel,
               task,
               reply: cancelInfo,
-              uploadedFlag: this.globalService.uploadedFlagForLocal
+              uploadedFlag: output.uploadedFlag = this.globalService.uploadedFlagForLocal
             }).then(result => this.dbService.saveTask(task));
           } else { // send to the server and save to local db
             return this.uploadService.cancel(cancelInfo)
@@ -358,7 +402,7 @@ export abstract class SyncService {
                 state: TaskState.Cancel,
                 task,
                 reply: cancelInfo,
-                uploadedFlag: result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal
+                uploadedFlag: output.uploadedFlag = result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal
               }))
               .then(result => this.dbService.saveTask(task));
           }

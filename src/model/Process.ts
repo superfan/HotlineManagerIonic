@@ -11,6 +11,10 @@ export class CancelExtend {
   remark: string;
 }
 
+export const DisableColor: string = 'gray';
+export const EnableColor: string = 'primary';
+export const NotUploadedColor: string = 'danger';
+
 export class Process {
   event: string;
   name: string;
@@ -19,6 +23,7 @@ export class Process {
   color: string;
   done: boolean;
   extend: any;
+  isUploaded: boolean;
 }
 
 export class ProcessEx {

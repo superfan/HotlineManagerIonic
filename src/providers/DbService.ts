@@ -489,18 +489,29 @@ export class DbService {
 
   /**
    *
+   * @param userId
    * @param taskIds
    * @param state
+   * @param uploadedFlags
    * @returns {any}
    */
-  public getSpecialHistories(taskIds: Array<string>, state: number): Promise<Array<History>> {
+  public getSpecialHistories(userId: number, taskIds: Array<string>, state?: number, uploadedFlags?: Array<number>): Promise<Array<History>> {
     if (this.globalService.isChrome || !taskIds || taskIds.length <= 0) {
       return Promise.resolve([]);
     } else {
       return this.openDb()
         .then(db => {
           let ids: Array<string> = taskIds.map(id => `\'${id}\'`);
-          let sql = `SELECT * FROM GD_HISTORIES WHERE S_TASKID IN (${ids.join(',')}) AND I_STATE = ${state};`;
+          let sql = `SELECT * FROM GD_HISTORIES WHERE I_USERID = ${userId} AND S_TASKID IN (${ids.join(',')})`;
+          if (state !== undefined && state !== null) {
+            sql += ` AND I_STATE = ${state}`;
+          }
+
+          if (uploadedFlags && uploadedFlags.length > 0) {
+            sql += ` AND I_UPLOADEDFLAG IN (${uploadedFlags.join(',')})`;
+          }
+
+          sql += ` ORDER BY ID;`;
           return db.executeSql(sql, {});
         })
         .then(data => {

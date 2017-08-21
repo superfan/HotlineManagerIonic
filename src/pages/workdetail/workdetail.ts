@@ -209,10 +209,13 @@ export class WorkDetailPage implements OnInit, OnDestroy {
     }
 
     let task: Task = transform2Task(this.replyInfo, this.taskEx, processEx);
+    let output: any = {
+      uploadedFlag: this.globalService.uploadedFlagForLocal
+    };
     this.globalService.getLocation()
       .then(location => {
         this.replyInfo.location = location;
-        return this.dataService.reply(this.replyInfo, task, this.taskDetail, this.mediaNames);
+        return this.dataService.reply(this.replyInfo, task, this.taskDetail, this.mediaNames, output);
       })
       .then(date => {
         console.log("success");
@@ -226,7 +229,7 @@ export class WorkDetailPage implements OnInit, OnDestroy {
           state: TaskState.Reply,
           task: task,
           reply: this.replyInfo,
-          uploadedFlag: undefined,
+          uploadedFlag: output.uploadedFlag,
           taskDetail: this.taskDetail,
           mediaNames: this.mediaNames
         };

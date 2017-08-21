@@ -33,11 +33,13 @@ export class MyHistory implements OnInit, OnDestroy {
   searchKey: string = '';
   private isOperationBusy: boolean = false;
   private replyHistories: History[] = [];
+  onServerFlag: number;
 
   constructor(public navCtrl: NavController,
               private dataService: DataService,
               private globalService: GlobalService,
               private events: Events) {
+    this.onServerFlag = this.globalService.uploadedFlagForUploaded;
   }
 
   ngOnInit(): void {

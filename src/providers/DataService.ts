@@ -22,6 +22,7 @@ import {MediaType} from "../model/Media";
 import {SyncService, MsgType} from "./SyncService";
 import {Events} from "ionic-angular";
 import {History} from "../model/History";
+import {ConfigService} from "./ConfigService";
 
 @Injectable()
 export class DataService extends SyncService {
@@ -40,8 +41,9 @@ export class DataService extends SyncService {
               globalService: GlobalService,
               dbService: DbService,
               mediaService: MediaService,
-              events: Events) {
-    super(downloadService, uploadService, globalService, dbService, mediaService, events);
+              events: Events,
+              configService: ConfigService) {
+    super(downloadService, uploadService, globalService, dbService, mediaService, events, configService);
     this.isInitialized = false;
   }
 
@@ -163,7 +165,16 @@ export class DataService extends SyncService {
     if (this.globalService.isChrome) {
       return Promise.resolve([]);
     } else {
-      return this.dbService.getSpecialHistories(taskIds, TaskState.Reply);
+      return this.dbService.getSpecialHistories(this.globalService.userId, taskIds, TaskState.Reply);
+    }
+  }
+
+  public checkIfExistNotUploadedHistories(taskIds: Array<string>): Promise<Array<History>> {
+    if (this.globalService.isChrome) {
+      return Promise.resolve([]);
+    } else {
+      return this.dbService.getSpecialHistories(this.globalService.userId, taskIds, undefined,
+        [this.globalService.uploadedFlagForLocal, this.globalService.uploadedFlagForUploading]);
     }
   }
 
