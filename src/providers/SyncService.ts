@@ -16,6 +16,7 @@ import {History} from "../model/History";
 import {DbService} from "./DbService";
 import {Media} from "../model/Media";
 import {MediaService} from "./MediaService";
+import {ConfigService} from "./ConfigService";
 
 export enum MsgType {
   DownloadTasksAndDetails,
@@ -46,6 +47,7 @@ export abstract class SyncService {
               protected uploadService: UploadService,
               protected globalService: GlobalService,
               protected dbService: DbService,
+              protected configService:ConfigService,
               protected mediaService: MediaService,
               protected events: Events) {
   }

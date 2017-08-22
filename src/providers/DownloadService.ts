@@ -17,6 +17,8 @@ import {Personnel} from "../model/Personnel";
 import {UserWorkInfo} from "../model/UserWorkInfo";
 import {UserManageInfo} from "../model/UserManageInfo";
 import {VersionInfo} from "../model/VersionInfo";
+import {Material} from "../model/Material";
+import {MaintainInfo} from "../model/MaintainInfo";
 
 @Injectable()
 export class DownloadService extends BaseService {
@@ -490,5 +492,58 @@ export class DownloadService extends BaseService {
         })
         .catch(error => reject(error));
     })
+  }
+
+  /**
+   * 获取材料信息
+   * @param group
+   * @returns {Promise<T>}
+   */
+  public getAllMaterials(group: string): Promise<Array<Material>> {
+    return new Promise((resolve, reject) => {
+      this.configService.getMaterialsBaseUri()
+        .then(data => {
+          let url = `${data}api/wap/v1/material/get/${group}`;
+          return this.http.get(url, this.getOptions())
+            .toPromise()
+            .then(data => {
+              let body = data.json();
+              if (body.status === this.globalService.httpSuccessStatusCode
+                && body.data instanceof Array) {
+                resolve(body.data);
+              } else {
+                reject(body.Message ? body.Message : "failure to get materials");
+              }
+            })
+            .catch(this.handleError);
+        })
+        .catch(error => reject(error));
+    });
+  }
+
+  /**
+   * 获得维修信息
+   * @param serialNumber
+   * @returns {Promise<T>}
+   */
+  public getMaintainInfo(serialNumber:string):Promise<MaintainInfo>{
+    return new Promise((resolve, reject) => {
+      this.configService.getMaterialsBaseUri()
+        .then(data => {
+          let url = `${data}api/wap/v1/materialusage/get/${serialNumber}`;
+          return this.http.get(url, this.getOptions())
+            .toPromise()
+            .then(data => {
+              let body = data.json();
+              if (body.status === this.globalService.httpSuccessStatusCode) {
+                resolve(body.data);
+              } else {
+                reject(body.Message ? body.Message : "failure to get materials");
+              }
+            })
+            .catch(this.handleError);
+        })
+        .catch(error => reject(error));
+    });
   }
 }

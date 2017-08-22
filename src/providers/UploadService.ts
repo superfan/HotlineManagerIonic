@@ -15,6 +15,7 @@ import {FileTransfer, FileUploadOptions, FileTransferObject} from '@ionic-native
 import {File} from '@ionic-native/file';
 import {Media, MediaType} from "../model/Media";
 import {FileService} from "./FileService";
+import {UploadMaterials} from "../model/MaterialsInfo";
 
 @Injectable()
 export class UploadService extends BaseService {
@@ -393,5 +394,32 @@ export class UploadService extends BaseService {
         })
         .catch(error => reject(error));
     });
+  }
+
+  /**
+   * 上传材料登记信息
+   * @param materialArr
+   * @returns {Promise<T>}
+   */
+  public uploadMaterialsAdd(materialArr:Array<UploadMaterials>):Promise<boolean>{
+    return new Promise((resolve,reject)=>{
+      this.configService.getMaterialsBaseUri()
+        .then(data=>{
+          let url=`${data}api/wap/v1/materialusage/batchadd`;
+          return this.http.post(url,JSON.stringify(materialArr),this.getOptions())
+            .toPromise()
+            .then(data=>{
+              let body=data.json();
+              if (body.status == this.globalService.httpSuccessStatusCode
+                && body.message=='OK') {
+                resolve(true);
+              }else{
+                resolve(body.message ? body.message : "failure to uploadMaterials")
+              }
+            })
+            .catch(this.handleError);
+        })
+        .catch(error=>reject(error));
+    })
   }
 }

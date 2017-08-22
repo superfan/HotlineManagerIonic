@@ -14,6 +14,7 @@ import {CancelInfo} from "../../model/CancelInfo";
 import {MapPage} from "../map/map";
 import {MapParam, MapType} from "../../model/MapParam";
 import {Location} from "../../model/Location";
+import {MaterialsPage} from "../materials/materials";
 
 enum FromWhere {
   Download,
@@ -217,6 +218,14 @@ export class MyWorkPage implements OnInit, OnDestroy {
   onPreview(taskEx: TaskEx): void {
     taskEx.isPreview = true;
     this.navCtrl.push(WorkDetailPage, taskEx);
+  }
+
+  /**
+   * 材料登记
+   * @param taskEx
+   */
+  onMaterials(taskEx: TaskEx): void {
+    this.navCtrl.push(MaterialsPage, taskEx.id);
   }
 
   /**

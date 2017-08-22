@@ -42,7 +42,7 @@ export class MyPluginMock extends MyPlugin {
 
 @Injectable()
 export class GlobalService {
-  readonly isChrome: boolean = true;
+  readonly isChrome: boolean = false;
   readonly httpCode: number = 0;
   readonly httpSuccessStatusCode: number = 200;
   readonly taskSinceDefault: number = 0;

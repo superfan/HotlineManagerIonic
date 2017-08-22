@@ -8,6 +8,8 @@ import {Task} from "../model/Task";
 import {TaskDetail} from "../model/TaskDetail";
 import {History} from "../model/History";
 import {Media} from "../model/Media";
+import {Material} from "../model/Material";
+import {DataMaterialInfo, MaterialsInfo} from "../model/MaterialsInfo";
 
 interface LocalWord {
   ID: number;
@@ -19,6 +21,23 @@ interface LocalWord {
   I_WPARENTID: number;
   S_WREMARK: string;
   S_WISACTIVE: string
+}
+
+interface LocalMaterial {
+  ID: number;
+  I_MID: number;
+  I_PARENTID: number;
+  S_GROUPKEY: string;
+  S_KEY: string;
+  S_NAME: string;
+}
+
+interface LocalMaterialInfo {
+  ID: number;
+  I_USERID: number;
+  S_TASKID: string;
+  S_INFOS: string;
+  I_UPLOADEDFLAG: number
 }
 
 interface LocalTask {
@@ -132,6 +151,165 @@ export class DbService {
           }
           return this.sqlitePorter.importSqlToDb(db, sql);
         });
+    }
+  }
+
+  /**
+   * 保存材料信息
+   * @param materials
+   * @returns {any}
+   */
+  public saveMaterials(materials: Array<Material>): Promise<boolean> {
+    if (this.globalService.isChrome || !materials || materials.length <= 0) {
+      return Promise.resolve(false);
+    } else {
+      return this.openDb()
+        .then(db => {
+          let sql: string = `DELETE FROM GD_MATERIALS;`;
+          for (let material of materials) {
+            sql += this.toMaterialInsertSql(material);
+          }
+          return this.sqlitePorter.importSqlToDb(db, sql);
+        })
+    }
+  }
+
+  /**
+   * 材料清单保存至本地
+   * @param materialInfo
+   * @returns {any}
+   */
+  public saveMaterialInfo(materialInfo: DataMaterialInfo): Promise<boolean> {
+    if (!materialInfo || !materialInfo.taskId || materialInfo.infos.length <= 0) {
+      return Promise.resolve(false);
+    } else {
+      return this.openDb()
+        .then(db => {
+          let selectSql: string = `SELECT * FROM GD_MATERIALINFO WHERE S_TASKID = '${materialInfo.taskId}';`;
+          let sql: string;
+          return db.executeSql(selectSql, {})
+            .then(data => {
+              let rows: any = data.rows;
+              if (rows && rows.length > 0) {
+                sql = this.toMaterialInfoUpdateSql(materialInfo);
+              } else {
+                sql = this.toMaterialInfoInsertSql(materialInfo);
+              }
+              return this.sqlitePorter.importSqlToDb(db, sql);
+            })
+            .catch(error => {
+              console.log(error);
+            })
+        })
+    }
+  }
+
+  /**
+   * 材料清单更新上传标志
+   * @param materialInfo
+   * @returns {any}
+   */
+  public updateFlagMaterials(materialInfo: DataMaterialInfo): Promise<boolean> {
+    if (!materialInfo || !materialInfo.taskId || materialInfo.infos.length <= 0) {
+      return Promise.resolve(false);
+    } else {
+      return this.openDb()
+        .then(db => {
+          materialInfo.uploadFlag = this.globalService.uploadedFlagForUploaded;
+          let sql = this.toMaterialInfoUpdateSql(materialInfo);
+          return this.sqlitePorter.importSqlToDb(db, sql);
+        })
+    }
+  }
+
+  /**
+   * 获取材料
+   * @param group
+   */
+  public getMaterials(groupKey: string): Promise<Array<Material>> {
+    if (this.globalService.isChrome || !groupKey) {
+      return Promise.reject(this.paramError);
+    } else {
+      return this.openDb()
+        .then(db => {
+          let sql: string = `SELECT * FROM GD_MATERIALS WHERE S_GROUPKEY = '${groupKey}';`;
+          return db.executeSql(sql, {})
+            .then(data => {
+              let rows: any = data.rows;
+              let materials: Array<Material> = [];
+              if (rows && rows.length > 0) {
+                for (let i = 0; i < rows.length; i++) {
+                  let localMaterial: LocalMaterial = rows.item(i) as LocalMaterial;
+                  if (!localMaterial) {
+                    continue;
+                  }
+                  materials.push(this.toMaterial(localMaterial));
+                }
+              }
+              return materials.length ? Promise.resolve(materials) : Promise.reject('no materials');
+            });
+        })
+    }
+  }
+
+  /**
+   * 根据id查询材料信息
+   * @param mid
+   * @returns {any}
+   */
+  public getMaterial(mid: number): Promise<Material> {
+    if (this.globalService.isChrome || !mid) {
+      return Promise.reject(this.paramError);
+    } else {
+      return this.openDb()
+        .then(db => {
+          let sql: string = `SELECT * FROM GD_MATERIALS WHERE I_MID =${mid};`;
+          return db.executeSql(sql, {})
+            .then(data => {
+              let rows: any = data.rows;
+              let result: Material;
+              if (rows && rows.length == 1) {
+                result = this.toMaterial(rows.item(0) as LocalMaterial);
+              }
+              return result ? Promise.resolve(result) : Promise.reject('no material');
+            });
+        })
+    }
+  }
+
+  /**
+   * 查询材料清单
+   * @param taskId
+   * @returns {any}
+   */
+  public getMaterialInfo(taskId: string): Promise<DataMaterialInfo> {
+    if (this.globalService.isChrome || !taskId) {
+      return Promise.reject(this.paramError);
+    } else {
+      return this.openDb()
+        .then(db => {
+          let sql: string = `SELECT * FROM GD_MATERIALINFO WHERE S_TASKID = '${taskId}';`;
+          return db.executeSql(sql, {})
+            .then(data => {
+              let rows: any = data.rows;
+              let result: DataMaterialInfo;
+              if (rows && rows.length == 1) {
+                let localMaterialInfo: LocalMaterialInfo = rows.item(0) as LocalMaterialInfo;
+                if (localMaterialInfo) {
+                  result = this.toMaterialInfo(localMaterialInfo);
+                }
+              }
+              return result ? Promise.resolve(result) : Promise.reject('no materialInfo');
+            })
+        })
+    }
+  }
+
+  private toMaterialInfo(localMaterialInfo: LocalMaterialInfo): DataMaterialInfo {
+    return {
+      taskId: localMaterialInfo.S_TASKID,
+      infos: JSON.parse(localMaterialInfo.S_INFOS),
+      uploadFlag: localMaterialInfo.I_UPLOADEDFLAG
     }
   }
 
@@ -639,7 +817,22 @@ export class DbService {
         [I_WPARENTID] INTEGER,
         [S_WREMARK] TEXT(100),
         [S_WISACTIVE] TEXT(100));
-      
+        
+      CREATE TABLE IF NOT EXISTS [GD_MATERIALS] (
+        [ID] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        [I_MID] INTEGER NOT NULL,
+        [I_PARENTID] INTEGER NOT NULL,
+        [S_GROUPKEY] TEXT(100) NOT NULL,
+        [S_KEY] TEXT(100) NOT NULL,
+        [S_NAME] TEXT(100));
+        
+      CREATE TABLE IF NOT EXISTS [GD_MATERIALINFO](
+        [ID] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        [I_USERID] INTEGER NOT NULL,
+        [S_TASKID] TEXT(50) NOT NULL,
+        [S_INFOS] TEXT(1000) NOT NULL,
+        [I_UPLOADEDFLAG] INTEGER NOT NULL DEFAULT 0);
+       
       CREATE TABLE IF NOT EXISTS [META_INFO] (
         [S_VERSION] TEXT(50) NOT NULL, 
         [S_PRODUCTER] TEXT (100) NOT NULL, 
@@ -668,6 +861,25 @@ export class DbService {
     return `INSERT INTO GD_WORDS VALUES (null, ${word.wid}, '${word.wName}', '${word.wValue}', '${word.wValueEx}', '${word.wGroup}', ${word.wParentId}, '${word.wRemark}', ${word.wIsActive ? "'1'" : "'0'"});`;
   }
 
+  private toMaterialInsertSql(material: Material): string {
+    return `INSERT INTO GD_MATERIALS VALUES (null,${material.id}, ${material.parentId}, '${material.groupKey}', '${material.key}', '${material.name}');`;
+  }
+
+  private toMaterialInfoInsertSql(materialInfo: DataMaterialInfo): string {
+    return `INSERT INTO GD_MATERIALINFO VALUES (null,${this.globalService.userId}, '${materialInfo.taskId}', 
+    '${JSON.stringify(materialInfo.infos)}', ${materialInfo.uploadFlag});`;
+  }
+
+  /**
+   * 更新
+   * @param materialInfo
+   * @returns {string}
+   */
+  private toMaterialInfoUpdateSql(materialInfo: DataMaterialInfo): string {
+    return `UPDATE GD_MATERIALINFO SET S_INFOS = '${JSON.stringify(materialInfo.infos)}',
+    I_UPLOADEDFLAG=${materialInfo.uploadFlag} WHERE S_TASKID = '${materialInfo.taskId}'`;
+  }
+
   /**
    *
    * @param localWord
@@ -684,6 +896,16 @@ export class DbService {
       wParentId: localWord.I_WPARENTID,
       wRemark: localWord.S_WREMARK
     };
+  }
+
+  private toMaterial(localMaterial: LocalMaterial): Material {
+    return {
+      id: localMaterial.I_MID,
+      parentId: localMaterial.I_PARENTID,
+      groupKey: localMaterial.S_GROUPKEY,
+      key: localMaterial.S_KEY,
+      name: localMaterial.S_NAME
+    }
   }
 
   /**

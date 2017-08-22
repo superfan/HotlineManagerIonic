@@ -3,7 +3,7 @@
     <ion-title>
       {{title}}
     </ion-title>
-    <ion-buttons end>
+    <ion-buttons end  *ngIf="isShowButtons">
       <button ion-button icon-only color="white" (click)="addMaterials()">
         <ion-icon name="add-circle"></ion-icon>
       </button>
@@ -29,11 +29,8 @@
 
     <ion-list *ngSwitchCase="'basicInfo'">
       <ion-item>
-        <ion-label color="label">工单编号：</ion-label>
-        <ion-input type="text" clearInput></ion-input>
-        <button item-end ion-button color="primary" clear icon-only (click)="searchTask()">
-          <ion-icon name='search' is-active="false"></ion-icon>
-        </button>
+        <ion-label fixed class="label-name">工单编号：</ion-label>
+        <div item-content>{{taskId}}</div>
       </ion-item>
 
       <ion-item *ngFor="let detail of details">
@@ -55,7 +52,7 @@
             材料类别：
           </ion-label>
           <div item-content>
-            {{item.category}}
+            {{item.category.name}}
           </div>
         </ion-item>
 
@@ -64,7 +61,7 @@
             材料型号：
           </ion-label>
           <div item-content>
-            {{item.type}}
+            {{item.type.name}}
           </div>
         </ion-item>
 
@@ -73,7 +70,7 @@
             材料规格：
           </ion-label>
           <div item-content>
-            {{item.size}}
+            {{item.size.name}}
           </div>
         </ion-item>
 
@@ -82,7 +79,7 @@
             生产厂家：
           </ion-label>
           <div item-content>
-            {{item.productor}}
+            {{item.productor.name}}
           </div>
         </ion-item>
 
@@ -91,7 +88,7 @@
             单位：
           </ion-label>
           <div item-content>
-            {{item.unit}}
+            {{item.unit.text}}
           </div>
         </ion-item>
 

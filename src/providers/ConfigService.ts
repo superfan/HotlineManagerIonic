@@ -5,16 +5,19 @@ import {GlobalService} from "./GlobalService";
 import {File} from "@ionic-native/file";
 import 'rxjs/add/operator/toPromise';
 import {FileService} from "./FileService";
+import {MaterialUnit} from "../model/MaterialUnit";
 
 interface SystemConfig {
   outerBaseUri: string;
   innerBaseUri: string;
   serverBaseUri: string;
+  materialsBaseUri: string;
   isOuterNetwork: boolean;
   isGridStyle: boolean;
   isDebugMode: boolean;
   keepAliveInterval: number;
   sysRegion: string;
+  materialUnit: Array<MaterialUnit>;
 }
 
 interface MapConfig {
@@ -71,6 +74,82 @@ export class ConfigService {
           })
           .catch(error => reject(error));
       });
+  }
+
+  /**
+   * 获得材料接口地址
+   * @returns {Promise<string>|Promise<T>}
+   */
+  public getMaterialsBaseUri(): Promise<string> {
+    return ConfigService.isValid<SystemConfig>(this.systemConfig, 'materialsBaseUri')
+      ? Promise.resolve(this.systemConfig.materialsBaseUri)
+      : new Promise((resolve, reject) => {
+        this.readSystemConfig()
+          .then(data => {
+            this.systemConfig = data as SystemConfig;
+            if (ConfigService.isValid<SystemConfig>(this.systemConfig, 'materialsBaseUri')) {
+              resolve(this.systemConfig.materialsBaseUri);
+            } else {
+              reject("failure to getMaterialsBaseUri");
+            }
+          })
+          .catch(error => reject(error));
+      })
+  }
+
+  /**
+   * 获得材料单位
+   * @returns {Promise<Array<MaterialUnit>>|Promise<T>}
+   */
+  public getMaterialUnit(): Promise<Array<MaterialUnit>> {
+    return ConfigService.isValid<SystemConfig>(this.systemConfig, "materialUnit")
+      ? Promise.resolve(this.systemConfig.materialUnit)
+      : new Promise((resolve, reject) => {
+        this.readSystemConfig()
+          .then(data => {
+            this.systemConfig = data as SystemConfig;
+            if (ConfigService.isValid<SystemConfig>(this.systemConfig, 'materialUnit')) {
+              resolve(this.systemConfig.materialUnit);
+            } else {
+              reject("failure to getmaterialUnit");
+            }
+          })
+          .catch(error => reject(error));
+      })
+  }
+
+  /**
+   * 获得某一个单位对象
+   * @param id
+   * @returns {Promise<MaterialUnit>|Promise<T>}
+   */
+  public getOneMaterialUnit(id: number): Promise<MaterialUnit> {
+    return ConfigService.isValid<SystemConfig>(this.systemConfig, "materialUnit")
+      ? Promise.resolve(this.filterMaterialUnit(id, this.systemConfig.materialUnit))
+      : new Promise((resolve, reject) => {
+        this.readSystemConfig()
+          .then(data => {
+            this.systemConfig = data as SystemConfig;
+            if (ConfigService.isValid<SystemConfig>(this.systemConfig, 'materialUnit')) {
+              resolve(this.filterMaterialUnit(id, this.systemConfig.materialUnit));
+            } else {
+              reject("failure to getmaterialUnit");
+            }
+          })
+          .catch(error => reject(error));
+      })
+  }
+
+  private filterMaterialUnit(id: number, arrays: Array<MaterialUnit>): MaterialUnit {
+    if (!id || !arrays || arrays.length <= 0) {
+      return null;
+    }
+    for (let temp of arrays) {
+      if (temp.id == id) {
+        return temp;
+      }
+    }
+    return null;
   }
 
   /**
@@ -388,11 +467,13 @@ export class ConfigService {
       outerBaseUri: obj["server.outer.baseuri"],
       innerBaseUri: obj["server.inner.baseuri"],
       serverBaseUri: obj["sys.connect.outer.network"] ? obj["server.outer.baseuri"] : obj["server.inner.baseuri"],
+      materialsBaseUri: obj["server.materials.baseuri"],
       isOuterNetwork: obj["sys.connect.outer.network"],
       isGridStyle: obj["sys.grid.style"],
       isDebugMode: obj["sys.debug.mode"],
       keepAliveInterval: obj["sys.keep.alive.interval"],
-      sysRegion: obj["sys.region"]
+      sysRegion: obj["sys.region"],
+      materialUnit: obj["sys.material.unit"]
     };
   }
 
@@ -417,11 +498,13 @@ export class ConfigService {
     return JSON.stringify({
       "server.outer.baseuri": systemConfig.outerBaseUri,
       "server.inner.baseuri": systemConfig.innerBaseUri,
+      "server.materials.baseuri": systemConfig.materialsBaseUri,
       "sys.connect.outer.network": systemConfig.isOuterNetwork,
       "sys.grid.style": systemConfig.isGridStyle,
       "sys.debug.mode": systemConfig.isDebugMode,
       "sys.keep.alive.interval": systemConfig.keepAliveInterval,
-      "sys.region": systemConfig.sysRegion
+      "sys.region": systemConfig.sysRegion,
+      "sys.material.unit": systemConfig.materialUnit
     });
   }
 
