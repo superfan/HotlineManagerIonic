@@ -46,13 +46,29 @@ public class MainActivity extends CordovaActivity {
     MainApplication mainApplication = ((MainApplication)getApplication());
     Intent intent = getIntent();
     if (savedInstanceState != null) {
+      Log.i("MainActivity","savedInstanceState");
       mainApplication.setBundle(savedInstanceState);
     } else if (intent != null) {
+      Log.i("MainActivity","intent");
       mainApplication.setBundle(intent.getExtras());
     } else {
+      Log.i("MainActivity","null");
       mainApplication.setBundle(null);
     }
 
     mainApplication.bindHostService();
+  }
+
+  @Override
+  protected void onNewIntent(Intent intent) {
+    Log.i("MainActivity","onNewIntent");
+    MainApplication mainApplication = ((MainApplication)getApplication());
+    mainApplication.setBundle(intent.getExtras());
+  }
+
+  @Override
+  protected void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    Log.i(TAG, "---onSaveInstanceState---");
   }
 }

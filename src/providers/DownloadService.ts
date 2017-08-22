@@ -328,7 +328,7 @@ export class DownloadService extends BaseService {
       this.configService.getServerBaseUri()
         .then(data => {
           let url;
-          if (user.role=='worker') {
+          if (user.role === this.globalService.worker) {
             url = data + "wap/v1/auth/" + user.userName + "/" + user.password + "?appIdentity=cc";
           } else {
             url = data + "wap/v1/auth/wap/" + user.userName + "/" + user.password + "?appIdentity=cc";
@@ -380,7 +380,7 @@ export class DownloadService extends BaseService {
     });
   }
 
-   /* 获得管理人员信息
+  /* 获得管理人员信息
    * @param userId
    * @returns {Promise<T>}
    */

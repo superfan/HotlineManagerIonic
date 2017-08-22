@@ -3,6 +3,7 @@ package cordova.plugin.MyPlugin;
 import android.content.Context;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
@@ -23,11 +24,12 @@ public class MyPlugin extends CordovaPlugin {
   private static final String ACTION_GET_LOCATION = "getLocation";
 
   private static final String ACCOUNT = "account";
+  private static final String PASSWORD = "password";
   private static final String USER_ID = "userId";
   private static final String USER_NAME = "userName";
   private static final String DEPARTMENT = "department";
   private static final String DEPARTMENT_ID = "departmentId";
-  private static final String ROLE = "role";
+  private static final String ROLES = "roles";
   private static final String PARAMS = "params";
   private static final String ACCESS_TOKEN = "accessToken";
 
@@ -58,31 +60,36 @@ public class MyPlugin extends CordovaPlugin {
       MainApplication mainApplication = (MainApplication) cordova.getActivity().getApplication();
       Bundle bundle = mainApplication.getBundle();
 
-      String account, userName, department, role, params, accessToken;
+      String account, password, userName, department, roles, params, accessToken;
       int userId, departmentId;
 
       if (bundle != null) {
         account = getString(bundle.getString(ACCOUNT));
+        password = getString(bundle.getString(PASSWORD));
         userId = bundle.getInt(USER_ID);
         userName = getString(bundle.getString(USER_NAME));
         department = getString(bundle.getString(DEPARTMENT));
         departmentId = bundle.getInt(DEPARTMENT_ID);
-        role = getString(bundle.getString(ROLE));
+        roles = getString(bundle.getString(ROLES));
         params = getString(bundle.getString(PARAMS));
         accessToken = getString(bundle.getString(ACCESS_TOKEN));
       } else {
         account = "ss1";
+        password = "0000";
         userId = 3;
         userName = "ss1";
         department = "上水";
         departmentId = 1;
-        role = "worker";
+        roles = "worker";
         params = "MyWorkPage";
         accessToken = getUUID(mainApplication);
       }
 
-      PageIntent pageIntent = new PageIntent(account, userId, userName,
-        (department != null ? department : "") + "#" + departmentId, role, params, accessToken);
+      Log.i("MyPlugin", "account:" + account + ", userId:" + userId + ", userName:" + userName + ", department:" + department
+        + ", roles:" + roles + ", params:" + params + ", bundle: " + (bundle != null));
+
+      PageIntent pageIntent = new PageIntent(account, password, userId, userName,
+        (department != null ? department : "") + "#" + departmentId, roles, params, accessToken, "");
       callbackContext.success(pageIntent.toJson());
     } catch (Exception e) {
       e.printStackTrace();

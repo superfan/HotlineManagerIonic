@@ -3,8 +3,9 @@ import {ToastController, LoadingController, Loading} from "ionic-angular";
 import {TaskEx} from "../model/Task";
 import {UserDetailInfo} from "../model/UserDetailInfo";
 import {Storage} from '@ionic/storage';
-import {MyPlugin, PageIntent} from "@ionic-native/my-plugin";
+import {MyPlugin, PageIntent, MyLocation} from "@ionic-native/my-plugin";
 import {Location, LocationEx} from "../model/Location";
+import {History} from "../model/History";
 
 export interface MainUpdateEvent {
   type: 'myWorkCount' | 'newsCount' | 'stationWorkCount' | 'gridStyle';
@@ -15,28 +16,33 @@ export interface MainUpdateEvent {
 export interface MyWorkUpdateEvent {
   type: 'reply' | 'cancel' | 'reject',
   taskEx?: TaskEx;
-  time?: number;
+  history?: History;
 }
 
 export class MyPluginMock extends MyPlugin {
-  getPageIntent(): Promise<PageIntent> {
-    let pageIntent: PageIntent = {
-      account: 'ss1',
-      userId: 3,
-      userName: 'ss1',
-      departmentAndId: '上水#1',
-      role: 'worker',
-      params: 'MyWorkPage'
+  public static pageIntent: PageIntent = {
+    account: 'ss1',
+    password: '0000',
+    userId: 3,
+    userName: 'ss1',
+    departmentAndId: '上水#1',
+    roles: 'worker',
+    params: 'MyWorkPage',
+    accessToken: '',
+    extendedInfo: ''
+  };
 
-    };
-    return Promise.resolve(pageIntent);
+  public static myLocation: MyLocation = {
+    lng: 121.524808,
+    lat: 31.280823
+  };
+
+  getPageIntent(): Promise<PageIntent> {
+    return Promise.resolve(MyPluginMock.pageIntent);
   }
 
   getLocation(): Promise<any> {
-    return Promise.resolve({
-      lng: 121.524808,
-      lat: 31.280823
-    });
+    return Promise.resolve(MyPluginMock.myLocation);
   }
 }
 
@@ -68,6 +74,9 @@ export class GlobalService {
   private readonly userDetailInfoStorageName: string = 'userDetailInfo';
   readonly locationType: string = 'bd09ll';
   private myPluginMock: MyPluginMock;
+  readonly worker: string = 'worker';
+  readonly photoSuffix: string = '.jpg';
+  readonly audioSuffix: string = '.mp3';
 
   constructor(private toastCtrl: ToastController,
               private loadingCtrl: LoadingController,
@@ -80,18 +89,43 @@ export class GlobalService {
   }
 
   public saveUserDetailInfo(userDetailInfo: UserDetailInfo): Promise<any> {
-    return userDetailInfo && userDetailInfo.account && userDetailInfo.userName && userDetailInfo.role && userDetailInfo.department
+    return userDetailInfo && userDetailInfo.account && userDetailInfo.userName && userDetailInfo.roles && userDetailInfo.department
       ? this.storage.set(this.userDetailInfoStorageName, JSON.stringify(userDetailInfo))
         .then(result => {
           this.account = userDetailInfo.account;
           this.userId = userDetailInfo.userId;
           this.userName = userDetailInfo.userName;
-          this.isWorker = userDetailInfo.role === 'worker';
+          this.isWorker = userDetailInfo.roles === this.worker;
           this.department = userDetailInfo.department;
           this.departmentId = userDetailInfo.departmentId;
           return Promise.resolve(result);
         })
       : Promise.reject('userDetailInfo is error');
+  }
+
+  public getUserDetailInfo(): Promise<any> {
+    return this.storage.get(this.userDetailInfoStorageName)
+      .then(userDetailInfo => {
+        if (userDetailInfo) {
+          userDetailInfo = JSON.parse(userDetailInfo);
+        }
+
+        if (userDetailInfo
+          && userDetailInfo.account
+          && userDetailInfo.userName
+          && userDetailInfo.roles
+          && userDetailInfo.department) {
+          this.account = userDetailInfo.account;
+          this.userId = userDetailInfo.userId;
+          this.userName = userDetailInfo.userName;
+          this.isWorker = userDetailInfo.roles === this.worker;
+          this.department = userDetailInfo.department;
+          this.departmentId = userDetailInfo.departmentId;
+          return userDetailInfo;
+        } else {
+          return Promise.reject('userDetailInfo is not valid');
+        }
+      });
   }
 
   public getLocationEx(): Promise<LocationEx> {

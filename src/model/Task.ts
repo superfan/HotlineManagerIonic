@@ -1,9 +1,12 @@
 import {Location} from './Location';
-import {Process, ProcessEx} from "./Process";
+import {Process, ProcessEx, DisableColor, EnableColor} from "./Process";
 import {ReplyInfo} from "./ReplyInfo";
 import {AcceptInfo} from "./AcceptInfo";
 import {GoInfo} from "./GoInfo";
 import {ArriveInfo} from "./ArriveInfo";
+import {RejectInfo} from "./RejectInfo";
+import {DelayInfo} from "./DelayInfo";
+import {CancelInfo} from "./CancelInfo";
 
 export enum TaskState {
   Dispatch,   // 0
@@ -15,6 +18,12 @@ export enum TaskState {
   Delay,      // 6
   Cancel,     // 7
   Continue    // 8
+}
+
+interface TaskExtendedInfo {
+  rejectTime?: number;
+  delayTime?: number;
+  destroyTime?: number;
 }
 
 export interface Task {
@@ -31,7 +40,7 @@ export interface Task {
   state: number;
   taskId: string;
   taskType: string;
-  extendedInfo?: string;
+  extendedInfo?: TaskExtendedInfo;
 }
 
 export class TaskEx {
@@ -48,7 +57,8 @@ export class TaskEx {
   videoCount: number;
   isPreview: boolean;
   isLocationValid: boolean;
-  extendedInfo?: string;
+  extendedInfo?: TaskExtendedInfo;
+  isUploaded?: boolean;
 
   constructor(task: Task) {
     this.id = task.taskId;
@@ -57,8 +67,8 @@ export class TaskEx {
     this.describe = task.desc;
     this.location = {
       type: task.location.type,
-      lng: '121.524808',//task.location.lng,
-      lat: '31.280823'//task.location.lat
+      lng: task.location.lng,
+      lat: task.location.lat
     };
     this.source = task.source;
     this.lastProcess = '';
@@ -67,6 +77,8 @@ export class TaskEx {
     this.videoCount = 0;
     this.isPreview = false;
     this.isLocationValid = TaskEx.checkLocation(this.location);
+    this.extendedInfo = task.extendedInfo;
+    this.isUploaded = true;
 
     this.processes = [];
     this.processes.push({
@@ -74,9 +86,10 @@ export class TaskEx {
       name: '创建时间',
       time: TaskEx.utc2Date(task.createTime),
       show: true,
-      color: 'gray',
+      color: DisableColor,
       done: false,
-      extend: null
+      extend: null,
+      isUploaded: true
     });
 
     this.processes.push({
@@ -84,9 +97,10 @@ export class TaskEx {
       name: '派发时间',
       time: TaskEx.utc2Date(task.assignTime),
       show: true,
-      color: 'gray',
+      color: DisableColor,
       done: false,
-      extend: null
+      extend: null,
+      isUploaded: true
     });
 
     this.processes.push({
@@ -94,9 +108,10 @@ export class TaskEx {
       name: '接单时间',
       time: TaskEx.utc2Date(task.acceptTime),
       show: true,
-      color: 'primary',
+      color: EnableColor,
       done: false,
-      extend: null
+      extend: null,
+      isUploaded: true
     });
 
     this.processes.push({
@@ -104,9 +119,10 @@ export class TaskEx {
       name: '出发时间',
       time: TaskEx.utc2Date(task.goTime),
       show: false,
-      color: 'primary',
+      color: EnableColor,
       done: false,
-      extend: null
+      extend: null,
+      isUploaded: true
     });
 
     this.processes.push({
@@ -114,9 +130,10 @@ export class TaskEx {
       name: '到场时间',
       time: TaskEx.utc2Date(task.arrivedTime),
       show: false,
-      color: 'primary',
+      color: EnableColor,
       done: false,
-      extend: null
+      extend: null,
+      isUploaded: true
     });
 
     this.processes.push({
@@ -124,9 +141,10 @@ export class TaskEx {
       name: '回复时间',
       time: TaskEx.utc2Date(task.replyTime),
       show: false,
-      color: 'primary',
+      color: EnableColor,
       done: false,
-      extend: null
+      extend: null,
+      isUploaded: true
     });
 
     this.processes.push({
@@ -134,9 +152,10 @@ export class TaskEx {
       name: '退单时间',
       time: undefined,
       show: false,
-      color: 'primary',
+      color: EnableColor,
       done: false,
-      extend: null
+      extend: null,
+      isUploaded: true
     });
 
     this.processes.push({
@@ -144,9 +163,10 @@ export class TaskEx {
       name: '延迟时间',
       time: undefined,
       show: false,
-      color: 'primary',
+      color: EnableColor,
       done: false,
-      extend: null
+      extend: null,
+      isUploaded: true
     });
 
     this.processes.push({
@@ -154,24 +174,27 @@ export class TaskEx {
       name: '销单时间',
       time: undefined,
       show: false,
-      color: 'primary',
+      color: EnableColor,
       done: false,
-      extend: null
+      extend: null,
+      isUploaded: true
     });
   }
 
-  public static transform(tasks: Array<Task>, taskExs: Array<TaskEx>) {
+  public static transform(tasks: Array<Task>, taskExs: Array<TaskEx>): Array<TaskEx> {
+    let start: number = taskExs.length;
     for (let task of tasks) {
       let taskEx = new TaskEx(task);
       taskExs.push(taskEx);
     }
+    return taskExs.slice(start);
   }
 
   private static utc2Date(utc: number): Date {
     return utc > 0 ? new Date(utc) : undefined;
   }
 
-  private static checkLocation(location: Location): boolean {
+  public static checkLocation(location: Location): boolean {
     let lng: number;
     let lat: number;
     if (location && location.lng && location.lat) {
@@ -342,7 +365,15 @@ export function transform2Task(info: any, taskEx: TaskEx, processEx: ProcessEx):
       taskType: taskEx.type
     };
   } else if (info.hasOwnProperty('rejectTime')) {
-    //let rejectInfo: RejectInfo = info as RejectInfo;
+    let rejectInfo: RejectInfo = info as RejectInfo;
+    if (!taskEx.extendedInfo) {
+      taskEx.extendedInfo = {
+        rejectTime: rejectInfo.rejectTime
+      };
+    } else {
+      taskEx.extendedInfo.rejectTime = rejectInfo.rejectTime;
+    }
+
     return {
       acceptTime: getTime(processEx.accept.time),
       arrivedTime: getTime(processEx.arrive.time),
@@ -360,10 +391,19 @@ export function transform2Task(info: any, taskEx: TaskEx, processEx: ProcessEx):
       source: taskEx.source,
       state: TaskState.Reject,
       taskId: taskEx.id,
-      taskType: taskEx.type
+      taskType: taskEx.type,
+      extendedInfo: taskEx.extendedInfo
     };
   } else if (info.hasOwnProperty('delayTime')) {
-    //let delayInfo: DelayInfo = info as DelayInfo;
+    let delayInfo: DelayInfo = info as DelayInfo;
+    if (!taskEx.extendedInfo) {
+      taskEx.extendedInfo = {
+        delayTime: delayInfo.delayTime
+      };
+    } else {
+      taskEx.extendedInfo.delayTime = delayInfo.delayTime;
+    }
+
     return {
       acceptTime: getTime(processEx.accept.time),
       arrivedTime: getTime(processEx.arrive.time),
@@ -381,7 +421,8 @@ export function transform2Task(info: any, taskEx: TaskEx, processEx: ProcessEx):
       source: taskEx.source,
       state: TaskState.Delay,
       taskId: taskEx.id,
-      taskType: taskEx.type
+      taskType: taskEx.type,
+      extendedInfo: taskEx.extendedInfo
     };
   } else if (info.hasOwnProperty('opTime')) {
     let replyInfo: ReplyInfo = info as ReplyInfo;
@@ -405,7 +446,15 @@ export function transform2Task(info: any, taskEx: TaskEx, processEx: ProcessEx):
       taskType: taskEx.type
     };
   } else if (info.hasOwnProperty('destroyTime')) {
-    //let cancelInfo: CancelInfo = info as CancelInfo;
+    let cancelInfo: CancelInfo = info as CancelInfo;
+    if (!taskEx.extendedInfo) {
+      taskEx.extendedInfo = {
+        destroyTime: cancelInfo.destroyTime
+      };
+    } else {
+      taskEx.extendedInfo.destroyTime = cancelInfo.destroyTime;
+    }
+
     return {
       acceptTime: getTime(processEx.accept.time),
       arrivedTime: getTime(processEx.arrive.time),
@@ -423,9 +472,11 @@ export function transform2Task(info: any, taskEx: TaskEx, processEx: ProcessEx):
       source: taskEx.source,
       state: TaskState.Cancel,
       taskId: taskEx.id,
-      taskType: taskEx.type
+      taskType: taskEx.type,
+      extendedInfo: taskEx.extendedInfo
     };
   } else {
     return null;
   }
 }
+

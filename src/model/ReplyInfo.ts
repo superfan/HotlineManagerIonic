@@ -2,7 +2,7 @@ import {Location} from "./Location";
 
 export interface ReplyInfo {
   opTime: number;
-  opDepartment: number;
+  opDepartment: string;
   opPerson: number;
   opLeiBie: number;
   opContent: number;

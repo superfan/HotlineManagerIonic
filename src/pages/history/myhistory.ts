@@ -1,10 +1,14 @@
 import {Component, ViewChild, OnInit, OnDestroy} from '@angular/core';
-import {NavController, Content, InfiniteScroll} from "ionic-angular";
+import {NavController, Content, InfiniteScroll, Events, Refresher} from "ionic-angular";
 import {DataService} from '../../providers/DataService';
-import {HistoryEx} from "../../model/History";
+import {History, HistoryEx} from "../../model/History";
 import {RejectInfo} from "../../model/RejectInfo";
 import {CancelInfo} from "../../model/CancelInfo";
 import {GlobalService} from "../../providers/GlobalService";
+import {WorkDetailPage} from "../workdetail/workdetail";
+import {TaskEx} from "../../model/Task";
+import {MapPage} from "../map/map";
+import {MapParam, MapType} from "../../model/MapParam";
 
 @Component({
   selector: 'page-myhistory',
@@ -15,6 +19,7 @@ import {GlobalService} from "../../providers/GlobalService";
 export class MyHistory implements OnInit, OnDestroy {
   private readonly tag: string = "[Myhistory]";
 
+  @ViewChild(Refresher) refresher: Refresher;
   @ViewChild(Content) content: Content;
   @ViewChild(InfiniteScroll) infiniteScroll: InfiniteScroll;
 
@@ -27,24 +32,27 @@ export class MyHistory implements OnInit, OnDestroy {
   private count: number = this.globalService.taskCountDefault10;
   searchKey: string = '';
   private isOperationBusy: boolean = false;
+  private replyHistories: History[] = [];
+  onServerFlag: number;
+
+  constructor(public navCtrl: NavController,
+              private dataService: DataService,
+              private globalService: GlobalService,
+              private events: Events) {
+    this.onServerFlag = this.globalService.uploadedFlagForUploaded;
+  }
 
   ngOnInit(): void {
     console.log(this.tag, 'ngOnInit');
-    this.since = this.items.length;
-    this.getHistory(this.since, this.count, this.searchKey)
-      .then(flag => {
-        this.infiniteScroll.enable(flag);
-      })
+    this.subscribeEvent(this.events);
+    this.getHistories(this.since, this.count, this.searchKey)
+      .then(flag => this.infiniteScroll.enable(flag))
       .catch(error => console.error(error));
   }
 
   ngOnDestroy(): void {
     console.log(this.tag, 'ngOnDestroy');
-  }
-
-  constructor(public navCtrl: NavController,
-              private dataService: DataService,
-              private globalService: GlobalService) {
+    this.events.unsubscribe(this.globalService.historyUploadFinishEvent);
   }
 
   //搜索
@@ -62,10 +70,9 @@ export class MyHistory implements OnInit, OnDestroy {
     this.since = this.globalService.taskSinceDefault;
     while (this.items.shift()) ;
     this.showFab = false;
-    this.getHistory(this.since, this.count, this.searchKey)
-      .then(data => {
-        this.infiniteScroll.enable(data);
-      })
+    this.replyHistories = [];
+    this.getHistories(this.since, this.count, this.searchKey)
+      .then(data => this.infiniteScroll.enable(data))
       .catch(error => {
         console.error(error);
       }).then(() => this.isOperationBusy = false);
@@ -80,11 +87,10 @@ export class MyHistory implements OnInit, OnDestroy {
   }
 
 
-  /*
-  doRefresh(refresher) {
-    this.searchKey = '';
-    refresher.completed();
-  }*/
+  doRefresh(refresher): void {
+    console.log(this.tag, 'doRefresh');
+    this.dataService.uploadHistoriesAndMedias();
+  }
 
   /**
    * 上拉加载更多
@@ -96,7 +102,7 @@ export class MyHistory implements OnInit, OnDestroy {
     setTimeout(() => {
       this.isDownloadFinished = false;
       this.showFab = false;
-      this.getHistory(this.since, this.count, this.searchKey)
+      this.getHistories(this.since, this.count, this.searchKey)
         .then(data => {
           if (!data) {
             infiniteScroll.enable(false);
@@ -128,17 +134,39 @@ export class MyHistory implements OnInit, OnDestroy {
     this.content.resize();
   }
 
-  private getHistory(since: number, count: number, key: string): Promise<boolean> {
+  private getHistories(since: number, count: number, key: string): Promise<boolean> {
     return this.dataService
       .getHistories(since, count, key)
-      .then(historys => {
-        console.log(this.tag + "getHistory" + historys.length);
-        if (historys.length <= 0) {
+      .then(histories => {
+        console.log(this.tag + "getHistory" + histories.length);
+        if (histories.length <= 0) {
           return Promise.resolve(false);
         } else {
-          HistoryEx.transformToHistoryEx(this.items, historys);
+          HistoryEx.transformToHistoryEx(this.items, histories);
           this.since = this.items.length;
-          return Promise.resolve(true);
+          return Promise.resolve(histories.map(history => history.taskId))
+            .then(taskIds => this.dataService.getReplyHistories(taskIds))
+            .then(histories => {
+              let result: boolean = false;
+              try {
+                this.replyHistories.push(...histories);
+                this.replyHistories.forEach(history => {
+                  if (history.mediaNames && history.mediaNames.length > 0) {
+                    let historyEx: HistoryEx = this.items.find(historyEx => historyEx.taskId === history.taskId);
+                    if (historyEx) {
+                      let mediaNames = history.mediaNames;
+                      historyEx.photoCount = mediaNames.filter(name => name.lastIndexOf(this.globalService.photoSuffix) !== -1).length;
+                      historyEx.audioCount = mediaNames.filter(name => name.lastIndexOf(this.globalService.audioSuffix) !== -1).length;
+                    }
+                  }
+                });
+                result = true;
+              } catch (err) {
+                console.error(err);
+              }
+
+              return Promise.resolve(result);
+            });
         }
       });
   }
@@ -149,5 +177,39 @@ export class MyHistory implements OnInit, OnDestroy {
 
   toReplyInfo(item: any): CancelInfo {
     return <CancelInfo>item;
+  }
+
+  onReply(historyEx: HistoryEx): void {
+    let taskEx: TaskEx = new TaskEx(historyEx.task);
+    taskEx.isPreview = true;
+    let history: History = this.findReplyHistory(taskEx.id);
+    this.navCtrl.push(WorkDetailPage, [taskEx, history]);
+  }
+
+  onLocate(historyEx: HistoryEx): void {
+    this.navCtrl.push(MapPage, new MapParam(MapType.Locate, historyEx.task.location, historyEx.task.taskId));
+  }
+
+  /**
+   * 订阅事件
+   * @param events
+   */
+  private subscribeEvent(events: Events): void {
+    events.subscribe(this.globalService.historyUploadFinishEvent, () => {
+      this.refresher.complete();
+      this.isOperationBusy = false;
+      this.searchKey = '';
+      this.since = this.globalService.taskSinceDefault;
+      while (this.items.shift()) ;
+      this.showFab = false;
+      this.replyHistories = [];
+      this.getHistories(this.since, this.count, this.searchKey)
+        .then(data => this.infiniteScroll.enable(data))
+        .catch(error => console.error(error));
+    });
+  }
+
+  private findReplyHistory(taskId: string): History {
+    return this.replyHistories.find(history => history.taskId === taskId);
   }
 }

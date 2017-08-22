@@ -345,6 +345,23 @@ export class DbService {
   }
 
   /**
+   * 获取词语数目
+   * @returns {any}
+   */
+  public getWordsCount(): Promise<number> {
+    if (this.globalService.isChrome) {
+      return Promise.resolve(0);
+    } else {
+      return this.openDb()
+        .then(db => {
+          let sql: string = `SELECT COUNT(*) FROM GD_WORDS;`;
+          return db.executeSql(sql, {})
+            .then(data => data.rows && data.rows.length > 0 ? data.rows.item(0)["COUNT(*)"] : 0);
+        });
+    }
+  }
+
+  /**
    * 保存任务列表
    * @param userId
    * @param serverTasks
@@ -629,6 +646,50 @@ export class DbService {
           } else {
             sql += ' ORDER BY ID;';
           }
+          return db.executeSql(sql, {});
+        })
+        .then(data => {
+          let rows: any = data.rows;
+          let histories: Array<History> = [];
+          if (rows && rows.length > 0) {
+            for (let i = 0; i < rows.length; i++) {
+              let localHistory: LocalHistory = rows.item(i) as LocalHistory;
+              if (!localHistory) {
+                continue;
+              }
+              histories.push(this.toHistory(localHistory));
+            }
+          }
+          return Promise.resolve(histories);
+        });
+    }
+  }
+
+  /**
+   *
+   * @param userId
+   * @param taskIds
+   * @param state
+   * @param uploadedFlags
+   * @returns {any}
+   */
+  public getSpecialHistories(userId: number, taskIds: Array<string>, state?: number, uploadedFlags?: Array<number>): Promise<Array<History>> {
+    if (this.globalService.isChrome || !taskIds || taskIds.length <= 0) {
+      return Promise.resolve([]);
+    } else {
+      return this.openDb()
+        .then(db => {
+          let ids: Array<string> = taskIds.map(id => `\'${id}\'`);
+          let sql = `SELECT * FROM GD_HISTORIES WHERE I_USERID = ${userId} AND S_TASKID IN (${ids.join(',')})`;
+          if (state !== undefined && state !== null) {
+            sql += ` AND I_STATE = ${state}`;
+          }
+
+          if (uploadedFlags && uploadedFlags.length > 0) {
+            sql += ` AND I_UPLOADEDFLAG IN (${uploadedFlags.join(',')})`;
+          }
+
+          sql += ` ORDER BY ID;`;
           return db.executeSql(sql, {});
         })
         .then(data => {

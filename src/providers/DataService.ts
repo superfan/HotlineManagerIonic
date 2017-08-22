@@ -51,7 +51,7 @@ export class DataService extends SyncService {
               configService: ConfigService,
               mediaService: MediaService,
               events: Events) {
-    super(downloadService, uploadService, globalService, dbService, configService, mediaService, events);
+    super(downloadService, uploadService, globalService, dbService, mediaService, events, configService);
     this.isInitialized = false;
   }
 
@@ -169,6 +169,23 @@ export class DataService extends SyncService {
     }
   }
 
+  public getReplyHistories(taskIds: Array<string>): Promise<Array<History>> {
+    if (this.globalService.isChrome) {
+      return Promise.resolve([]);
+    } else {
+      return this.dbService.getSpecialHistories(this.globalService.userId, taskIds, TaskState.Reply);
+    }
+  }
+
+  public checkIfExistNotUploadedHistories(taskIds: Array<string>): Promise<Array<History>> {
+    if (this.globalService.isChrome) {
+      return Promise.resolve([]);
+    } else {
+      return this.dbService.getSpecialHistories(this.globalService.userId, taskIds, undefined,
+        [this.globalService.uploadedFlagForLocal, this.globalService.uploadedFlagForUploading]);
+    }
+  }
+
   /**
    * 获取未派工任务
    * @param since
@@ -224,6 +241,22 @@ export class DataService extends SyncService {
   public downloadWords(): Promise<boolean> {
     return this.downloadService.getAllWords('all')
       .then(words => this.dbService.saveWords(words))
+      .catch(error => {
+        console.error(error);
+        this.globalService.showToast(error);
+        return Promise.resolve(false);
+      });
+  }
+
+  /**
+   *
+   * @returns {Promise<boolean>}
+   */
+  public checkIfDownloadWords(): Promise<boolean> {
+    return this.dbService.getWordsCount()
+      .then(count => count > 0
+        ? Promise.resolve(true)
+        : this.downloadService.getAllWords('all').then(words => this.dbService.saveWords(words)))
       .catch(error => {
         console.error(error);
         this.globalService.showToast(error);

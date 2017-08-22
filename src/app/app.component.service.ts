@@ -1,8 +1,8 @@
 import {Injectable} from "@angular/core";
 import {AndroidPermissions} from "@ionic-native/android-permissions";
-import {GlobalService} from "../providers/GlobalService";
+import {GlobalService, MyPluginMock} from "../providers/GlobalService";
 import {FileService} from "../providers/FileService";
-import {MyPlugin} from "@ionic-native/my-plugin";
+import {MyPlugin, PageIntent} from "@ionic-native/my-plugin";
 import {MyHistory} from "../pages/history/myhistory";
 import {MapPage} from "../pages/map/map";
 import {SearchPage} from "../pages/search/search";
@@ -11,7 +11,6 @@ import {NewsPage} from "../pages/news/news";
 import {MaterialsPage} from "../pages/materials/materials";
 import {SettingPage} from "../pages/setting/setting";
 import {MyWorkPage} from "../pages/mywork/mywork";
-import {UserDetailInfo} from "../model/UserDetailInfo";
 import {DataService} from "../providers/DataService";
 
 @Injectable()
@@ -37,7 +36,7 @@ export class AppComponentService {
       return this.checkPermissions()
         .then(result => this.fileService.createDirRoot())
         .then(result => this.dataService.init())
-        .then(result => this.dataService.downloadWords())
+        .then(result => this.dataService.checkIfDownloadWords())
         .then(result=> this.dataService.downloadMaterials())
         .then(result => this.parsePageIntent());
     }
@@ -60,26 +59,6 @@ export class AppComponentService {
       this.androidPermissions.PERMISSION.RECORD_AUDIO
     ];
 
-    // let promise: Promise<any>;
-    // for (let permission of permissions) {
-    //   if (!permission) {
-    //     continue;
-    //   }
-    //
-    //   if (promise) {
-    //     promise.then(() => this.androidPermissions.checkPermission(permission))
-    //       .then(success => console.log('Permission granted'),
-    //         err => this.androidPermissions.requestPermission(permission))
-    //       .catch(error => console.error(error));
-    //   } else {
-    //     promise =
-    //       this.androidPermissions.checkPermission(permission)
-    //         .then(success => console.log('Permission granted'),
-    //           err => this.androidPermissions.requestPermission(permission))
-    //         .catch(error => console.error(error));
-    //   }
-    // }
-
     return this.androidPermissions.requestPermissions(permissions)
       .then(success => console.log('Permission granted'),
         err => console.error(err));
@@ -92,30 +71,20 @@ export class AppComponentService {
   private parsePageIntent(): Promise<any> {
     return this.myPlugin.getPageIntent()
       .then(pageIntent => {
+        if (!pageIntent.roles) {
+          pageIntent.roles = this.globalService.worker;
+        }
+
         if (!pageIntent.account
           || !pageIntent.userName
           || !pageIntent.departmentAndId
-          || !pageIntent.role
+          //|| !pageIntent.roles
           || !pageIntent.params
           || pageIntent.params.length <= 0) {
-          return Promise.reject('params of the page are error');
+          pageIntent = MyPluginMock.pageIntent;
         }
 
-        let userDetailInfo: UserDetailInfo = {
-          account: pageIntent.account,
-          userId: pageIntent.userId,
-          userName: pageIntent.userName,
-          role: pageIntent.role,
-          department: '',
-          departmentId: 0
-        };
-        let departmentAndId: string[] = pageIntent.departmentAndId.split('#');
-        if (departmentAndId[0]) {
-          userDetailInfo.department = departmentAndId[0]
-        }
-
-        userDetailInfo.departmentId = GlobalService.string2Int(departmentAndId[1]);
-        return this.globalService.saveUserDetailInfo(userDetailInfo)
+        return this.setUserDetailInfo(pageIntent)
           .then(result => {
             let params: string[] = pageIntent.params.split('#');
             let page: any;
@@ -148,6 +117,43 @@ export class AppComponentService {
             }
             return Promise.resolve(page);
           });
+      });
+  }
+
+  /**
+   *
+   * @param pageIntent
+   * @returns {Promise<TResult|boolean>}
+   */
+  private setUserDetailInfo(pageIntent: PageIntent): Promise<any> {
+    return this.globalService.getUserDetailInfo()
+      .then(userDetailInfo => {
+        // userId passed from main shell is not same as saved id
+        // it will be changed in future
+        pageIntent.userId = userDetailInfo.userId;
+
+        if (pageIntent.account === userDetailInfo.account
+          && pageIntent.userId === userDetailInfo.userId
+          && pageIntent.userName === userDetailInfo.userName) {
+          return Promise.resolve(true);
+        } else {
+          return Promise.reject('different user');
+        }
+      })
+      .catch(error => {
+        console.error(error);
+        return this.dataService.doLogin({
+          userName: pageIntent.account,
+          password: pageIntent.password,
+          role: pageIntent.roles
+        }).then(userResult => this.globalService.saveUserDetailInfo({
+          account: pageIntent.account,
+          userId: userResult.userId,
+          userName: pageIntent.userName,
+          roles: pageIntent.roles,
+          department: userResult.Department,
+          departmentId: 0
+        }));
       });
   }
 }

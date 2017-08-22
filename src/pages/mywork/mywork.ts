@@ -3,7 +3,7 @@ import {Content, NavController, InfiniteScroll, AlertController, Events, Refresh
 import {WorkDetailPage} from "../workdetail/workdetail";
 import {DataService} from "../../providers/DataService";
 import {Task, TaskEx, TaskState, transform2ProcessEx, transform2Task} from "../../model/Task";
-import {ProcessEx, DelayExtend, RejectExtend, CancelExtend} from "../../model/Process";
+import {ProcessEx, DelayExtend, RejectExtend, CancelExtend, DisableColor, NotUploadedColor} from "../../model/Process";
 import {GlobalService, MyWorkUpdateEvent} from "../../providers/GlobalService";
 import {AcceptInfo} from "../../model/AcceptInfo";
 import {GoInfo} from "../../model/GoInfo";
@@ -15,6 +15,8 @@ import {MapPage} from "../map/map";
 import {MapParam, MapType} from "../../model/MapParam";
 import {Location} from "../../model/Location";
 import {MaterialsPage} from "../materials/materials";
+import {History} from "../../model/History";
+import {ReplyInfo} from "../../model/ReplyInfo";
 
 enum FromWhere {
   Download,
@@ -29,7 +31,7 @@ enum FromWhere {
 
 export class MyWorkPage implements OnInit, OnDestroy {
   private readonly tag: string = "[MyWorkPage]";
-  private readonly disableColor: string = 'gray';
+  //private readonly disableColor: string = 'gray';
   //private enableColor: string = 'primary';
 
   @ViewChild(Refresher) refresher: Refresher;
@@ -45,6 +47,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
   private count: number = this.globalService.taskCountDefault10;
   private isOperationBusy: boolean = false;
   private key: string = '';
+  private replyHistories: History[] = [];
 
   constructor(public navCtrl: NavController,
               private dataService: DataService,
@@ -217,7 +220,8 @@ export class MyWorkPage implements OnInit, OnDestroy {
    */
   onPreview(taskEx: TaskEx): void {
     taskEx.isPreview = true;
-    this.navCtrl.push(WorkDetailPage, taskEx);
+    let history: History = this.findReplyHistory(taskEx.id);
+    this.navCtrl.push(WorkDetailPage, [taskEx, history]);
   }
 
   /**
@@ -242,8 +246,42 @@ export class MyWorkPage implements OnInit, OnDestroy {
         if (tasks.length <= 0) {
           return Promise.resolve(false)
         } else {
-          TaskEx.transform(tasks, this.items);
-          return this.setProcesses(this.items);
+          let taskExs: TaskEx[] = TaskEx.transform(tasks, this.items);
+          return this.setProcesses(this.items)
+            .then(() => taskExs.map(taskEx => taskEx.id))
+            .then(taskIds => this.dataService.checkIfExistNotUploadedHistories(taskIds))
+            .then(histories => {
+              for (let taskEx of taskExs) {
+                let history: History = histories.find(history => history.taskId === taskEx.id);
+                if (history) {
+                  taskEx.isUploaded = history.uploadedFlag === this.globalService.uploadedFlagForUploaded;
+                }
+              }
+            })
+            .then(() => tasks.filter(task => task.state === TaskState.Reply))
+            .then(tasks => tasks.map(task => task.taskId))
+            .then(taskIds => this.dataService.getReplyHistories(taskIds))
+            .then(histories => {
+              let result: boolean = false;
+              try {
+                this.replyHistories.push(...histories);
+                this.replyHistories.forEach(history => {
+                  if (history.mediaNames && history.mediaNames.length > 0) {
+                    let taskEx: TaskEx = this.items.find(taskEx => taskEx.id === history.taskId);
+                    if (taskEx) {
+                      let mediaNames = history.mediaNames;
+                      taskEx.photoCount = mediaNames.filter(name => name.lastIndexOf(this.globalService.photoSuffix) !== -1).length;
+                      taskEx.audioCount = mediaNames.filter(name => name.lastIndexOf(this.globalService.audioSuffix) !== -1).length;
+                    }
+                  }
+                });
+                result = true;
+              } catch (err) {
+                console.error(err);
+              }
+
+              return Promise.resolve(result);
+            });
         }
       });
   }
@@ -264,18 +302,18 @@ export class MyWorkPage implements OnInit, OnDestroy {
 
         if (processEx.accept.time) {
           processEx.accept.show = true;
-          processEx.accept.color = this.disableColor;
+          processEx.accept.color = DisableColor;
           processEx.accept.done = true;
           taskEx.lastProcess = 'accept';
         }
 
         if (processEx.go.time) {
           processEx.go.show = true;
-          processEx.go.color = this.disableColor;
+          processEx.go.color = DisableColor;
           processEx.go.done = true;
           if (taskEx.lastProcess != 'accept') {
             processEx.accept.show = true;
-            processEx.accept.color = this.disableColor;
+            processEx.accept.color = DisableColor;
             processEx.accept.done = true;
           }
           taskEx.lastProcess = 'go';
@@ -283,11 +321,11 @@ export class MyWorkPage implements OnInit, OnDestroy {
 
         if (processEx.arrive.time) {
           processEx.arrive.show = true;
-          processEx.arrive.color = this.disableColor;
+          processEx.arrive.color = DisableColor;
           processEx.arrive.done = true;
           if (taskEx.lastProcess != 'go') {
             processEx.go.show = true;
-            processEx.go.color = this.disableColor;
+            processEx.go.color = DisableColor;
             processEx.go.done = true;
           }
           taskEx.lastProcess = 'arrive';
@@ -295,11 +333,11 @@ export class MyWorkPage implements OnInit, OnDestroy {
 
         if (processEx.reply.time) {
           processEx.reply.show = true;
-          processEx.reply.color = this.disableColor;
+          processEx.reply.color = DisableColor;
           processEx.reply.done = true;
           if (taskEx.lastProcess != 'arrive') {
             processEx.arrive.show = true;
-            processEx.arrive.color = this.disableColor;
+            processEx.arrive.color = DisableColor;
             processEx.arrive.done = true;
           }
           taskEx.lastProcess = 'reply';
@@ -307,21 +345,21 @@ export class MyWorkPage implements OnInit, OnDestroy {
 
         if (processEx.reject.time) {
           processEx.reject.show = true;
-          processEx.reject.color = this.disableColor;
+          processEx.reject.color = DisableColor;
           processEx.reject.done = true;
           taskEx.lastProcess = 'reject';
         }
 
         if (processEx.delay.time) {
           processEx.delay.show = true;
-          processEx.delay.color = this.disableColor;
+          processEx.delay.color = DisableColor;
           processEx.delay.done = true;
           taskEx.lastProcess = 'delay';
         }
 
         if (processEx.cancel.time) {
           processEx.cancel.show = true;
-          processEx.cancel.color = this.disableColor;
+          processEx.cancel.color = DisableColor;
           processEx.cancel.done = true;
           taskEx.lastProcess = 'cancel';
         }
@@ -398,17 +436,23 @@ export class MyWorkPage implements OnInit, OnDestroy {
         userId: this.globalService.userId
       };
       let task: Task = transform2Task(acceptInfo, taskEx, processEx);
-      this.dataService.accept(acceptInfo, task)
+      let output: any = {
+        uploadedFlag: this.globalService.uploadedFlagForLocal
+      };
+      this.dataService.accept(acceptInfo, task, output)
         .then(data => {
+          let uploadedFlag: boolean = output.uploadedFlag === this.globalService.uploadedFlagForUploaded;
           processEx.accept.time = time;
-          processEx.accept.color = this.disableColor;
+          processEx.accept.color = DisableColor;
           processEx.accept.done = true;
+          processEx.accept.isUploaded = uploadedFlag;
           processEx.go.show = true;
           processEx.reject.show = true;
           processEx.delay.show = true;
           //processEx.cancel.show = true;
           taskEx.lastProcess = 'accept';
           taskEx.state = TaskState.Accept;
+          taskEx.isUploaded = taskEx.isUploaded && uploadedFlag;
         })
         .catch(error => {
           console.error(this.tag, error);
@@ -437,17 +481,23 @@ export class MyWorkPage implements OnInit, OnDestroy {
         userId: this.globalService.userId
       };
       let task: Task = transform2Task(goInfo, taskEx, processEx);
-      this.dataService.go(goInfo, task)
+      let output: any = {
+        uploadedFlag: this.globalService.uploadedFlagForLocal
+      };
+      this.dataService.go(goInfo, task, output)
         .then(data => {
+          let uploadedFlag: boolean = output.uploadedFlag === this.globalService.uploadedFlagForUploaded;
           processEx.go.time = new Date();
-          processEx.go.color = this.disableColor;
+          processEx.go.color = DisableColor;
           processEx.go.done = true;
+          processEx.go.isUploaded = uploadedFlag;
           processEx.arrive.show = true;
           processEx.reject.show = true;
           processEx.delay.show = true;
           //processEx.cancel.show = true;
           taskEx.lastProcess = 'go';
           taskEx.state = TaskState.Go;
+          taskEx.isUploaded = taskEx.isUploaded && uploadedFlag;
         })
         .catch(error => {
           console.error(this.tag + error);
@@ -476,17 +526,23 @@ export class MyWorkPage implements OnInit, OnDestroy {
         userId: this.globalService.userId
       };
       let task: Task = transform2Task(arriveInfo, taskEx, processEx);
-      this.dataService.arrive(arriveInfo, task)
+      let output: any = {
+        uploadedFlag: this.globalService.uploadedFlagForLocal
+      };
+      this.dataService.arrive(arriveInfo, task, output)
         .then(data => {
+          let uploadedFlag: boolean = output.uploadedFlag === this.globalService.uploadedFlagForUploaded;
           processEx.arrive.time = time;
-          processEx.arrive.color = this.disableColor;
+          processEx.arrive.color = DisableColor;
           processEx.arrive.done = true;
+          processEx.arrive.isUploaded = uploadedFlag;
           processEx.reply.show = true;
           processEx.reject.show = true;
           processEx.delay.show = true;
           //processEx.cancel.show = true;
           taskEx.lastProcess = 'arrive';
           taskEx.state = TaskState.Arrived;
+          taskEx.isUploaded = taskEx.isUploaded && uploadedFlag;
         })
         .catch(error => {
           console.error(this.tag + error);
@@ -508,7 +564,8 @@ export class MyWorkPage implements OnInit, OnDestroy {
 
     if (!processEx.reply.done) {
       taskEx.isPreview = false;
-      this.navCtrl.push(WorkDetailPage, taskEx);
+      let history: History = this.findReplyHistory(taskEx.id);
+      this.navCtrl.push(WorkDetailPage, [taskEx, history]);
     }
   }
 
@@ -534,11 +591,16 @@ export class MyWorkPage implements OnInit, OnDestroy {
         userId: this.globalService.userId
       };
       let task: Task = transform2Task(rejectInfo, taskEx, processEx);
-      this.dataService.reject(rejectInfo, task)
+      let output: any = {
+        uploadedFlag: this.globalService.uploadedFlagForLocal
+      };
+      this.dataService.reject(rejectInfo, task, output)
         .then(data => {
+          let uploadedFlag: boolean = output.uploadedFlag === this.globalService.uploadedFlagForUploaded;
           processEx.reject.time = time;
-          processEx.reject.color = this.disableColor;
+          processEx.reject.color = DisableColor;
           processEx.reject.done = true;
+          processEx.reject.isUploaded = uploadedFlag;
 
           processEx.go.show = processEx.go.done;
           processEx.arrive.show = processEx.arrive.done;
@@ -547,6 +609,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
           //processEx.cancel.show = false;
           taskEx.lastProcess = 'reject';
           taskEx.state = TaskState.Reject;
+          taskEx.isUploaded = taskEx.isUploaded && uploadedFlag;
 
           this.events.publish(this.globalService.myWorkUpdateEvent, {type: 'reject'});
         })
@@ -606,13 +669,20 @@ export class MyWorkPage implements OnInit, OnDestroy {
           userId: this.globalService.userId
         };
         let task: Task = transform2Task(delayInfo, taskEx, processEx);
-        this.dataService.delay(delayInfo, task)
+        let output: any = {
+          uploadedFlag: this.globalService.uploadedFlagForLocal
+        };
+        this.dataService.delay(delayInfo, task, output)
           .then(data => {
+            let uploadedFlag: boolean = output.uploadedFlag === this.globalService.uploadedFlagForUploaded;
             processEx.delay.time = time;
-            processEx.delay.color = this.disableColor;
+            processEx.delay.color = DisableColor;
             processEx.delay.done = true;
+            processEx.delay.isUploaded = uploadedFlag;
+
             taskEx.lastProcess = 'delay';
             taskEx.state = TaskState.Delay;
+            taskEx.isUploaded = taskEx.isUploaded && uploadedFlag;
           })
           .catch(error => {
             console.error(this.tag + error);
@@ -642,13 +712,18 @@ export class MyWorkPage implements OnInit, OnDestroy {
         location,
         taskId: taskEx.id,
         userId: this.globalService.userId
-      }
+      };
       let task: Task = transform2Task(cancelInfo, taskEx, processEx);
-      this.dataService.cancel(cancelInfo, task)
+      let output: any = {
+        uploadedFlag: this.globalService.uploadedFlagForLocal
+      };
+      this.dataService.cancel(cancelInfo, task, output)
         .then(data => {
+          let uploadedFlag: boolean = output.uploadedFlag === this.globalService.uploadedFlagForUploaded;
           processEx.cancel.time = time;
-          processEx.cancel.color = this.disableColor;
+          processEx.cancel.color = DisableColor;
           processEx.cancel.done = true;
+          processEx.cancel.isUploaded = uploadedFlag;
 
           processEx.go.show = processEx.go.done;
           processEx.arrive.show = processEx.arrive.done;
@@ -657,6 +732,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
           processEx.delay.show = processEx.delay.done;
           taskEx.lastProcess = 'cancel';
           taskEx.state = TaskState.Cancel;
+          taskEx.isUploaded = taskEx.isUploaded && uploadedFlag;
 
           this.events.publish(this.globalService.myWorkUpdateEvent, {type: 'cancel'});
         })
@@ -953,20 +1029,46 @@ export class MyWorkPage implements OnInit, OnDestroy {
     events.subscribe(this.globalService.myWorkUpdateEvent, (myWorkUpdateEvent: MyWorkUpdateEvent) => {
       console.log("my work need to update");
 
-      if (myWorkUpdateEvent.type === 'reply' && myWorkUpdateEvent.taskEx && myWorkUpdateEvent.time) {
+      if (myWorkUpdateEvent.type === 'reply'
+        && myWorkUpdateEvent.taskEx
+        && myWorkUpdateEvent.history
+        && myWorkUpdateEvent.history.task
+        && myWorkUpdateEvent.history.reply
+        && myWorkUpdateEvent.history.taskDetail) {
         let processEx: ProcessEx = new ProcessEx();
         if (!transform2ProcessEx(myWorkUpdateEvent.taskEx, processEx)) {
           return;
         }
 
-        processEx.reply.time = new Date(myWorkUpdateEvent.time);
-        processEx.reply.color = this.disableColor;
+        let replyInfo: ReplyInfo = myWorkUpdateEvent.history.reply as ReplyInfo;
+        let uploadedFlag: boolean = myWorkUpdateEvent.history.uploadedFlag === this.globalService.uploadedFlagForUploaded;
+        processEx.reply.time = replyInfo && replyInfo.opTime ? new Date(replyInfo.opTime) : new Date();
+        processEx.reply.color = DisableColor;
         processEx.reply.done = true;
         processEx.reject.show = false;
         processEx.delay.show = processEx.delay.done;
         processEx.cancel.show = true;
+        processEx.reply.isUploaded = uploadedFlag;
         myWorkUpdateEvent.taskEx.lastProcess = 'reply';
         myWorkUpdateEvent.taskEx.state = TaskState.Reply;
+        myWorkUpdateEvent.taskEx.isUploaded = myWorkUpdateEvent.taskEx.isUploaded && uploadedFlag;
+
+        let history: History = this.findReplyHistory(myWorkUpdateEvent.taskEx.id);
+        if (history) {
+          history = {
+            userId: this.globalService.userId,
+            taskId: myWorkUpdateEvent.taskEx.id,
+            state: myWorkUpdateEvent.history.state,
+            task: myWorkUpdateEvent.history.task,
+            reply: myWorkUpdateEvent.history.reply,
+            uploadedFlag: myWorkUpdateEvent.history.uploadedFlag,
+            taskDetail: myWorkUpdateEvent.history.taskDetail,
+            mediaNames: myWorkUpdateEvent.history.mediaNames
+          };
+        } else {
+          this.replyHistories.push(myWorkUpdateEvent.history);
+        }
+
       } else if (myWorkUpdateEvent.type === 'cancel' || myWorkUpdateEvent.type === 'reject') {
         this.resetTasks(FromWhere.CancelOrReject);
       }
@@ -981,6 +1083,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
     this.isOperationBusy = true;
     this.since = this.globalService.taskSinceDefault;
     while (this.items.shift()) ;
+    this.replyHistories = [];
     this.showFab = false;
     this.getTasks(this.since, this.count, this.key)
       .then(data => this.infiniteScroll.enable(data))
@@ -1001,5 +1104,9 @@ export class MyWorkPage implements OnInit, OnDestroy {
             break;
         }
       });
+  }
+
+  private findReplyHistory(taskId: string): History {
+    return this.replyHistories.find(history => history.taskId === taskId);
   }
 }
