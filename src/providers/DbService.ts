@@ -10,6 +10,7 @@ import {History} from "../model/History";
 import {Media} from "../model/Media";
 import {Material} from "../model/Material";
 import {DataMaterialInfo, MaterialsInfo} from "../model/MaterialsInfo";
+import {MaintainInfo} from "../model/MaintainInfo";
 
 interface LocalWord {
   ID: number;
@@ -38,6 +39,16 @@ interface LocalMaterialInfo {
   S_TASKID: string;
   S_INFOS: string;
   I_UPLOADEDFLAG: number
+}
+
+interface LocalMaintainInfo {
+  ID: number;
+  S_TASKID: string;
+  S_TYPE: string;
+  S_ADDRESS: string;
+  S_AREA: string;
+  S_CONTENT: string;
+  S_REMARK: string;
 }
 
 interface LocalTask {
@@ -170,6 +181,50 @@ export class DbService {
             sql += this.toMaterialInsertSql(material);
           }
           return this.sqlitePorter.importSqlToDb(db, sql);
+        })
+    }
+  }
+
+  /**
+   * 保存维修信息
+   * @param maintainInfo
+   * @returns {any}
+   */
+  public saveMaintainInfo(maintainInfo: MaintainInfo): Promise<boolean> {
+    if (this.globalService.isChrome || !maintainInfo) {
+      return Promise.resolve(false);
+    } else {
+      return this.openDb()
+        .then(db => {
+          let sql: string;
+          sql = this.toMaintainInfoInsertSql(maintainInfo);
+          return this.sqlitePorter.importSqlToDb(db, sql);
+        })
+    }
+  }
+
+  /**
+   * 查询维修信息
+   * @param taskId
+   * @returns {any}
+   */
+  public queryMaintainInfo(taskId: string): Promise<MaintainInfo> {
+    if (this.globalService.isChrome || !taskId) {
+      return Promise.reject(this.paramError);
+    } else {
+      return this.openDb()
+        .then(db => {
+          let selectSql: string = `SELECT * FROM GD_MAINTAININFO WHERE S_TASKID = '${taskId}';`;
+          return db.executeSql(selectSql, {})
+            .then(data => {
+              let rows: any = data.rows;
+              let maintainInfo: MaintainInfo;
+              if (rows && rows.length == 1) {
+                let localMaintainInfo: LocalMaintainInfo = rows.item(0) as LocalMaintainInfo;
+                maintainInfo = this.toMaintainInfo(localMaintainInfo);
+              }
+              return maintainInfo ? Promise.resolve(maintainInfo) : Promise.reject('no maintainInfo');
+            })
         })
     }
   }
@@ -360,6 +415,7 @@ export class DbService {
         });
     }
   }
+
 
   /**
    * 保存任务列表
@@ -893,6 +949,15 @@ export class DbService {
         [S_TASKID] TEXT(50) NOT NULL,
         [S_INFOS] TEXT(1000) NOT NULL,
         [I_UPLOADEDFLAG] INTEGER NOT NULL DEFAULT 0);
+        
+      CREATE TABLE IF NOT EXISTS [GD_MAINTAININFO](
+        [ID] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        [S_TASKID] TEXT(50) NOT NULL,
+        [S_TYPE] TEXT(50),
+        [S_ADDRESS] TEXT(100),
+        [S_AREA] TEXT(50),
+        [S_CONTENT] TEXT(1000),
+        [S_REMARK] TEXT(1000));
        
       CREATE TABLE IF NOT EXISTS [META_INFO] (
         [S_VERSION] TEXT(50) NOT NULL, 
@@ -931,6 +996,11 @@ export class DbService {
     '${JSON.stringify(materialInfo.infos)}', ${materialInfo.uploadFlag});`;
   }
 
+  private toMaintainInfoInsertSql(maintainInfo: MaintainInfo): string {
+    return `INSERT INTO GD_MAINTAININFO VALUES (null,'${maintainInfo.serialNumber}','${maintainInfo.maintenanceType}',
+    '${maintainInfo.maintenanceAddress}','${maintainInfo.area}','${maintainInfo.repairContent}','${maintainInfo.remark}');`;
+  }
+
   /**
    * 更新
    * @param materialInfo
@@ -966,6 +1036,18 @@ export class DbService {
       groupKey: localMaterial.S_GROUPKEY,
       key: localMaterial.S_KEY,
       name: localMaterial.S_NAME
+    }
+  }
+
+  private toMaintainInfo(localMaintainInfo: LocalMaintainInfo): MaintainInfo {
+    return {
+      id: localMaintainInfo.ID,
+      serialNumber: localMaintainInfo.S_TASKID,
+      maintenanceType: localMaintainInfo.S_TYPE,
+      maintenanceAddress: localMaintainInfo.S_ADDRESS,
+      area: localMaintainInfo.S_AREA,
+      repairContent: localMaintainInfo.S_CONTENT,
+      remark: localMaintainInfo.S_REMARK
     }
   }
 

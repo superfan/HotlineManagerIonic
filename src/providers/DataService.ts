@@ -685,20 +685,20 @@ export class DataService extends SyncService {
       this.dbService.saveMaterialInfo(data)
         .then(result => {
           if (result) {
-            resolve(true);
-            // return this.uploadService.uploadMaterialsAdd(data.infos)
-            //   .then(result => {
-            //     //更新上传标志
-            //     if (result) {
-            //       data.uploadFlag = this.globalService.uploadedFlagForUploaded;//已上传
-            //       resolve(this.dbService.updateFlagMaterials(data));
-            //     } else {
-            //       reject("upload failed");
-            //     }
-            //   })
-            //   .catch(error => {
-            //     reject(false);
-            //   });
+            // resolve(true);
+            return this.uploadService.uploadMaterialsAdd(data.infos)
+              .then(result => {
+                //更新上传标志
+                if (result) {
+                  data.uploadFlag = this.globalService.uploadedFlagForUploaded;//已上传
+                  resolve(this.dbService.updateFlagMaterials(data));
+                } else {
+                  reject("upload failed");
+                }
+              })
+              .catch(error => {
+                reject(false);
+              });
           } else {
             reject("save to db failed");
           }
@@ -732,11 +732,11 @@ export class DataService extends SyncService {
               resolve(materialInfoEx);
             })
             .catch(error => {
-              console.log(error);
+              reject(error);
             })
         })
         .catch(error => {
-          console.log(error);
+          reject(error);
         })
     })
   }
@@ -770,6 +770,31 @@ export class DataService extends SyncService {
    * @returns {Promise<MaintainInfo>}
    */
   public getMaintainInfo(serialNumber: string): Promise<MaintainInfo> {
-    return this.downloadService.getMaintainInfo(serialNumber);
+    return new Promise((resolve, reject) => {
+      this.dbService.queryMaintainInfo(serialNumber)
+        .then(maintainInfo => {
+          resolve(maintainInfo);
+        })
+        .catch(error => {
+          console.log("getMaintainInfo:" + error);
+          return this.downloadService.getMaintainInfo(serialNumber)
+            .then(maintainInfo => {
+              this.dbService.saveMaintainInfo(maintainInfo)
+                .then(result => {
+                  if (result) {
+                    resolve(maintainInfo);
+                  } else {
+                    reject(result);
+                  }
+                })
+                .catch(error => {
+                  reject(error);
+                })
+            })
+            .catch(error => {
+              reject(error);
+            })
+        })
+    })
   }
 }

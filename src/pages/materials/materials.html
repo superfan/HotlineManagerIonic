@@ -110,7 +110,7 @@
           </div>
         </ion-item>
 
-        <ion-item>
+        <ion-item  *ngIf="isShowButtons">
           <button item-right ion-button icon-left clear small color="danger" (click)="deleteMaterials(item)">
             <ion-icon name="trash"></ion-icon>
             <div>删除</div>

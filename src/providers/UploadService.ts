@@ -405,7 +405,7 @@ export class UploadService extends BaseService {
     return new Promise((resolve,reject)=>{
       this.configService.getMaterialsBaseUri()
         .then(data=>{
-          let url=`${data}api/wap/v1/materialusage/batchadd`;
+          let url=`${data}api/wap/v1/materialusage/batch`;
           return this.http.post(url,JSON.stringify(materialArr),this.getOptions())
             .toPromise()
             .then(data=>{

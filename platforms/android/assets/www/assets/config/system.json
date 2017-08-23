@@ -1,7 +1,7 @@
 {
-  "server.outer.baseuri": "http://128.1.3.154:6001/",
-  "server.inner.baseuri": "http://128.1.3.154:6001/",
-  "server.materials.baseuri": "http://128.1.3.102:8100/",
+  "server.outer.baseuri": "http://128.1.2.184:8174/api/",
+  "server.inner.baseuri": "http://128.1.2.184:8174/api/",
+  "server.materials.baseuri": "http://128.1.2.184:8175/",
   "sys.connect.outer.network": true,
   "sys.grid.style": true,
   "sys.debug.mode": true,

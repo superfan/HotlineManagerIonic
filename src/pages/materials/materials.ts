@@ -20,7 +20,7 @@ export class MaterialsPage implements OnInit, OnDestroy {
   items: MaterialsInfo[] = [];
   public needEditItem: any;
   private taskId: string;
-  private isShowButtons: boolean = true;
+  private isShowButtons: boolean = false;
 
   constructor(public navCtrl: NavController,
               private navParams: NavParams,
@@ -58,6 +58,7 @@ export class MaterialsPage implements OnInit, OnDestroy {
         this.isShowButtons = result.uploadFlag == this.globalService.uploadedFlagForLocal;
       })
       .catch(error => {
+        this.isShowButtons = true;
         console.log(this.tag, error);
       })
 
