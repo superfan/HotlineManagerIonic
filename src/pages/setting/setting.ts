@@ -2,12 +2,19 @@
  * Created by zhangjing on 2017/6/29.
  */
 import {Component, OnDestroy, OnInit} from "@angular/core";
-import {ActionSheetController, AlertController, Events, NavController} from "ionic-angular";
+import {
+  ActionSheetController, AlertController, Events, NavController, PopoverController,
+  ToastController
+} from "ionic-angular";
 import {ConfigService} from "../../providers/ConfigService";
 import {GlobalService} from "../../providers/GlobalService";
 import {StorageService} from "../../providers/StorageService";
 import {FileService} from "../../providers/FileService";
 import {Storage} from "@ionic/storage";
+import {NetworkSetPage} from "./networkset";
+import {DownloadService} from "../../providers/DownloadService";
+import {all} from "q";
+import {DataService} from "../../providers/DataService";
 
 @Component({
   selector: 'page-setting',
@@ -24,6 +31,7 @@ export class SettingPage implements OnInit, OnDestroy {
   keepAlive: number;//心跳频率
   alermStyle: string = '仅铃声';//提醒方式
   isChrome;//是否是浏览器执行
+  public isShow: boolean = false;
 
   constructor(public navCtrl: NavController,
               public alertCtrl: AlertController,
@@ -32,27 +40,30 @@ export class SettingPage implements OnInit, OnDestroy {
               public globalService: GlobalService,
               public storageService: StorageService,
               public storage: Storage,
+              private popoverCtrl: PopoverController,
               public fileService: FileService,
-              public events: Events) {
+              public events: Events,
+              public dataService: DataService,
+              public toastCtrl: ToastController) {
   }
 
   ngOnInit() {
-    if (this.globalService.isChrome) {
-      this.storage.get(this.configService.systemStorageName)
-        .then(result => {
-          if (result) {
-            let jsonObject = ConfigService.transform2SystemConfig(result);
-            this.isGrid = jsonObject.isGridStyle;
-            this.isOuterNet = jsonObject.isOuterNetwork;
-            this.isOuterNet ? this.netWorkUri = jsonObject.outerBaseUri : this.netWorkUri = jsonObject.innerBaseUri;
-            this.keepAlive = jsonObject.keepAliveInterval;
-          } else {
-            this.readDataFromFile();
-          }
-        })
-      return;
-    }
-    this.readDataFromFile();
+    // if (this.globalService.isChrome) {
+    //   this.storage.get(this.configService.systemStorageName)
+    //     .then(result => {
+    //       if (result) {
+    //         let jsonObject = ConfigService.transform2SystemConfig(result);
+    //         this.isGrid = jsonObject.isGridStyle;
+    //         this.isOuterNet = jsonObject.isOuterNetwork;
+    //         this.isOuterNet ? this.netWorkUri = jsonObject.outerBaseUri : this.netWorkUri = jsonObject.innerBaseUri;
+    //         this.keepAlive = jsonObject.keepAliveInterval;
+    //       } else {
+    //         this.readDataFromFile();
+    //       }
+    //     })
+    //   return;
+    // }
+    // this.readDataFromFile();
   }
 
   ngOnDestroy(): void {
@@ -176,40 +187,80 @@ export class SettingPage implements OnInit, OnDestroy {
    * 网络设置
    */
   showNetwork() {
-    let prompt = this.alertCtrl.create({
-      title: '网络设置',
-      message: '数据访问地址',
-      inputs: [
-        {
-          name: 'netWorkUri',
-          value: this.netWorkUri,
-          placeholder: '数据访问地址',
-        }
-      ],
+    this.popoverCtrl.create(NetworkSetPage).present();
+    // let prompt = this.alertCtrl.create({
+    //   title: '网络设置',
+    //   message: '数据访问地址',
+    //   inputs: [
+    //     {
+    //       name: 'netWorkUri',
+    //       value: this.netWorkUri,
+    //       placeholder: '数据访问地址',
+    //     }
+    //   ],
+    //   buttons: [
+    //     {
+    //       text: '取消',
+    //       handler: data => {
+    //         console.log(this.tag + 'showNetwork cancel');
+    //       }
+    //     },
+    //     {
+    //       text: '保存',
+    //       handler: data => {
+    //         this.configService.setSystemUrl(data.netWorkUri)
+    //           .then(result => {
+    //             if (result) {
+    //               this.netWorkUri = data.netWorkUri;
+    //             }
+    //           })
+    //           .catch(error => {
+    //             console.log(this.tag + 'showNetwork:' + error);
+    //           })
+    //       }
+    //     }
+    //   ]
+    // });
+    // prompt.present();
+  }
+
+  showDownloadWords() {
+    let confirm = this.alertCtrl.create({
+      title: '更新词语',
+      message: '是否确定需要更新词语信息？',
       buttons: [
         {
           text: '取消',
-          handler: data => {
-            console.log(this.tag + 'showNetwork cancel');
+          handler: () => {
+            console.log(this.tag + '取消 clicked');
           }
         },
         {
-          text: '保存',
-          handler: data => {
-            this.configService.setSystemUrl(data.netWorkUri)
+          text: '确定',
+          handler: () => {
+            let toast = this.toastCtrl.create({
+              duration: 2000,
+              position: 'bottom',
+            });
+            this.dataService.downloadWords()
               .then(result => {
                 if (result) {
-                  this.netWorkUri = data.netWorkUri;
+                  toast.setMessage('更新成功');
+                } else {
+                  toast.setMessage('更新失败');
                 }
+                toast.present();
               })
               .catch(error => {
-                console.log(this.tag + 'showNetwork:' + error);
+                console.log(error);
+                toast.setMessage('更新失败');
+                toast.present();
               })
           }
         }
       ]
     });
-    prompt.present();
+    confirm.present();
   }
 
   /**

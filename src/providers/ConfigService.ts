@@ -11,6 +11,8 @@ interface SystemConfig {
   outerBaseUri: string;
   innerBaseUri: string;
   serverBaseUri: string;
+  materialsOuterBaseUri: string;
+  materialsInnerBaseUri: string;
   materialsBaseUri: string;
   isOuterNetwork: boolean;
   isGridStyle: boolean;
@@ -87,7 +89,11 @@ export class ConfigService {
         this.readSystemConfig()
           .then(data => {
             this.systemConfig = data as SystemConfig;
-            if (ConfigService.isValid<SystemConfig>(this.systemConfig, 'materialsBaseUri')) {
+            if (ConfigService.isValid<SystemConfig>(this.systemConfig, 'isOuterNetwork')
+              && ConfigService.isValid<SystemConfig>(this.systemConfig, 'materialsOuterBaseUri')
+              && ConfigService.isValid<SystemConfig>(this.systemConfig, 'materialsInnerBaseUri')) {
+              this.systemConfig.materialsBaseUri = this.systemConfig.isOuterNetwork ? this.systemConfig.materialsOuterBaseUri
+                : this.systemConfig.materialsInnerBaseUri;
               resolve(this.systemConfig.materialsBaseUri);
             } else {
               reject("failure to getMaterialsBaseUri");
@@ -323,6 +329,8 @@ export class ConfigService {
               this.systemConfig.isOuterNetwork = isOuterNet;
               this.systemConfig.serverBaseUri = this.systemConfig.isOuterNetwork ?
                 this.systemConfig.outerBaseUri : this.systemConfig.innerBaseUri;
+              this.systemConfig.materialsBaseUri = this.systemConfig.isOuterNetwork ?
+                this.systemConfig.materialsOuterBaseUri : this.systemConfig.materialsInnerBaseUri;
             }
             resolve(!!result);
           })
@@ -334,7 +342,7 @@ export class ConfigService {
   }
 
   /**
-   * 设置地址
+   * 设置热线地址
    * @param isOuterNet
    * @param systemUrl
    * @returns {any}
@@ -357,7 +365,35 @@ export class ConfigService {
           .catch(error => reject(error));
       })
     } else {
-      return Promise.reject('sysytemConfig has no data');
+      return Promise.reject('systemConfig has no data');
+    }
+  }
+
+  /**
+   * 设置材料地址
+   * @param materialUrl
+   * @returns {any}
+   */
+  public setMaterialUrl(materialUrl: string): Promise<boolean> {
+    if (ConfigService.isValid<SystemConfig>(this.systemConfig, 'isOuterNetwork')
+      && ConfigService.isValid<SystemConfig>(this.systemConfig, 'materialsBaseUri')) {
+      return new Promise((resolve, reject) => {
+        let systemConfig: SystemConfig = Object.create(this.systemConfig);
+        systemConfig.materialsBaseUri = materialUrl;
+        this.systemConfig.isOuterNetwork ? systemConfig.materialsOuterBaseUri = materialUrl : systemConfig.materialsInnerBaseUri = materialUrl;
+        this.writeSystemConfig(systemConfig)
+          .then(result => {
+            if (result) {
+              this.systemConfig.materialsBaseUri = materialUrl;
+              this.systemConfig.isOuterNetwork ? this.systemConfig.materialsOuterBaseUri = materialUrl :
+                this.systemConfig.materialsInnerBaseUri = materialUrl;
+            }
+            resolve(!!result);
+          })
+          .catch(error => reject(error));
+      })
+    } else {
+      return Promise.reject('systemConfig has no data');
     }
   }
 
@@ -467,7 +503,9 @@ export class ConfigService {
       outerBaseUri: obj["server.outer.baseuri"],
       innerBaseUri: obj["server.inner.baseuri"],
       serverBaseUri: obj["sys.connect.outer.network"] ? obj["server.outer.baseuri"] : obj["server.inner.baseuri"],
-      materialsBaseUri: obj["server.materials.baseuri"],
+      materialsOuterBaseUri: obj["server.materials.outer.baseuri"],
+      materialsInnerBaseUri: obj["server.materials.inner.baseuri"],
+      materialsBaseUri: obj["sys.connect.outer.network"] ? obj["server.materials.outer.baseuri"] : obj["server.materials.inner.baseuri"],
       isOuterNetwork: obj["sys.connect.outer.network"],
       isGridStyle: obj["sys.grid.style"],
       isDebugMode: obj["sys.debug.mode"],
@@ -498,7 +536,8 @@ export class ConfigService {
     return JSON.stringify({
       "server.outer.baseuri": systemConfig.outerBaseUri,
       "server.inner.baseuri": systemConfig.innerBaseUri,
-      "server.materials.baseuri": systemConfig.materialsBaseUri,
+      "server.materials.outer.baseuri": systemConfig.materialsOuterBaseUri,
+      "server.materials.inner.baseuri": systemConfig.materialsInnerBaseUri,
       "sys.connect.outer.network": systemConfig.isOuterNetwork,
       "sys.grid.style": systemConfig.isGridStyle,
       "sys.debug.mode": systemConfig.isDebugMode,
