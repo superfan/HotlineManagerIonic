@@ -8,13 +8,13 @@
 
 <ion-content class="page-setting">
   <ion-list>
-    <ion-item>
+    <ion-item *ngIf="isShow">
       <ion-toggle [(ngModel)]="isGrid" (ionChange)="notifyIsGrid()"></ion-toggle>
       <ion-label>是否切换九宫格</ion-label>
       <ion-icon name='grid' item-start color="{{'primary'}}"></ion-icon>
     </ion-item>
 
-    <ion-item>
+    <ion-item *ngIf="isShow">
       <ion-toggle [(ngModel)]="isOuterNet" (ionChange)="notifyIsOutNet()"></ion-toggle>
       <ion-label>是否使用外网</ion-label>
       <ion-icon name='md-wifi' item-start color="{{'primary'}}"></ion-icon>
@@ -26,21 +26,28 @@
       <ion-icon name='arrow-dropright' item-end color="{{'primary'}}"></ion-icon>
     </ion-item>
 
-    <ion-item (click)="showHeartSetting()">
+    <ion-item (click)="showDownloadWords()">
+      <ion-icon name='download' item-start color="{{'primary'}}"></ion-icon>
+      <ion-label>更新词语</ion-label>
+      <ion-icon name='arrow-dropright' item-end color="{{'primary'}}"></ion-icon>
+    </ion-item>
+
+
+    <ion-item *ngIf="isShow" (click)="showHeartSetting()">
       <ion-icon name='heart-outline' item-start color="{{'primary'}}"></ion-icon>
       <ion-label>心跳频率</ion-label>
       <ion-label class="label-right">{{keepAlive+'毫秒'}}</ion-label>
       <ion-icon name='arrow-dropright' item-end color="{{'primary'}}"></ion-icon>
     </ion-item>
 
-    <ion-item (click)="showAlermType()">
+    <ion-item *ngIf="isShow" (click)="showAlermType()">
       <ion-icon name='alarm' item-start color="{{'primary'}}"></ion-icon>
       <ion-label>提醒方式</ion-label>
       <ion-label class="label-right">{{alermStyle}}</ion-label>
       <ion-icon name='arrow-dropright' item-end color="{{'primary'}}"></ion-icon>
     </ion-item>
 
-    <ion-item (click)="showRevertSetting()">
+    <ion-item *ngIf="isShow" (click)="showRevertSetting()">
       <ion-icon name='redo' item-start color="{{'primary'}}"></ion-icon>
       <ion-label>恢复出厂设置</ion-label>
       <ion-icon name='arrow-dropright' item-end color="{{'primary'}}"></ion-icon>

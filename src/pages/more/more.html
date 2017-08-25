@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>
+      {{title}}
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="page-main">
+  <!--list style-->
+  <ion-list>
+    <ion-item *ngFor="let item of listItems">
+      <div class="list-item" *ngIf="item.active" (click)="itemSelected(item.id)">
+        <img src="{{item.src}}" width="{{imgWidth}}" height="{{imgHeight}}" class="item-img"/>
+        <p class="item-name">{{item.name}}</p>
+        <ion-badge color="danger" class="list-item-badge" *ngIf="item.count>0">{{item.count}}</ion-badge>
+      </div>
+    </ion-item>
+  </ion-list>
+
+</ion-content>

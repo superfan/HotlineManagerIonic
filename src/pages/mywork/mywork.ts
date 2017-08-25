@@ -14,6 +14,7 @@ import {CancelInfo} from "../../model/CancelInfo";
 import {MapPage} from "../map/map";
 import {MapParam, MapType} from "../../model/MapParam";
 import {Location} from "../../model/Location";
+import {MaterialsPage} from "../materials/materials";
 import {History} from "../../model/History";
 import {ReplyInfo} from "../../model/ReplyInfo";
 
@@ -221,6 +222,14 @@ export class MyWorkPage implements OnInit, OnDestroy {
     taskEx.isPreview = true;
     let history: History = this.findReplyHistory(taskEx.id);
     this.navCtrl.push(WorkDetailPage, [taskEx, history]);
+  }
+
+  /**
+   * 材料登记
+   * @param taskEx
+   */
+  onMaterials(taskEx: TaskEx): void {
+    this.navCtrl.push(MaterialsPage, taskEx.id);
   }
 
   /**

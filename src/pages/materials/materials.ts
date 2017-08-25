@@ -1,8 +1,10 @@
 import {Component, OnDestroy, OnInit} from "@angular/core";
-import {AlertController, Events, NavController} from "ionic-angular";
+import {AlertController, Events, NavController, NavParams, ToastController} from "ionic-angular";
 import {MaterialsAddPage} from "../materialsadd/materialsadd";
 import {GlobalService} from "../../providers/GlobalService";
-import {MaterialsInfo} from "../../model/MaterialsInfo";
+import {DataMaterialInfo, MaterialsInfo, UploadMaterials} from "../../model/MaterialsInfo";
+import {DataService} from "../../providers/DataService";
+import {MaintainInfo} from "../../model/MaintainInfo";
 
 @Component({
   selector: 'page-materials',
@@ -17,14 +19,49 @@ export class MaterialsPage implements OnInit, OnDestroy {
   details: any[];
   items: MaterialsInfo[] = [];
   public needEditItem: any;
+  private taskId: string;
+  private isShowButtons: boolean = false;
 
   constructor(public navCtrl: NavController,
+              private navParams: NavParams,
               private globalService: GlobalService,
+              private dataService: DataService,
+              private toastCtrl: ToastController,
               private events: Events,
               public alertCtrl: AlertController) {
+    this.taskId = this.navParams.data;
   }
 
   ngOnInit(): void {
+
+    this.dataService.getMaintainInfo(this.taskId)
+      .then(result => {
+        if (result.serialNumber == this.taskId) {
+          this.details = [
+            {name: '维修类别', value: result.maintenanceType},
+            {name: '维修地址', value: result.maintenanceAddress},
+            {name: '所属区域', value: result.area},
+            {name: '报修内容', value: result.repairContent}]
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      })
+
+    /**
+     * 获得该条工单的材料列表清单
+     */
+    this.dataService.getMaterialInfo(this.taskId)
+      .then(result => {
+        console.log(this.tag, result);
+        this.items = result.infos;
+        this.isShowButtons = result.uploadFlag == this.globalService.uploadedFlagForLocal;
+      })
+      .catch(error => {
+        this.isShowButtons = true;
+        console.log(this.tag, error);
+      })
+
     //订阅事件，清单加入
     this.events.subscribe(this.globalService.materialsUpdateEvent, (isSave, materials) => {
       this.segmentName = "materialsList";
@@ -52,11 +89,7 @@ export class MaterialsPage implements OnInit, OnDestroy {
 
   private searchTask() {
     console.log(this.tag + "searchTask");
-    this.details = [
-      {name: '维修类别', value: '紧急'},
-      {name: '维修地址', value: '上海控江路1555号'},
-      {name: '所属区域', value: '上海杨浦区'},
-      {name: '保修内容', value: '水管破裂急需修理'}]
+
   }
 
   /**
@@ -118,31 +151,61 @@ export class MaterialsPage implements OnInit, OnDestroy {
       return;
     }
 
-    let prompt = this.alertCtrl.create({
+    let uploadInfoArr: UploadMaterials[] = [];
+    let uploadMaterial;
+    for (let item of this.items) {
+      uploadMaterial = new UploadMaterials();
+      uploadMaterial.userId = this.globalService.userId;
+      uploadMaterial.serialNumber = this.taskId;
+      uploadMaterial.materialCategory = item.category.id;
+      uploadMaterial.materialType = item.type.id;
+      uploadMaterial.materialSize = item.size.id;
+      uploadMaterial.manufacturer = item.productor.id;
+      uploadMaterial.materialUnit = item.unit.id;
+      uploadMaterial.count = item.count;
+      uploadMaterial.remark = item.remark;
+      uploadInfoArr.push(uploadMaterial);
+    }
+    if (!uploadInfoArr || uploadInfoArr.length <= 0) {
+      return;
+    }
+
+    let confirm = this.alertCtrl.create({
       title: '提示',
-      message: "请填写备注信息：",
-      inputs: [
-        {
-          name: '备注',
-          placeholder: '备注'
-        },
-      ],
+      message: '确认保存上传？',
       buttons: [
         {
           text: '取消',
-          handler: data => {
-            console.log('Cancel clicked');
+          handler: () => {
+            console.log('Disagree clicked');
           }
         },
         {
-          text: '保存',
-          handler: data => {
-            console.log('Saved clicked');
+          text: '确定',
+          handler: () => {
+            let data = new DataMaterialInfo();
+            data.taskId = this.taskId;
+            data.uploadFlag = this.globalService.uploadedFlagForLocal;
+            data.infos = uploadInfoArr;
+            this.dataService.saveMaterialInfo(data)
+              .then(result => {
+                console.log(this.tag, result);
+                let toast = this.toastCtrl.create({
+                  duration: 2000,
+                  message: result ? '保存成功' : '上传失败',
+                  position: 'bottom',
+                });
+                toast.present();
+                this.navCtrl.pop();
+              })
+              .catch(error => {
+                console.log(this.tag, error);
+              })
           }
         }
       ]
     });
-    prompt.present();
+    confirm.present();
   }
 }
 

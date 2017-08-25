@@ -37,6 +37,7 @@ export class AppComponentService {
         .then(result => this.fileService.createDirRoot())
         .then(result => this.dataService.init())
         .then(result => this.dataService.checkIfDownloadWords())
+        .then(result=> this.dataService.downloadMaterials())
         .then(result => this.parsePageIntent());
     }
   }

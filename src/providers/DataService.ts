@@ -22,6 +22,10 @@ import {MediaType} from "../model/Media";
 import {SyncService, MsgType} from "./SyncService";
 import {Events} from "ionic-angular";
 import {History} from "../model/History";
+import {Material} from "../model/Material";
+import {MaintainInfo} from "../model/MaintainInfo";
+import {DataMaterialInfo, MaterialInfoEx, MaterialsInfo, UploadMaterials} from "../model/MaterialsInfo";
+import {getErrorLogger} from "@angular/core/src/errors";
 import {ConfigService} from "./ConfigService";
 
 @Injectable()
@@ -35,14 +39,18 @@ export class DataService extends SyncService {
   private reflectContents: Array<Word>;
   private personnels: Array<Personnel>;
   private isInitialized: boolean;
+  private optMaterialLB: Array<Material>;//材料类别
+  private optMaterialXH: Array<Material>;//材料型号
+  private optMaterialGG: Array<Material>;//材料规格
+  private optMaterialCJ: Array<Material>;//材料厂家
 
   constructor(downloadService: DownloadService,
               uploadService: UploadService,
               globalService: GlobalService,
               dbService: DbService,
+              configService: ConfigService,
               mediaService: MediaService,
-              events: Events,
-              configService: ConfigService) {
+              events: Events) {
     super(downloadService, uploadService, globalService, dbService, mediaService, events, configService);
     this.isInitialized = false;
   }
@@ -254,6 +262,107 @@ export class DataService extends SyncService {
         this.globalService.showToast(error);
         return Promise.resolve(false);
       });
+  }
+
+  /**
+   * 下载材料信息
+   */
+  public downloadMaterials(): Promise<boolean> {
+    return this.downloadService.getAllMaterials('all')
+      .then(materials => this.dbService.saveMaterials(materials))
+      .catch(error => {
+        console.error(error);
+        this.globalService.showToast(error);
+        return Promise.resolve(false);
+      });
+  }
+
+  /**
+   * 材料类别
+   * @returns {Promise<Array<Material>>}
+   */
+  public getOptMaterialLB(): Promise<Array<Material>> {
+    const groupKey: string = 'LB';
+    return (this.optMaterialLB && this.optMaterialLB.length > 0)
+      ? Promise.resolve(this.optMaterialLB)
+      : this.dbService.getMaterials(groupKey)
+        .then(materials => {
+          return this.optMaterialLB = materials;
+        })
+        .catch(error => {
+          console.log(error);
+        })
+  }
+
+  /**
+   * 材料型号
+   * @param parentId
+   */
+  public getOptMaterialXH(parentId: number): Promise<Array<Material>> {
+    const groupKey: string = 'XH';
+    return (this.optMaterialXH && this.optMaterialXH.length > 0 && this.optMaterialXH[0].parentId == parentId)
+      ? Promise.resolve(this.optMaterialXH)
+      : this.dbService.getMaterials(groupKey)
+        .then(materials => {
+          let newMaterials: Array<Material> = [];
+          for (let material of materials) {
+            if (material.parentId == parentId) {
+              newMaterials.push(material);
+            }
+          }
+          return this.optMaterialXH = newMaterials;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+  }
+
+  /**
+   * 材料规格
+   * @param parentId
+   * @returns {Promise<Array<Material>>|Promise<TResult|TResult2|Array<Material>>}
+   */
+  public getOptMaterialGG(parentId: number): Promise<Array<Material>> {
+    const groupKey: string = 'GG';
+    return (this.optMaterialGG && this.optMaterialGG.length > 0 && this.optMaterialGG[0].parentId == parentId)
+      ? Promise.resolve(this.optMaterialGG)
+      : this.dbService.getMaterials(groupKey)
+        .then(materials => {
+          let newMaterials: Array<Material> = [];
+          for (let material of materials) {
+            if (material.parentId == parentId) {
+              newMaterials.push(material);
+            }
+          }
+          return this.optMaterialGG = newMaterials;
+        })
+        .catch(error => {
+          console.log(error);
+        })
+  }
+
+  /**
+   * 材料厂家
+   * @param parentId
+   * @returns {Promise<Array<Material>>|Promise<TResult|TResult2|Array<Material>>}
+   */
+  public getOptMaterialCJ(parentId: number): Promise<Array<Material>> {
+    const groupKey: string = 'CJ';
+    return (this.optMaterialCJ && this.optMaterialCJ.length > 0 && this.optMaterialCJ[0].parentId == parentId)
+      ? Promise.resolve(this.optMaterialCJ)
+      : this.dbService.getMaterials(groupKey)
+        .then(materials => {
+          let newMaterials: Array<Material> = [];
+          for (let material of materials) {
+            if (material.parentId == parentId) {
+              newMaterials.push(material);
+            }
+          }
+          return this.optMaterialCJ = newMaterials;
+        })
+        .catch(error => {
+          console.log(error);
+        })
   }
 
   /**
@@ -564,5 +673,128 @@ export class DataService extends SyncService {
     let newWords: Array<Word> = [];
     find(words, newWords, rootWord);
     return newWords;
+  }
+
+  /**
+   * 材料清单保存以及上传
+   * @param data
+   * @returns {Promise<T>}
+   */
+  public saveMaterialInfo(data: DataMaterialInfo): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this.dbService.saveMaterialInfo(data)
+        .then(result => {
+          if (result) {
+            // resolve(true);
+            return this.uploadService.uploadMaterialsAdd(data.infos)
+              .then(result => {
+                //更新上传标志
+                if (result) {
+                  data.uploadFlag = this.globalService.uploadedFlagForUploaded;//已上传
+                  resolve(this.dbService.updateFlagMaterials(data));
+                } else {
+                  reject("upload failed");
+                }
+              })
+              .catch(error => {
+                reject(false);
+              });
+          } else {
+            reject("save to db failed");
+          }
+        })
+        .catch(error => {
+          reject(error);
+        })
+    });
+  }
+
+  /**
+   * 获取本地某工单编号的材料清单
+   * @param serialNumber
+   * @returns {Promise<Array<DataMaterialInfo>>}
+   */
+  public getMaterialInfo(serialNumber: string): Promise<MaterialInfoEx> {
+    return new Promise((resolve, reject) => {
+      this.dbService.getMaterialInfo(serialNumber)
+        .then(data => {
+          let arrays: Array<UploadMaterials> = data.infos;
+          let promiseArray: Array<Promise<MaterialsInfo>> = [];
+          for (let temp of arrays) {
+            promiseArray.push(this.getMaterialAndUnit(temp));
+          }
+          Promise.all(promiseArray)
+            .then(result => {
+              let materialInfoEx = new MaterialInfoEx();
+              materialInfoEx.taskId = serialNumber;
+              materialInfoEx.infos = result;
+              materialInfoEx.uploadFlag = data.uploadFlag;
+              resolve(materialInfoEx);
+            })
+            .catch(error => {
+              reject(error);
+            })
+        })
+        .catch(error => {
+          reject(error);
+        })
+    })
+  }
+
+  private getMaterialAndUnit(temp: UploadMaterials): Promise<MaterialsInfo> {
+    return new Promise((resolve, reject) => {
+      Promise.all([this.dbService.getMaterial(temp.materialCategory),
+        this.dbService.getMaterial(temp.materialType), this.dbService.getMaterial(temp.materialSize),
+        this.dbService.getMaterial(temp.manufacturer), this.configService.getOneMaterialUnit(temp.materialUnit)])
+        .then(result => {
+          console.log(result);
+          let info = new MaterialsInfo();
+          info.category = result[0];
+          info.type = result[1];
+          info.size = result[2];
+          info.productor = result[3];
+          info.unit = result[4];
+          info.count = temp.count;
+          info.remark = temp.remark;
+          resolve(info);
+        })
+        .catch(error => {
+          console.log(error);
+        })
+    })
+  }
+
+  /**
+   * 获得维修信息
+   * @param serialNumber
+   * @returns {Promise<MaintainInfo>}
+   */
+  public getMaintainInfo(serialNumber: string): Promise<MaintainInfo> {
+    return new Promise((resolve, reject) => {
+      this.dbService.queryMaintainInfo(serialNumber)
+        .then(maintainInfo => {
+          resolve(maintainInfo);
+        })
+        .catch(error => {
+          console.log("getMaintainInfo:" + error);
+          return this.downloadService.getMaintainInfo(serialNumber)
+            .then(maintainInfo => {
+              this.dbService.saveMaintainInfo(maintainInfo)
+                .then(result => {
+                  if (result) {
+                    resolve(maintainInfo);
+                  } else {
+                    reject(result);
+                  }
+                })
+                .catch(error => {
+                  reject(error);
+                })
+            })
+            .catch(error => {
+              reject(error);
+            })
+        })
+    })
   }
 }
