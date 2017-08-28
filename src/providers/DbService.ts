@@ -307,6 +307,19 @@ export class DbService {
     }
   }
 
+  public getMaterialsCount(): Promise<number> {
+    if (this.globalService.isChrome) {
+      return Promise.resolve(0);
+    } else {
+      return this.openDb()
+        .then(db => {
+          let sql: string = `SELECT COUNT(*) FROM GD_WORDS;`;
+          return db.executeSql(sql, {})
+            .then(data => data.rows && data.rows.length > 0 ? data.rows.item(0)["COUNT(*)"] : 0);
+        });
+    }
+  }
+
   /**
    * 根据id查询材料信息
    * @param mid

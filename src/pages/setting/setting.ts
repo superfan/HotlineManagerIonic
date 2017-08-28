@@ -242,9 +242,9 @@ export class SettingPage implements OnInit, OnDestroy {
               duration: 2000,
               position: 'bottom',
             });
-            this.dataService.downloadWords()
-              .then(result => {
-                if (result) {
+            Promise.all([this.dataService.downloadWords(), this.dataService.downloadMaterials()])
+              .then(([result1, result2]) => {
+                if (result1 && result2) {
                   toast.setMessage('更新成功');
                 } else {
                   toast.setMessage('更新失败');

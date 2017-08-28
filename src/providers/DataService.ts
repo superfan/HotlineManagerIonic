@@ -25,7 +25,6 @@ import {History} from "../model/History";
 import {Material} from "../model/Material";
 import {MaintainInfo} from "../model/MaintainInfo";
 import {DataMaterialInfo, MaterialInfoEx, MaterialsInfo, UploadMaterials} from "../model/MaterialsInfo";
-import {getErrorLogger} from "@angular/core/src/errors";
 import {ConfigService} from "./ConfigService";
 
 @Injectable()
@@ -177,6 +176,15 @@ export class DataService extends SyncService {
     }
   }
 
+  public getHistory(taskId: string, state: number): Promise<History> {
+    if (this.globalService.isChrome) {
+      return Promise.reject('chrome');
+    } else {
+      return this.dbService.getSpecialHistories(this.globalService.userId, [taskId], state)
+        .then(histories => histories.length > 0 ? Promise.resolve(histories[0]) : Promise.reject('none history'));
+    }
+  }
+
   public checkIfExistNotUploadedHistories(taskIds: Array<string>): Promise<Array<History>> {
     if (this.globalService.isChrome) {
       return Promise.resolve([]);
@@ -256,7 +264,25 @@ export class DataService extends SyncService {
     return this.dbService.getWordsCount()
       .then(count => count > 0
         ? Promise.resolve(true)
-        : this.downloadService.getAllWords('all').then(words => this.dbService.saveWords(words)))
+        : this.downloadService.getAllWords('all')
+          .then(words => this.dbService.saveWords(words)))
+      .catch(error => {
+        console.error(error);
+        this.globalService.showToast(error);
+        return Promise.resolve(false);
+      });
+  }
+
+  /**
+   *
+   * @returns {Promise<boolean|boolean>}
+   */
+  public checkIfDownloadMaterials(): Promise<boolean> {
+    return this.dbService.getMaterialsCount()
+      .then(count => count > 0
+        ? Promise.resolve(true)
+        : this.downloadService.getAllMaterials('all')
+          .then(materials => this.dbService.saveMaterials(materials)))
       .catch(error => {
         console.error(error);
         this.globalService.showToast(error);

@@ -92,7 +92,9 @@ import {NetworkSetPage} from "../pages/setting/networkset";
   imports: [
     BrowserModule,
     HttpModule,
-    IonicModule.forRoot(MyApp),
+    IonicModule.forRoot(MyApp, {
+      tabsHideOnSubPages: 'true'         //隐藏全部子页面tabs
+    }),
     IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],

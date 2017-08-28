@@ -64,26 +64,44 @@
           接单时间 {{item.task.acceptTime | date:'y-MM-dd HH:mm:ss'}}
         </button>
 
+        <!--延迟时间-->
+        <button ion-item class="gray-text" *ngIf="item.delayBeyond === 'accept'" (click)="onDelay(item)">
+          <ion-icon name='icon-vline' item-start></ion-icon>
+          延迟时间 {{item.delayTime | date:'y-MM-dd HH:mm:ss'}}
+        </button>
+
         <!--出发时间-->
-        <button ion-item class="gray-text" *ngIf="item.isCanceled">
+        <button ion-item class="gray-text" *ngIf="item.task.goTime">
           <ion-icon name='icon-vline' item-start></ion-icon>
           出发时间 {{item.task.goTime| date:'y-MM-dd HH:mm:ss'}}
         </button>
 
+        <!--延迟时间-->
+        <button ion-item class="gray-text" *ngIf="item.delayBeyond === 'go'" (click)="onDelay(item)">
+          <ion-icon name='icon-vline' item-start></ion-icon>
+          延迟时间 {{item.delayTime | date:'y-MM-dd HH:mm:ss'}}
+        </button>
+
         <!--到场时间-->
-        <button ion-item class="gray-text" *ngIf="item.isCanceled">
+        <button ion-item class="gray-text" *ngIf="item.task.arrivedTime">
           <ion-icon name='icon-vline' item-start></ion-icon>
           到场时间 {{item.task.arrivedTime | date:'y-MM-dd HH:mm:ss'}}
         </button>
 
+        <!--延迟时间-->
+        <button ion-item class="gray-text" *ngIf="item.delayBeyond === 'arrived'" (click)="onDelay(item)">
+          <ion-icon name='icon-vline' item-start></ion-icon>
+          延迟时间 {{item.delayTime | date:'y-MM-dd HH:mm:ss'}}
+        </button>
+
         <!--回复时间-->
-        <button ion-item class="gray-text" *ngIf="item.isCanceled" (click)="onReply(item)">
+        <button ion-item class="gray-text" *ngIf="item.task.replyTime" (click)="onReply(item)">
           <ion-icon name='icon-vline' item-start></ion-icon>
           回复时间 {{item.task.replyTime | date:'y-MM-dd HH:mm:ss'}}
         </button>
 
         <!--退单时间-->
-        <button ion-item class="gray-text" *ngIf="item.isRejected">
+        <button ion-item class="gray-text" *ngIf="item.isRejected" (click)="onReject(item)">
           <ion-icon name='icon-vline' item-start></ion-icon>
           退单时间 {{ toRejectedInfo(item.reply).rejectTime | date:'y-MM-dd HH:mm:ss'}}
         </button>
