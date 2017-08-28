@@ -200,6 +200,7 @@ export class MaterialsPage implements OnInit, OnDestroy {
               })
               .catch(error => {
                 console.log(this.tag, error);
+                this.navCtrl.pop();
               })
           }
         }

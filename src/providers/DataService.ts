@@ -797,4 +797,11 @@ export class DataService extends SyncService {
         })
     })
   }
+
+  /**
+   * 上传所有未上传的材料工单信息
+   */
+  public uploadNotUploadMaterialInfos(): void {
+    super.sendMsg({msgType: MsgType.UploadMaterialInfos});
+  }
 }
