@@ -34,6 +34,8 @@ export class HistoryEx {
   photoCount: number;
   audioCount: number;
   isLocationValid: boolean;
+  delayTime?: number;
+  delayBeyond?: string;
 
   constructor(history: History) {
     this.userId = history.userId;
@@ -46,13 +48,19 @@ export class HistoryEx {
     this.mediaNames = history.mediaNames;
     this.isRejected = history.state === TaskState.Reject;
     this.isCanceled = history.state === TaskState.Cancel;
-    if (history.mediaNames && history.mediaNames.length > 0) {
-      this.photoCount = history.mediaNames.length;
-    } else {
-      this.photoCount = 0;
-    }
+    this.photoCount = 0;
     this.audioCount = 0;  //todo 录音的数量
     this.isLocationValid = TaskEx.checkLocation(this.task.location);
+    if (this.task.extendedInfo.delayTime > 0) {
+      this.delayTime = this.task.extendedInfo.delayTime;
+      if (this.delayTime > this.task.arrivedTime) {
+        this.delayBeyond = "arrived";
+      } else if (this.delayTime > this.task.goTime) {
+        this.delayBeyond = "go";
+      } else {
+        this.delayBeyond = "accept";
+      }
+    }
   }
 
   static transformToHistoryEx(historyEx: Array<HistoryEx>, historys: Array<History>) {

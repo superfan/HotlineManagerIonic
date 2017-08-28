@@ -3,7 +3,7 @@ import {Content, NavController, InfiniteScroll, AlertController, Events, Refresh
 import {WorkDetailPage} from "../workdetail/workdetail";
 import {DataService} from "../../providers/DataService";
 import {Task, TaskEx, TaskState, transform2ProcessEx, transform2Task} from "../../model/Task";
-import {ProcessEx, DelayExtend, RejectExtend, CancelExtend, DisableColor, NotUploadedColor} from "../../model/Process";
+import {ProcessEx, DelayExtend, RejectExtend, CancelExtend, DisableColor} from "../../model/Process";
 import {GlobalService, MyWorkUpdateEvent} from "../../providers/GlobalService";
 import {AcceptInfo} from "../../model/AcceptInfo";
 import {GoInfo} from "../../model/GoInfo";

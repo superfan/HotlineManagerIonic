@@ -2,7 +2,6 @@ import {Component} from "@angular/core";
 import {MyWorkPage} from "../mywork/mywork";
 import {MyHistory} from "../history/myhistory";
 import {MapPage} from "../map/map";
-import {NewsPage} from "../news/news";
 import {SearchPage} from "../search/search";
 import {StationWorkPage} from "../stationwork/stationwork";
 import {MorePage} from "../more/more";

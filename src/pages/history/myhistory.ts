@@ -6,9 +6,10 @@ import {RejectInfo} from "../../model/RejectInfo";
 import {CancelInfo} from "../../model/CancelInfo";
 import {GlobalService} from "../../providers/GlobalService";
 import {WorkDetailPage} from "../workdetail/workdetail";
-import {TaskEx} from "../../model/Task";
+import {TaskEx, TaskState} from "../../model/Task";
 import {MapPage} from "../map/map";
 import {MapParam, MapType} from "../../model/MapParam";
+import {DelayInfo} from "../../model/DelayInfo";
 
 @Component({
   selector: 'page-myhistory',
@@ -179,11 +180,31 @@ export class MyHistory implements OnInit, OnDestroy {
     return <CancelInfo>item;
   }
 
+  onDelay(historyEx: HistoryEx): void {
+    this.dataService.getHistory(historyEx.taskId, TaskState.Delay)
+      .then(history => {
+        if (history.reply as DelayInfo) {
+          let delayInfo: DelayInfo = history.reply as DelayInfo;
+          if (delayInfo.comment) {
+            this.globalService.showToast(`延迟原因: ${delayInfo.comment}`);
+          }
+        }
+      })
+      .catch(err => console.error(err));
+  }
+
   onReply(historyEx: HistoryEx): void {
     let taskEx: TaskEx = new TaskEx(historyEx.task);
     taskEx.isPreview = true;
     let history: History = this.findReplyHistory(taskEx.id);
     this.navCtrl.push(WorkDetailPage, [taskEx, history]);
+  }
+
+  onReject(historyEx: HistoryEx): void {
+    let rejectInfo: RejectInfo = this.toRejectedInfo(historyEx.reply);
+    if (rejectInfo && rejectInfo.rejectReason) {
+      this.globalService.showToast(`退单原因: ${rejectInfo.rejectReason}`);
+    }
   }
 
   onLocate(historyEx: HistoryEx): void {

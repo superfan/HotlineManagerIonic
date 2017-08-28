@@ -28,12 +28,15 @@ export class MyApp {
         splashScreen.hide();
         return appComponentService.init();
       })
-      .then(page => this.rootPage = TabsPage)
+      .then(page => console.log(page))
       .catch(error => {
         console.error(error);
         this.globalService.showToast(error);
       })
-      .then(() => this.globalService.hideLoading());
+      .then(() => {
+        this.globalService.hideLoading();
+        this.rootPage = TabsPage;
+      });
   }
 }
 
