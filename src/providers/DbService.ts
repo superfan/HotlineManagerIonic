@@ -9,7 +9,7 @@ import {TaskDetail} from "../model/TaskDetail";
 import {History} from "../model/History";
 import {Media} from "../model/Media";
 import {Material} from "../model/Material";
-import {DataMaterialInfo, MaterialsInfo} from "../model/MaterialsInfo";
+import {DataMaterialInfo} from "../model/MaterialsInfo";
 import {MaintainInfo} from "../model/MaintainInfo";
 
 interface LocalWord {

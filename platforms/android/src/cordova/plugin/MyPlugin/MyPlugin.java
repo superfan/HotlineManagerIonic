@@ -8,6 +8,7 @@ import android.util.Log;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
 
+import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,6 +23,7 @@ import io.ionic.MainApplication;
 public class MyPlugin extends CordovaPlugin {
   private static final String ACTION_GET_PAGE_INTENT = "getPageIntent";
   private static final String ACTION_GET_LOCATION = "getLocation";
+  private static final String ACTION_QUIT = "quit";
 
   private static final String ACCOUNT = "account";
   private static final String PASSWORD = "password";
@@ -32,8 +34,6 @@ public class MyPlugin extends CordovaPlugin {
   private static final String ROLES = "roles";
   private static final String PARAMS = "params";
   private static final String ACCESS_TOKEN = "accessToken";
-
-  private static String loadUrl;
 
   @Override
   public boolean execute(String action, final JSONArray args, final CallbackContext callbackContext) throws JSONException {
@@ -50,6 +50,12 @@ public class MyPlugin extends CordovaPlugin {
           getLocation(callbackContext, args);
         }
       });
+      return true;
+    } else if (ACTION_QUIT.equals(action)) {
+      this.webView.getPluginManager().postMessage("exit", null);
+      PluginResult.Status status = PluginResult.Status.OK;
+      String result = "";
+      callbackContext.sendPluginResult(new PluginResult(status, result));
       return true;
     }
     return false;

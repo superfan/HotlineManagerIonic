@@ -375,5 +375,28 @@ export class SettingPage implements OnInit, OnDestroy {
     });
     confirm.present();
   }
+
+  onExit(): void {
+    let confirm = this.alertCtrl.create({
+      title: '提示',
+      message: '是否完全退出当前应用？',
+      buttons: [
+        {
+          text: '取消',
+          handler: () => {
+            console.log(this.tag + '取消 clicked');
+          }
+        },
+        {
+          text: '确定',
+          handler: () => {
+            console.log(this.tag + '保存 clicked');
+            this.globalService.quit();
+          }
+        }
+      ]
+    });
+    confirm.present();
+  }
 }
 

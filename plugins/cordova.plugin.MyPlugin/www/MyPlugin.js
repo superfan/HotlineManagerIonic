@@ -51,4 +51,8 @@ MyApi.prototype.getLocation = function (success, fail) {
   return getPromisedCordovaExec('getLocation', success, fail);
 };
 
+MyApi.prototype.quit = function (success, fail) {
+  return getPromisedCordovaExec('quit', success, fail);
+};
+
 module.exports = new MyApi();

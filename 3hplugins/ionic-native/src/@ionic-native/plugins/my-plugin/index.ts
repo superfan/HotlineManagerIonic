@@ -78,4 +78,11 @@ export class MyPlugin extends IonicNativePlugin {
     return; // We add return; here to avoid any IDE / Compiler errors
   }
 
+  /**
+   * 退出
+   */
+  @Cordova()
+  quit(): Promise<any> {
+    return; // We add return; here to avoid any IDE / Compiler errors
+  }
 }
