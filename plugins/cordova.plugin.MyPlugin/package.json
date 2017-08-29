@@ -2,15 +2,15 @@
   "_args": [
     [
       {
-        "raw": "D:\\work\\git_internal\\HotlineManagerIonic\\3hplugins\\MyPlugin",
+        "raw": "E:\\ionic\\new\\HotlineManagerIonic\\3hplugins\\MyPlugin",
         "scope": null,
         "escapedName": null,
         "name": null,
-        "rawSpec": "D:\\work\\git_internal\\HotlineManagerIonic\\3hplugins\\MyPlugin",
-        "spec": "D:\\work\\git_internal\\HotlineManagerIonic\\3hplugins\\MyPlugin",
+        "rawSpec": "E:\\ionic\\new\\HotlineManagerIonic\\3hplugins\\MyPlugin",
+        "spec": "E:\\ionic\\new\\HotlineManagerIonic\\3hplugins\\MyPlugin",
         "type": "directory"
       },
-      "D:\\work\\git_internal\\HotlineManagerIonic\\node_modules"
+      "E:\\ionic\\new\\HotlineManagerIonic\\node_modules"
     ]
   ],
   "_from": "3hplugins\\MyPlugin",
@@ -19,12 +19,12 @@
   "_location": "/MyPlugin",
   "_phantomChildren": {},
   "_requested": {
-    "raw": "D:\\work\\git_internal\\HotlineManagerIonic\\3hplugins\\MyPlugin",
+    "raw": "E:\\ionic\\new\\HotlineManagerIonic\\3hplugins\\MyPlugin",
     "scope": null,
     "escapedName": null,
     "name": null,
-    "rawSpec": "D:\\work\\git_internal\\HotlineManagerIonic\\3hplugins\\MyPlugin",
-    "spec": "D:\\work\\git_internal\\HotlineManagerIonic\\3hplugins\\MyPlugin",
+    "rawSpec": "E:\\ionic\\new\\HotlineManagerIonic\\3hplugins\\MyPlugin",
+    "spec": "E:\\ionic\\new\\HotlineManagerIonic\\3hplugins\\MyPlugin",
     "type": "directory"
   },
   "_requiredBy": [
@@ -32,10 +32,10 @@
     "/"
   ],
   "_resolved": "file:3hplugins\\MyPlugin",
-  "_shasum": "841b7e6c1a2651a15879fca3aa937ae509747ba1",
+  "_shasum": "763438ab753125429e69e8508faf585e18abf132",
   "_shrinkwrap": null,
-  "_spec": "D:\\work\\git_internal\\HotlineManagerIonic\\3hplugins\\MyPlugin",
-  "_where": "D:\\work\\git_internal\\HotlineManagerIonic\\node_modules",
+  "_spec": "E:\\ionic\\new\\HotlineManagerIonic\\3hplugins\\MyPlugin",
+  "_where": "E:\\ionic\\new\\HotlineManagerIonic\\node_modules",
   "author": "",
   "cordova": {
     "id": "cordova.plugin.MyPlugin",
