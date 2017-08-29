@@ -117,16 +117,38 @@ export class MapPage implements OnInit, OnDestroy {
 
     // 进行定位
     console.log("getCurrentLocation");
-    let map = this.map;
-    baidumap_location.getCurrentPosition(function (result) {
-      console.log(result);
-      let latitude = result.latitude;
-      let lontitude = result.longitude;
-      let point = new BMap.Point(lontitude, latitude);
-      map.centerAndZoom(point, this.ZoomMaxLevel);//设置中心和地图显示级别
-    }, function (error) {
-      console.log(error);
-    });
+    // let map = this.map;
+    // baidumap_location.getCurrentPosition(function (result) {
+    //   console.log(result);
+    //   let latitude = result.latitude;
+    //   let lontitude = result.longitude;
+    //   let point = new BMap.Point(lontitude, latitude);
+    //   map.centerAndZoom(point, this.ZoomMaxLevel);//设置中心和地图显示级别
+    // }, function (error) {
+    //   console.log(error);
+    // });
+
+    this.globalService.getLocationEx()
+      .then(location => {
+        if (location && Math.abs(location.lng) > 0 && Math.abs(location.lat) > 0) {
+          let point = new BMap.Point(location.lng, location.lat);
+          setTimeout(() => {
+            let convertor = new BMap.Convertor();
+            let pointArr = [];
+            pointArr.push(point);
+            convertor.translate(pointArr, 1, 5, data => {
+              if(data.status === 0) {
+                this.map.clearOverlays();
+                this.map.centerAndZoom(data.points[0], this.ZoomMaxLevel);
+                let marker = new BMap.Marker(data.points[0]);  // 创建标注
+                this.map.addOverlay(marker);               // 将标注添加到地图中
+                //marker.setAnimation('BMAP_ANIMATION_BOUNCE'); //跳动的动画
+              }
+            });
+          }, 1000);
+        }
+      })
+      .catch(error => console.error(error));
   }
 
   /**

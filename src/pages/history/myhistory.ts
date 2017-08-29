@@ -1,5 +1,5 @@
 import {Component, ViewChild, OnInit, OnDestroy} from '@angular/core';
-import {NavController, Content, InfiniteScroll, Events, Refresher} from "ionic-angular";
+import {NavController, Content, InfiniteScroll, Events, Refresher, AlertController} from "ionic-angular";
 import {DataService} from '../../providers/DataService';
 import {History, HistoryEx} from "../../model/History";
 import {RejectInfo} from "../../model/RejectInfo";
@@ -38,6 +38,7 @@ export class MyHistory implements OnInit, OnDestroy {
 
   constructor(public navCtrl: NavController,
               private dataService: DataService,
+              private alertCtrl: AlertController,
               private globalService: GlobalService,
               private events: Events) {
     this.onServerFlag = this.globalService.uploadedFlagForUploaded;
@@ -211,6 +212,32 @@ export class MyHistory implements OnInit, OnDestroy {
     this.navCtrl.push(MapPage, new MapParam(MapType.Locate, historyEx.task.location, historyEx.task.taskId));
   }
 
+  onDelete(historyEx: HistoryEx): void {
+    let alert = this.alertCtrl.create({
+      title: '删除任务',
+      message: '是否删除该任务及其所有操作?',
+      buttons: [
+        {
+          text: '取消',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: '确定',
+          handler: () => {
+            console.log('Ok clicked');
+            this.dataService.deleteOneTaskWithAllInfos(historyEx.taskId)
+              .then(result => this.resetList())
+              .catch(err => console.error(err));
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
   /**
    * 订阅事件
    * @param events
@@ -218,19 +245,23 @@ export class MyHistory implements OnInit, OnDestroy {
   private subscribeEvent(events: Events): void {
     events.subscribe(this.globalService.historyUploadFinishEvent, () => {
       this.refresher.complete();
-      this.isOperationBusy = false;
-      this.searchKey = '';
-      this.since = this.globalService.taskSinceDefault;
-      while (this.items.shift()) ;
-      this.showFab = false;
-      this.replyHistories = [];
-      this.getHistories(this.since, this.count, this.searchKey)
-        .then(data => this.infiniteScroll.enable(data))
-        .catch(error => console.error(error));
+      this.resetList()
     });
   }
 
   private findReplyHistory(taskId: string): History {
     return this.replyHistories.find(history => history.taskId === taskId);
+  }
+
+  private resetList(): void {
+    this.isOperationBusy = false;
+    this.searchKey = '';
+    this.since = this.globalService.taskSinceDefault;
+    while (this.items.shift()) ;
+    this.showFab = false;
+    this.replyHistories = [];
+    this.getHistories(this.since, this.count, this.searchKey)
+      .then(data => this.infiniteScroll.enable(data))
+      .catch(error => console.error(error));
   }
 }

@@ -30,7 +30,7 @@
   <!--list content-->
   <ion-list>
     <ion-card *ngFor="let item of items">
-      <ion-item>
+      <ion-item (click)="onDelete(item)">
         <ion-avatar item-start>
           <img src="assets/img/ic_mywork_avatar.png">
         </ion-avatar>

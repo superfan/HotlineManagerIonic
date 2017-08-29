@@ -869,6 +869,27 @@ export class DbService {
   }
 
   /**
+   *
+   * @param userId
+   * @param taskId
+   * @returns {any}
+   */
+  public deleteOneTaskWithAllInfos(userId: number, taskId: string): Promise<any> {
+      if (this.globalService.isChrome) {
+        return Promise.reject('chrome');
+      } else {
+        return this.openDb()
+          .then(db => {
+            let sql = `DELETE FROM GD_TASKS WHERE I_USERID = ${userId} AND S_TASKID = '${taskId}';`
+              + `DELETE FROM GD_TASKDETAILS WHERE S_TASKID = '${taskId}';`
+              + `DELETE FROM GD_HISTORIES WHERE I_USERID = ${userId} AND S_TASKID = '${taskId}';`
+              + `DELETE FROM GD_MULTIMEDIAS WHERE I_USERID = ${userId} AND S_TASKID = '${taskId}';`;
+            return this.sqlitePorter.importSqlToDb(db, sql);
+          });
+      }
+  }
+
+  /**
    * 打开数据库
    * @returns {any}
    */

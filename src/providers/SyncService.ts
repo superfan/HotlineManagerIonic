@@ -447,6 +447,28 @@ export abstract class SyncService {
     // download all tasks
     this.events.subscribe(this.downloadTaskEvent, (msgType: MsgType, since: number, count: number) => {
       this.downloadService.getTasks(this.globalService.userId, since, count)
+        .then(tasks => {
+          let retTasks: Array<Task> = [];
+          for(let task of tasks) {
+            let item: Task = retTasks.find((item) =>
+              item.taskId === task.taskId
+              && item.acceptTime === task.acceptTime
+              && item.arrivedTime === task.arrivedTime
+              && item.assignTime === task.assignTime
+              && item.compltedTime === task.compltedTime
+              && item.createTime === task.createTime
+              && item.desc === task.desc
+              && item.goTime === task.goTime
+              && item.replyTime === task.replyTime
+              && item.source === task.source
+              && item.state === task.state
+              && item.taskType === task.taskType);
+            if (!item) {
+              retTasks.push(task);
+            }
+          }
+          return retTasks;
+        })
         .then(tasks => this.dbService.saveTasks(this.globalService.userId, tasks))
         .then(result => {
           this.events.publish(this.downloadTaskEvent, msgType, since + count, count);
