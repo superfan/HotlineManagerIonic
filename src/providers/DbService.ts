@@ -313,7 +313,7 @@ export class DbService {
     } else {
       return this.openDb()
         .then(db => {
-          let sql: string = `SELECT COUNT(*) FROM GD_WORDS;`;
+          let sql: string = `SELECT COUNT(*) FROM GD_MATERIALS;`;
           return db.executeSql(sql, {})
             .then(data => data.rows && data.rows.length > 0 ? data.rows.item(0)["COUNT(*)"] : 0);
         });
