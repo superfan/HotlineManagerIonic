@@ -109,7 +109,7 @@ public class MainApplication extends Application {
         mainService.addPid(Process.myPid());
       } catch (RemoteException e) {
         e.printStackTrace();
-        Log.e(TAG, e.getMessage());
+        Log.e(TAG, e.getMessage() != null ? e.getMessage() : "ServiceConnection");
       }
     }
 
@@ -120,7 +120,7 @@ public class MainApplication extends Application {
         mainService.unregisterCallback(mCallback);
       } catch (RemoteException e) {
         e.printStackTrace();
-        Log.e(TAG, e.getMessage());
+        Log.e(TAG, e.getMessage() != null ? e.getMessage() : "onServiceDisconnected");
       }
       mainService = null;
     }

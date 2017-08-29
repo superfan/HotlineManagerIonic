@@ -3,10 +3,12 @@ package cordova.plugin.MyPlugin;
 import android.content.Context;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
 
+import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -88,6 +90,9 @@ public class MyPlugin extends CordovaPlugin {
         params = "MyWorkPage";
         accessToken = getUUID(mainApplication);
       }
+
+      Log.i("MyPlugin", "account:" + account + ", userId:" + userId + ", userName:" + userName + ", department:" + department
+        + ", roles:" + roles + ", params:" + params + ", bundle: " + (bundle != null));
 
       PageIntent pageIntent = new PageIntent(account, password, userId, userName,
         (department != null ? department : "") + "#" + departmentId, roles, params, accessToken, "");
