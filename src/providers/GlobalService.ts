@@ -173,6 +173,16 @@ export class GlobalService {
       });
   }
 
+  public quit(): void {
+    if (this.isChrome) {
+      return;
+    }
+
+    this.myPlugin.quit()
+      .then(result => console.log(result))
+      .catch(err => console.error(err));
+  }
+
   /**
    * 转换时间格式
    * @param date

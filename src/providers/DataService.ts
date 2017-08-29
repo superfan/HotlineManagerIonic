@@ -194,6 +194,14 @@ export class DataService extends SyncService {
     }
   }
 
+  public deleteOneTaskWithAllInfos(taskId: string): Promise<any> {
+    if (this.globalService.isChrome) {
+      return Promise.resolve(false);
+    } else {
+      return this.dbService.deleteOneTaskWithAllInfos(this.globalService.userId, taskId);
+    }
+  }
+
   /**
    * 获取未派工任务
    * @param since

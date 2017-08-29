@@ -9,7 +9,7 @@ import {TaskDetail} from "../model/TaskDetail";
 import {History} from "../model/History";
 import {Media} from "../model/Media";
 import {Material} from "../model/Material";
-import {DataMaterialInfo, MaterialsInfo} from "../model/MaterialsInfo";
+import {DataMaterialInfo} from "../model/MaterialsInfo";
 import {MaintainInfo} from "../model/MaintainInfo";
 
 interface LocalWord {
@@ -866,6 +866,27 @@ export class DbService {
           return Promise.resolve(mediaList);
         });
     }
+  }
+
+  /**
+   *
+   * @param userId
+   * @param taskId
+   * @returns {any}
+   */
+  public deleteOneTaskWithAllInfos(userId: number, taskId: string): Promise<any> {
+      if (this.globalService.isChrome) {
+        return Promise.reject('chrome');
+      } else {
+        return this.openDb()
+          .then(db => {
+            let sql = `DELETE FROM GD_TASKS WHERE I_USERID = ${userId} AND S_TASKID = '${taskId}';`
+              + `DELETE FROM GD_TASKDETAILS WHERE S_TASKID = '${taskId}';`
+              + `DELETE FROM GD_HISTORIES WHERE I_USERID = ${userId} AND S_TASKID = '${taskId}';`
+              + `DELETE FROM GD_MULTIMEDIAS WHERE I_USERID = ${userId} AND S_TASKID = '${taskId}';`;
+            return this.sqlitePorter.importSqlToDb(db, sql);
+          });
+      }
   }
 
   /**

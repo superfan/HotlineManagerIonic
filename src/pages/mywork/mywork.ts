@@ -21,7 +21,8 @@ import {ReplyInfo} from "../../model/ReplyInfo";
 enum FromWhere {
   Download,
   CancelOrReject,
-  Search
+  Search,
+  Delete
 }
 
 @Component({
@@ -230,6 +231,32 @@ export class MyWorkPage implements OnInit, OnDestroy {
    */
   onMaterials(taskEx: TaskEx): void {
     this.navCtrl.push(MaterialsPage, taskEx.id);
+  }
+
+  onDelete(taskEx: TaskEx): void {
+    let alert = this.alertCtrl.create({
+      title: '删除任务',
+      message: '是否删除该任务及其所有操作?',
+      buttons: [
+        {
+          text: '取消',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: '确定',
+          handler: () => {
+            console.log('Ok clicked');
+            this.dataService.deleteOneTaskWithAllInfos(taskEx.id)
+              .then(result => this.resetTasks(FromWhere.Delete))
+              .catch(err => console.error(err));
+          }
+        }
+      ]
+    });
+    alert.present();
   }
 
   /**
@@ -1099,6 +1126,9 @@ export class MyWorkPage implements OnInit, OnDestroy {
             this.getTaskCount();
             break;
           case FromWhere.Search:
+            break;
+          case FromWhere.Delete:
+            this.getTaskCount();
             break;
           default:
             break;
