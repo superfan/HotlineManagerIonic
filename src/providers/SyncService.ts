@@ -676,7 +676,7 @@ export abstract class SyncService {
       return Promise.all(promises)
         .then(result => {
           let files: Array<string> = mediaList.map(media => media.fileId);
-          return this.uploadService.uploadMediaIds(mediaList[0].taskId, files.join(','));
+          return this.uploadService.uploadMediaIds(mediaList[0].taskId.split('#')[0], files.join(','));
         })
         .then(result => {
           for (let media of mediaList) {
@@ -697,7 +697,7 @@ export abstract class SyncService {
    * @returns {Promise<boolean>}
    */
   private uploadOneMedia(media: Media): Promise<boolean> {
-    return media.fileId
+    return media.fileId && media.fileId !== 'null' && media.fileId !== 'undefined'
       ? Promise.resolve(true)
       : this.uploadService.uploadMedia(media)
         .then(fileId => {

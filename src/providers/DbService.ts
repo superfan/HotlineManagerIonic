@@ -813,7 +813,7 @@ export class DbService {
             .then(data => {
               let rows: any = data.rows;
               if (rows && rows.length > 0) {
-                let localMedia: LocalMedia = rows[0] as LocalMedia;
+                let localMedia: LocalMedia = rows.item(0) as LocalMedia;
                 sql = this.toMediaUpdateSql(media, localMedia);
               } else {
                 sql = this.toMediaInsertSql(media);
