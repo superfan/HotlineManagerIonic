@@ -93,6 +93,13 @@ export class DataService extends SyncService {
   }
 
   /**
+   * 上传所有信息
+   */
+  public uploadAllInfos(): void {
+    super.sendMsg({msgType: MsgType.UploadAllInfos});
+  }
+
+  /**
    * 上传一条任务的多媒体信息
    * @param taskId
    */
@@ -145,8 +152,11 @@ export class DataService extends SyncService {
         .then(detail => {
           return detail && detail.taskId
             ? Promise.resolve(detail)
-            : this.downloadService.getTaskDetail(taskId)
-              .then(detail => this.dbService.saveTaskDetail(detail))
+            : this.downloadService.getTaskDetail(taskId.split('#')[0])
+              .then(detail => {
+                detail.taskId = taskId;
+                return this.dbService.saveTaskDetail(detail)
+              })
               .then(result => this.dbService.getTaskDetail(taskId));
         });
     }
