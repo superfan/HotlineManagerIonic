@@ -989,13 +989,35 @@ export class MyWorkPage implements OnInit, OnDestroy {
                 comment: data.reason,
                 deadline
               };
-              this.delay(taskEx, location);
+              this.judgeDelayTime(taskEx, processEx.delay.extend, location);
             }
           }
         }
       ]
     });
     prompt.present();
+  }
+
+  /**
+   * 判断申请延期时间
+   * @param taskEx
+   * @param extend
+   * @param location
+   */
+  private judgeDelayTime(taskEx: TaskEx, extend: DelayExtend, location: Location) {
+    this.dataService.getTaskDetail(taskEx.id)
+      .then(taskDetail => {
+        if (taskDetail && taskDetail.delayReplyDeadLine) {
+          if (extend.deadline.getTime() <= taskDetail.delayReplyDeadLine) {
+            return this.globalService.showToast("填写的时间必须大于处理时限!");
+          } else {
+            this.delay(taskEx, location);
+          }
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      })
   }
 
   /**
