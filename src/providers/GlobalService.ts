@@ -48,7 +48,7 @@ export class MyPluginMock extends MyPlugin {
 
 @Injectable()
 export class GlobalService {
-  readonly isChrome: boolean = true;
+  readonly isChrome: boolean = false;
   readonly httpCode: number = 0;
   readonly httpSuccessStatusCode: number = 200;
   readonly taskSinceDefault: number = 0;
@@ -66,6 +66,7 @@ export class GlobalService {
   readonly mainUpdateEvent: string = "main:update";
   readonly myWorkDownloadFinishEvent: string = "mywork:download:finish"; // task & detail
   readonly historyUploadFinishEvent: string = "history:upload:finish"; // history & media
+  readonly materialInfoFinishEvent: string = "materialInfo:upload:finish";//materialInfo
   readonly myWorkUpdateEvent: string = "mywork:update";
   readonly stationWorkUpdateEvent: string = "stationwork:update";
   readonly materialsUpdateEvent: string = "addMaterials:update";

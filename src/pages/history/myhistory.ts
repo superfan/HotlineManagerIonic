@@ -55,6 +55,7 @@ export class MyHistory implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     console.log(this.tag, 'ngOnDestroy');
     this.events.unsubscribe(this.globalService.historyUploadFinishEvent);
+    this.events.unsubscribe(this.globalService.materialInfoFinishEvent);
   }
 
   //搜索
@@ -244,9 +245,15 @@ export class MyHistory implements OnInit, OnDestroy {
    */
   private subscribeEvent(events: Events): void {
     events.subscribe(this.globalService.historyUploadFinishEvent, () => {
-      this.refresher.complete();
+      this.dataService.uploadNotUploadMaterialInfos();
+      // this.refresher.complete();
       this.resetList()
     });
+
+    events.subscribe(this.globalService.materialInfoFinishEvent, () => {
+      console.log(this.tag, "materialInfoFinishEvent");
+      this.refresher.complete();
+    })
   }
 
   private findReplyHistory(taskId: string): History {

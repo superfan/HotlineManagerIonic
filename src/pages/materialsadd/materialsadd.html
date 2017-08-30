@@ -34,7 +34,7 @@
 
     <ion-item>
       <ion-label>生产厂家：</ion-label>
-      <ion-select okText="确定" cancelText="取消" [(ngModel)]="materialCJID" (ionChange)="selectMaterialCJ()">
+      <ion-select okText="确定" cancelText="取消" [(ngModel)]="materialCJID">
         <ion-option *ngFor="let type of optMaterialsCJ" value={{type.id}}>{{type.name}}</ion-option>
       </ion-select>
     </ion-item>

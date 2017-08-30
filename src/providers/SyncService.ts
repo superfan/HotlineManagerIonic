@@ -17,12 +17,14 @@ import {DbService} from "./DbService";
 import {Media} from "../model/Media";
 import {MediaService} from "./MediaService";
 import {ConfigService} from "./ConfigService";
+import {DataMaterialInfo} from "../model/MaterialsInfo";
 
 export enum MsgType {
   DownloadTasksAndDetails,
     //DownloadDetailOfTask,
   UploadMediasOfHistory,
-  UploadHistoriesAndMedias
+  UploadHistoriesAndMedias,
+  UploadMaterialInfos
   //UploadMedias
 }
 
@@ -39,6 +41,7 @@ export abstract class SyncService {
   private readonly downloadTaskDetailEvent: string = 'task:detail:download';
   private readonly uploadHistoryEvent: string = 'history:upload';
   private readonly uploadMediaEvent: string = 'media:upload';
+  private readonly uploadMaterialInfoEvent: string = 'materialInfo:upload';
 
   private queue: Array<SyncMsg> = [];
   private isServiceBusy: boolean;
@@ -60,6 +63,7 @@ export abstract class SyncService {
     this.subscribeSyncEvent();
     this.subscribeDownloadEvent();
     this.subscribeUploadEvent();
+    this.subscribeUploadMaterialInfoEvent();
   }
 
   /**
@@ -71,6 +75,7 @@ export abstract class SyncService {
     this.events.unsubscribe(this.downloadTaskDetailEvent);
     this.events.unsubscribe(this.uploadHistoryEvent);
     this.events.unsubscribe(this.uploadMediaEvent);
+    this.events.unsubscribe(this.uploadMaterialInfoEvent);
   }
 
   /**
@@ -90,7 +95,7 @@ export abstract class SyncService {
    * @returns {any}
    */
   public accept(acceptInfo: AcceptInfo, task: Task,
-                output: {uploadedFlag: number} = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
+                output: { uploadedFlag: number } = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
     if (this.configService.isDebugMode()) {
       debugger;
     }
@@ -136,7 +141,7 @@ export abstract class SyncService {
    * @returns {any}
    */
   public go(goInfo: GoInfo, task: Task,
-            output: {uploadedFlag: number} = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
+            output: { uploadedFlag: number } = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
     if (this.configService.isDebugMode()) {
       debugger;
     }
@@ -182,7 +187,7 @@ export abstract class SyncService {
    * @returns {any}
    */
   public arrive(arriveInfo: ArriveInfo, task: Task,
-                output: {uploadedFlag: number} = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
+                output: { uploadedFlag: number } = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
     if (this.configService.isDebugMode()) {
       debugger;
     }
@@ -230,7 +235,7 @@ export abstract class SyncService {
    * @returns {any}
    */
   public reply(replyInfo: ReplyInfo, task: Task, taskDetail: TaskDetail, mediaNames: Array<string>,
-               output: {uploadedFlag: number} = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
+               output: { uploadedFlag: number } = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
     if (this.configService.isDebugMode()) {
       debugger;
     }
@@ -280,7 +285,7 @@ export abstract class SyncService {
    * @returns {any}
    */
   public reject(rejectInfo: RejectInfo, task: Task,
-                output: {uploadedFlag: number} = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
+                output: { uploadedFlag: number } = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
     if (this.configService.isDebugMode()) {
       debugger;
     }
@@ -326,7 +331,7 @@ export abstract class SyncService {
    * @returns {any}
    */
   public delay(delayInfo: DelayInfo, task: Task,
-               output: {uploadedFlag: number} = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
+               output: { uploadedFlag: number } = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
     if (this.configService.isDebugMode()) {
       debugger;
     }
@@ -372,7 +377,7 @@ export abstract class SyncService {
    * @returns {any}
    */
   public cancel(cancelInfo: CancelInfo, task: Task,
-                output: {uploadedFlag: number} = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
+                output: { uploadedFlag: number } = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
     if (this.configService.isDebugMode()) {
       debugger;
     }
@@ -431,6 +436,9 @@ export abstract class SyncService {
             break;
           case MsgType.UploadHistoriesAndMedias:
             this.uploadHistories(syncMsg.msgType);
+            break;
+          case MsgType.UploadMaterialInfos:
+            this.uploadUnUploadMaterialInfo(syncMsg.msgType);
             break;
           default:
             this.next();
@@ -710,6 +718,71 @@ export abstract class SyncService {
     }
     return existing;
   }
+
+  /**
+   * 上传本地未上传的材料登记记录
+   * @returns {Promise<T>}
+   */
+  private uploadUnUploadMaterialInfo(msgType: MsgType) {
+    if (this.globalService.isChrome) {
+      this.next();
+      this.events.publish(this.globalService.materialInfoFinishEvent);
+      return;
+    }
+    return this.dbService.getNotUploadMaterilalInfo(this.globalService.userId)
+      .then(results => {
+        this.events.publish(this.uploadMaterialInfoEvent, results);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  }
+
+  /**
+   * 订阅上传事件 材料清单
+   */
+  private subscribeUploadMaterialInfoEvent(): void {
+    this.events.subscribe(this.uploadMaterialInfoEvent, (materialInfos: Array<DataMaterialInfo>) => {
+      if (materialInfos && materialInfos.length > 0) {
+        let materialInfo = materialInfos.shift();
+        this.uploadMaterialInfo(materialInfo)
+          .then(result => {
+            this.events.publish(this.uploadMaterialInfoEvent, materialInfos);
+          })
+          .catch(error => {
+            console.log(error);
+            this.events.publish(this.uploadMaterialInfoEvent, materialInfos);
+          })
+      } else {
+        this.next();
+        this.events.publish(this.globalService.materialInfoFinishEvent);
+      }
+    });
+  }
+
+  /**
+   * 上传某条工单的记录并且修改标志位
+   * @param data
+   * @returns {Promise<T>}
+   */
+  private uploadMaterialInfo(data: DataMaterialInfo): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      return this.uploadService.uploadMaterialsAdd(data.infos)
+        .then(result => {
+          //更新上传标志
+          if (result) {
+            data.uploadFlag = this.globalService.uploadedFlagForUploaded;//已上传
+            resolve(this.dbService.updateFlagMaterials(data));
+          } else {
+            reject("upload failed");
+          }
+        })
+        .catch(error => {
+          reject(false);
+        });
+    })
+  }
+
 
   /**
    *

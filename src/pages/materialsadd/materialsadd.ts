@@ -182,7 +182,7 @@ export class MaterialsAddPage implements OnInit {
   /**
    * 选择材料类别
    */
-  private selectMaterialLB() {
+  selectMaterialLB() {
     console.log(this.tag,this.materialLBID);
     this.dataService.getOptMaterialXH(this.materialLBID)
       .then(materials => {
@@ -199,7 +199,7 @@ export class MaterialsAddPage implements OnInit {
   /**
    * 选择材料型号
    */
-  private selectMaterialXH() {
+  selectMaterialXH() {
     this.dataService.getOptMaterialGG(this.materialXHID)
       .then(materials => {
         this.optMaterialsGG = materials;
@@ -214,7 +214,7 @@ export class MaterialsAddPage implements OnInit {
   /**
    * 选择材料规格
    */
-  private selectMaterialGG() {
+  selectMaterialGG() {
     this.dataService.getOptMaterialCJ(this.materialGGID)
       .then(materials => {
         this.optMaterialsCJ = materials;

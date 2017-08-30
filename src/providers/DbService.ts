@@ -313,7 +313,7 @@ export class DbService {
     } else {
       return this.openDb()
         .then(db => {
-          let sql: string = `SELECT COUNT(*) FROM GD_WORDS;`;
+          let sql: string = `SELECT COUNT(*) FROM GD_MATERIALS;`;
           return db.executeSql(sql, {})
             .then(data => data.rows && data.rows.length > 0 ? data.rows.item(0)["COUNT(*)"] : 0);
         });
@@ -1386,5 +1386,37 @@ export class DbService {
       fileId: localMedia.S_FILEID,
       extendedInfo: localMedia.S_EXTENDEDINFO
     };
+  }
+
+  /**
+   * 获取未上传的材料清单记录
+   * @param userId
+   * @returns {any}
+   */
+  public getNotUploadMaterilalInfo(userId: number): Promise<Array<DataMaterialInfo>> {
+    if (this.globalService.isChrome || !userId) {
+      return Promise.reject(this.paramError);
+    } else {
+      return this.openDb()
+        .then(db => {
+          let sql: string = `SELECT * FROM GD_MATERIALINFO WHERE I_USERID = ${userId} 
+          AND I_UPLOADEDFLAG= ${this.globalService.uploadedFlagForLocal};`;
+          return db.executeSql(sql, {})
+            .then(data => {
+              let rows: any = data.rows;
+              let results: Array<DataMaterialInfo> = [];
+              if (rows && rows.length > 0) {
+                for (let i = 0; i < rows.length; i++) {
+                  let localMaterialInfo: LocalMaterialInfo = rows.item(i) as LocalMaterialInfo;
+                  if (!localMaterialInfo) {
+                    continue;
+                  }
+                  results.push(this.toMaterialInfo(localMaterialInfo));
+                }
+              }
+              return results.length ? Promise.resolve(results) : Promise.reject('no materialInfos');
+            })
+        })
+    }
   }
 }

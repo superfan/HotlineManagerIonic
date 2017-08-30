@@ -38,7 +38,7 @@ export class AppComponentService {
         .then(result => this.fileService.createDirRoot())
         .then(result => this.dataService.init())
         .then(result => this.dataService.checkIfDownloadWords())
-        .then(result=> this.dataService.checkIfDownloadWords())
+        .then(result => this.dataService.checkIfDownloadMaterials())
         .then(result => this.parsePageIntent());
     }
   }
@@ -72,6 +72,7 @@ export class AppComponentService {
   private parsePageIntent(): Promise<any> {
     return this.myPlugin.getPageIntent()
       .then(pageIntent => {
+        console.log(pageIntent);
         if (!pageIntent.roles) {
           pageIntent.roles = this.globalService.worker;
         }

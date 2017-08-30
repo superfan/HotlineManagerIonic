@@ -44,6 +44,8 @@
         "@ionic-native/zip": "^3.12.1",
         "@ionic/storage": "^2.0.1",
         "MyPlugin": "file:3hplugins\\MyPlugin",
+        "android": "0.0.8",
+        "build": "^0.1.4",
         "cordova-android": "^6.2.3",
         "cordova-plugin-android-permissions": "^0.11.0",
         "cordova-plugin-app-preferences": "^0.99.3",
@@ -67,14 +69,15 @@
         "cordova-plugin-x-toast": "^2.6.0",
         "cordova-plugin-zip": "^3.1.0",
         "cordova-sqlite-storage": "^2.0.4",
+        "cordova.plugin.MyPlugin": ".\\3hplugins\\MyPlugin",
         "ionic-angular": "3.3.0",
         "ionic-plugin-keyboard": "^2.2.1",
         "ionicons": "3.0.0",
+        "run": "^1.4.0",
         "rxjs": "5.1.1",
         "sw-toolbox": "3.6.0",
         "uk.co.workingedge.cordova.plugin.sqliteporter": "^0.1.5",
-        "zone.js": "0.8.11",
-        "cordova.plugin.MyPlugin": ".\\3hplugins\\MyPlugin"
+        "zone.js": "0.8.11"
     },
     "devDependencies": {
         "@ionic/app-scripts": "1.3.7",
