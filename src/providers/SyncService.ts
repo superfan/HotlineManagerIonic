@@ -23,9 +23,10 @@ export enum MsgType {
   DownloadTasksAndDetails,
     //DownloadDetailOfTask,
   UploadMediasOfHistory,
-  UploadHistoriesAndMedias,
-  UploadMaterialInfos
+  UploadHistoriesAndMedias, //
+  UploadMaterialInfos,
   //UploadMedias
+  UploadAllInfos // history & media & material
 }
 
 export interface SyncMsg {
@@ -440,6 +441,9 @@ export abstract class SyncService {
           case MsgType.UploadMaterialInfos:
             this.uploadUnUploadMaterialInfo(syncMsg.msgType);
             break;
+          case MsgType.UploadAllInfos:
+            this.uploadHistories(syncMsg.msgType);
+            break;
           default:
             this.next();
             break;
@@ -458,6 +462,7 @@ export abstract class SyncService {
         .then(tasks => {
           let retTasks: Array<Task> = [];
           for(let task of tasks) {
+            task.taskId += `#${task.assignTime}`; // modify for the rejected task
             let item: Task = retTasks.find((item) =>
               item.taskId === task.taskId
               && item.acceptTime === task.acceptTime
@@ -497,8 +502,12 @@ export abstract class SyncService {
       if (taskIds && taskIds.length > 0) {
         let taskId: string = taskIds.shift();
         if (taskId) {
-          return this.downloadService.getTaskDetail(taskId)
-            .then(detail => this.dbService.saveTaskDetail(detail))
+          // modify for the rejected task
+          return this.downloadService.getTaskDetail(taskId.split('#')[0])
+            .then(detail => {
+              detail.taskId = taskId; // modify for the rejected task
+              return this.dbService.saveTaskDetail(detail)
+            })
             .catch(error => console.error(error))
             .then((result) => this.events.publish(this.downloadTaskDetailEvent, msgType, taskIds));
         }
@@ -557,7 +566,7 @@ export abstract class SyncService {
           .catch(error => console.error(error))
           .then(() => this.events.publish(this.uploadHistoryEvent, msgType, histories));
       } else { // finish
-        if (msgType === MsgType.UploadHistoriesAndMedias) {
+        if (msgType === MsgType.UploadHistoriesAndMedias || msgType === MsgType.UploadAllInfos) {
           this.uploadMedias(msgType);
         } else {
           this.next();
@@ -585,8 +594,12 @@ export abstract class SyncService {
           this.events.publish(this.uploadMediaEvent, msgType, histories);
         }
       } else { // finish
-        this.next();
-        this.events.publish(this.globalService.historyUploadFinishEvent);
+        if (msgType === MsgType.UploadAllInfos) {
+          this.uploadUnUploadMaterialInfo(msgType);
+        } else {
+          this.next();
+          this.events.publish(this.globalService.historyUploadFinishEvent);
+        }
       }
     });
   }
@@ -726,16 +739,12 @@ export abstract class SyncService {
   private uploadUnUploadMaterialInfo(msgType: MsgType) {
     if (this.globalService.isChrome) {
       this.next();
-      this.events.publish(this.globalService.materialInfoFinishEvent);
+      this.events.publish(this.globalService.historyUploadFinishEvent);
       return;
     }
     return this.dbService.getNotUploadMaterilalInfo(this.globalService.userId)
-      .then(results => {
-        this.events.publish(this.uploadMaterialInfoEvent, results);
-      })
-      .catch(error => {
-        console.log(error);
-      })
+      .catch(error => console.log(error))
+      .then(results => this.events.publish(this.uploadMaterialInfoEvent, results))
   }
 
   /**
@@ -745,17 +754,15 @@ export abstract class SyncService {
     this.events.subscribe(this.uploadMaterialInfoEvent, (materialInfos: Array<DataMaterialInfo>) => {
       if (materialInfos && materialInfos.length > 0) {
         let materialInfo = materialInfos.shift();
-        this.uploadMaterialInfo(materialInfo)
-          .then(result => {
-            this.events.publish(this.uploadMaterialInfoEvent, materialInfos);
-          })
-          .catch(error => {
-            console.log(error);
-            this.events.publish(this.uploadMaterialInfoEvent, materialInfos);
-          })
+        if (materialInfo) {
+          this.uploadMaterialInfo(materialInfo)
+            .then(result => console.log(result))
+            .catch(error => console.log(error))
+            .then(() => this.events.publish(this.uploadMaterialInfoEvent, materialInfos));
+        }
       } else {
         this.next();
-        this.events.publish(this.globalService.materialInfoFinishEvent);
+        this.events.publish(this.globalService.historyUploadFinishEvent);
       }
     });
   }

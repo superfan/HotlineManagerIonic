@@ -34,7 +34,7 @@
         <ion-avatar item-start>
           <img src="assets/img/ic_mywork_avatar.png">
         </ion-avatar>
-        <div><h2 class="card-header-label-hint">任务编号 </h2><h2 class="card-header-label-content">{{item.id | valueValid}}</h2></div>
+        <div><h2 class="card-header-label-hint">任务编号 </h2><h2 class="card-header-label-content">{{item.id.split('#')[0] | valueValid}}</h2></div>
         <div><h2 class="card-header-label-hint">任务类型 </h2><h2 class="card-header-label-content">{{item.type | valueValid}}</h2></div>
         <ion-icon name='cloud-upload' item-end *ngIf="!item.isUploaded"></ion-icon>
       </ion-item>

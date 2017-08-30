@@ -66,7 +66,7 @@ export class GlobalService {
   readonly mainUpdateEvent: string = "main:update";
   readonly myWorkDownloadFinishEvent: string = "mywork:download:finish"; // task & detail
   readonly historyUploadFinishEvent: string = "history:upload:finish"; // history & media
-  readonly materialInfoFinishEvent: string = "materialInfo:upload:finish";//materialInfo
+  //readonly materialInfoFinishEvent: string = "materialInfo:upload:finish";//materialInfo
   readonly myWorkUpdateEvent: string = "mywork:update";
   readonly stationWorkUpdateEvent: string = "stationwork:update";
   readonly materialsUpdateEvent: string = "addMaterials:update";
