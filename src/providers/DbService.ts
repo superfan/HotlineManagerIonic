@@ -890,6 +890,24 @@ export class DbService {
   }
 
   /**
+   *
+   * @param userId
+   * @param fileNames
+   * @returns {any}
+   */
+  public deleteOneMedia(userId: number, fileNames: string): Promise<any> {
+    if (this.globalService.isChrome) {
+      return Promise.reject('chrome');
+    } else {
+      return this.openDb()
+        .then(db => {
+          let sql = `DELETE FROM GD_MULTIMEDIAS WHERE S_FILENAME = '${fileNames}' AND I_USERID = ${userId};`;
+          return this.sqlitePorter.importSqlToDb(db, sql);
+        });
+    }
+  }
+
+  /**
    * 打开数据库
    * @returns {any}
    */

@@ -325,6 +325,46 @@ export class WorkDetailPage implements OnInit, OnDestroy {
       .catch(error => console.error(error));
   }
 
+  onDeletePicture(name: string): void {
+    if (this.globalService.isChrome || this.isPreview || !name) {
+      return;
+    }
+
+    let index: number = this.pictures.findIndex(item => item === name);
+    if (index === -1) {
+      return;
+    }
+
+    let lastIndex: number = name.lastIndexOf('/');
+    if (lastIndex <= 0) {
+      return;
+    }
+    name = name.substring(lastIndex + 1);
+    if (!name) {
+      return;
+    }
+
+    let index2: number = this.mediaNames.findIndex(item => item === name);
+    if (index2 === -1) {
+      return;
+    }
+
+    this.dataService.deleteOneMedia(name)
+      .then(result => {
+        for (let i = index; i < this.pictures.length - 1; i++) {
+          this.pictures[i] = this.pictures[i + 1];
+        }
+        this.picCount--;
+        this.pictures[this.picCount] = '';
+
+        for (let i = index2; i < this.mediaNames.length - 1; i++) {
+          this.mediaNames[i] = this.mediaNames[i + 1];
+        }
+        this.mediaNames.pop();
+      })
+      .catch(err => console.error(err));
+  }
+
   /**
    * 录音
    * @param ev
@@ -346,6 +386,78 @@ export class WorkDetailPage implements OnInit, OnDestroy {
       showBackdrop: true,
       enableBackdropDismiss: false
     }).present();
+  }
+
+  onPlay(audio: {name: string, time: number}): void {
+    if (!audio.name) {
+      return;
+    }
+
+    let names: string[] = audio.name.split('#');
+    if (!names || names.length !== 2) {
+      return;
+    }
+
+    this.dataService.playAudio(names[0])
+      .then(file => {
+        if (file) {
+          let prompt = this.alertCtrl.create({
+            title: '提示',
+            message: "结束播放语音",
+            enableBackdropDismiss: false,
+            buttons: [
+              {
+                text: '确定',
+                handler: data => {
+                  console.log('Saved clicked');
+                  this.dataService.stopAudio(file)
+                    .catch(err => console.error(err));
+                }
+              }
+            ]
+          });
+          prompt.present();
+        }
+      })
+      .catch(err => console.error(err));
+  }
+
+  onDeleteAudio(audio: {name: string, time: number}): void {
+    if (this.globalService.isChrome || this.isPreview || !audio.name) {
+      return;
+    }
+
+    let names: string[] = audio.name.split('#');
+    if (!names || names.length !== 2) {
+      return;
+    }
+    let name: string = names[0];
+    let index: number = this.audios.findIndex(item => item.name === audio.name);
+    if (index === -1) {
+      return;
+    }
+
+    let index2: number = this.mediaNames.findIndex(item => item === audio.name);
+    if (index2 === -1) {
+      return;
+    }
+
+    this.dataService.deleteOneMedia(name)
+      .then(result => {
+        for (let i = index; i < this.audios.length - 1; i++) {
+          this.audios[i].name = this.audios[i + 1].name;
+          this.audios[i].time = this.audios[i + 1].time;
+        }
+        this.audioCount--;
+        this.audios[this.audioCount].name = '';
+        this.audios[this.audioCount].time = 0;
+
+        for (let i = index2; i < this.mediaNames.length - 1; i++) {
+          this.mediaNames[i] = this.mediaNames[i + 1];
+        }
+        this.mediaNames.pop();
+      })
+      .catch(err => console.error(err));
   }
 
   /**

@@ -651,6 +651,14 @@ export class DataService extends SyncService {
     return this.mediaService.endRecordAudio(file);
   }
 
+  public playAudio(name: string): Promise<any> {
+    return this.mediaService.playAudio(name);
+  }
+
+  public stopAudio(file: any): Promise<boolean> {
+    return this.mediaService.stopAudio(file);
+  }
+
   /**
    * 保存录音到数据库
    * @param taskId
@@ -666,6 +674,19 @@ export class DataService extends SyncService {
         fileName,
         uploadedFlag: this.globalService.uploadedFlagForLocal
       });
+    } else {
+      return Promise.reject('taskId or fileName is error');
+    }
+  }
+
+  /**
+   *
+   * @param fileName
+   * @returns {any}
+   */
+  public deleteOneMedia(fileName: string): Promise<any> {
+    if (fileName) {
+      return this.dbService.deleteOneMedia(this.globalService.userId, fileName);
     } else {
       return Promise.reject('taskId or fileName is error');
     }

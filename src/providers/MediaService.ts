@@ -112,4 +112,44 @@ export class MediaService extends BaseService {
       return Promise.reject('file is error');
     }
   }
+
+  public playAudio(name: string): Promise<any> {
+    const error: string = 'failure to play audio';
+    return new Promise((resolve, reject) => {
+      let file: MediaObject;
+      try {
+        // Create a Media instance.  Expects path to file or url as argument
+        // We can optionally pass a second argument to track the status of the media
+        file = this.media.create(`${this.fileService.getSoundsDir()}/${name}`);
+        if (!file) {
+          return reject(error);
+        }
+
+        file.play();
+        return resolve(file);
+      }
+      catch (err) {
+        console.error(err);
+        if (file) {
+          file.release();
+        }
+        return reject(err);
+      }
+    });
+  }
+
+  public stopAudio(file: any): Promise<boolean> {
+    if (file instanceof MediaObject) {
+      try {
+        (<MediaObject>file).stop();
+        (<MediaObject>file).release();
+        return Promise.resolve(true);
+      } catch (err) {
+        console.error(err);
+        return Promise.reject(err);
+      }
+    } else {
+      return Promise.reject('file is error');
+    }
+  }
 }
