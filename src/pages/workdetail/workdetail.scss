@@ -15,7 +15,8 @@
 
   .col-img {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
     //border: 1px solid #e6e9ee;
   }
@@ -26,11 +27,21 @@
   }
 
   .audio {
+    margin: 10px;
+  }
+
+  .audio-info {
     width: 150px;
     height: 30px;
     background: #34D48E;
     border:1px solid #34D48E;
     border-radius:10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .audio-btn {
     display: flex;
     justify-content: center;
     align-items: center;

@@ -49647,9 +49647,12 @@ page-welcome .welcome-info {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
   -webkit-align-items: center;
   -ms-flex-align: center;
   align-items: center;
@@ -49661,11 +49664,27 @@ page-welcome .welcome-info {
 }
 
 .page-workdetail .audio {
+  margin: 10px;
+}
+
+.page-workdetail .audio-info {
   width: 150px;
   height: 30px;
   background: #34D48E;
   border: 1px solid #34D48E;
   border-radius: 10px;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.page-workdetail .audio-btn {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
