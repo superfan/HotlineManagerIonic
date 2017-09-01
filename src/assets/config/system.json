@@ -1,8 +1,8 @@
 {
-  "server.outer.baseuri": "http://128.1.2.184:8174/outer/",
-  "server.inner.baseuri": "http://128.1.2.184:8174/api/",
-  "server.materials.outer.baseuri": "http://128.1.2.184:8175/outer",
-  "server.materials.inner.baseuri": "http://128.1.2.184:8175/",
+  "server.outer.baseuri": "http://221.203.76.12:8009/api/",
+  "server.inner.baseuri": "http://172.16.50.118:8009/api/",
+  "server.materials.outer.baseuri": "http://221.203.76.12:8097/",
+  "server.materials.inner.baseuri": "http://172.16.50.118:8097/",
   "sys.connect.outer.network": false,
   "sys.grid.style": true,
   "sys.debug.mode": true,
@@ -10,31 +10,31 @@
   "sys.region": "shanghai",
   "sys.material.unit": [
     {
-      "id": "1000006",
+      "id": "188901",
       "text": "米"
     },
     {
-      "id": "1000007",
+      "id": "188902",
       "text": "平方米"
     },
     {
-      "id": "1000008",
+      "id": "188903",
       "text": "立方米"
     },
     {
-      "id": "1000009",
+      "id": "188904",
       "text": "千克"
     },
     {
-      "id": "1000010",
+      "id": "188905",
       "text": "个"
     },
     {
-      "id": "1000011",
+      "id": "188906",
       "text": "支"
     },
     {
-      "id": "1000012",
+      "id": "188907",
       "text": "块"
     }
   ]

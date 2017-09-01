@@ -29,7 +29,7 @@ export class MaterialsPage implements OnInit, OnDestroy {
               private toastCtrl: ToastController,
               private events: Events,
               public alertCtrl: AlertController) {
-    this.taskId = this.navParams.data;
+    this.taskId = this.navParams.data.split('#')[0];
   }
 
   ngOnInit(): void {
