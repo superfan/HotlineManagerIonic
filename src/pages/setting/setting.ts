@@ -12,8 +12,6 @@ import {StorageService} from "../../providers/StorageService";
 import {FileService} from "../../providers/FileService";
 import {Storage} from "@ionic/storage";
 import {NetworkSetPage} from "./networkset";
-import {DownloadService} from "../../providers/DownloadService";
-import {all} from "q";
 import {DataService} from "../../providers/DataService";
 
 @Component({
@@ -73,17 +71,17 @@ export class SettingPage implements OnInit, OnDestroy {
   /**
    * 从文件中读取参数
    */
-  private readDataFromFile() {
-    Promise.all([this.isGridStyleFromFile(), this.isOuterNetFromFile(), this.getKeepAliveFromFile()])
-      .catch(error => {
-        console.log(this.tag + 'readDataFromFile:' + error);
-      })
-  }
+  // private readDataFromFile() {
+  //   Promise.all([this.isGridStyleFromFile(), this.isOuterNetFromFile(), this.getKeepAliveFromFile()])
+  //     .catch(error => {
+  //       console.log(this.tag + 'readDataFromFile:' + error);
+  //     })
+  // }
 
   /**
    * 切换九宫格
    */
-  private notifyIsGrid() {
+  notifyIsGrid(): void {
     console.log(this.tag + "Toggled:" + this.isGrid);
     this.configService.setGridStyle(this.isGrid)
       .then(result => {
@@ -102,7 +100,7 @@ export class SettingPage implements OnInit, OnDestroy {
   /**
    * 切换内外网
    */
-  private notifyIsOutNet() {
+  notifyIsOutNet(): void {
     console.log(this.tag + "Toggled:" + this.isOuterNet);
     this.configService.setIsOuterNet(this.isOuterNet)
       .then(result => {
@@ -120,29 +118,29 @@ export class SettingPage implements OnInit, OnDestroy {
   /**
    * 从文件中读取是否是九宫格
    */
-  private isGridStyleFromFile() {
-    this.configService.isGridStyle()
-      .then(data => {
-        console.log(this.tag + data);
-        this.isGrid = data;
-      }).catch(err => {
-      console.log(this.tag + err);
-    })
-  }
+  // private isGridStyleFromFile() {
+  //   this.configService.isGridStyle()
+  //     .then(data => {
+  //       console.log(this.tag + data);
+  //       this.isGrid = data;
+  //     }).catch(err => {
+  //     console.log(this.tag + err);
+  //   })
+  // }
 
   /**
    * 从文件中读取是否是外网
    */
-  private isOuterNetFromFile() {
-    this.configService.isOuterNetwork()
-      .then(data => {
-        this.isOuterNet = data;
-        this.getNetworkUriFromFile();
-      })
-      .catch(err => {
-        console.log(this.tag + err);
-      })
-  }
+  // private isOuterNetFromFile() {
+  //   this.configService.isOuterNetwork()
+  //     .then(data => {
+  //       this.isOuterNet = data;
+  //       this.getNetworkUriFromFile();
+  //     })
+  //     .catch(err => {
+  //       console.log(this.tag + err);
+  //     })
+  // }
 
   /**
    * 从文件读取数据地址
@@ -161,27 +159,27 @@ export class SettingPage implements OnInit, OnDestroy {
   /**
    * 读取文件的心跳频率
    */
-  private getKeepAliveFromFile() {
-    this.configService.getKeepAliveInterval()
-      .then(data => {
-        console.log(this.tag + data);
-        this.keepAlive = data;
-      })
-      .catch(err => {
-        console.log(this.tag + err);
-      })
-  }
+  // private getKeepAliveFromFile() {
+  //   this.configService.getKeepAliveInterval()
+  //     .then(data => {
+  //       console.log(this.tag + data);
+  //       this.keepAlive = data;
+  //     })
+  //     .catch(err => {
+  //       console.log(this.tag + err);
+  //     })
+  // }
 
   /**
    * 获取提醒方式
    */
-  private getAlermStyle() {
-    if (this.isChrome) {
-      (this.storageService.read('alermStyle') == null || undefined) ?
-        this.alermStyle = '仅铃声' : this.alermStyle = this.storageService.read<string>('alermStyle');
-      return;
-    }
-  }
+  // private getAlermStyle() {
+  //   if (this.isChrome) {
+  //     (this.storageService.read('alermStyle') == null || undefined) ?
+  //       this.alermStyle = '仅铃声' : this.alermStyle = this.storageService.read<string>('alermStyle');
+  //     return;
+  //   }
+  // }
 
   /**
    * 网络设置
@@ -242,9 +240,9 @@ export class SettingPage implements OnInit, OnDestroy {
               duration: 2000,
               position: 'bottom',
             });
-            Promise.all([this.dataService.downloadWords(), this.dataService.downloadMaterials()])
-              .then(([result1, result2]) => {
-                if (result1 && result2) {
+            Promise.all([this.dataService.downloadWords(), this.dataService.downloadMaterials(), this.dataService.downloadPersonnels()])
+              .then(([result1, result2, result3]) => {
+                if (result1 && result2 && result3) {
                   toast.setMessage('更新成功');
                 } else {
                   toast.setMessage('更新失败');

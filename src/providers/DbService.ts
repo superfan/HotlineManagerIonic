@@ -11,6 +11,7 @@ import {Media} from "../model/Media";
 import {Material} from "../model/Material";
 import {DataMaterialInfo} from "../model/MaterialsInfo";
 import {MaintainInfo} from "../model/MaintainInfo";
+import {Personnel} from "../model/Personnel";
 
 interface LocalWord {
   ID: number;
@@ -104,6 +105,12 @@ interface LocalMedia {
   I_UPLOADEDFLAG: number;
   S_FILEID: string;
   S_EXTENDEDINFO: string;
+}
+
+interface LocalPersonnel {
+  I_FIELDPERSONNELID: number;
+  S_FIELDPERSONNELNAME: string;
+  S_ROLES: string
 }
 
 @Injectable()
@@ -908,6 +915,69 @@ export class DbService {
   }
 
   /**
+   *
+   * @param personnels
+   * @returns {any}
+   */
+  public savePersonnels(personnels: Array<Personnel>): Promise<boolean> {
+    if (this.globalService.isChrome || !personnels || personnels.length <= 0) {
+      return Promise.resolve(false);
+    } else {
+      return this.openDb()
+        .then(db => {
+          let sql: string = `DELETE FROM GD_PERSONNELS;`;
+          for (let personnel of personnels) {
+            sql += this.toPersonnelInsertSql(personnel);
+          }
+          return this.sqlitePorter.importSqlToDb(db, sql);
+        });
+    }
+  }
+
+  /**
+   *
+   * @returns {any}
+   */
+  public getPersonnels(): Promise<Array<Personnel>> {
+    if (this.globalService.isChrome) {
+      return Promise.reject(this.paramError);
+    } else {
+      return this.openDb()
+        .then(db => {
+          let sql: string = `SELECT * FROM GD_PERSONNELS;`;
+          return db.executeSql(sql, {})
+            .then(data => {
+              let rows: any = data.rows;
+              let personnels: Array<Personnel> = [];
+              if (rows && rows.length > 0) {
+                for (let i = 0; i < rows.length; i++) {
+                  let localPersonnel: LocalPersonnel = rows.item(i) as LocalPersonnel;
+                  if (!localPersonnel) {
+                    continue;
+                  }
+                  personnels.push(this.toPersonnel(localPersonnel));
+                }
+              }
+              return personnels.length ? Promise.resolve(personnels) : Promise.reject('no personnels');
+            });
+        });
+    }
+  }
+
+  public getPersonnelsCount(): Promise<number> {
+    if (this.globalService.isChrome) {
+      return Promise.resolve(0);
+    } else {
+      return this.openDb()
+        .then(db => {
+          let sql: string = `SELECT COUNT(*) FROM GD_PERSONNELS;`;
+          return db.executeSql(sql, {})
+            .then(data => data.rows && data.rows.length > 0 ? data.rows.item(0)["COUNT(*)"] : 0);
+        });
+    }
+  }
+
+  /**
    * 打开数据库
    * @returns {any}
    */
@@ -1014,7 +1084,12 @@ export class DbService {
       CREATE TABLE IF NOT EXISTS [META_INFO] (
         [S_VERSION] TEXT(50) NOT NULL, 
         [S_PRODUCTER] TEXT (100) NOT NULL, 
-        [D_PRODUCTEDTIME] INTEGER NOT NULL);`;
+        [D_PRODUCTEDTIME] INTEGER NOT NULL);
+
+      CREATE TABLE IF NOT EXISTS [GD_PERSONNELS] (
+        [I_FIELDPERSONNELID] INTEGER NOT NULL, 
+        [S_FIELDPERSONNELNAME] TEXT (100) NOT NULL, 
+        [S_ROLES] TEXT);`;
 
     return this.openDb()
       .then(db => {
@@ -1418,5 +1493,17 @@ export class DbService {
             })
         })
     }
+  }
+
+  private toPersonnelInsertSql(personnel: Personnel): string {
+    return `INSERT INTO GD_PERSONNELS VALUES (${personnel.fieldPersonnelId}, '${personnel.fieldPersonnelName}', '${personnel.roles.join(',')}');`
+  }
+
+  private toPersonnel(localPersonnel: LocalPersonnel): Personnel {
+    return {
+      fieldPersonnelId: localPersonnel.I_FIELDPERSONNELID,
+      fieldPersonnelName: localPersonnel.S_FIELDPERSONNELNAME,
+      roles: localPersonnel.S_ROLES.split(',')
+    };
   }
 }

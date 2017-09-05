@@ -1,7 +1,5 @@
 import {Component, OnInit} from "@angular/core";
-import {AlertController, App, Events, NavController, NavParams} from "ionic-angular";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {MaterialsPage} from "../materials/materials";
+import {AlertController, Events, NavController, NavParams} from "ionic-angular";
 import {GlobalService} from "../../providers/GlobalService";
 import {MaterialsInfo} from "../../model/MaterialsInfo";
 import {Material} from "../../model/Material";
@@ -183,7 +181,7 @@ export class MaterialsAddPage implements OnInit {
    * 选择材料类别
    */
   selectMaterialLB() {
-    console.log(this.tag,this.materialLBID);
+    console.log(this.tag, this.materialLBID);
     this.dataService.getOptMaterialXH(this.materialLBID)
       .then(materials => {
         this.optMaterialsXH = materials;
@@ -228,21 +226,21 @@ export class MaterialsAddPage implements OnInit {
   /**
    * 数量（增加）
    */
-  private addAccount() {
+  addAccount(): void {
     this.count++;
   }
 
   /**
    * 数量（减少）
    */
-  private reduceAccount() {
+  reduceAccount(): void {
     this.count = (--this.count <= 0) ? 0 : this.count;
   }
 
   /**
    * 添加材料
    */
-  private addClick() {
+  addClick(): void {
     let confirm = this.alertCtrl.create({
       title: '提示',
       message: '确认信息无误？',

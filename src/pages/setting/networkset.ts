@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import {NavParams, ToastController, ViewController} from "ionic-angular";
+import {ToastController, ViewController} from "ionic-angular";
 import {ConfigService} from "../../providers/ConfigService";
 /**
  * 网络设置
@@ -31,7 +31,7 @@ import {ConfigService} from "../../providers/ConfigService";
     </ion-list>
   `,
   styles: [
-      `.selected {
+    `.selected {
       font-weight: bold;
     }`
   ]
@@ -67,7 +67,7 @@ export class NetworkSetPage {
   /**
    * 切换内外网
    */
-  private notifyIsOutNet() {
+  notifyIsOutNet(): void {
     console.log(this.tag + "Toggled:" + this.isOuterNet);
     this.configService.setIsOuterNet(this.isOuterNet)
       .then(result => {

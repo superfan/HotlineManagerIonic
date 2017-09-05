@@ -27,7 +27,7 @@ interface Item {
 
 export class MorePage implements OnInit {
 
-  private readonly tag: string = "[MorePage]";
+  //private readonly tag: string = "[MorePage]";
   title: string = '更多';
   imgWidth: number = 64;
   imgHeight: number = 64;

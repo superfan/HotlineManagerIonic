@@ -3,7 +3,7 @@ import {Location} from "./Location";
 export interface ReplyInfo {
   opTime: number;
   opDepartment: string;
-  opPerson: number;
+  opPerson: string;
   opLeiBie: number;
   opContent: number;
   reason: number;

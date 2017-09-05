@@ -629,10 +629,45 @@ export class DataService extends SyncService {
   public getPersonnels(userId: number): Promise<Array<Personnel>> {
     return (this.personnels && this.personnels.length > 0)
       ? Promise.resolve(this.personnels)
-      : this.downloadService.getPersonnels(userId)
+      : this.dbService.getPersonnels()
+        .catch(error => {
+          console.error(error);
+          return this.downloadService.getPersonnels(this.globalService.userId);
+        })
         .then(personnels => {
           return this.personnels = personnels;
         });
+  }
+
+  /**
+   *
+   * @returns {Promise<boolean|boolean>}
+   */
+  public downloadPersonnels(): Promise<boolean> {
+    return this.downloadService.getPersonnels(this.globalService.userId)
+      .then(personnels => this.dbService.savePersonnels(personnels))
+      .catch(error => {
+        console.error(error);
+        this.globalService.showToast(error);
+        return Promise.resolve(false);
+      });
+  }
+
+  /**
+   *
+   * @returns {Promise<boolean|boolean>}
+   */
+  public checkIfDownloadPersonnels(): Promise<boolean> {
+    return this.dbService.getPersonnelsCount()
+      .then(count => count > 0
+        ? Promise.resolve(true)
+        : this.downloadService.getPersonnels(this.globalService.userId)
+          .then(personnels => this.dbService.savePersonnels(personnels)))
+      .catch(error => {
+        console.error(error);
+        this.globalService.showToast(error);
+        return Promise.resolve(false);
+      });
   }
 
   /**

@@ -4,7 +4,6 @@ import {MaterialsAddPage} from "../materialsadd/materialsadd";
 import {GlobalService} from "../../providers/GlobalService";
 import {DataMaterialInfo, MaterialsInfo, UploadMaterials} from "../../model/MaterialsInfo";
 import {DataService} from "../../providers/DataService";
-import {MaintainInfo} from "../../model/MaintainInfo";
 
 @Component({
   selector: 'page-materials',
@@ -87,22 +86,22 @@ export class MaterialsPage implements OnInit, OnDestroy {
     this.events.unsubscribe(this.globalService.materialsUpdateEvent);
   }
 
-  private searchTask() {
-    console.log(this.tag + "searchTask");
-
-  }
+  // private searchTask() {
+  //   console.log(this.tag + "searchTask");
+  //
+  // }
 
   /**
    * 材料登记
    */
-  private addMaterials() {
+  addMaterials(): void {
     this.navCtrl.push(MaterialsAddPage);
   }
 
   /**
    * 删除材料
    */
-  private deleteMaterials(item) {
+  deleteMaterials(item): void {
     for (let i = 0; i < this.items.length; i++) {
       if (this.items[i] == item) {
         let confirm = this.alertCtrl.create({
@@ -131,7 +130,7 @@ export class MaterialsPage implements OnInit, OnDestroy {
   /**
    * 修改材料
    */
-  private editMaterials(item) {
+  editMaterials(item): void {
     this.needEditItem = item;
     this.navCtrl.push(MaterialsAddPage, {'edit': item});
   }
@@ -139,7 +138,7 @@ export class MaterialsPage implements OnInit, OnDestroy {
   /**
    * 保存
    */
-  private saveMaterials() {
+  saveMaterials(): void {
     if (this.items.length == 0) {
       let alert = this.alertCtrl.create({
         title: '提示',

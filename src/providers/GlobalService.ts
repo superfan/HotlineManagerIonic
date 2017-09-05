@@ -21,7 +21,7 @@ export interface MyWorkUpdateEvent {
 
 export class MyPluginMock extends MyPlugin {
   public static pageIntent: PageIntent = {
-    account: '123456',
+    account: 'zhouhl',
     password: '0000',
     userId: 3,
     userName: 'ss1',
@@ -48,7 +48,7 @@ export class MyPluginMock extends MyPlugin {
 
 @Injectable()
 export class GlobalService {
-  readonly isChrome: boolean = false;
+  readonly isChrome: boolean = true;
   readonly httpCode: number = 0;
   readonly httpSuccessStatusCode: number = 200;
   readonly taskSinceDefault: number = 0;

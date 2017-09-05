@@ -3,7 +3,7 @@
   "server.inner.baseuri": "http://172.16.50.118:8009/api/",
   "server.materials.outer.baseuri": "http://221.203.76.12:8097/",
   "server.materials.inner.baseuri": "http://172.16.50.118:8097/",
-  "sys.connect.outer.network": false,
+  "sys.connect.outer.network": true,
   "sys.grid.style": true,
   "sys.debug.mode": true,
   "sys.keep.alive.interval": 60000,

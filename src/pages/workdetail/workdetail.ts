@@ -153,7 +153,7 @@ export class WorkDetailPage implements OnInit, OnDestroy {
       this.replyInfo = {
         opTime: 0,
         opDepartment: this.globalService.department,
-        opPerson: this.globalService.userId,
+        opPerson: '',
         opLeiBie: 0,
         opContent: 0,
         reason: 0,
@@ -490,7 +490,7 @@ export class WorkDetailPage implements OnInit, OnDestroy {
     // department
     this.reply[1].value = this.replyInfo.opDepartment;
     // person
-    this.reply[2].value = this.globalService.userName;
+    this.reply[2].value = ''; //this.globalService.userName;
     // operation type
     this.getOptTypes(this.replyInfo.opLeiBie, this.replyInfo.opContent);
     // operation reason

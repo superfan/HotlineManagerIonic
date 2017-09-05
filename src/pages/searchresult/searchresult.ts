@@ -113,7 +113,7 @@ export class SearchResultPage implements OnInit {
    * jump to details
    * @param taskId
    */
-  private onDetails(taskId: string) {
+  onDetails(taskId: string): void {
     console.log(this.tag + taskId);
     this.navCtrl.push(SearchDetailsPage, {'taskId': taskId});
   }

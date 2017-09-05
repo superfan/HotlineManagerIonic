@@ -65,7 +65,7 @@ export class WelcomePage {
           //     this.navCtrl.push(MaterialsPage, {});
           //   }
           // }, error => alert(error));
-          // this.getVersionCode();
+          this.getVersionCode();
           this.jump2Login();
         })
         .catch(err => {
