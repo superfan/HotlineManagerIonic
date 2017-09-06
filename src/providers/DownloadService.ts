@@ -503,7 +503,7 @@ export class DownloadService extends BaseService {
     return new Promise((resolve, reject) => {
       this.configService.getMaterialsBaseUri()
         .then(data => {
-          let url = `${data}api/wap/v1/material/get/${group}`;
+          let url = `${data}/wap/v1/material/get/${group}`;
           return this.http.get(url, this.getOptions())
             .toPromise()
             .then(data => {
@@ -530,7 +530,7 @@ export class DownloadService extends BaseService {
     return new Promise((resolve, reject) => {
       this.configService.getMaterialsBaseUri()
         .then(data => {
-          let url = `${data}api/wap/v1/materialusage/get/${serialNumber}`;
+          let url = `${data}/wap/v1/materialusage/get/${serialNumber}`;
           return this.http.get(url, this.getOptions())
             .toPromise()
             .then(data => {

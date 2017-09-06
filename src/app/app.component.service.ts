@@ -32,7 +32,7 @@ export class AppComponentService {
       return this.dataService.init()
         .then(result => this.dataService.downloadWords())
         .then(result => this.dataService.downloadMaterials())
-        .then(result => this.dataService.downloadPersonnels())
+        //.then(result => this.dataService.downloadPersonnels())
         .then(result => this.parsePageIntent());
     } else {
       return this.checkPermissions()
@@ -40,7 +40,7 @@ export class AppComponentService {
         .then(result => this.dataService.init())
         .then(result => this.dataService.checkIfDownloadWords())
         .then(result => this.dataService.checkIfDownloadMaterials())
-        .then(result => this.dataService.checkIfDownloadPersonnels())
+        //.then(result => this.dataService.checkIfDownloadPersonnels())
         .then(result => this.parsePageIntent());
     }
   }

@@ -21,7 +21,7 @@ export interface MyWorkUpdateEvent {
 
 export class MyPluginMock extends MyPlugin {
   public static pageIntent: PageIntent = {
-    account: 'zhouhl',
+    account: '123456',
     password: '0000',
     userId: 3,
     userName: 'ss1',

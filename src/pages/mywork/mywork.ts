@@ -589,7 +589,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
       return;
     }
 
-    if (!processEx.reply.done) {
+    if (!processEx.reply.done || !processEx.reply.isUploaded) {
       taskEx.isPreview = false;
       let history: History = this.findReplyHistory(taskEx.id);
       this.navCtrl.push(WorkDetailPage, [taskEx, history]);

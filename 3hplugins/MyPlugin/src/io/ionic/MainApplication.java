@@ -87,6 +87,20 @@ public class MainApplication extends Application {
     }
   }
 
+  public long getCurrentTime() {
+    long time = new Date().getTime();
+    try {
+      if (mainService != null) {
+        time += mainService.getCurrentTime();
+      }
+    } catch (RemoteException exception) {
+      exception.printStackTrace();
+      Log.e(TAG, "---setMyModule---" + exception.getMessage());
+    }
+
+    return time;
+  }
+
   public boolean isGpsLocated() {
     return mIsGpsLocated;
   }

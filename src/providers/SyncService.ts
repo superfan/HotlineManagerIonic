@@ -119,7 +119,7 @@ export abstract class SyncService {
             }).then(result => this.dbService.saveTask(task));
           } else { // send to the server and save to local db
             return this.uploadService.accept(acceptInfo)
-              .catch(error => console.error(error))
+              //.catch(error => console.error(error))
               .then(result => this.dbService.saveHistory({
                 userId: acceptInfo.userId,
                 taskId: acceptInfo.taskId,
@@ -165,7 +165,7 @@ export abstract class SyncService {
             }).then(result => this.dbService.saveTask(task));
           } else { // send to the server and save to local db
             return this.uploadService.go(goInfo)
-              .catch(error => console.error(error))
+              //.catch(error => console.error(error))
               .then((result) => this.dbService.saveHistory({
                 userId: goInfo.userId,
                 taskId: goInfo.taskId,
@@ -211,7 +211,7 @@ export abstract class SyncService {
             }).then(result => this.dbService.saveTask(task));
           } else { // send to the server and save to local db
             return this.uploadService.arrive(arriveInfo)
-              .catch(error => console.error(error))
+              //.catch(error => console.error(error))
               .then((result) => this.dbService.saveHistory({
                 userId: arriveInfo.userId,
                 taskId: arriveInfo.taskId,
@@ -227,7 +227,7 @@ export abstract class SyncService {
   }
 
   /**
-   *
+   * 回复
    * @param replyInfo
    * @param task
    * @param taskDetail
@@ -309,7 +309,7 @@ export abstract class SyncService {
             }).then(result => this.dbService.saveTask(task));
           } else { // send to the server and save to local db
             return this.uploadService.reject(rejectInfo)
-              .catch(error => console.error(error))
+              //.catch(error => console.error(error))
               .then((result) => this.dbService.saveHistory({
                 userId: rejectInfo.userId,
                 taskId: rejectInfo.taskId,
@@ -355,7 +355,7 @@ export abstract class SyncService {
             }).then(result => this.dbService.saveTask(task));
           } else { // send to the server and save to local db
             return this.uploadService.delay(delayInfo)
-              .catch(error => console.error(error))
+              //.catch(error => console.error(error))
               .then((result) => this.dbService.saveHistory({
                 userId: delayInfo.userId,
                 taskId: delayInfo.taskId,
@@ -401,7 +401,7 @@ export abstract class SyncService {
             }).then(result => this.dbService.saveTask(task));
           } else { // send to the server and save to local db
             return this.uploadService.cancel(cancelInfo)
-              .catch(error => console.error(error))
+              //.catch(error => console.error(error))
               .then((result) => this.dbService.saveHistory({
                 userId: cancelInfo.userId,
                 taskId: cancelInfo.taskId,

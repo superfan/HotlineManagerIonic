@@ -26,6 +26,7 @@ import com.sh3h.ipc.IMainService;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.Date;
 import java.util.List;
 
 public class MainApplication extends Application {
@@ -86,6 +87,21 @@ public class MainApplication extends Application {
       Log.e(TAG, "---setMyModule---" + exception.getMessage());
     }
   }
+
+  public long getCurrentTime() {
+    long time = new Date().getTime();
+    try {
+      if (mainService != null) {
+        time += mainService.getCurrentTime();
+      }
+    } catch (RemoteException exception) {
+      exception.printStackTrace();
+      Log.e(TAG, "---setMyModule---" + exception.getMessage());
+    }
+
+    return time;
+  }
+
 
   public boolean isGpsLocated() {
     return mIsGpsLocated;
