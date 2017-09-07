@@ -24,6 +24,8 @@ public class MyPlugin extends CordovaPlugin {
   private static final String ACTION_GET_PAGE_INTENT = "getPageIntent";
   private static final String ACTION_GET_LOCATION = "getLocation";
   private static final String ACTION_QUIT = "quit";
+  private static final String ACTION_GET_PUSH_MESSAGE = "getPushMessage";
+  private static final String ACTION_GET_CHANGED_INFO = "getChangedInfo";
 
   private static final String ACCOUNT = "account";
   private static final String PASSWORD = "password";
@@ -35,6 +37,9 @@ public class MyPlugin extends CordovaPlugin {
   private static final String PARAMS = "params";
   private static final String ACCESS_TOKEN = "accessToken";
   private static final String EXTENDED_INFO = "extendedInfo";
+
+  private CallbackContext pushMessageCallbackContext;
+  private CallbackContext changedInfoCallbackContext;
 
   @Override
   public boolean execute(String action, final JSONArray args, final CallbackContext callbackContext) throws JSONException {
@@ -57,6 +62,12 @@ public class MyPlugin extends CordovaPlugin {
       PluginResult.Status status = PluginResult.Status.OK;
       String result = "";
       callbackContext.sendPluginResult(new PluginResult(status, result));
+      return true;
+    } else if (ACTION_GET_PUSH_MESSAGE.equals(action)) {
+      pushMessageCallbackContext = callbackContext;
+      return true;
+    } else if (ACTION_GET_CHANGED_INFO.equals(action)) {
+      changedInfoCallbackContext = callbackContext;
       return true;
     }
     return false;
@@ -149,4 +160,23 @@ public class MyPlugin extends CordovaPlugin {
       return "";
     }
   }
+
+  public void sendPushMessage(String message) {
+    try {
+      pushMessageCallbackContext.success(message);
+    } catch (Exception e) {
+      e.printStackTrace();
+      pushMessageCallbackContext.error(e.getMessage());
+    }
+  }
+
+  public void sendChangedInfo(String info) {
+    try {
+      changedInfoCallbackContext.success(info);
+    } catch (Exception e) {
+      e.printStackTrace();
+      changedInfoCallbackContext.error(e.getMessage());
+    }
+  }
+
 }

@@ -68,6 +68,7 @@ public class MyPlugin extends CordovaPlugin {
       return true;
     } else if (ACTION_GET_CHANGED_INFO.equals(action)) {
       changedInfoCallbackContext = callbackContext;
+      return true;
     }
     return false;
   }

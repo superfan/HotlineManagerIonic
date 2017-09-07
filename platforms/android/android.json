@@ -94,7 +94,7 @@
                         },
                         {
                             "xml": "<feature name=\"MyPlugin\"><param name=\"android-package\" value=\"cordova.plugin.MyPlugin.MyPlugin\" /></feature>",
-                            "count": 2
+                            "count": 3
                         }
                     ],
                     "/widget": [
@@ -128,47 +128,47 @@
                     "/*": [
                         {
                             "xml": "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\" />",
-                            "count": 10
+                            "count": 11
                         },
                         {
                             "xml": "<uses-permission android:name=\"android.permission.READ_EXTERNAL_STORAGE\" />",
-                            "count": 7
+                            "count": 8
                         },
                         {
                             "xml": "<uses-permission android:name=\"android.permission.RECORD_AUDIO\" />",
-                            "count": 7
+                            "count": 8
                         },
                         {
                             "xml": "<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\" />",
-                            "count": 6
-                        },
-                        {
-                            "xml": "<uses-permission android:name=\"android.permission.READ_PHONE_STATE\" />",
-                            "count": 6
-                        },
-                        {
-                            "xml": "<uses-permission android:name=\"android.permission.RECORD_VIDEO\" />",
-                            "count": 6
-                        },
-                        {
-                            "xml": "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />",
                             "count": 7
                         },
                         {
+                            "xml": "<uses-permission android:name=\"android.permission.READ_PHONE_STATE\" />",
+                            "count": 7
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.RECORD_VIDEO\" />",
+                            "count": 7
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />",
+                            "count": 8
+                        },
+                        {
                             "xml": "<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\" />",
-                            "count": 6
+                            "count": 7
                         },
                         {
                             "xml": "<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\" />",
-                            "count": 6
+                            "count": 7
                         },
                         {
                             "xml": "<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\" />",
-                            "count": 6
+                            "count": 7
                         },
                         {
                             "xml": "<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\" />",
-                            "count": 6
+                            "count": 7
                         },
                         {
                             "xml": "<uses-permission android:name=\"android.permission.READ_PHONE_STATE\" />",
@@ -176,15 +176,15 @@
                         },
                         {
                             "xml": "<uses-permission android:name=\"android.permission.INTERNET\" />",
-                            "count": 6
+                            "count": 7
                         },
                         {
                             "xml": "<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\" />",
-                            "count": 6
+                            "count": 7
                         },
                         {
                             "xml": "<uses-permission android:name=\"android.permission.CAMERA\" />",
-                            "count": 5
+                            "count": 6
                         }
                     ]
                 }

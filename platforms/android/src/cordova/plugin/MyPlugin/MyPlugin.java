@@ -68,6 +68,7 @@ public class MyPlugin extends CordovaPlugin {
       return true;
     } else if (ACTION_GET_CHANGED_INFO.equals(action)) {
       changedInfoCallbackContext = callbackContext;
+      return true;
     }
     return false;
   }
@@ -162,7 +163,9 @@ public class MyPlugin extends CordovaPlugin {
 
   public void sendPushMessage(String message) {
     try {
-      pushMessageCallbackContext.success(message);
+      PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, message);
+      pluginResult.setKeepCallback(true);
+      pushMessageCallbackContext.sendPluginResult(pluginResult);
     } catch (Exception e) {
       e.printStackTrace();
       pushMessageCallbackContext.error(e.getMessage());
@@ -171,7 +174,9 @@ public class MyPlugin extends CordovaPlugin {
 
   public void sendChangedInfo(String info) {
     try {
-      changedInfoCallbackContext.success(info);
+      PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, info);
+      pluginResult.setKeepCallback(true);
+      pushMessageCallbackContext.sendPluginResult(pluginResult);
     } catch (Exception e) {
       e.printStackTrace();
       changedInfoCallbackContext.error(e.getMessage());

@@ -5,7 +5,9 @@ import {MapPage} from "../map/map";
 import {SearchPage} from "../search/search";
 import {StationWorkPage} from "../stationwork/stationwork";
 import {MorePage} from "../more/more";
-import {MyPlugin} from "@ionic-native/my-plugin";
+// import {MyPlugin} from "@ionic-native/my-plugin";
+import {GlobalService} from "../../providers/GlobalService";
+declare let cordova: any;
 
 interface TabInfo {
   title: string;
@@ -33,18 +35,28 @@ export class TabsPage implements OnInit, OnDestroy {
 
   tabsInfo: TabInfo[];
 
-  constructor(private myPlugin: MyPlugin) {
+  constructor(private globalService: GlobalService) {
     this.tabsInfo = this.workerTabsInfo;
   }
 
   ngOnInit(): void {
-    this.myPlugin.getPushMessage()
-      .then(message => console.log(message))
-      .catch(error => console.error(error));
+    if (!this.globalService.isChrome) {
+      cordova.plugins.MyPlugin.getPushMessage(
+        function (data) {
+          console.log(data);
+        },
+        function (error) {
+          console.error(error);
+        }
+      );
 
-    this.myPlugin.getChangedInfo()
-      .then(info => console.log(info))
-      .catch(error => console.error(error));
+      //   .then(message => console.log(message))
+      //   .catch(error => console.error(error));
+      //
+      // cordova.plugins.MyPlugin.getChangedInfo()
+      //   .then(info => console.log(info))
+      //   .catch(error => console.error(error));
+    }
   }
 
   ngOnDestroy(): void {

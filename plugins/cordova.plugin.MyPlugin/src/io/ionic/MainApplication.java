@@ -16,6 +16,7 @@ import android.os.Message;
 import android.os.Process;
 import android.os.RemoteException;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.sh3h.ipc.IRemoteServiceCallback;
@@ -26,9 +27,19 @@ import com.sh3h.ipc.IMainService;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.Date;
 import java.util.List;
 
+
 public class MainApplication extends Application {
+  public interface OnAidlListener {
+    void handlePushMessage(String message);
+    void clearCache();
+    void restoreFactory();
+    void handlePhotoQuality(String info);
+    void handleOuterNetwork(String info);
+  }
+
   private static final String TAG = "MainApplication";
   private static final String HOST_SERVICE_NAME = "com.sh3h.mainshell.service.HostService";
   private static final String BINDING_NAME = "bindingName";
@@ -37,6 +48,7 @@ public class MainApplication extends Application {
   private boolean mIsGpsLocated;
   private MyLocation mMyLocation;
   private Bundle mBundle;
+  private OnAidlListener mOnAidlListener;
 
   @Override
   public void onCreate() {
@@ -52,6 +64,14 @@ public class MainApplication extends Application {
 
   public Bundle getBundle() {
     return mBundle;
+  }
+
+  public void registerOnAidlListener(OnAidlListener onAidlListener) {
+    mOnAidlListener = onAidlListener;
+  }
+
+  public void unregisterOnAidlListener(OnAidlListener onAidlListener) {
+    mOnAidlListener = null;
   }
 
   public void bindHostService() {
@@ -100,6 +120,7 @@ public class MainApplication extends Application {
 
     return time;
   }
+
 
   public boolean isGpsLocated() {
     return mIsGpsLocated;
@@ -167,6 +188,11 @@ public class MainApplication extends Application {
   private static final int MY_MSG_LOCATION = 1;
   private static final int MY_MSG_MODULE = 2;
   private static final int MY_MSG_EXIT = 3;
+  private static final int MY_MSG_PUSH = 4;
+  private static final int MY_MSG_CLEAR_CACHE = 5;
+  private static final int MY_MSG_RESTORE_FACTORY = 6;
+  private static final int MY_MSG_PHOTO_QUALITY = 7;
+  private static final int MY_MSG_NETWORK_CHANGED = 8;
   private Handler mHandler = new MyHandler(this);
 
   private static class MyHandler extends Handler {
@@ -236,6 +262,14 @@ public class MainApplication extends Application {
           if (str.startsWith(MyModule.MQTT) && str.contains(MyModule.SEPARATOR)) {
             int index = str.indexOf(MyModule.SEPARATOR);
             parseMqtt(str.substring(index + 1));
+          } else if (str.startsWith(MyModule.CLEAR_CACHE)) {
+            clearCache();
+          } else if (str.startsWith(MyModule.RESTORE_FACTORY)) {
+            restoreFactory();
+          } else if (str.startsWith(MyModule.PHOTO_QUALITY)) {
+            handlePhotoQuality(str);
+          } else if (str.startsWith(MyModule.OUTER_NETWORK)) {
+            handleOuterNetwork(str);
           }
         }
       } catch (Exception e) {
@@ -258,8 +292,11 @@ public class MainApplication extends Application {
         return;
       }
 
-      int type = jsonObject.optInt(messageType);
-      JSONArray jsonArray = jsonObject.optJSONArray(messageContent);
+      if (mMainApplication.mOnAidlListener != null) {
+        mMainApplication.mOnAidlListener.handlePushMessage(info);
+      }
+      //int type = jsonObject.optInt(messageType);
+      //JSONArray jsonArray = jsonObject.optJSONArray(messageContent);
 //      Observable<Boolean> observable =
 //        mMainApplication.mDataManager.saveMessage(type == newTask, jsonArray);
 //      if (observable == null) {
@@ -283,6 +320,30 @@ public class MainApplication extends Application {
 //            LogUtil.i(TAG, "parseMqtt onNext:" + aBoolean);
 //          }
 //        });
+    }
+
+    private void clearCache() {
+      if (mMainApplication.mOnAidlListener != null) {
+        mMainApplication.mOnAidlListener.clearCache();
+      }
+    }
+
+    private void restoreFactory() {
+      if (mMainApplication.mOnAidlListener != null) {
+        mMainApplication.mOnAidlListener.restoreFactory();
+      }
+    }
+
+    private void handlePhotoQuality(String info) {
+      if (mMainApplication.mOnAidlListener != null && !isNullOrEmpty(info)) {
+        mMainApplication.mOnAidlListener.handlePhotoQuality(info);
+      }
+    }
+
+    private void handleOuterNetwork(String info) {
+      if (mMainApplication.mOnAidlListener != null && !isNullOrEmpty(info)) {
+        mMainApplication.mOnAidlListener.handleOuterNetwork(info);
+      }
     }
   }
 
