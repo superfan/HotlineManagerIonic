@@ -26,10 +26,15 @@ import android.view.KeyEvent;
 
 import org.apache.cordova.*;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import cordova.plugin.MyPlugin.MyPlugin;
 import io.ionic.MainApplication;
 
 
-public class MainActivity extends CordovaActivity {
+public class MainActivity extends CordovaActivity implements MainApplication.OnAidlListener {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -57,6 +62,7 @@ public class MainActivity extends CordovaActivity {
     }
 
     mainApplication.bindHostService();
+    mainApplication.registerOnAidlListener(this);
   }
 
   @Override
@@ -64,11 +70,51 @@ public class MainActivity extends CordovaActivity {
     Log.i("MainActivity","onNewIntent");
     MainApplication mainApplication = ((MainApplication)getApplication());
     mainApplication.setBundle(intent.getExtras());
+    mainApplication.registerOnAidlListener(this);
   }
 
   @Override
   protected void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     Log.i(TAG, "---onSaveInstanceState---");
+  }
+
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    MainApplication mainApplication = ((MainApplication)getApplication());
+    mainApplication.unregisterOnAidlListener(this);
+  }
+
+  public void handlePushMessage(String message) {
+    PluginManager pluginManager = appView.getPluginManager();
+    CordovaPlugin cordovaPlugin = pluginManager.getPlugin("MyPlugin");
+    if (cordovaPlugin instanceof MyPlugin) {
+      ((MyPlugin)cordovaPlugin).sendPushMessage(message);
+    }
+  }
+
+  public void clearCache() {
+
+  }
+
+  public void restoreFactory() {
+
+  }
+
+  public void handlePhotoQuality(String info) {
+    sendChangedInfo(info);
+  }
+
+  public void handleOuterNetwork(String info) {
+    sendChangedInfo(info);
+  }
+
+  private void sendChangedInfo(String info) {
+    PluginManager pluginManager = appView.getPluginManager();
+    CordovaPlugin cordovaPlugin = pluginManager.getPlugin("MyPlugin");
+    if (cordovaPlugin instanceof MyPlugin) {
+      ((MyPlugin)cordovaPlugin).sendChangedInfo(info);
+    }
   }
 }

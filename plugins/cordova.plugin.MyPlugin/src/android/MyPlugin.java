@@ -34,6 +34,7 @@ public class MyPlugin extends CordovaPlugin {
   private static final String ROLES = "roles";
   private static final String PARAMS = "params";
   private static final String ACCESS_TOKEN = "accessToken";
+  private static final String EXTENDED_INFO = "extendedInfo";
 
   @Override
   public boolean execute(String action, final JSONArray args, final CallbackContext callbackContext) throws JSONException {
@@ -66,7 +67,7 @@ public class MyPlugin extends CordovaPlugin {
       MainApplication mainApplication = (MainApplication) cordova.getActivity().getApplication();
       Bundle bundle = mainApplication.getBundle();
 
-      String account, password, userName, department, roles, params, accessToken;
+      String account, password, userName, department, roles, params, accessToken, extendedInfo;
       int userId, departmentId;
 
       if (bundle != null) {
@@ -79,6 +80,7 @@ public class MyPlugin extends CordovaPlugin {
         roles = getString(bundle.getString(ROLES));
         params = getString(bundle.getString(PARAMS));
         accessToken = getString(bundle.getString(ACCESS_TOKEN));
+        extendedInfo = getString(bundle.getString(EXTENDED_INFO));
       } else {
         account = "ss1";
         password = "0000";
@@ -89,13 +91,15 @@ public class MyPlugin extends CordovaPlugin {
         roles = "worker";
         params = "MyWorkPage";
         accessToken = getUUID(mainApplication);
+        extendedInfo = "";
       }
 
-      Log.i("MyPlugin", "account:" + account + ", userId:" + userId + ", userName:" + userName + ", department:" + department
-        + ", roles:" + roles + ", params:" + params + ", bundle: " + (bundle != null));
+      Log.i("MyPlugin", "account:" + account + ", userId:" + userId + ", userName:" + userName
+        + ", department:" + department + ", roles:" + roles + ", params:" + params
+        + ", bundle: " + (bundle != null) + ", extendedInfo: " + extendedInfo);
 
       PageIntent pageIntent = new PageIntent(account, password, userId, userName,
-        (department != null ? department : "") + "#" + departmentId, roles, params, accessToken, "");
+        (department != null ? department : "") + "#" + departmentId, roles, params, accessToken, extendedInfo);
       callbackContext.success(pageIntent.toJson());
     } catch (Exception e) {
       e.printStackTrace();

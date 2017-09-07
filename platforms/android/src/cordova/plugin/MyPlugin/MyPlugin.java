@@ -24,6 +24,8 @@ public class MyPlugin extends CordovaPlugin {
   private static final String ACTION_GET_PAGE_INTENT = "getPageIntent";
   private static final String ACTION_GET_LOCATION = "getLocation";
   private static final String ACTION_QUIT = "quit";
+  private static final String ACTION_GET_PUSH_MESSAGE = "getPushMessage";
+  private static final String ACTION_GET_CHANGED_INFO = "getChangedInfo";
 
   private static final String ACCOUNT = "account";
   private static final String PASSWORD = "password";
@@ -34,6 +36,10 @@ public class MyPlugin extends CordovaPlugin {
   private static final String ROLES = "roles";
   private static final String PARAMS = "params";
   private static final String ACCESS_TOKEN = "accessToken";
+  private static final String EXTENDED_INFO = "extendedInfo";
+
+  private CallbackContext pushMessageCallbackContext;
+  private CallbackContext changedInfoCallbackContext;
 
   @Override
   public boolean execute(String action, final JSONArray args, final CallbackContext callbackContext) throws JSONException {
@@ -57,6 +63,11 @@ public class MyPlugin extends CordovaPlugin {
       String result = "";
       callbackContext.sendPluginResult(new PluginResult(status, result));
       return true;
+    } else if (ACTION_GET_PUSH_MESSAGE.equals(action)) {
+      pushMessageCallbackContext = callbackContext;
+      return true;
+    } else if (ACTION_GET_CHANGED_INFO.equals(action)) {
+      changedInfoCallbackContext = callbackContext;
     }
     return false;
   }
@@ -66,7 +77,7 @@ public class MyPlugin extends CordovaPlugin {
       MainApplication mainApplication = (MainApplication) cordova.getActivity().getApplication();
       Bundle bundle = mainApplication.getBundle();
 
-      String account, password, userName, department, roles, params, accessToken;
+      String account, password, userName, department, roles, params, accessToken, extendedInfo;
       int userId, departmentId;
 
       if (bundle != null) {
@@ -79,6 +90,7 @@ public class MyPlugin extends CordovaPlugin {
         roles = getString(bundle.getString(ROLES));
         params = getString(bundle.getString(PARAMS));
         accessToken = getString(bundle.getString(ACCESS_TOKEN));
+        extendedInfo = getString(bundle.getString(EXTENDED_INFO));
       } else {
         account = "ss1";
         password = "0000";
@@ -89,13 +101,15 @@ public class MyPlugin extends CordovaPlugin {
         roles = "worker";
         params = "MyWorkPage";
         accessToken = getUUID(mainApplication);
+        extendedInfo = "";
       }
 
-      Log.i("MyPlugin", "account:" + account + ", userId:" + userId + ", userName:" + userName + ", department:" + department
-        + ", roles:" + roles + ", params:" + params + ", bundle: " + (bundle != null));
+      Log.i("MyPlugin", "account:" + account + ", userId:" + userId + ", userName:" + userName
+        + ", department:" + department + ", roles:" + roles + ", params:" + params
+        + ", bundle: " + (bundle != null) + ", extendedInfo: " + extendedInfo);
 
       PageIntent pageIntent = new PageIntent(account, password, userId, userName,
-        (department != null ? department : "") + "#" + departmentId, roles, params, accessToken, "");
+        (department != null ? department : "") + "#" + departmentId, roles, params, accessToken, extendedInfo);
       callbackContext.success(pageIntent.toJson());
     } catch (Exception e) {
       e.printStackTrace();
@@ -145,4 +159,23 @@ public class MyPlugin extends CordovaPlugin {
       return "";
     }
   }
+
+  public void sendPushMessage(String message) {
+    try {
+      pushMessageCallbackContext.success(message);
+    } catch (Exception e) {
+      e.printStackTrace();
+      pushMessageCallbackContext.error(e.getMessage());
+    }
+  }
+
+  public void sendChangedInfo(String info) {
+    try {
+      changedInfoCallbackContext.success(info);
+    } catch (Exception e) {
+      e.printStackTrace();
+      changedInfoCallbackContext.error(e.getMessage());
+    }
+  }
+
 }

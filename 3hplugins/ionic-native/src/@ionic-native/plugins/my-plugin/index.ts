@@ -85,4 +85,20 @@ export class MyPlugin extends IonicNativePlugin {
   quit(): Promise<any> {
     return; // We add return; here to avoid any IDE / Compiler errors
   }
+
+  /**
+   * 获取推送消息
+   */
+  @Cordova()
+  getPushMessage(): Promise<any> {
+    return; // We add return; here to avoid any IDE / Compiler errors
+  }
+
+  /**
+   * 获取变化信息(如：设置)
+   */
+  @Cordova()
+  getChangedInfo(): Promise<any> {
+    return; // We add return; here to avoid any IDE / Compiler errors
+  }
 }

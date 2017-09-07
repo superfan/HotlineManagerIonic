@@ -12,6 +12,7 @@ import {MaterialsPage} from "../pages/materials/materials";
 import {SettingPage} from "../pages/setting/setting";
 import {MyWorkPage} from "../pages/mywork/mywork";
 import {DataService} from "../providers/DataService";
+import {ConfigService} from "../providers/ConfigService";
 
 @Injectable()
 export class AppComponentService {
@@ -19,7 +20,8 @@ export class AppComponentService {
               private globalService: GlobalService,
               private fileService: FileService,
               private dataService: DataService,
-              private myPlugin: MyPlugin) {
+              private myPlugin: MyPlugin,
+              private configService: ConfigService) {
   }
 
   /**
@@ -88,7 +90,19 @@ export class AppComponentService {
           pageIntent = MyPluginMock.pageIntent;
         }
 
-        return this.setUserDetailInfo(pageIntent)
+
+        return this.getExtendedInfo(pageIntent.extendedInfo)
+          .then(extendedInfo => {
+            if (extendedInfo
+              && extendedInfo.hasOwnProperty("network")
+              && extendedInfo['network'] !== undefined
+              && extendedInfo['network'] !== null) {
+              return this.configService.setIsOuterNet(extendedInfo['network']);
+            } else {
+              return Promise.resolve(true);
+            }
+          })
+          .then(() => this.setUserDetailInfo(pageIntent))
           .then(result => {
             let params: string[] = pageIntent.params.split('#');
             let page: any;
@@ -159,5 +173,18 @@ export class AppComponentService {
           departmentId: 0
         }));
       });
+  }
+
+  private getExtendedInfo(extendedInfo: string): Promise<any> {
+    let info: any;
+    try {
+      if (extendedInfo) {
+        info = JSON.parse(extendedInfo);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+
+    return Promise.resolve(info);
   }
 }

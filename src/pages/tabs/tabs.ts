@@ -1,10 +1,11 @@
-import {Component} from "@angular/core";
+import {Component, OnInit, OnDestroy} from "@angular/core";
 import {MyWorkPage} from "../mywork/mywork";
 import {MyHistory} from "../history/myhistory";
 import {MapPage} from "../map/map";
 import {SearchPage} from "../search/search";
 import {StationWorkPage} from "../stationwork/stationwork";
 import {MorePage} from "../more/more";
+import {MyPlugin} from "@ionic-native/my-plugin";
 
 interface TabInfo {
   title: string;
@@ -15,7 +16,7 @@ interface TabInfo {
 @Component({
   templateUrl: 'tabs.html'
 })
-export class TabsPage {
+export class TabsPage implements OnInit, OnDestroy {
   workerTabsInfo: TabInfo[] = [
     {title: '我的任务', icon: 'home', page: MyWorkPage},
     {title: '历史记录', icon: 'document', page: MyHistory},
@@ -32,7 +33,22 @@ export class TabsPage {
 
   tabsInfo: TabInfo[];
 
-  constructor() {
+  constructor(private myPlugin: MyPlugin) {
     this.tabsInfo = this.workerTabsInfo;
   }
+
+  ngOnInit(): void {
+    this.myPlugin.getPushMessage()
+      .then(message => console.log(message))
+      .catch(error => console.error(error));
+
+    this.myPlugin.getChangedInfo()
+      .then(info => console.log(info))
+      .catch(error => console.error(error));
+  }
+
+  ngOnDestroy(): void {
+
+  }
+
 }
