@@ -176,7 +176,7 @@ public class MyPlugin extends CordovaPlugin {
     try {
       PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, info);
       pluginResult.setKeepCallback(true);
-      pushMessageCallbackContext.sendPluginResult(pluginResult);
+      changedInfoCallbackContext.sendPluginResult(pluginResult);
     } catch (Exception e) {
       e.printStackTrace();
       changedInfoCallbackContext.error(e.getMessage());

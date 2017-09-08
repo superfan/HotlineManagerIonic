@@ -57,13 +57,7 @@ MyApi.prototype.quit = function (success, fail) {
 };
 
 MyApi.prototype.getPushMessage = function (success, fail) {
-  return getPromisedCordovaExec('getPushMessage',
-    function(data) {
-      success && success(data);
-    },
-    function(error) {
-      fail && fail(error);
-    });
+  return getPromisedCordovaExec('getPushMessage', success, fail);
 };
 
 MyApi.prototype.getChangedInfo = function (success, fail) {

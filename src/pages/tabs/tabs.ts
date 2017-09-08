@@ -7,6 +7,7 @@ import {StationWorkPage} from "../stationwork/stationwork";
 import {MorePage} from "../more/more";
 // import {MyPlugin} from "@ionic-native/my-plugin";
 import {GlobalService} from "../../providers/GlobalService";
+import {ConfigService} from "../../providers/ConfigService";
 declare let cordova: any;
 
 interface TabInfo {
@@ -35,7 +36,8 @@ export class TabsPage implements OnInit, OnDestroy {
 
   tabsInfo: TabInfo[];
 
-  constructor(private globalService: GlobalService) {
+  constructor(private globalService: GlobalService,
+              private configService: ConfigService) {
     this.tabsInfo = this.workerTabsInfo;
   }
 
@@ -50,12 +52,20 @@ export class TabsPage implements OnInit, OnDestroy {
         }
       );
 
-      //   .then(message => console.log(message))
-      //   .catch(error => console.error(error));
-      //
-      // cordova.plugins.MyPlugin.getChangedInfo()
-      //   .then(info => console.log(info))
-      //   .catch(error => console.error(error));
+      cordova.plugins.MyPlugin.getChangedInfo(
+        function (data) {
+          console.log(data);
+          if (data) {
+            let values: string[] = data.split('#');
+            if (values[0] === 'outerNetwork' && values[1]) {
+              this.configService.setIsOuterNet(values[1] === 'true');
+            }
+          }
+        },
+        function (error) {
+          console.error(error);
+        }
+      );
     }
   }
 
