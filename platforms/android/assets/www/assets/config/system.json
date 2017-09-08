@@ -1,8 +1,8 @@
 {
-  "server.outer.baseuri": "http://128.1.2.184:8174/api/",
-  "server.inner.baseuri": "http://128.1.2.184:8174/api/",
-  "server.materials.outer.baseuri": "http://128.1.2.184:8175/api/",
-  "server.materials.inner.baseuri": "http://128.1.2.184:8175/api/",
+  "server.outer.baseuri": "http://221.203.76.12:8009/api/",
+  "server.inner.baseuri": "http://172.16.50.118:8009/api/",
+  "server.materials.outer.baseuri": "http://221.203.76.12:8097/api/",
+  "server.materials.inner.baseuri": "http://172.16.50.118:8097/api/",
   "sys.connect.outer.network": true,
   "sys.grid.style": true,
   "sys.debug.mode": true,
