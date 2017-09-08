@@ -66,6 +66,9 @@
     <feature name="BaiduMapLocation">
         <param name="android-package" value="com.aruistar.cordova.baidumap.BaiduMapLocation" />
     </feature>
+    <feature name="MyPlugin">
+        <param name="android-package" value="cordova.plugin.MyPlugin.MyPlugin" />
+    </feature>
     <feature name="Zip">
         <param name="android-package" value="org.apache.cordova.Zip" />
     </feature>
@@ -112,7 +115,4 @@
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashScreenDelay" value="3000" />
     <preference name="loadUrlTimeoutValue" value="70000" />
-    <feature name="MyPlugin">
-        <param name="android-package" value="cordova.plugin.MyPlugin.MyPlugin" />
-    </feature>
 </widget>

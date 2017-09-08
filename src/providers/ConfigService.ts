@@ -319,26 +319,35 @@ export class ConfigService {
    * @returns {any}
    */
   public setIsOuterNet(isOuterNet: boolean): Promise<boolean> {
-    if (ConfigService.isValid<SystemConfig>(this.systemConfig, 'isOuterNetwork')) {
-      return new Promise((resolve, reject) => {
-        let systemConfig: SystemConfig = Object.create(this.systemConfig);
-        systemConfig.isOuterNetwork = isOuterNet;
-        this.writeSystemConfig(systemConfig)
-          .then(result => {
-            if (result) {
-              this.systemConfig.isOuterNetwork = isOuterNet;
-              this.systemConfig.serverBaseUri = this.systemConfig.isOuterNetwork ?
-                this.systemConfig.outerBaseUri : this.systemConfig.innerBaseUri;
-              this.systemConfig.materialsBaseUri = this.systemConfig.isOuterNetwork ?
-                this.systemConfig.materialsOuterBaseUri : this.systemConfig.materialsInnerBaseUri;
-            }
-            resolve(!!result);
-          })
-          .catch(error => reject(error));
-      });
+    let promise: Promise<any>;
+    if (!this.systemConfig) {
+      promise = this.readSystemConfig().then(data => this.systemConfig = data as SystemConfig)
     } else {
-      return Promise.reject('sysytemConfig has no data');
+      promise = Promise.resolve();
     }
+
+    return promise.then(() => {
+      if (ConfigService.isValid<SystemConfig>(this.systemConfig, 'isOuterNetwork')) {
+        return new Promise((resolve, reject) => {
+          let systemConfig: SystemConfig = Object.create(this.systemConfig);
+          systemConfig.isOuterNetwork = isOuterNet;
+          this.writeSystemConfig(systemConfig)
+            .then(result => {
+              if (result) {
+                this.systemConfig.isOuterNetwork = isOuterNet;
+                this.systemConfig.serverBaseUri = this.systemConfig.isOuterNetwork ?
+                  this.systemConfig.outerBaseUri : this.systemConfig.innerBaseUri;
+                this.systemConfig.materialsBaseUri = this.systemConfig.isOuterNetwork ?
+                  this.systemConfig.materialsOuterBaseUri : this.systemConfig.materialsInnerBaseUri;
+              }
+              resolve(!!result);
+            })
+            .catch(error => reject(error));
+        });
+      } else {
+        return Promise.reject('sysytemConfig has no data');
+      }
+    });
   }
 
   /**

@@ -43,6 +43,7 @@ export class TabsPage implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (!this.globalService.isChrome) {
+      let _this = this;
       cordova.plugins.MyPlugin.getPushMessage(
         function (data) {
           console.log(data);
@@ -58,7 +59,7 @@ export class TabsPage implements OnInit, OnDestroy {
           if (data) {
             let values: string[] = data.split('#');
             if (values[0] === 'outerNetwork' && values[1]) {
-              this.configService.setIsOuterNet(values[1] === 'true');
+              _this.configService.setIsOuterNet(values[1] === 'true');
             }
           }
         },

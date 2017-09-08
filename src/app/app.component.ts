@@ -28,7 +28,7 @@ export class MyApp {
         splashScreen.hide();
         return appComponentService.init();
       })
-      .then(page => console.log(page))
+      .then(result => console.log(result))
       .catch(error => {
         console.error(error);
         this.globalService.showToast(error);

@@ -23,7 +23,7 @@ export class MyPluginMock extends MyPlugin {
   public static pageIntent: PageIntent = {
     account: '123456',
     password: '0000',
-    userId: 3,
+    userId: 0,
     userName: 'ss1',
     departmentAndId: '上水#1',
     roles: 'worker',
@@ -59,7 +59,7 @@ export class GlobalService {
   readonly uploadedFlagForUploaded: number = 2;
   account: string = "admin";
   userName: string = "admin";
-  userId: number = 1;
+  userId: number = 0;
   department: string = "上海三高";
   departmentId: number = 1;
   isWorker: boolean = false;//是否是外勤人员

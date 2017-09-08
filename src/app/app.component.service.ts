@@ -32,18 +32,18 @@ export class AppComponentService {
     if (this.globalService.isChrome) {
       this.myPlugin = this.globalService.getMyPluginMock();
       return this.dataService.init()
+        .then(result => this.parsePageIntent())
         .then(result => this.dataService.downloadWords())
-        .then(result => this.dataService.downloadMaterials())
+        .then(result => this.dataService.downloadMaterials());
         //.then(result => this.dataService.downloadPersonnels())
-        .then(result => this.parsePageIntent());
     } else {
       return this.checkPermissions()
         .then(result => this.fileService.createDirRoot())
         .then(result => this.dataService.init())
+        .then(result => this.parsePageIntent())
         .then(result => this.dataService.checkIfDownloadWords())
-        .then(result => this.dataService.checkIfDownloadMaterials())
+        .then(result => this.dataService.checkIfDownloadMaterials());
         //.then(result => this.dataService.checkIfDownloadPersonnels())
-        .then(result => this.parsePageIntent());
     }
   }
 
@@ -89,7 +89,6 @@ export class AppComponentService {
           || pageIntent.params.length <= 0) {
           pageIntent = MyPluginMock.pageIntent;
         }
-
 
         return this.getExtendedInfo(pageIntent.extendedInfo)
           .then(extendedInfo => {
@@ -148,7 +147,7 @@ export class AppComponentService {
       .then(userDetailInfo => {
         // userId passed from main shell is not same as saved id
         // it will be changed in future
-        pageIntent.userId = userDetailInfo.userId;
+        //pageIntent.userId = userDetailInfo.userId;
 
         if (pageIntent.account === userDetailInfo.account
           && pageIntent.userId === userDetailInfo.userId
@@ -171,7 +170,12 @@ export class AppComponentService {
           roles: pageIntent.roles,
           department: userResult.Department,
           departmentId: 0
-        }));
+        })).catch(error => {
+          console.error(error);
+          this.globalService.account = pageIntent.account;
+          this.globalService.userId = pageIntent.userId;
+          this.globalService.userName = pageIntent.userName;
+        });
       });
   }
 

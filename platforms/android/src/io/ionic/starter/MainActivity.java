@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 
 import org.apache.cordova.*;
+import org.json.JSONObject;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -71,6 +72,7 @@ public class MainActivity extends CordovaActivity implements MainApplication.OnA
     MainApplication mainApplication = ((MainApplication)getApplication());
     mainApplication.setBundle(intent.getExtras());
     mainApplication.registerOnAidlListener(this);
+    notify(intent.getExtras());
   }
 
   @Override
@@ -115,6 +117,32 @@ public class MainActivity extends CordovaActivity implements MainApplication.OnA
     CordovaPlugin cordovaPlugin = pluginManager.getPlugin("MyPlugin");
     if (cordovaPlugin instanceof MyPlugin) {
       ((MyPlugin)cordovaPlugin).sendChangedInfo(info);
+    }
+  }
+
+  private void notify(Bundle bundle) {
+    try {
+      if (bundle == null) {
+        return;
+      }
+
+      String extendedInfo = bundle.getString("extendedInfo");
+      if (extendedInfo == null || extendedInfo.equals("")) {
+        return;
+      }
+
+      JSONObject jsonObject = new JSONObject(extendedInfo);
+      if (!jsonObject.isNull("photoQuality")) {
+        String value = jsonObject.getString("photoQuality");
+        sendChangedInfo("photoQuality#" + value);
+      }
+      if (!jsonObject.isNull("network")) {
+        boolean value = jsonObject.getBoolean("network");
+        sendChangedInfo("outerNetwork#" + value);
+      }
+
+    } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 }

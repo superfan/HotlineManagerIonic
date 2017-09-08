@@ -22,11 +22,10 @@ import {MaintainInfo} from "../model/MaintainInfo";
 
 @Injectable()
 export class DownloadService extends BaseService {
-
-  constructor(private http: Http,
+  constructor(http: Http,
               private configService: ConfigService,
               private globalService: GlobalService) {
-    super();
+    super(http);
   }
 
   /**
@@ -41,7 +40,7 @@ export class DownloadService extends BaseService {
       this.configService.getServerBaseUri()
         .then(data => {
           let url = `${data}wap/v1/mobile/task/user/${userId}/task?taskType=all&completed=0&count=${count}&since=${since}`;
-          return this.http.get(url, this.getOptions())
+          return this.get(url, this.getOptions())
             .toPromise()
             .then(data => {
               let body = data.json();
@@ -74,7 +73,7 @@ export class DownloadService extends BaseService {
       this.configService.getServerBaseUri()
         .then(data => {
           let url = `${data}wap/v1/mobile/hotline/task/${taskId}/detail`;
-          return this.http.get(url, this.getOptions())
+          return this.get(url, this.getOptions())
             .toPromise()
             .then(data => {
               let body = data.json();
@@ -102,7 +101,7 @@ export class DownloadService extends BaseService {
       this.configService.getServerBaseUri()
         .then(data => {
           let url = `${data}wap/v1/mobile/resource/wordNew?group=${group}`;
-          return this.http.get(url, this.getOptions())
+          return this.get(url, this.getOptions())
             .toPromise()
             .then(data => {
               let body = data.json();
@@ -132,7 +131,7 @@ export class DownloadService extends BaseService {
       this.configService.getServerBaseUri()
         .then(data => {
           let url = `${data}wap/v1/mobile/tasksearch/${userId}/unDispatchedTasks?count=${count}&since=${since}`;
-          return this.http.get(url, this.getOptions())
+          return this.get(url, this.getOptions())
             .toPromise()
             .then(data => {
               let body = data.json();
@@ -163,7 +162,7 @@ export class DownloadService extends BaseService {
       this.configService.getServerBaseUri()
         .then(data => {
           let url = `${data}wap/v1/mobile/tasksearch/${userId}/dispatchedTasks/${minutes}?count=${count}&since=${since}`;
-          return this.http.get(url, this.getOptions())
+          return this.get(url, this.getOptions())
             .toPromise()
             .then(data => {
               let body = data.json();
@@ -202,7 +201,7 @@ export class DownloadService extends BaseService {
             request.serialNo + "&taskNo=" + request.taskNo + "&taskState=" + request.taskState +
             "&reportType=" + request.reportType + "&reportPerson=" + request.reportPerson +
             "&sendTime=" + request.sendTime + "&count=10&since=0";
-          return this.http.get(url, this.getOptions())
+          return this.get(url, this.getOptions())
             .toPromise()
             .then(data => {
               console.log("getSearchTasks:" + data)
@@ -242,7 +241,7 @@ export class DownloadService extends BaseService {
             request.serialNo + "&taskNo=" + request.taskNo + "&taskState=" + request.taskState +
             "&reportType=" + request.reportType + "&reportPerson=" + request.reportPerson + "&sendTime=" +
             request.sendTime;
-          return this.http.get(url, this.getOptions())
+          return this.get(url, this.getOptions())
             .toPromise()
             .then(data => {
               console.log("getSearchTaskCounts:" + data)
@@ -271,7 +270,7 @@ export class DownloadService extends BaseService {
       this.configService.getServerBaseUri()
         .then(data => {
           let url = data + "wap/v1/mobile/hotline/task/" + taskId + "/detail";
-          return this.http.get(url, this.getOptions())
+          return this.get(url, this.getOptions())
             .toPromise()
             .then(data => {
               console.log("getSearchTaskDetails" + data)
@@ -299,10 +298,10 @@ export class DownloadService extends BaseService {
       this.configService.getServerBaseUri()
         .then(data => {
           let url = data + "wap/v1/mobile/resource/news/latestd";
-          return this.http.get(url, this.getOptions())
+          return this.get(url, this.getOptions())
             .toPromise()
             .then(data => {
-              console.log("getNews:" + data)
+              console.log("getNews:" + data);
               let body = data.json();
               if (body.Code == this.globalService.httpCode
                 && body.StatusCode === this.globalService.httpSuccessStatusCode
@@ -333,7 +332,7 @@ export class DownloadService extends BaseService {
           } else {
             url = data + "wap/v1/auth/wap/" + user.userName + "/" + user.password + "?appIdentity=cc";
           }
-          return this.http.get(url, this.getOptions())
+          return this.get(url, this.getOptions())
             .toPromise()
             .then(data => {
               console.log("getUserInfo:" + data);
@@ -362,7 +361,7 @@ export class DownloadService extends BaseService {
       this.configService.getServerBaseUri()
         .then(data => {
           let url = `${data}wap/v1/mobile/resource/user/${userId}/getFieldPersonnel`;
-          return this.http.get(url, this.getOptions())
+          return this.get(url, this.getOptions())
             .toPromise()
             .then(data => {
               let body = data.json();
@@ -389,7 +388,7 @@ export class DownloadService extends BaseService {
       this.configService.getServerBaseUri()
         .then(data => {
           let url = data + "wap/v1/mobile/resource/user/hotline/" + userId;
-          return this.http.get(url, this.getOptions())
+          return this.get(url, this.getOptions())
             .toPromise()
             .then(data => {
               console.log("getManagerUserInfo:" + data);
@@ -418,7 +417,7 @@ export class DownloadService extends BaseService {
       this.configService.getServerBaseUri()
         .then(data => {
           let url = data + "wap/v1/mobile/resource/user/" + userId;
-          return this.http.get(url, this.getOptions())
+          return this.get(url, this.getOptions())
             .toPromise()
             .then(data => {
               console.log("getWorkerUserInfo:" + data);
@@ -447,7 +446,7 @@ export class DownloadService extends BaseService {
       this.configService.getServerBaseUri()
         .then(data => {
           let url = `${data}wap/v1/system/update/app/check?version=${version}`;
-          return this.http.get(url, this.getOptions())
+          return this.get(url, this.getOptions())
             .toPromise()
             .then(data => {
               console.log("checkAppVersion:" + data);
@@ -475,7 +474,7 @@ export class DownloadService extends BaseService {
       this.configService.getServerBaseUri()
         .then(data => {
           let url = `${data}wap/v1/system/update/data/check?version=${version}`;
-          return this.http.get(url, this.getOptions())
+          return this.get(url, this.getOptions())
             .toPromise()
             .then(data => {
               console.log("checkDataVersion:" + data);
@@ -504,7 +503,7 @@ export class DownloadService extends BaseService {
       this.configService.getMaterialsBaseUri()
         .then(data => {
           let url = `${data}/wap/v1/material/get/${group}`;
-          return this.http.get(url, this.getOptions())
+          return this.get(url, this.getOptions())
             .toPromise()
             .then(data => {
               let body = data.json();
@@ -531,7 +530,7 @@ export class DownloadService extends BaseService {
       this.configService.getMaterialsBaseUri()
         .then(data => {
           let url = `${data}/wap/v1/materialusage/get/${serialNumber}`;
-          return this.http.get(url, this.getOptions())
+          return this.get(url, this.getOptions())
             .toPromise()
             .then(data => {
               let body = data.json();

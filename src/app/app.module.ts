@@ -20,7 +20,7 @@ import {File} from "@ionic-native/file";
 import {FileService} from "../providers/FileService";
 import {Transfer} from "@ionic-native/transfer";
 import {StorageService} from "../providers/StorageService";
-import {HttpModule, Http, RequestOptions} from "@angular/http";
+import {HttpModule} from "@angular/http";
 import {AppVersion} from "@ionic-native/app-version";
 import {Zip} from "@ionic-native/zip";
 import {ConfigService} from "../providers/ConfigService";
@@ -38,7 +38,7 @@ import {NewsDetailsPage} from "../pages/newsdetails/newsdetails";
 import {SettingPage} from "../pages/setting/setting";
 import {HttpInterceptorBackend} from "../providers/HttpInterceptorBackend";
 import {HttpInterceptor} from "../providers/HttpInterceptor";
-import {httpFactory} from "../providers/httpFactory";
+//import {httpFactory} from "../providers/httpFactory";
 import {SQLite} from "@ionic-native/sqlite";
 import {SQLitePorter} from "@ionic-native/sqlite-porter";
 import {DbService} from "../providers/DbService";
@@ -154,7 +154,7 @@ import {NetworkSetPage} from "../pages/setting/networkset";
     FileTransfer,
     MyPlugin,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    {provide: Http, useFactory: httpFactory, deps: [HttpInterceptorBackend, RequestOptions]},
+    //{provide: Http, useFactory: httpFactory, deps: [HttpInterceptorBackend, RequestOptions]},
   ]
 })
 export class AppModule {

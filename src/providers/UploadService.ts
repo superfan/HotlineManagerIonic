@@ -20,13 +20,13 @@ import {UploadMaterials} from "../model/MaterialsInfo";
 @Injectable()
 export class UploadService extends BaseService {
 
-  constructor(private http: Http,
+  constructor(http: Http,
               private configService: ConfigService,
               private globalService: GlobalService,
               private transfer: FileTransfer,
               private file: File,
               private fileService: FileService) {
-    super();
+    super(http);
   }
 
   /**
@@ -45,7 +45,7 @@ export class UploadService extends BaseService {
             body = body.replace(`#${time}`, '');
           }
           let url = data + "wap/v1/mobile/task/" + taskId + "/accept";
-          return this.http.put(url, body, this.getOptions())
+          return this.put(url, body, this.getOptions())
             .toPromise()
             .then(data => {
               let body = data.json();
@@ -79,7 +79,7 @@ export class UploadService extends BaseService {
             body = body.replace(`#${time}`, '');
           }
           let url = data + "wap/v1/mobile/task/" + taskId + "/go";
-          return this.http.put(url, body, this.getOptions())
+          return this.put(url, body, this.getOptions())
             .toPromise()
             .then(data => {
               let body = data.json();
@@ -113,7 +113,7 @@ export class UploadService extends BaseService {
             body = body.replace(`#${time}`, '');
           }
           let url = data + "wap/v1/mobile/task/" + taskId + "/arrived";
-          return this.http.put(url, body, this.getOptions())
+          return this.put(url, body, this.getOptions())
             .toPromise()
             .then(data => {
               let body = data.json();
@@ -147,7 +147,7 @@ export class UploadService extends BaseService {
             body = body.replace(`#${time}`, '');
           }
           let url = data + "wap/v1/mobile/hotline/task/" + taskId + "/reply";
-          return this.http.post(url, body, this.getOptions())
+          return this.post(url, body, this.getOptions())
             .toPromise()
             .then(data => {
               let body = data.json();
@@ -181,7 +181,7 @@ export class UploadService extends BaseService {
             body = body.replace(`#${time}`, '');
           }
           let url = data + "wap/v1/mobile/task/" + taskId + "/reject";
-          return this.http.put(url, body, this.getOptions())
+          return this.put(url, body, this.getOptions())
             .toPromise()
             .then(data => {
               let body = data.json();
@@ -215,7 +215,7 @@ export class UploadService extends BaseService {
             body = body.replace(`#${time}`, '');
           }
           let url = data + "wap/v1/mobile/task/" + taskId + "/delay";
-          return this.http.put(url, body, this.getOptions())
+          return this.put(url, body, this.getOptions())
             .toPromise()
             .then(data => {
               let body = data.json();
@@ -249,7 +249,7 @@ export class UploadService extends BaseService {
             body = body.replace(`#${time}`, '');
           }
           let url = data + "wap/v1/mobile/task/" + taskId + "/taskXD";
-          return this.http.put(url, body, this.getOptions())
+          return this.put(url, body, this.getOptions())
             .toPromise()
             .then(data => {
               let body = data.json();
@@ -277,7 +277,7 @@ export class UploadService extends BaseService {
       this.configService.getServerBaseUri()
         .then(data => {
           let url = data + "wap/v1/mobile/stationTask/" + acceptExInfo.taskId + "/accept";
-          return this.http.put(url, JSON.stringify(acceptExInfo), this.getOptions())
+          return this.put(url, JSON.stringify(acceptExInfo), this.getOptions())
             .toPromise()
             .then(data => {
               let body = data.json();
@@ -305,7 +305,7 @@ export class UploadService extends BaseService {
       this.configService.getServerBaseUri()
         .then(data => {
           let url = data + "wap/v1/mobile/stationTask/" + dispatchInfo.taskId + "/dispatch";
-          return this.http.put(url, JSON.stringify(dispatchInfo), this.getOptions())
+          return this.put(url, JSON.stringify(dispatchInfo), this.getOptions())
             .toPromise()
             .then(data => {
               let body = data.json();
@@ -333,7 +333,7 @@ export class UploadService extends BaseService {
       this.configService.getServerBaseUri()
         .then(data => {
           let url = data + "wap/v1/mobile/stationTask/" + cancelExInfo.TaskNo + "/saveTaskXD";
-          return this.http.post(url, JSON.stringify(cancelExInfo), this.getOptions())
+          return this.post(url, JSON.stringify(cancelExInfo), this.getOptions())
             .toPromise()
             .then(data => {
               let body = data.json();
@@ -427,7 +427,7 @@ export class UploadService extends BaseService {
             taskId,
             files
           };
-          return this.http.put(url, JSON.stringify(content), this.getOptions())
+          return this.put(url, JSON.stringify(content), this.getOptions())
             .toPromise()
             .then(data => {
               let body = data.json();
@@ -455,7 +455,7 @@ export class UploadService extends BaseService {
       this.configService.getMaterialsBaseUri()
         .then(data=>{
           let url=`${data}api/wap/v1/materialusage/batch`;
-          return this.http.post(url,JSON.stringify(materialArr),this.getOptions())
+          return this.post(url,JSON.stringify(materialArr),this.getOptions())
             .toPromise()
             .then(data=>{
               let body=data.json();

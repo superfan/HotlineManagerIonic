@@ -6,15 +6,17 @@ import {FileService} from "./FileService";
 import {Camera, CameraOptions} from "@ionic-native/camera";
 import {Media, MediaObject} from "@ionic-native/media";
 import {MediaType} from "../model/Media";
+import {Http} from "@angular/http";
 
 @Injectable()
 export class MediaService extends BaseService {
-  constructor(private globalService: GlobalService,
+  constructor(http: Http,
+              private globalService: GlobalService,
               private dbService: DbService,
               private camera: Camera,
               private media: Media,
               private fileService: FileService) {
-    super();
+    super(http);
   }
 
   /**
