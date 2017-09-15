@@ -50,7 +50,7 @@ public class SplashScreen extends CordovaPlugin {
     private static final String LOG_TAG = "SplashScreen";
     // Cordova 3.x.x has a copy of this plugin bundled with it (SplashScreenInternal.java).
     // Enable functionality only if running on 4.x.x.
-    private static final boolean HAS_BUILT_IN_SPLASH_SCREEN = false;//Integer.valueOf(CordovaWebView.CORDOVA_VERSION.split("\\.")[0]) < 4;
+    private static final boolean HAS_BUILT_IN_SPLASH_SCREEN = true;//Integer.valueOf(CordovaWebView.CORDOVA_VERSION.split("\\.")[0]) < 4;
     private static final int DEFAULT_SPLASHSCREEN_DURATION = 3000;
     private static final int DEFAULT_FADE_DURATION = 500;
     private static Dialog splashDialog;
