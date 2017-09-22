@@ -66,9 +66,6 @@
     <feature name="BaiduMapLocation">
         <param name="android-package" value="com.aruistar.cordova.baidumap.BaiduMapLocation" />
     </feature>
-    <feature name="MyPlugin">
-        <param name="android-package" value="cordova.plugin.MyPlugin.MyPlugin" />
-    </feature>
     <feature name="Zip">
         <param name="android-package" value="org.apache.cordova.Zip" />
     </feature>

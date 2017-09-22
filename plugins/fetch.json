@@ -193,13 +193,5 @@
         },
         "is_top_level": true,
         "variables": {}
-    },
-    "cordova.plugin.MyPlugin": {
-        "source": {
-            "type": "local",
-            "path": "D:\\work\\git_internal\\HotlineManagerIonic\\node_modules\\MyPlugin"
-        },
-        "is_top_level": true,
-        "variables": {}
     }
 }
