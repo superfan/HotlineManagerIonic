@@ -37,6 +37,7 @@
         <div><h2 class="card-header-label-hint">任务编号 </h2><h2 class="card-header-label-content">{{item.id.split('#')[0] | valueValid}}</h2></div>
         <div><h2 class="card-header-label-hint">任务类型 </h2><h2 class="card-header-label-content">{{item.type | valueValid}}</h2></div>
         <ion-icon name='cloud-upload' item-end *ngIf="!item.isUploaded"></ion-icon>
+        <ion-icon name="timer" item-end color="{{'danger'}}" *ngIf="item.isOverdueArrivedLine || item.isOverdueReplyLine"></ion-icon>
       </ion-item>
 
       <ion-list>
@@ -104,11 +105,11 @@
         </button>
 
         <!--销单时间-->
-        <button ion-item [style.color]="item.processes[8].color" *ngIf="item.processes[8].show" (click)="itemSelected(item, 8)">
-          <ion-icon name='icon-vline'item-start color="{{item.processes[8].color}}"></ion-icon>
-          {{item.processes[8].name}} {{item.processes[8].time | date:'y-MM-dd HH:mm:ss'}}
-          <ion-icon name='ios-arrow-forward' item-end *ngIf="!item.processes[8].done" color="{{item.processes[8].color}}"></ion-icon>
-        </button>
+        <!--<button ion-item [style.color]="item.processes[8].color" *ngIf="item.processes[8].show" (click)="itemSelected(item, 8)">-->
+          <!--<ion-icon name='icon-vline'item-start color="{{item.processes[8].color}}"></ion-icon>-->
+          <!--{{item.processes[8].name}} {{item.processes[8].time | date:'y-MM-dd HH:mm:ss'}}-->
+          <!--<ion-icon name='ios-arrow-forward' item-end *ngIf="!item.processes[8].done" color="{{item.processes[8].color}}"></ion-icon>-->
+        <!--</button>-->
       </ion-list>
 
       <ion-row>
@@ -126,12 +127,12 @@
           </button>
         </ion-col>
 
-        <!--<ion-col>-->
-          <!--<button ion-button icon-left clear small color="gray">-->
-            <!--<ion-icon name="videocam"></ion-icon>-->
-            <!--<div>{{item.videoCount}}</div>-->
-          <!--</button>-->
-        <!--</ion-col>-->
+        <ion-col>
+          <button ion-button icon-left clear small color="gray">
+            <ion-icon name="videocam"></ion-icon>
+            <div>{{item.videoCount}}</div>
+          </button>
+        </ion-col>
 
         <ion-col class="card-bottom-btn" *ngIf="item.isLocationValid">
           <button ion-button icon-left clear small (click)="onLocate(item)">

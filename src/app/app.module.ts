@@ -46,6 +46,8 @@ import {IonicStorageModule} from "@ionic/storage";
 import {Device} from "@ionic-native/device";
 import {ValueValidPipe} from "../pipes/ValueValidPipe";
 import {Camera} from "@ionic-native/camera";
+import {MediaCapture} from '@ionic-native/media-capture';
+import {VideoPlayer } from '@ionic-native/video-player';
 import {AndroidPermissions} from "@ionic-native/android-permissions";
 import {Media} from "@ionic-native/media";
 import {MediaService} from "../providers/MediaService";
@@ -148,6 +150,8 @@ import {NetworkSetPage} from "../pages/setting/networkset";
     DbService,
     Device,
     Camera,
+    MediaCapture,
+    VideoPlayer,
     AndroidPermissions,
     Media,
     MediaService,

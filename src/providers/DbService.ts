@@ -567,6 +567,36 @@ export class DbService {
   }
 
   /**
+   * 获取当前登录人TaskIds
+   * @param userId
+   * @returns {Array<string>}
+   */
+  public getTaskIds(userId: number): Promise<Array<string>> {
+    if (this.globalService.isChrome) {
+      return Promise.reject(this.paramError);
+    } else {
+      return this.openDb()
+        .then(db => {
+          let sql: string = `SELECT S_TASKID FROM GD_TASKS WHERE I_USERID = ${userId};`;
+          return db.executeSql(sql, {})
+            .then(data => {
+              let rows: any = data.rows;
+              let taskIds: Array<string> = [];
+              if (rows && rows.length > 0) {
+                for (let i = 0; i < rows.length; i++) {
+                  let item: any = rows.item(i);
+                  if (item.hasOwnProperty('S_TASKID') && item['S_TASKID']) {
+                    taskIds.push(item['S_TASKID']);
+                  }
+                }
+              }
+              return Promise.resolve(taskIds);
+            });
+        });
+    }
+  }
+
+  /**
    * 保存任务详情
    * @param taskDetail
    * @returns {any}
@@ -619,6 +649,40 @@ export class DbService {
                 }
               }
               return Promise.resolve(taskDetail);
+            });
+        });
+    }
+  }
+
+
+  /**
+   * 获取任务详情
+   * @param taskIds
+   * @returns {Array<TaskDetail>}
+   */
+  public getTaskDetails(taskIds: Array<string>): Promise<Array<TaskDetail>> {
+    if (this.globalService.isChrome || !taskIds || taskIds.length <=0) {
+      return Promise.reject(this.paramError);
+    } else {
+      return this.openDb()
+        .then(db => {
+          let sql: string = `SELECT * FROM GD_TASKDETAILS WHERE`;
+          let ids: Array<string> = taskIds.map(id => `\'${id}\'`);
+          sql += ` S_TASKID IN (${ids.join(',')})`;
+          return db.executeSql(sql, {})
+            .then(data => {
+              let rows: any = data.rows;
+              let taskDetails: Array<TaskDetail> = [];
+              if (rows && rows.length > 0) {
+                for (let i = 0; i < rows.length; i++) {
+                  let localTaskDetail: LocalTaskDetail = rows.item(i) as LocalTaskDetail;
+                  if (!localTaskDetail) {
+                    continue;
+                  }
+                  taskDetails.push(this.toTaskDetail(localTaskDetail));
+                }
+              }
+              return Promise.resolve(taskDetails);
             });
         });
     }

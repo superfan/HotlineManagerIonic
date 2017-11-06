@@ -17,6 +17,7 @@ import {Location} from "../../model/Location";
 import {MaterialsPage} from "../materials/materials";
 import {History} from "../../model/History";
 import {ReplyInfo} from "../../model/ReplyInfo";
+import {ConfigService} from "../../providers/ConfigService";
 
 enum FromWhere {
   Download,
@@ -44,6 +45,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
   showFab: boolean = false;
 
   items: TaskEx[] = [];
+  overdueTime: number;//超期时限
   private since: number = this.globalService.taskSinceDefault;
   private count: number = this.globalService.taskCountDefault10;
   private isOperationBusy: boolean = false;
@@ -54,7 +56,8 @@ export class MyWorkPage implements OnInit, OnDestroy {
               private dataService: DataService,
               private alertCtrl: AlertController,
               private events: Events,
-              private globalService: GlobalService) {
+              private globalService: GlobalService,
+              public configService: ConfigService,) {
   }
 
   /**
@@ -111,6 +114,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
             infiniteScroll.enable(false);
           } else {
             infiniteScroll.complete();
+            this.getTaskDetails(this.since, this.count, this.key);
           }
           console.log(this.tag, 'doInfinite end');
         })
@@ -152,9 +156,9 @@ export class MyWorkPage implements OnInit, OnDestroy {
           case 'delay':
             this.delayPrompt(taskEx, location);
             break;
-          case 'cancel':
-            this.cancelPrompt(taskEx, location);
-            break;
+          // case 'cancel':
+          //   this.cancelPrompt(taskEx, location);
+          //   break;
         }
       })
       .catch(error => {
@@ -299,6 +303,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
                       let mediaNames = history.mediaNames;
                       taskEx.photoCount = mediaNames.filter(name => name.lastIndexOf(this.globalService.photoSuffix) !== -1).length;
                       taskEx.audioCount = mediaNames.filter(name => name.lastIndexOf(this.globalService.audioSuffix) !== -1).length;
+                      taskEx.videoCount =  mediaNames.filter(name => name.lastIndexOf(this.globalService.videoSuffix) !== -1).length;
                     }
                   }
                 });
@@ -309,6 +314,116 @@ export class MyWorkPage implements OnInit, OnDestroy {
 
               return Promise.resolve(result);
             });
+        }
+      });
+  }
+
+  /**
+   * 读取文件的超期时限
+   */
+  getOverdueFromFile() {
+    this.configService.getOverdueTime()
+      .then(data => {
+        console.log(this.tag + data);
+        this.overdueTime = data;
+        this.getTaskDetails(this.since, this.count, this.key)
+          .then(data => {
+            console.log(this.tag + data);
+            this.getTaskDetailOverdueCount()
+              .then(data =>{
+                if(data >0){
+                  this.showOverdueCountAlert(data);
+                }
+              });
+          })
+          .catch(err => {
+            console.log(this.tag + err);
+          });
+      })
+      .catch(err => {
+        console.log(this.tag + err);
+      })
+  }
+
+  showOverdueCountAlert(count :number) {
+    let alert = this.alertCtrl.create({
+      title: '提示!',
+      subTitle: '当前有'+ count +'个热线工单任务超期',
+      buttons: ['OK']
+    });
+    alert.present();
+  }
+
+  /**
+   * 获取超期任务数量
+   * @returns {Promise<number>}
+   */
+  private getTaskDetailOverdueCount(): Promise<number> {
+    return this.dataService.getTaskDetailByUserId()
+      .then(taskDetails => {
+        console.log(this.tag + "getTaskDetailOverdueCount");
+        if (!taskDetails || taskDetails.length <= 0) {
+          return Promise.resolve(0)
+        } else {
+          let count: number = 0;
+          let isOverdueArrived: boolean = false;
+          let isOverdueReply: boolean = false;
+          taskDetails.forEach(taskDetail => {
+            if (taskDetail.arrivedTime == 0) {
+              isOverdueArrived = taskDetail.arrivedDeadLine < new Date().getTime() - this.overdueTime * 60 * 1000;
+            }
+
+            if (taskDetail.replyTime == 0) {
+              isOverdueReply = taskDetail.replyDeadLine < new Date().getTime() - this.overdueTime * 60 * 1000;
+            }
+            if (isOverdueArrived || isOverdueReply){
+              count++;
+            }
+
+            isOverdueArrived = false;
+            isOverdueReply = false;
+
+          });
+          return Promise.resolve(count)
+        }
+      }) .catch(error => console.error(error));;
+  }
+
+
+  /**
+   * 获取任务详情
+   * @param since
+   * @param count
+   * @param key
+   * @returns {Promise<boolean>}
+   */
+  private getTaskDetails(since: number, count: number, key: string): Promise<boolean> {
+    return this.dataService.getTasks(since, count, key)
+      .then(tasks => {
+        console.log(this.tag + "getTaskDetails: " + tasks.length);
+        if (tasks.length <= 0) {
+          return Promise.resolve(false)
+        } else {
+          let taskIds: Array<string> = tasks.map(tasks => tasks.taskId);
+          if (taskIds && taskIds.length > 0) {
+            for (let i = 0; i < taskIds.length; i++) {
+              this.dataService.getTaskDetail(taskIds[i])
+                .then((detail => {
+                  let taskEx: TaskEx = this.items.find(taskEx => taskEx.id === detail.taskId);
+                  if (taskEx) {
+                    // let mediaNames = history.mediaNames;
+                    if (detail.arrivedTime == 0) {
+                      taskEx.isOverdueArrivedLine = detail.arrivedDeadLine < new Date().getTime() - this.overdueTime * 60 * 1000;
+                    }
+
+                    if (detail.replyTime == 0) {
+                      taskEx.isOverdueReplyLine = detail.replyDeadLine < new Date().getTime() - this.overdueTime * 60 * 1000;
+                    }
+                  }
+                  return Promise.resolve(true);
+                }));
+            }
+          }
         }
       });
   }
@@ -439,6 +554,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
     this.dataService.getTaskCount()
       .then(count => {
         this.events.publish(this.globalService.mainUpdateEvent, {type: 'myWorkCount', count});
+        this.getOverdueFromFile();
       })
       .catch(error => console.error(error));
   }

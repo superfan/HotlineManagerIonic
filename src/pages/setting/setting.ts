@@ -27,6 +27,7 @@ export class SettingPage implements OnInit, OnDestroy {
   isOuterNet: boolean;//是否是外网
   netWorkUri: string;//数据地址
   keepAlive: number;//心跳频率
+  overdueTime: number;//超期时限
   alermStyle: string = '仅铃声';//提醒方式
   isChrome;//是否是浏览器执行
   public isShow: boolean = false;
@@ -170,6 +171,22 @@ export class SettingPage implements OnInit, OnDestroy {
   //     })
   // }
 
+
+  /**
+   * 读取文件的超期时限
+   */
+    getOverdueFromFile() {
+    this.configService.getOverdueTime()
+      .then(data => {
+        console.log(this.tag + data);
+        this.overdueTime = data;
+        this.showOverdueSetting();
+      })
+      .catch(err => {
+        console.log(this.tag + err);
+      })
+  }
+
   /**
    * 获取提醒方式
    */
@@ -259,6 +276,45 @@ export class SettingPage implements OnInit, OnDestroy {
       ]
     });
     confirm.present();
+  }
+
+  /**
+   * 超期设置
+   */
+  showOverdueSetting() {
+    let alert = this.alertCtrl.create({
+      title: '超期设置',
+      message: '时限设置(分钟):',
+      inputs: [
+        {
+          name: 'overdueTime',
+          value: this.overdueTime.toString(),
+          placeholder: '请输入超期时限',
+        }
+      ],
+      buttons: [
+        {
+          text: '取消',
+          role: 'cancel',
+          handler: data => {
+            console.log(this.tag + 'showOverdueSetting Cancel clicked');
+          }
+        },
+        {
+          text: '保存',
+          handler: data => {
+            this.configService.setOverdue(data.overdueTime)
+              .then(result => {
+                this.overdueTime = data.overdueTime;
+              })
+              .catch(error => {
+                console.log(this.tag + 'showOverdueSetting:' + error);
+              })
+          }
+        }
+      ]
+    });
+    alert.present();
   }
 
   /**

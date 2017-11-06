@@ -23,7 +23,7 @@ export class MyPluginMock extends MyPlugin {
   public static pageIntent: PageIntent = {
     account: '123456',
     password: '0000',
-    userId: 0,
+    userId: 797782,
     userName: 'ss1',
     departmentAndId: '上水#1',
     roles: 'worker',
@@ -48,7 +48,7 @@ export class MyPluginMock extends MyPlugin {
 
 @Injectable()
 export class GlobalService {
-  readonly isChrome: boolean = true;
+  readonly isChrome: boolean = false;
   readonly httpCode: number = 0;
   readonly httpSuccessStatusCode: number = 200;
   readonly taskSinceDefault: number = 0;
@@ -78,6 +78,7 @@ export class GlobalService {
   readonly worker: string = 'worker';
   readonly photoSuffix: string = '.jpg';
   readonly audioSuffix: string = '.mp3';
+  readonly videoSuffix: string = '.mp4';
 
   constructor(private toastCtrl: ToastController,
               private loadingCtrl: LoadingController,

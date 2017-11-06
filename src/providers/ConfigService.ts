@@ -18,6 +18,7 @@ interface SystemConfig {
   isGridStyle: boolean;
   isDebugMode: boolean;
   keepAliveInterval: number;
+  overdueTime: number;
   sysRegion: string;
   materialUnit: Array<MaterialUnit>;
 }
@@ -247,6 +248,29 @@ export class ConfigService {
   }
 
   /**
+   * 获取超期时限设置
+   * @returns {Promise<T>}
+   */
+  public getOverdueTime(): Promise<number> {
+    return ConfigService.isValid<SystemConfig>(this.systemConfig, 'overdueTime')
+      ? Promise.resolve(this.systemConfig.overdueTime)
+      : new Promise((resolve, reject) => {
+        this.readSystemConfig()
+          .then(data => {
+            this.systemConfig = data as SystemConfig;
+            if (ConfigService.isValid<SystemConfig>(this.systemConfig, 'overdueTime')) {
+              resolve(this.systemConfig.overdueTime);
+            }
+            else {
+              reject("failure to getOverdueTime");
+            }
+          })
+          .catch(error => reject(error));
+      });
+  }
+
+
+  /**
    * 获取区域
    * @returns {Promise<T>}
    */
@@ -431,6 +455,30 @@ export class ConfigService {
   }
 
   /**
+   * 设置超期时限
+   * @param keepAlive
+   * @returns {any}
+   */
+  public setOverdue(overdue: number): Promise<boolean> {
+    if (ConfigService.isValid<SystemConfig>(this.systemConfig, 'overdueTime')) {
+      return new Promise((resolve, reject) => {
+        let systemConfig: SystemConfig = Object.create(this.systemConfig);
+        systemConfig.overdueTime = overdue;
+        this.writeSystemConfig(systemConfig)
+          .then(result => {
+            if (result) {
+              this.systemConfig.overdueTime = overdue;
+            }
+            resolve(!!result);
+          })
+          .catch(error => reject(error));
+      })
+    } else {
+      return Promise.reject('systemConfig has no data');
+    }
+  }
+
+  /**
    * 读取system.json
    * @returns {Promise<TResult2|SystemConfig>|Promise<any>|Promise<SystemConfig>}
    */
@@ -519,6 +567,7 @@ export class ConfigService {
       isGridStyle: obj["sys.grid.style"],
       isDebugMode: obj["sys.debug.mode"],
       keepAliveInterval: obj["sys.keep.alive.interval"],
+      overdueTime: obj["sys.overdue.time"],
       sysRegion: obj["sys.region"],
       materialUnit: obj["sys.material.unit"]
     };
@@ -551,6 +600,7 @@ export class ConfigService {
       "sys.grid.style": systemConfig.isGridStyle,
       "sys.debug.mode": systemConfig.isDebugMode,
       "sys.keep.alive.interval": systemConfig.keepAliveInterval,
+      "sys.overdue.time": systemConfig.overdueTime,
       "sys.region": systemConfig.sysRegion,
       "sys.material.unit": systemConfig.materialUnit
     });

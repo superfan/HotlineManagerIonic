@@ -41,6 +41,7 @@
         </ion-label>
         <div item-content *ngIf="item.isTime">
           {{item.value | date:'y-MM-dd HH:mm:ss'}}
+          <ion-icon *ngIf="item.isShowOverdue" name="timer" color="{{'danger'}}"></ion-icon>
         </div>
         <div item-content *ngIf="!item.isTime">
           {{item.value}}
@@ -116,7 +117,7 @@
         录音
       </button>
 
-      <ion-grid>
+      <ion-grid style="width: 100%; height: 100px;">
         <ion-row *ngIf="audios[0].time > 0" class="audio">
           <ion-col col-6 class="audio-info">{{audios[0].time}}s</ion-col>
           <ion-col col-2><ion-icon name="play" class="audio-btn" (click)="onPlay(audios[0])"></ion-icon></ion-col>
@@ -139,11 +140,33 @@
         </ion-row>
       </ion-grid>
 
-      <!--<button ion-item icon-left>-->
-      <!--<ion-icon name="videocam"></ion-icon>-->
-      <!--视频-->
-      <!--</button>-->
+      <br>
+      <br>
+      <button ion-item icon-left (click)="onTakeVideo($event)">
+      <ion-icon name="videocam"></ion-icon>
+      视频
+      </button>
 
+      <ion-grid style="width: 100%; height: 100px;">
+        <ion-row>
+          <ion-col col-4 class="col-img" *ngIf="videos[0]">
+            <video class="video" (click)="onPlayVideo(videos[0])"></video>
+            <ion-icon name="close" (click)="onDeleteVideo(videos[0])"></ion-icon>
+          </ion-col>
+
+          <ion-col col-4 class="col-img" *ngIf="videos[1]">
+            <video class="video" (click)="onPlayVideo(videos[1])"></video>
+            <ion-icon name="close" (click)="onDeleteVideo(videos[1])"></ion-icon>
+          </ion-col>
+
+          <ion-col col-4 class="col-img" *ngIf="pictures[2]">
+            <video class="video" (click)="onPlayVideo(videos[2])"></video>
+            <ion-icon name="close" (click)="onDeleteVideo(videos[2])"></ion-icon>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+      <br>
+      <br>
       <!--<ion-row>-->
       <!--<ion-col class="col-img">-->
       <!--<img width="80" height="80" src="assets/img/ic_video_default.png"/>-->

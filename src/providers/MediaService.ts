@@ -5,6 +5,9 @@ import {DbService} from "./DbService";
 import {FileService} from "./FileService";
 import {Camera, CameraOptions} from "@ionic-native/camera";
 import {Media, MediaObject} from "@ionic-native/media";
+import {MediaCapture, MediaFile, CaptureError, CaptureVideoOptions} from '@ionic-native/media-capture';
+import { VideoPlayer } from '@ionic-native/video-player';
+
 import {MediaType} from "../model/Media";
 import {Http} from "@angular/http";
 
@@ -15,7 +18,9 @@ export class MediaService extends BaseService {
               private dbService: DbService,
               private camera: Camera,
               private media: Media,
-              private fileService: FileService) {
+              private mediaCapture: MediaCapture,
+              private fileService: FileService,
+              private videoPlayer: VideoPlayer) {
     super(http);
   }
 
@@ -60,6 +65,54 @@ export class MediaService extends BaseService {
         .then(result => result
           ? Promise.resolve({filePath: `${this.fileService.getImagesDir()}/${fileName}`, fileName})
           : Promise.reject('failure to save the db')));
+  }
+
+  /**
+   * 视频
+   * @param taskId
+   * @returns {Promise<TResult>}
+   */
+  public takeVideo(taskId: string): Promise<any> {
+    let options: CaptureVideoOptions = { limit: 1 };
+    return this.mediaCapture.captureVideo(options)
+      .then(
+        (data: MediaFile[]) => {
+          console.log(data)
+          // Promise.reject('success to save the db')
+          let path: string = data[0].fullPath.toString();
+          return Promise.resolve(path);
+        },
+        (err: CaptureError) =>
+        {
+          console.error(err);
+          return Promise.reject(err);
+        }
+      )
+      .then(path => this.fileService.moveVideo(path))
+      .then(fileName => this.dbService.saveMedia({
+        userId: this.globalService.userId,
+        taskId,
+        fileType: MediaType.Vedio,
+        fileName,
+        uploadedFlag: this.globalService.uploadedFlagForLocal
+      })
+        .then(result => result
+          ? Promise.resolve({filePath: `${this.fileService.getVideosDir()}/${fileName}`, fileName})
+          : Promise.reject('failure to save the db')));
+  }
+
+
+  public playVideo(path: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      // Playing a video.
+      this.videoPlayer.play(path).then(() => {
+        console.log('video completed');
+        return reject('video completed');
+      }).catch(err => {
+        console.log(err);
+        return reject(err);
+      });
+    });
   }
 
   /**

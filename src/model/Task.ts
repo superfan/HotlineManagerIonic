@@ -59,6 +59,8 @@ export class TaskEx {
   isLocationValid: boolean;
   extendedInfo?: TaskExtendedInfo;
   isUploaded?: boolean;
+  isOverdueArrivedLine? :boolean;
+  isOverdueReplyLine? :boolean;
 
   constructor(task: Task) {
     this.id = task.taskId;
@@ -79,6 +81,8 @@ export class TaskEx {
     this.isLocationValid = TaskEx.checkLocation(this.location);
     this.extendedInfo = task.extendedInfo;
     this.isUploaded = true;
+    this.isOverdueArrivedLine = false;
+    this.isOverdueReplyLine = false;
 
     this.processes = [];
     this.processes.push({

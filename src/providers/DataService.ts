@@ -163,6 +163,20 @@ export class DataService extends SyncService {
   }
 
   /**
+   * 获取任务详情
+   * @returns {Promise<Array<TaskDetail>>}
+   */
+  public getTaskDetailByUserId(): Promise<Array<TaskDetail>> {
+    if (this.globalService.isChrome) {
+      return Promise.reject([]);
+    } else {
+      return this.dbService.getTaskIds(this.globalService.userId)
+        .then(taskIds => this.dbService.getTaskDetails(taskIds))
+        .catch(error => console.error(error));
+    }
+  }
+
+  /**
    * 历史工单获取记录
    * @param since
    * @param count
@@ -677,6 +691,19 @@ export class DataService extends SyncService {
    */
   public takePicture(taskId: string): Promise<any> {
     return this.mediaService.takePicture(taskId);
+  }
+
+  /**
+   * 视频
+   * @param taskId
+   * @returns {Promise<any>}
+   */
+  public takeVideo(taskId: string): Promise<any> {
+    return this.mediaService.takeVideo(taskId);
+  }
+
+  public playVideo(path: string): Promise<any> {
+    return this.mediaService.playVideo(path);
   }
 
   /**

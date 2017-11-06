@@ -49663,6 +49663,11 @@ page-welcome .welcome-info {
   height: 80px;
 }
 
+.page-workdetail .video {
+  width: 80px;
+  height: 80px;
+}
+
 .page-workdetail .audio {
   margin: 10px;
 }

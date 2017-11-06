@@ -12,7 +12,7 @@ export class FileService {
   private dirPath: string = null;
   private readonly dirRoot: string = 'sh3h';
   private readonly dir: string = 'hotlinemanager';
-  private readonly arrDirs: string[] = ['config', 'data', 'images', 'log', 'sounds', 'update', 'user'];
+  private readonly arrDirs: string[] = ['config', 'data', 'images','videos', 'log', 'sounds', 'update', 'user'];
   private readonly apkName: string = "/TaskManager.apk";
 
   constructor(private file: File,
@@ -44,6 +44,14 @@ export class FileService {
    */
   public getImagesDir(): string {
     return `${this.dirPath}${this.dirRoot}/${this.dir}/images`;
+  }
+
+  /**
+   * 获取video路径
+   * @returns {string}
+   */
+  public getVideosDir(): string {
+    return `${this.dirPath}${this.dirRoot}/${this.dir}/videos`;
   }
 
   /**
@@ -210,6 +218,37 @@ export class FileService {
 
     return this.file.checkFile(srcPath, fileName)
       .then(result => this.file.moveFile(srcPath, fileName, this.getImagesDir(), fileName))
+      .then(entry => entry ? Promise.resolve(fileName) : Promise.reject(error));
+  }
+
+  /**
+   *
+   * @param srcFilePath
+   * @returns {any}
+   */
+  public moveVideo(srcFilePath: string): Promise<any> {
+    const error: string = `failure to move ${srcFilePath}`;
+    if (!srcFilePath) {
+      return Promise.reject(error);
+    }
+
+    let index: number = srcFilePath.lastIndexOf('/');
+    if (index <= 0) {
+      return Promise.reject(error);
+    }
+
+    let srcPath: string = srcFilePath.substring(0, index + 1);
+    if (!srcPath) {
+      return Promise.reject(error);
+    }
+
+    let fileName: string = srcFilePath.substring(index + 1);
+    if (!fileName) {
+      return Promise.reject(error);
+    }
+
+    return this.file.checkFile(srcPath, fileName)
+      .then(result => this.file.moveFile(srcPath, fileName, this.getVideosDir(), fileName))
       .then(entry => entry ? Promise.resolve(fileName) : Promise.reject(error));
   }
 

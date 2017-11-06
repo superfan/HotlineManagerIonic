@@ -26,12 +26,17 @@
       <ion-icon name='arrow-dropright' item-end color="{{'primary'}}"></ion-icon>
     </ion-item>
 
+    <ion-item (click)="getOverdueFromFile()">
+      <ion-icon name='time' item-start color="{{'primary'}}"></ion-icon>
+      <ion-label>超期设置</ion-label>
+      <ion-icon name='arrow-dropright' item-end color="{{'primary'}}"></ion-icon>
+    </ion-item>
+
     <ion-item (click)="showDownloadWords()">
       <ion-icon name='download' item-start color="{{'primary'}}"></ion-icon>
       <ion-label>更新词语</ion-label>
       <ion-icon name='arrow-dropright' item-end color="{{'primary'}}"></ion-icon>
     </ion-item>
-
 
     <ion-item *ngIf="isShow" (click)="showHeartSetting()">
       <ion-icon name='heart-outline' item-start color="{{'primary'}}"></ion-icon>
