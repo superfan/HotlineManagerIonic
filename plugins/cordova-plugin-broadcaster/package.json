@@ -1,0 +1,103 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "cordova-plugin-broadcaster@2.3.0",
+        "scope": null,
+        "escapedName": "cordova-plugin-broadcaster",
+        "name": "cordova-plugin-broadcaster",
+        "rawSpec": "2.3.0",
+        "spec": "2.3.0",
+        "type": "version"
+      },
+      "D:\\cordova_ionic\\HotlineManagerIonic"
+    ]
+  ],
+  "_from": "cordova-plugin-broadcaster@2.3.0",
+  "_id": "cordova-plugin-broadcaster@2.3.0",
+  "_inCache": true,
+  "_location": "/cordova-plugin-broadcaster",
+  "_nodeVersion": "7.6.0",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/cordova-plugin-broadcaster-2.3.0.tgz_1506938150033_0.04992891987785697"
+  },
+  "_npmUser": {
+    "name": "bsorrentino",
+    "email": "bartolomeo.sorrentino@gmail.com"
+  },
+  "_npmVersion": "4.1.2",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "cordova-plugin-broadcaster@2.3.0",
+    "scope": null,
+    "escapedName": "cordova-plugin-broadcaster",
+    "name": "cordova-plugin-broadcaster",
+    "rawSpec": "2.3.0",
+    "spec": "2.3.0",
+    "type": "version"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-broadcaster/-/cordova-plugin-broadcaster-2.3.0.tgz",
+  "_shasum": "9f6a008d0386578c78e770c3d08662dc5097d256",
+  "_shrinkwrap": null,
+  "_spec": "cordova-plugin-broadcaster@2.3.0",
+  "_where": "D:\\cordova_ionic\\HotlineManagerIonic",
+  "author": {
+    "name": "bsorrentino"
+  },
+  "bugs": {
+    "url": "https://github.com/bsorrentino/cordova-broadcaster/issues"
+  },
+  "cordova": {
+    "id": "cordova-plugin-broadcaster",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "dependencies": {},
+  "description": "Allow send message from Javascript to Native",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "9f6a008d0386578c78e770c3d08662dc5097d256",
+    "tarball": "https://registry.npmjs.org/cordova-plugin-broadcaster/-/cordova-plugin-broadcaster-2.3.0.tgz"
+  },
+  "engines": {
+    "cordovaDependencies": {
+      "2.2.1": {
+        "cordova": ">3.9.0"
+      },
+      "2.3.0": {
+        "cordova": ">4.0.0"
+      }
+    }
+  },
+  "gitHead": "b6377c94c7995fd2729aa70bb7b6ea38cddca4b9",
+  "homepage": "https://github.com/bsorrentino/cordova-broadcaster#readme",
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "license": "MIT",
+  "maintainers": [
+    {
+      "name": "bsorrentino",
+      "email": "bartolomeo.sorrentino@gmail.com"
+    }
+  ],
+  "name": "cordova-plugin-broadcaster",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bsorrentino/cordova-broadcaster.git"
+  },
+  "scripts": {},
+  "version": "2.3.0"
+}
