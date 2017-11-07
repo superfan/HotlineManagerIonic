@@ -3,7 +3,7 @@ import {NavController, NavParams} from "ionic-angular";
 import {GlobalService} from "../../providers/GlobalService";
 import {MapParam, MapType} from "../../model/MapParam";
 declare var BMap;
-declare var baidumap_location;
+//declare var baidumap_location;
 
 enum MapStatus {
   LOADING,

@@ -71,7 +71,9 @@ cordova.define("uk.co.workingedge.cordova.plugin.sqliteporter.sqlitePorter", fun
         db.transaction(function(tx) {
             try {
                 //Clean SQL + split into statements
-                var totalCount, currentCount, statements = sql.replace(/[\n\r]/g,"") // strip out line endings
+                var totalCount, currentCount;
+
+                var statements = sql
                     .replace(/(?:\/\*(?:[\s\S]*?)\*\/)|(?:([\s;])+\/\/(?:.*)$)/gm,"") // strip out comments
                     .match(statementRegEx);
 
@@ -179,12 +181,17 @@ cordova.define("uk.co.workingedge.cordova.plugin.sqliteporter.sqlitePorter", fun
                         if (results.rows && !opts.dataOnly) {
                             for (var i = 0; i < results.rows.length; i++) {
                                 var row = results.rows.item(i);
-                                if (row.sql != null && row.sql.indexOf("CREATE TABLE") != -1 && row.sql.indexOf("__") == -1) {
-                                    var tableName = sqlUnescape(trimWhitespace(trimWhitespace(row.sql.replace("CREATE TABLE", "")).split(/ |\(/)[0]));
-                                    sqlStatements.push("DROP TABLE IF EXISTS " + sqlEscape(tableName));
-                                }
-                                if(row.sql != null && row.sql.indexOf("__") == -1){
-                                    sqlStatements.push(row.sql);
+                                var shouldAdd = true;
+                                if (row.sql != null && row.sql.indexOf("__") == -1) {
+                                    if(row.sql.indexOf("CREATE TABLE") != -1){
+                                        var tableName = sqlUnescape(trimWhitespace(trimWhitespace(row.sql.replace("CREATE TABLE", "")).split(/ |\(/)[0]));
+                                        if(!isReservedTable(tableName)){
+                                            sqlStatements.push("DROP TABLE IF EXISTS " + sqlEscape(tableName));
+                                        }else{
+                                            shouldAdd = false;
+                                        }
+                                    }
+                                    if(shouldAdd) sqlStatements.push(row.sql);
                                 }
                             }
                         }
@@ -242,7 +249,7 @@ cordova.define("uk.co.workingedge.cordova.plugin.sqliteporter.sqlitePorter", fun
                             sqlStatement = "SELECT * FROM " + sqlEscape(tableName);
                         tx.executeSql(sqlStatement, [],
                             function (tx, rslt) {
-                                if (rslt.rows) {
+                                if (rslt.rows && !isReservedTable(tableName)) {
                                     json.data.inserts[tableName] = [];
                                     for (var m = 0; m < rslt.rows.length; m++) {
                                         var dataRow = rslt.rows.item(m);
@@ -273,8 +280,7 @@ cordova.define("uk.co.workingedge.cordova.plugin.sqliteporter.sqlitePorter", fun
 
                         if (results.rows && !opts.dataOnly) {
                             json.structure = {
-                                tables:{},
-                                otherSQL:[]
+                                tables:{}
                             };
                             for (var i = 0; i < results.rows.length; i++) {
                                 var row = results.rows.item(i);
@@ -288,6 +294,9 @@ cordova.define("uk.co.workingedge.cordova.plugin.sqliteporter.sqlitePorter", fun
                                             statementCount += 2; // One for DROP, one for create
                                         }
                                     }else{
+                                        if(!json.structure.otherSQL){
+                                            json.structure.otherSQL = [];
+                                        }
                                         json.structure.otherSQL.push(row.sql.replace(/\s+/g," "));
                                         statementCount++;
                                     }
@@ -358,14 +367,16 @@ cordova.define("uk.co.workingedge.cordova.plugin.sqliteporter.sqlitePorter", fun
             if(json.structure){
                 for(var tableName in json.structure.tables){
                     mainSql += "DROP TABLE IF EXISTS " + sqlEscape(tableName) + separator
-                    + "CREATE TABLE " + sqlEscape(tableName) + json.structure.tables[tableName] + separator;
+                        + "CREATE TABLE " + sqlEscape(tableName) + json.structure.tables[tableName] + separator;
                 }
-                for(var i=0; i<json.structure.otherSQL.length; i++){
-                    var command = json.structure.otherSQL[i];
-                    if(command.match(/CREATE INDEX/i)){
-                        createIndexSql += json.structure.otherSQL[i] + separator;
-                    }else{
-                        mainSql += json.structure.otherSQL[i] + separator;
+                if(json.structure.otherSQL){
+                    for(var i=0; i<json.structure.otherSQL.length; i++){
+                        var command = json.structure.otherSQL[i];
+                        if(command.match(/CREATE INDEX/i)){
+                            createIndexSql += json.structure.otherSQL[i] + separator;
+                        }else{
+                            mainSql += json.structure.otherSQL[i] + separator;
+                        }
                     }
                 }
             }
@@ -562,7 +573,7 @@ cordova.define("uk.co.workingedge.cordova.plugin.sqliteporter.sqlitePorter", fun
      * @returns {string} trimmed string
      */
     function trimWhitespace(str){
-        return str.replace(/^\s+/,"").replace(/\s+&/,"");
+        return str.replace(/^\s+/,"").replace(/\s+$/,"");
     }
 
     /**
@@ -573,7 +584,7 @@ cordova.define("uk.co.workingedge.cordova.plugin.sqliteporter.sqlitePorter", fun
      */
     function sanitiseForSql(value){
         if (value === null || value === undefined) { return null; }
-        return (value+"").replace(/'([^']|$)/g,"''$1");
+        return (value+"").replace(/'/g,"''");
     }
 
     /**

@@ -5,16 +5,13 @@
     <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
     <content src="index.html" />
     <access origin="*" />
-    <allow-navigation href="http://ionic.local/*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <allow-intent href="tel:*" />
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
-    <preference name="webviewbounce" value="false" />
-    <preference name="UIWebViewBounce" value="false" />
-    <preference name="DisallowOverscroll" value="true" />
+    <preference name="ScrollEnabled" value="false" />
     <preference name="android-minSdkVersion" value="16" />
     <preference name="BackupWebStorage" value="none" />
     <preference name="SplashMaintainAspectRatio" value="true" />
@@ -22,7 +19,6 @@
     <preference name="SplashShowOnlyFirstTime" value="false" />
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashScreenDelay" value="3000" />
-    <preference name="loadUrlTimeoutValue" value="70000" />
     <platform name="android">
         <allow-intent href="market:*" />
         <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
@@ -65,6 +61,7 @@
         <icon height="29" src="resources/ios/icon/icon-small.png" width="29" />
         <icon height="58" src="resources/ios/icon/icon-small@2x.png" width="58" />
         <icon height="87" src="resources/ios/icon/icon-small@3x.png" width="87" />
+        <icon height="1024" src="resources/ios/icon/icon-1024.png" width="1024" />
         <splash height="1136" src="resources/ios/splash/Default-568h@2x~iphone.png" width="640" />
         <splash height="1334" src="resources/ios/splash/Default-667h.png" width="750" />
         <splash height="2208" src="resources/ios/splash/Default-736h.png" width="1242" />
@@ -77,20 +74,13 @@
         <splash height="1024" src="resources/ios/splash/Default-Portrait~ipad.png" width="768" />
         <splash height="960" src="resources/ios/splash/Default@2x~iphone.png" width="640" />
         <splash height="480" src="resources/ios/splash/Default~iphone.png" width="320" />
+        <splash height="2732" src="resources/ios/splash/Default@2x~universal~anyany.png" width="2732" />
     </platform>
-    <engine name="android" spec="^6.2.3" />
-    <plugin name="com.moust.cordova.videoplayer" spec="~1.0.1" />
-    <plugin name="cordova-plugin-android-permissions" spec="^0.11.0" />
+    <engine name="android" spec="~6.3.0" />
+    <plugin name="cordova-plugin-android-permissions" spec="^1.0.0" />
     <plugin name="cordova-plugin-app-preferences" spec="^0.99.3" />
     <plugin name="cordova-plugin-app-version" spec="^0.1.9" />
-    <plugin name="cordova-plugin-baidumaplocation" spec="^3.0.1">
-        <variable name="ANDROID_KEY" value="zr5fvLYYgiOoLzZFQxcbLyIwCdaphwMo" />
-        <variable name="IOS_KEY" value="zr5fvLYYgiOoLzZFQxcbLyIwCdaphwMo" />
-        <variable name="IOS_LOCATION_DESC" value="����'��'��������ʡ�" />
-    </plugin>
-    <plugin name="cordova-plugin-broadcaster" spec="^2.2.1" />
     <plugin name="cordova-plugin-camera" spec="^2.4.1" />
-    <plugin name="cordova-plugin-console" spec="^1.0.5" />
     <plugin name="cordova-plugin-device" spec="^1.1.4" />
     <plugin name="cordova-plugin-dialogs" spec="^1.3.3" />
     <plugin name="cordova-plugin-file" spec="^4.3.3" />
@@ -99,12 +89,17 @@
     <plugin name="cordova-plugin-media" spec="^3.0.1" />
     <plugin name="cordova-plugin-media-capture" spec="^1.4.3" />
     <plugin name="cordova-plugin-network-information" spec="^1.3.3" />
-    <plugin name="cordova-plugin-splashscreen" spec="^4.0.3" />
-    <plugin name="cordova-plugin-statusbar" spec="^2.2.2" />
-    <plugin name="cordova-plugin-whitelist" spec="^1.3.1" />
-    <plugin name="cordova-plugin-x-toast" spec="^2.6.0" />
-    <plugin name="cordova-plugin-zip" spec="^3.1.0" />
-    <plugin name="cordova-sqlite-storage" spec="^2.0.4" />
     <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
-    <plugin name="uk.co.workingedge.cordova.plugin.sqliteporter" spec="^0.1.5" />
+    <plugin name="cordova-plugin-whitelist" spec="^1.3.1" />
+    <plugin name="cordova-plugin-splashscreen" spec="^4.0.3" />
+    <plugin name="cordova-plugin-ionic-webview" spec="^1.1.16" />
+    <plugin name="com.moust.cordova.videoplayer" spec="~1.0.1" />
+    <plugin name="cordova-plugin-x-toast" spec="^2.6.0" />
+    <plugin name="cordova-sqlite-storage" spec="^2.1.0" />
+    <plugin name="uk.co.workingedge.cordova.plugin.sqliteporter" spec="^1.0.2" />
+    <plugin name="cordova-plugin-broadcaster" spec="^2.3.0" />
+    <plugin name="cordova-plugin-console" spec="^1.1.0" />
+    <plugin name="cordova-plugin-statusbar" spec="^2.2.3" />
+    <plugin name="cordova-plugin-zip" spec="^3.1.0" />
+    <plugin name="cordova.plugin.MyPlugin" spec=".\3hplugins\MyPlugin" />
 </widget>
