@@ -1,5 +1,167 @@
 webpackJsonp([0],{
 
+/***/ 120:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* unused harmony export PageIntent */
+/* unused harmony export MyLocation */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MyPlugin; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ionic_native_core__ = __webpack_require__(12);
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+/**
+ * This is a template for new plugin wrappers
+ *
+ * TODO:
+ * - Add/Change information below
+ * - Document usage (importing, executing main functionality)
+ * - Remove any imports that you are not using
+ * - Add this file to /src/index.ts (follow style of other plugins)
+ * - Remove all the comments included in this template, EXCEPT the @Plugin wrapper docs and any other docs you added
+ * - Remove this note
+ *
+ */
+
+
+var PageIntent = (function () {
+    function PageIntent() {
+    }
+    return PageIntent;
+}());
+
+var MyLocation = (function () {
+    function MyLocation() {
+    }
+    return MyLocation;
+}());
+
+/**
+ * @name My Plugin
+ * @description
+ * This plugin does something
+ *
+ * @usage
+ * ```typescript
+ * import { MyPlugin } from '@ionic-native/my-plugin';
+ *
+ *
+ * constructor(private myPlugin: MyPlugin) { }
+ *
+ * ...
+ *
+ *
+ * this.myPlugin.getPageIntent()
+ *   .then((res: any) => console.log(res))
+ *   .catch((error: any) => console.error(error));
+ *
+ * ```
+ */
+var MyPlugin = (function (_super) {
+    __extends(MyPlugin, _super);
+    function MyPlugin() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    /**
+     * 获取当前Page intent
+     */
+    MyPlugin.prototype.getPageIntent = function () {
+        return; // We add return; here to avoid any IDE / Compiler errors
+    };
+    /**
+     * 获取位置信息
+     */
+    MyPlugin.prototype.getLocation = function () {
+        return; // We add return; here to avoid any IDE / Compiler errors
+    };
+    /**
+     * 退出
+     */
+    MyPlugin.prototype.quit = function () {
+        return; // We add return; here to avoid any IDE / Compiler errors
+    };
+    /**
+     * 获取推送消息
+     */
+    MyPlugin.prototype.getPushMessage = function () {
+        return; // We add return; here to avoid any IDE / Compiler errors
+    };
+    /**
+     * 获取变化信息(如：设置)
+     */
+    MyPlugin.prototype.getChangedInfo = function () {
+        return; // We add return; here to avoid any IDE / Compiler errors
+    };
+    return MyPlugin;
+}(__WEBPACK_IMPORTED_MODULE_1__ionic_native_core__["g" /* IonicNativePlugin */]));
+MyPlugin.decorators = [
+    { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["B" /* Injectable */] },
+];
+/** @nocollapse */
+MyPlugin.ctorParameters = function () { return []; };
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_1__ionic_native_core__["a" /* Cordova */])(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], MyPlugin.prototype, "getPageIntent", null);
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_1__ionic_native_core__["a" /* Cordova */])(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], MyPlugin.prototype, "getLocation", null);
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_1__ionic_native_core__["a" /* Cordova */])(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], MyPlugin.prototype, "quit", null);
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_1__ionic_native_core__["a" /* Cordova */])(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], MyPlugin.prototype, "getPushMessage", null);
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_1__ionic_native_core__["a" /* Cordova */])(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], MyPlugin.prototype, "getChangedInfo", null);
+MyPlugin = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_1__ionic_native_core__["h" /* Plugin */])({
+        pluginName: 'MyPlugin',
+        plugin: 'cordova.plugin.MyPlugin',
+        pluginRef: 'cordova.plugins.MyPlugin',
+        repo: '',
+        platforms: [],
+        install: '',
+    })
+], MyPlugin);
+
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+
 /***/ 121:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -745,10 +907,9 @@ var BaseService = (function () {
 }());
 BaseService = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["B" /* Injectable */])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _a || Object])
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]])
 ], BaseService);
 
-var _a;
 //# sourceMappingURL=BaseService.js.map
 
 /***/ }),
@@ -8285,7 +8446,7 @@ var ValueValidPipe = (function () {
     return ValueValidPipe;
 }());
 ValueValidPipe = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["W" /* Pipe */])({ name: 'valueValid' })
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["V" /* Pipe */])({ name: 'valueValid' })
 ], ValueValidPipe);
 
 //# sourceMappingURL=ValueValidPipe.js.map
@@ -8938,7 +9099,7 @@ var MapPage = (function () {
     return MapPage;
 }());
 __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_14" /* ViewChild */])('map'),
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])('map'),
     __metadata("design:type", __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */])
 ], MapPage.prototype, "mapElement", void 0);
 MapPage = __decorate([
@@ -9261,15 +9422,15 @@ var MyHistory = (function () {
     return MyHistory;
 }());
 __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_14" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["n" /* Refresher */]),
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["n" /* Refresher */]),
     __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["n" /* Refresher */])
 ], MyHistory.prototype, "refresher", void 0);
 __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_14" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["c" /* Content */]),
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["c" /* Content */]),
     __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["c" /* Content */])
 ], MyHistory.prototype, "content", void 0);
 __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_14" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* InfiniteScroll */]),
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* InfiniteScroll */]),
     __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* InfiniteScroll */])
 ], MyHistory.prototype, "infiniteScroll", void 0);
 MyHistory = __decorate([
@@ -11312,7 +11473,7 @@ var StationWorkPage = (function () {
     return StationWorkPage;
 }());
 __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_14" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["c" /* Content */]),
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["c" /* Content */]),
     __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["c" /* Content */])
 ], StationWorkPage.prototype, "content", void 0);
 StationWorkPage = __decorate([
@@ -13450,15 +13611,15 @@ var MyWorkPage = (function () {
     return MyWorkPage;
 }());
 __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_14" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["n" /* Refresher */]),
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["n" /* Refresher */]),
     __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["n" /* Refresher */])
 ], MyWorkPage.prototype, "refresher", void 0);
 __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_14" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["c" /* Content */]),
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["c" /* Content */]),
     __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["c" /* Content */])
 ], MyWorkPage.prototype, "content", void 0);
 __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_14" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* InfiniteScroll */]),
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* InfiniteScroll */]),
     __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* InfiniteScroll */])
 ], MyWorkPage.prototype, "infiniteScroll", void 0);
 MyWorkPage = __decorate([
@@ -13545,7 +13706,7 @@ var GlobalService = (function () {
         this.loadingCtrl = loadingCtrl;
         this.storage = storage;
         this.myPlugin = myPlugin;
-        this.isChrome = true;
+        this.isChrome = false;
         this.httpCode = 0;
         this.httpSuccessStatusCode = 200;
         this.taskSinceDefault = 0;
