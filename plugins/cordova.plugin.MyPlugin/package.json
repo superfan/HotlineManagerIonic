@@ -1,57 +1,17 @@
 {
-  "_args": [
-    [
-      {
-        "raw": "D:\\cordova_ionic\\HotlineManagerIonic\\3hplugins\\MyPlugin",
-        "scope": null,
-        "escapedName": null,
-        "name": null,
-        "rawSpec": "D:\\cordova_ionic\\HotlineManagerIonic\\3hplugins\\MyPlugin",
-        "spec": "D:\\cordova_ionic\\HotlineManagerIonic\\3hplugins\\MyPlugin",
-        "type": "directory"
-      },
-      "D:\\cordova_ionic\\HotlineManagerIonic"
-    ]
-  ],
-  "_from": "3hplugins\\MyPlugin",
-  "_id": "MyPlugin@0.0.1",
-  "_inCache": true,
-  "_location": "/MyPlugin",
-  "_phantomChildren": {},
-  "_requested": {
-    "raw": "D:\\cordova_ionic\\HotlineManagerIonic\\3hplugins\\MyPlugin",
-    "scope": null,
-    "escapedName": null,
-    "name": null,
-    "rawSpec": "D:\\cordova_ionic\\HotlineManagerIonic\\3hplugins\\MyPlugin",
-    "spec": "D:\\cordova_ionic\\HotlineManagerIonic\\3hplugins\\MyPlugin",
-    "type": "directory"
-  },
-  "_requiredBy": [
-    "#USER",
-    "/"
-  ],
-  "_resolved": "file:3hplugins\\MyPlugin",
-  "_shasum": "edd3c640de90a48063c056fe73ebac4e62d11ebb",
-  "_shrinkwrap": null,
-  "_spec": "D:\\cordova_ionic\\HotlineManagerIonic\\3hplugins\\MyPlugin",
-  "_where": "D:\\cordova_ionic\\HotlineManagerIonic",
-  "author": "",
+  "name": "MyPlugin",
+  "version": "0.0.1",
+  "description": "",
   "cordova": {
     "id": "cordova.plugin.MyPlugin",
     "platforms": [
       "android"
     ]
   },
-  "dependencies": {},
-  "devDependencies": {},
   "keywords": [
     "ecosystem:cordova",
     "cordova-android"
   ],
-  "license": "ISC",
-  "name": "MyPlugin",
-  "optionalDependencies": {},
-  "readme": "ERROR: No README data found!",
-  "version": "0.0.1"
+  "author": "",
+  "license": "ISC"
 }

@@ -1,41 +1,19 @@
 {
-  "_args": [
-    [
-      {
-        "raw": "cordova-plugin-video-player",
-        "scope": null,
-        "escapedName": "cordova-plugin-video-player",
-        "name": "cordova-plugin-video-player",
-        "rawSpec": "",
-        "spec": "latest",
-        "type": "tag"
-      },
-      "D:\\cordova_ionic\\HotlineManagerIonic"
-    ]
-  ],
-  "_from": "cordova-plugin-video-player@latest",
+  "_from": "cordova-plugin-video-player",
   "_id": "cordova-plugin-video-player@1.0.1",
-  "_inCache": true,
+  "_inBundle": false,
+  "_integrity": "sha512-cK9oTa/N/kp+I1W6BYTW/N0h1dNuWT/m+PpwDG6K2UpeUCOsy2ynrzz9e6fOn1vCQ85koQzL6Pve0XNzupAVew==",
   "_location": "/cordova-plugin-video-player",
-  "_nodeVersion": "6.10.3",
-  "_npmOperationalInternal": {
-    "host": "s3://npm-registry-packages",
-    "tmp": "tmp/cordova-plugin-video-player-1.0.1.tgz_1499789147525_0.036127605475485325"
-  },
-  "_npmUser": {
-    "name": "moust",
-    "email": "qaupetit@gmail.com"
-  },
-  "_npmVersion": "5.2.0",
   "_phantomChildren": {},
   "_requested": {
+    "type": "tag",
+    "registry": true,
     "raw": "cordova-plugin-video-player",
-    "scope": null,
-    "escapedName": "cordova-plugin-video-player",
     "name": "cordova-plugin-video-player",
+    "escapedName": "cordova-plugin-video-player",
     "rawSpec": "",
-    "spec": "latest",
-    "type": "tag"
+    "saveSpec": null,
+    "fetchSpec": "latest"
   },
   "_requiredBy": [
     "#USER",
@@ -43,7 +21,6 @@
   ],
   "_resolved": "https://registry.npmjs.org/cordova-plugin-video-player/-/cordova-plugin-video-player-1.0.1.tgz",
   "_shasum": "3dbc2a14e60eadb1b35e491f94ead2fea068d059",
-  "_shrinkwrap": null,
   "_spec": "cordova-plugin-video-player",
   "_where": "D:\\cordova_ionic\\HotlineManagerIonic",
   "author": {
@@ -52,6 +29,7 @@
   "bugs": {
     "url": "https://github.com/moust/cordova-plugin-videoplayer/issues"
   },
+  "bundleDependencies": false,
   "cordova": {
     "id": "cordova-plugin-video-player",
     "platforms": [
@@ -59,15 +37,8 @@
       "ios"
     ]
   },
-  "dependencies": {},
+  "deprecated": false,
   "description": "A Codova plugin that simply allows you to immediately play a video in fullscreen mode.",
-  "devDependencies": {},
-  "directories": {},
-  "dist": {
-    "integrity": "sha512-cK9oTa/N/kp+I1W6BYTW/N0h1dNuWT/m+PpwDG6K2UpeUCOsy2ynrzz9e6fOn1vCQ85koQzL6Pve0XNzupAVew==",
-    "shasum": "3dbc2a14e60eadb1b35e491f94ead2fea068d059",
-    "tarball": "https://registry.npmjs.org/cordova-plugin-video-player/-/cordova-plugin-video-player-1.0.1.tgz"
-  },
   "engines": {
     "cordovaDependencies": {
       "2.0.0": {
@@ -75,7 +46,6 @@
       }
     }
   },
-  "gitHead": "c25b83bc95346741f65923e15060c4516267622b",
   "homepage": "https://github.com/moust/cordova-plugin-videoplayer#readme",
   "keywords": [
     "ecosystem:cordova",
@@ -86,15 +56,7 @@
     "fullscreen"
   ],
   "license": "MIT",
-  "maintainers": [
-    {
-      "name": "moust",
-      "email": "qaupetit@gmail.com"
-    }
-  ],
   "name": "cordova-plugin-video-player",
-  "optionalDependencies": {},
-  "readme": "ERROR: No README data found!",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/moust/cordova-plugin-videoplayer.git"

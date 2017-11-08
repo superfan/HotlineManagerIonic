@@ -1,41 +1,19 @@
 {
-  "_args": [
-    [
-      {
-        "raw": "cordova-plugin-file-opener2",
-        "scope": null,
-        "escapedName": "cordova-plugin-file-opener2",
-        "name": "cordova-plugin-file-opener2",
-        "rawSpec": "",
-        "spec": "latest",
-        "type": "tag"
-      },
-      "D:\\cordova_ionic\\HotlineManagerIonic"
-    ]
-  ],
-  "_from": "cordova-plugin-file-opener2@latest",
+  "_from": "cordova-plugin-file-opener2",
   "_id": "cordova-plugin-file-opener2@2.0.19",
-  "_inCache": true,
+  "_inBundle": false,
+  "_integrity": "sha1-yjrhIlOVt3qx/lsgrMv+zGiOJJM=",
   "_location": "/cordova-plugin-file-opener2",
-  "_nodeVersion": "5.12.0",
-  "_npmOperationalInternal": {
-    "host": "s3://npm-registry-packages",
-    "tmp": "tmp/cordova-plugin-file-opener2-2.0.19.tgz_1496387012327_0.8553608951624483"
-  },
-  "_npmUser": {
-    "name": "pwlin",
-    "email": "pwlin05@gmail.com"
-  },
-  "_npmVersion": "3.8.6",
   "_phantomChildren": {},
   "_requested": {
+    "type": "tag",
+    "registry": true,
     "raw": "cordova-plugin-file-opener2",
-    "scope": null,
-    "escapedName": "cordova-plugin-file-opener2",
     "name": "cordova-plugin-file-opener2",
+    "escapedName": "cordova-plugin-file-opener2",
     "rawSpec": "",
-    "spec": "latest",
-    "type": "tag"
+    "saveSpec": null,
+    "fetchSpec": "latest"
   },
   "_requiredBy": [
     "#USER",
@@ -43,7 +21,6 @@
   ],
   "_resolved": "https://registry.npmjs.org/cordova-plugin-file-opener2/-/cordova-plugin-file-opener2-2.0.19.tgz",
   "_shasum": "ca3ae1225395b77ab1fe5b20accbfecc688e2493",
-  "_shrinkwrap": null,
   "_spec": "cordova-plugin-file-opener2",
   "_where": "D:\\cordova_ionic\\HotlineManagerIonic",
   "author": {
@@ -52,6 +29,7 @@
   "bugs": {
     "url": "https://github.com/pwlin/cordova-plugin-file-opener2/issues"
   },
+  "bundleDependencies": false,
   "cordova": {
     "id": "cordova-plugin-file-opener2",
     "platforms": [
@@ -61,21 +39,14 @@
       "windows"
     ]
   },
-  "dependencies": {},
+  "deprecated": false,
   "description": "A File Opener Plugin for Cordova. (The Original Version)",
-  "devDependencies": {},
-  "directories": {},
-  "dist": {
-    "shasum": "ca3ae1225395b77ab1fe5b20accbfecc688e2493",
-    "tarball": "https://registry.npmjs.org/cordova-plugin-file-opener2/-/cordova-plugin-file-opener2-2.0.19.tgz"
-  },
   "engines": [
     {
       "name": "cordova",
       "version": ">=3.0.0"
     }
   ],
-  "gitHead": "f08a0fb15495e95f2bbe1fdb65077bd6e036b955",
   "homepage": "https://github.com/pwlin/cordova-plugin-file-opener2#readme",
   "keywords": [
     "ecosystem:cordova",
@@ -85,19 +56,10 @@
     "cordova-windows"
   ],
   "license": "MIT",
-  "maintainers": [
-    {
-      "name": "pwlin",
-      "email": "pwlin05@gmail.com"
-    }
-  ],
   "name": "cordova-plugin-file-opener2",
-  "optionalDependencies": {},
-  "readme": "ERROR: No README data found!",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pwlin/cordova-plugin-file-opener2.git"
   },
-  "scripts": {},
   "version": "2.0.19"
 }
