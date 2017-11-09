@@ -32,17 +32,17 @@ export class AppComponentService {
     if (this.globalService.isChrome) {
       this.myPlugin = this.globalService.getMyPluginMock();
       return this.dataService.init()
-        .then(result => this.parsePageIntent())
-        .then(result => this.dataService.downloadWords())
-        .then(result => this.dataService.downloadMaterials());
+        .then(result => this.parsePageIntent());
+        //.then(result => this.dataService.downloadWords())
+        //.then(result => this.dataService.downloadMaterials());
         //.then(result => this.dataService.downloadPersonnels())
     } else {
       return this.checkPermissions()
         .then(result => this.fileService.createDirRoot())
         .then(result => this.dataService.init())
-        .then(result => this.parsePageIntent())
-        .then(result => this.dataService.checkIfDownloadWords())
-        .then(result => this.dataService.checkIfDownloadMaterials());
+        .then(result => this.parsePageIntent());
+        //.then(result => this.dataService.checkIfDownloadWords())
+        //.then(result => this.dataService.checkIfDownloadMaterials());
         //.then(result => this.dataService.checkIfDownloadPersonnels())
     }
   }

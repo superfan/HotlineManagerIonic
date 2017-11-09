@@ -60,6 +60,8 @@ import {MyPlugin} from "@ionic-native/my-plugin";
 import {TabsPage} from "../pages/tabs/tabs";
 import {MorePage} from "../pages/more/more";
 import {NetworkSetPage} from "../pages/setting/networkset";
+import {AboutPage} from "../pages/about/about";
+import {ContactPage} from "../pages/contact/contact";
 
 
 @NgModule({
@@ -89,13 +91,15 @@ import {NetworkSetPage} from "../pages/setting/networkset";
     PopoverRecordPage,
     TabsPage,
     MorePage,
-    NetworkSetPage
+    NetworkSetPage,
+    AboutPage,
+    ContactPage
   ],
   imports: [
     BrowserModule,
     HttpModule,
     IonicModule.forRoot(MyApp, {
-      tabsHideOnSubPages: 'true'         //闅愯棌鍏ㄩ儴瀛愰〉闈abs
+      tabsHideOnSubPages: 'true'         //隐藏全部子页面tabs
     }),
     IonicStorageModule.forRoot()
   ],
@@ -123,7 +127,9 @@ import {NetworkSetPage} from "../pages/setting/networkset";
     MaterialsAddPage,
     TabsPage,
     MorePage,
-    NetworkSetPage
+    NetworkSetPage,
+    AboutPage,
+    ContactPage
   ],
   providers: [
     StatusBar,

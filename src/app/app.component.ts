@@ -4,7 +4,8 @@ import {StatusBar} from '@ionic-native/status-bar';
 import {SplashScreen} from '@ionic-native/splash-screen';
 import {AppComponentService} from "./app.component.service";
 import {GlobalService} from "../providers/GlobalService";
-import {TabsPage} from "../pages/tabs/tabs";
+import {MyWorkPage} from "../pages/mywork/mywork";
+//import {TabsPage} from "../pages/tabs/tabs";
 
 @Component({
   templateUrl: 'app.html',
@@ -28,14 +29,14 @@ export class MyApp {
         splashScreen.hide();
         return appComponentService.init();
       })
-      .then(result => console.log(result))
+      .then(page => this.rootPage = page)
       .catch(error => {
         console.error(error);
         this.globalService.showToast(error);
+        this.rootPage = MyWorkPage;
       })
       .then(() => {
         this.globalService.hideLoading();
-        this.rootPage = TabsPage;
       });
   }
 }

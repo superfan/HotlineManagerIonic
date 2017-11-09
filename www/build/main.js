@@ -925,7 +925,7 @@ BaseService = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__BaseService__ = __webpack_require__(123);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_file_transfer__ = __webpack_require__(224);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ionic_native_file__ = __webpack_require__(60);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ionic_native_file__ = __webpack_require__(61);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__model_Media__ = __webpack_require__(125);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__FileService__ = __webpack_require__(25);
 var __extends = (this && this.__extends) || (function () {
@@ -1460,7 +1460,7 @@ var MediaType;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__BaseService__ = __webpack_require__(123);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__GlobalService__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__DbService__ = __webpack_require__(62);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__DbService__ = __webpack_require__(63);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__FileService__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_camera__ = __webpack_require__(227);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ionic_native_media__ = __webpack_require__(228);
@@ -1758,7 +1758,7 @@ var MaterialInfoEx = (function () {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return WorkDetailPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__model_Task__ = __webpack_require__(36);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_DataService__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_GlobalService__ = __webpack_require__(7);
@@ -2712,11 +2712,11 @@ WorkDetailPage = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__model_Task__ = __webpack_require__(36);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__UploadService__ = __webpack_require__(124);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__DbService__ = __webpack_require__(62);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__DbService__ = __webpack_require__(63);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__MediaService__ = __webpack_require__(126);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__model_Media__ = __webpack_require__(125);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__SyncService__ = __webpack_require__(322);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__SyncService__ = __webpack_require__(321);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__model_MaterialsInfo__ = __webpack_require__(127);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__ConfigService__ = __webpack_require__(16);
 var __extends = (this && this.__extends) || (function () {
@@ -3653,10 +3653,10 @@ webpackEmptyAsyncContext.id = 137;
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ConfigService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(35);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_storage__ = __webpack_require__(59);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_storage__ = __webpack_require__(60);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__GlobalService__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_file__ = __webpack_require__(60);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_toPromise__ = __webpack_require__(320);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_file__ = __webpack_require__(61);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_toPromise__ = __webpack_require__(319);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_toPromise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_toPromise__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__FileService__ = __webpack_require__(25);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -4296,7 +4296,7 @@ webpackEmptyAsyncContext.id = 178;
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PopoverRecordPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_DataService__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_GlobalService__ = __webpack_require__(7);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -4406,7 +4406,7 @@ PopoverRecordPage = __decorate([
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SearchResultPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__searchdetail_searchdetails__ = __webpack_require__(233);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_DataService__ = __webpack_require__(13);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -4571,7 +4571,7 @@ SearchResultPage = __decorate([
 /* unused harmony export TaskState */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SearchDetailsPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_DataService__ = __webpack_require__(13);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -4754,7 +4754,7 @@ SearchDetailsPage = __decorate([
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return WorkInfoPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_DataService__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_GlobalService__ = __webpack_require__(7);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -5020,7 +5020,7 @@ WorkInfoPage = __decorate([
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return NewsDetailsPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -5061,7 +5061,7 @@ NewsDetailsPage = __decorate([
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MaterialsAddPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__model_MaterialsInfo__ = __webpack_require__(127);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_DataService__ = __webpack_require__(13);
@@ -5446,7 +5446,7 @@ StorageService = __decorate([
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return NetworkSetPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_ConfigService__ = __webpack_require__(16);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -5599,199 +5599,17 @@ NetworkSetPage = __decorate([
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TabsPage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mywork_mywork__ = __webpack_require__(68);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__history_myhistory__ = __webpack_require__(61);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__map_map__ = __webpack_require__(37);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__search_search__ = __webpack_require__(63);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__stationwork_stationwork__ = __webpack_require__(64);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__more_more__ = __webpack_require__(240);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__providers_GlobalService__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__providers_ConfigService__ = __webpack_require__(16);
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-
-
-
-
-// import {MyPlugin} from "@ionic-native/my-plugin";
-
-
-var TabsPage = (function () {
-    function TabsPage(globalService, configService) {
-        this.globalService = globalService;
-        this.configService = configService;
-        this.workerTabsInfo = [
-            { title: '我的任务', icon: 'home', page: __WEBPACK_IMPORTED_MODULE_1__mywork_mywork__["a" /* MyWorkPage */] },
-            { title: '历史记录', icon: 'document', page: __WEBPACK_IMPORTED_MODULE_2__history_myhistory__["a" /* MyHistory */] },
-            { title: '地图', icon: 'map', page: __WEBPACK_IMPORTED_MODULE_3__map_map__["a" /* MapPage */] },
-            { title: '更多', icon: 'more', page: __WEBPACK_IMPORTED_MODULE_6__more_more__["a" /* MorePage */] } // 公告、设置
-        ];
-        this.adminTabsInfo = [
-            { title: '站点任务', icon: 'home', page: __WEBPACK_IMPORTED_MODULE_5__stationwork_stationwork__["a" /* StationWorkPage */] },
-            { title: '查询', icon: 'search', page: __WEBPACK_IMPORTED_MODULE_4__search_search__["a" /* SearchPage */] },
-            { title: '地图', icon: 'map', page: __WEBPACK_IMPORTED_MODULE_3__map_map__["a" /* MapPage */] },
-            { title: '更多', icon: 'more', page: __WEBPACK_IMPORTED_MODULE_6__more_more__["a" /* MorePage */] } // 公告、设置
-        ];
-        this.tabsInfo = this.workerTabsInfo;
-    }
-    TabsPage.prototype.ngOnInit = function () {
-        if (!this.globalService.isChrome) {
-            var _this_1 = this;
-            cordova.plugins.MyPlugin.getPushMessage(function (data) {
-                console.log(data);
-            }, function (error) {
-                console.error(error);
-            });
-            cordova.plugins.MyPlugin.getChangedInfo(function (data) {
-                console.log(data);
-                if (data) {
-                    var values = data.split('#');
-                    if (values[0] === 'outerNetwork' && values[1]) {
-                        _this_1.configService.setIsOuterNet(values[1] === 'true');
-                    }
-                }
-            }, function (error) {
-                console.error(error);
-            });
-        }
-    };
-    TabsPage.prototype.ngOnDestroy = function () {
-    };
-    return TabsPage;
-}());
-TabsPage = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\tabs\tabs.html"*/'<ion-tabs>\n\n  <ion-tab [root]="tabsInfo[0].page" tabTitle="{{tabsInfo[0].title}}" tabIcon="{{tabsInfo[0].icon}}"></ion-tab>\n\n  <ion-tab [root]="tabsInfo[1].page" tabTitle="{{tabsInfo[1].title}}" tabIcon="{{tabsInfo[1].icon}}"></ion-tab>\n\n  <ion-tab [root]="tabsInfo[2].page" tabTitle="{{tabsInfo[2].title}}" tabIcon="{{tabsInfo[2].icon}}"></ion-tab>\n\n  <ion-tab [root]="tabsInfo[3].page" tabTitle="{{tabsInfo[3].title}}" tabIcon="{{tabsInfo[3].icon}}"></ion-tab>\n\n</ion-tabs>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\tabs\tabs.html"*/
-    }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_7__providers_GlobalService__["a" /* GlobalService */],
-        __WEBPACK_IMPORTED_MODULE_8__providers_ConfigService__["a" /* ConfigService */]])
-], TabsPage);
-
-//# sourceMappingURL=tabs.js.map
-
-/***/ }),
-
-/***/ 240:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MorePage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_GlobalService__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__setting_setting__ = __webpack_require__(67);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__news_news__ = __webpack_require__(65);
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-
-
-/**
- * Created by zhangjing on 2017/8/23.
- */
-var ItemId;
-(function (ItemId) {
-    ItemId[ItemId["News"] = 0] = "News";
-    ItemId[ItemId["Setting"] = 1] = "Setting";
-})(ItemId || (ItemId = {}));
-var MorePage = (function () {
-    function MorePage(navCtrl, globalService) {
-        this.navCtrl = navCtrl;
-        this.globalService = globalService;
-        //private readonly tag: string = "[MorePage]";
-        this.title = '更多';
-        this.imgWidth = 64;
-        this.imgHeight = 64;
-        this.listItems = [];
-    }
-    /**
-     * 初始化list
-     */
-    MorePage.prototype.initListItem = function () {
-        this.listItems.push({
-            id: ItemId.News,
-            src: 'assets/img/ic_news.png',
-            name: '公告',
-            active: true,
-            count: 0
-        });
-        this.listItems.push({
-            id: ItemId.Setting,
-            src: 'assets/img/ic_setting.png',
-            name: '设置',
-            active: true,
-            count: 0
-        });
-    };
-    MorePage.prototype.ngOnInit = function () {
-        this.initListItem();
-    };
-    /**
-     * 选择功能按钮
-     * @param id
-     */
-    MorePage.prototype.itemSelected = function (id) {
-        console.log(id);
-        switch (id) {
-            case ItemId.News:
-                this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_4__news_news__["a" /* NewsPage */]);
-                break;
-            case ItemId.Setting:
-                this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_3__setting_setting__["a" /* SettingPage */]);
-                break;
-            default:
-                break;
-        }
-    };
-    return MorePage;
-}());
-MorePage = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-main',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\more\more.html"*/'<ion-header>\n\n  <ion-toolbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n  </ion-toolbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-main">\n\n  <!--list style-->\n\n  <ion-list>\n\n    <ion-item *ngFor="let item of listItems">\n\n      <div class="list-item" *ngIf="item.active" (click)="itemSelected(item.id)">\n\n        <img src="{{item.src}}" width="{{imgWidth}}" height="{{imgHeight}}" class="item-img"/>\n\n        <p class="item-name">{{item.name}}</p>\n\n        <ion-badge color="danger" class="list-item-badge" *ngIf="item.count>0">{{item.count}}</ion-badge>\n\n      </div>\n\n    </ion-item>\n\n  </ion-list>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\more\more.html"*/
-    }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
-        __WEBPACK_IMPORTED_MODULE_2__providers_GlobalService__["a" /* GlobalService */]])
-], MorePage);
-
-//# sourceMappingURL=more.js.map
-
-/***/ }),
-
-/***/ 241:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoginPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__main_main__ = __webpack_require__(242);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__main_main__ = __webpack_require__(240);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_forms__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_app_preferences__ = __webpack_require__(243);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_network__ = __webpack_require__(244);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_app_preferences__ = __webpack_require__(241);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_network__ = __webpack_require__(242);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__providers_GlobalService__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__model_UserInfo__ = __webpack_require__(328);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__model_UserInfo__ = __webpack_require__(327);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__providers_DataService__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__ionic_native_device__ = __webpack_require__(245);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__ionic_native_device__ = __webpack_require__(243);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -6029,25 +5847,25 @@ LoginPage = __decorate([
 
 /***/ }),
 
-/***/ 242:
+/***/ 240:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MainPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mywork_mywork__ = __webpack_require__(68);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__news_news__ = __webpack_require__(65);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__stationwork_stationwork__ = __webpack_require__(64);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__search_search__ = __webpack_require__(63);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mywork_mywork__ = __webpack_require__(49);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__news_news__ = __webpack_require__(66);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__stationwork_stationwork__ = __webpack_require__(65);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__search_search__ = __webpack_require__(64);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__providers_DataService__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__setting_setting__ = __webpack_require__(67);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__history_myhistory__ = __webpack_require__(61);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__setting_setting__ = __webpack_require__(68);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__history_myhistory__ = __webpack_require__(62);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__providers_ConfigService__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__map_map__ = __webpack_require__(37);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__model_MapParam__ = __webpack_require__(48);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__materials_materials__ = __webpack_require__(66);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__materials_materials__ = __webpack_require__(67);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -6314,7 +6132,7 @@ MainPage = __decorate([
 
 /***/ }),
 
-/***/ 247:
+/***/ 245:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6350,13 +6168,108 @@ HttpInterceptor = __decorate([
 
 /***/ }),
 
-/***/ 248:
+/***/ 246:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MorePage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_GlobalService__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__setting_setting__ = __webpack_require__(68);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__news_news__ = __webpack_require__(66);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+/**
+ * Created by zhangjing on 2017/8/23.
+ */
+var ItemId;
+(function (ItemId) {
+    ItemId[ItemId["News"] = 0] = "News";
+    ItemId[ItemId["Setting"] = 1] = "Setting";
+})(ItemId || (ItemId = {}));
+var MorePage = (function () {
+    function MorePage(navCtrl, globalService) {
+        this.navCtrl = navCtrl;
+        this.globalService = globalService;
+        //private readonly tag: string = "[MorePage]";
+        this.title = '更多';
+        this.imgWidth = 64;
+        this.imgHeight = 64;
+        this.listItems = [];
+    }
+    /**
+     * 初始化list
+     */
+    MorePage.prototype.initListItem = function () {
+        this.listItems.push({
+            id: ItemId.News,
+            src: 'assets/img/ic_news.png',
+            name: '公告',
+            active: true,
+            count: 0
+        });
+        this.listItems.push({
+            id: ItemId.Setting,
+            src: 'assets/img/ic_setting.png',
+            name: '设置',
+            active: true,
+            count: 0
+        });
+    };
+    MorePage.prototype.ngOnInit = function () {
+        this.initListItem();
+    };
+    /**
+     * 选择功能按钮
+     * @param id
+     */
+    MorePage.prototype.itemSelected = function (id) {
+        console.log(id);
+        switch (id) {
+            case ItemId.News:
+                this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_4__news_news__["a" /* NewsPage */]);
+                break;
+            case ItemId.Setting:
+                this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_3__setting_setting__["a" /* SettingPage */]);
+                break;
+            default:
+                break;
+        }
+    };
+    return MorePage;
+}());
+MorePage = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+        selector: 'page-main',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\more\more.html"*/'<ion-header>\n\n  <ion-toolbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n  </ion-toolbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-main">\n\n  <!--list style-->\n\n  <ion-list>\n\n    <ion-item *ngFor="let item of listItems">\n\n      <div class="list-item" *ngIf="item.active" (click)="itemSelected(item.id)">\n\n        <img src="{{item.src}}" width="{{imgWidth}}" height="{{imgHeight}}" class="item-img"/>\n\n        <p class="item-name">{{item.name}}</p>\n\n        <ion-badge color="danger" class="list-item-badge" *ngIf="item.count>0">{{item.count}}</ion-badge>\n\n      </div>\n\n    </ion-item>\n\n  </ion-list>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\more\more.html"*/
+    }),
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
+        __WEBPACK_IMPORTED_MODULE_2__providers_GlobalService__["a" /* GlobalService */]])
+], MorePage);
+
+//# sourceMappingURL=more.js.map
+
+/***/ }),
+
+/***/ 247:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(249);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(266);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(248);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(265);
 
 
 Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* platformBrowserDynamic */])().bootstrapModule(__WEBPACK_IMPORTED_MODULE_1__app_module__["a" /* AppModule */]);
@@ -6370,9 +6283,9 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return FileService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ionic_native_file__ = __webpack_require__(60);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ionic_native_file__ = __webpack_require__(61);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_transfer__ = __webpack_require__(221);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_zip__ = __webpack_require__(222);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_file_opener__ = __webpack_require__(223);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -6677,33 +6590,33 @@ FileService = __decorate([
 
 /***/ }),
 
-/***/ 266:
+/***/ 265:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__ = __webpack_require__(32);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__ = __webpack_require__(218);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_status_bar__ = __webpack_require__(220);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__app_component__ = __webpack_require__(315);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_home_home__ = __webpack_require__(325);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_welcome_welcome__ = __webpack_require__(326);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_login_login__ = __webpack_require__(241);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_main_main__ = __webpack_require__(242);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__pages_mywork_mywork__ = __webpack_require__(68);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pages_news_news__ = __webpack_require__(65);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__app_component__ = __webpack_require__(314);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_home_home__ = __webpack_require__(324);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_welcome_welcome__ = __webpack_require__(325);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_login_login__ = __webpack_require__(239);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_main_main__ = __webpack_require__(240);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__pages_mywork_mywork__ = __webpack_require__(49);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pages_news_news__ = __webpack_require__(66);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__pages_workdetail_workdetail__ = __webpack_require__(128);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__pages_stationwork_stationwork__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__pages_stationwork_stationwork__ = __webpack_require__(65);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__pages_workinfo_workinfo__ = __webpack_require__(234);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__pages_history_myhistory__ = __webpack_require__(61);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__ionic_native_file__ = __webpack_require__(60);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__pages_history_myhistory__ = __webpack_require__(62);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__ionic_native_file__ = __webpack_require__(61);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__providers_FileService__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__ionic_native_transfer__ = __webpack_require__(221);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__providers_StorageService__ = __webpack_require__(237);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__angular_http__ = __webpack_require__(35);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__ionic_native_app_version__ = __webpack_require__(246);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__ionic_native_app_version__ = __webpack_require__(244);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__ionic_native_zip__ = __webpack_require__(222);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__providers_ConfigService__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__ionic_native_file_opener__ = __webpack_require__(223);
@@ -6711,21 +6624,21 @@ FileService = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_26__providers_DownloadService__ = __webpack_require__(121);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_27__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_28__providers_UploadService__ = __webpack_require__(124);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_29__ionic_native_network__ = __webpack_require__(244);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_30__pages_search_search__ = __webpack_require__(63);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_31__ionic_native_app_preferences__ = __webpack_require__(243);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_29__ionic_native_network__ = __webpack_require__(242);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_30__pages_search_search__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_31__ionic_native_app_preferences__ = __webpack_require__(241);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_32__pages_searchresult_searchresult__ = __webpack_require__(232);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_33__pages_searchdetail_searchdetails__ = __webpack_require__(233);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_34__pages_newsdetails_newsdetails__ = __webpack_require__(235);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_35__pages_setting_setting__ = __webpack_require__(67);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_36__providers_HttpInterceptorBackend__ = __webpack_require__(329);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_37__providers_HttpInterceptor__ = __webpack_require__(247);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_35__pages_setting_setting__ = __webpack_require__(68);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_36__providers_HttpInterceptorBackend__ = __webpack_require__(328);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_37__providers_HttpInterceptor__ = __webpack_require__(245);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_38__ionic_native_sqlite__ = __webpack_require__(225);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_39__ionic_native_sqlite_porter__ = __webpack_require__(226);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_40__providers_DbService__ = __webpack_require__(62);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_41__ionic_storage__ = __webpack_require__(59);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_42__ionic_native_device__ = __webpack_require__(245);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_43__pipes_ValueValidPipe__ = __webpack_require__(330);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_40__providers_DbService__ = __webpack_require__(63);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_41__ionic_storage__ = __webpack_require__(60);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_42__ionic_native_device__ = __webpack_require__(243);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_43__pipes_ValueValidPipe__ = __webpack_require__(329);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_44__ionic_native_camera__ = __webpack_require__(227);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_45__ionic_native_media_capture__ = __webpack_require__(229);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_46__ionic_native_video_player__ = __webpack_require__(230);
@@ -6735,12 +6648,14 @@ FileService = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_50__pages_record_PopoverRecordPage__ = __webpack_require__(231);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_51__ionic_native_file_transfer__ = __webpack_require__(224);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_52__pages_map_map__ = __webpack_require__(37);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_53__pages_materials_materials__ = __webpack_require__(66);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_53__pages_materials_materials__ = __webpack_require__(67);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_54__pages_materialsadd_materialsadd__ = __webpack_require__(236);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_55__ionic_native_my_plugin__ = __webpack_require__(120);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_56__pages_tabs_tabs__ = __webpack_require__(239);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_57__pages_more_more__ = __webpack_require__(240);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_56__pages_tabs_tabs__ = __webpack_require__(330);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_57__pages_more_more__ = __webpack_require__(246);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_58__pages_setting_networkset__ = __webpack_require__(238);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_59__pages_about_about__ = __webpack_require__(331);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_60__pages_contact_contact__ = __webpack_require__(332);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -6807,6 +6722,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
+
+
 var AppModule = (function () {
     function AppModule() {
     }
@@ -6840,13 +6757,15 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_50__pages_record_PopoverRecordPage__["a" /* PopoverRecordPage */],
             __WEBPACK_IMPORTED_MODULE_56__pages_tabs_tabs__["a" /* TabsPage */],
             __WEBPACK_IMPORTED_MODULE_57__pages_more_more__["a" /* MorePage */],
-            __WEBPACK_IMPORTED_MODULE_58__pages_setting_networkset__["a" /* NetworkSetPage */]
+            __WEBPACK_IMPORTED_MODULE_58__pages_setting_networkset__["a" /* NetworkSetPage */],
+            __WEBPACK_IMPORTED_MODULE_59__pages_about_about__["a" /* AboutPage */],
+            __WEBPACK_IMPORTED_MODULE_60__pages_contact_contact__["a" /* ContactPage */]
         ],
         imports: [
             __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
             __WEBPACK_IMPORTED_MODULE_20__angular_http__["c" /* HttpModule */],
             __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["h" /* IonicModule */].forRoot(__WEBPACK_IMPORTED_MODULE_5__app_component__["a" /* MyApp */], {
-                tabsHideOnSubPages: 'true' //隐藏全部子页面tabs
+                tabsHideOnSubPages: 'true' //����ȫ����ҳ��tabs
             }, {
                 links: []
             }),
@@ -6876,7 +6795,9 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_54__pages_materialsadd_materialsadd__["a" /* MaterialsAddPage */],
             __WEBPACK_IMPORTED_MODULE_56__pages_tabs_tabs__["a" /* TabsPage */],
             __WEBPACK_IMPORTED_MODULE_57__pages_more_more__["a" /* MorePage */],
-            __WEBPACK_IMPORTED_MODULE_58__pages_setting_networkset__["a" /* NetworkSetPage */]
+            __WEBPACK_IMPORTED_MODULE_58__pages_setting_networkset__["a" /* NetworkSetPage */],
+            __WEBPACK_IMPORTED_MODULE_59__pages_about_about__["a" /* AboutPage */],
+            __WEBPACK_IMPORTED_MODULE_60__pages_contact_contact__["a" /* ContactPage */]
         ],
         providers: [
             __WEBPACK_IMPORTED_MODULE_4__ionic_native_status_bar__["a" /* StatusBar */],
@@ -6919,18 +6840,18 @@ AppModule = __decorate([
 
 /***/ }),
 
-/***/ 315:
+/***/ 314:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MyApp; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__ = __webpack_require__(220);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__ = __webpack_require__(218);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__app_component_service__ = __webpack_require__(316);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__app_component_service__ = __webpack_require__(315);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_GlobalService__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_tabs_tabs__ = __webpack_require__(239);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_mywork_mywork__ = __webpack_require__(49);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -6947,6 +6868,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+//import {TabsPage} from "../pages/tabs/tabs";
 var MyApp = (function () {
     function MyApp(platform, statusBar, splashScreen, appComponentService, globalService) {
         var _this = this;
@@ -6962,14 +6884,14 @@ var MyApp = (function () {
             splashScreen.hide();
             return appComponentService.init();
         })
-            .then(function (result) { return console.log(result); })
+            .then(function (page) { return _this.rootPage = page; })
             .catch(function (error) {
             console.error(error);
             _this.globalService.showToast(error);
+            _this.rootPage = __WEBPACK_IMPORTED_MODULE_6__pages_mywork_mywork__["a" /* MyWorkPage */];
         })
             .then(function () {
             _this.globalService.hideLoading();
-            _this.rootPage = __WEBPACK_IMPORTED_MODULE_6__pages_tabs_tabs__["a" /* TabsPage */];
         });
     }
     return MyApp;
@@ -6989,7 +6911,7 @@ MyApp = __decorate([
 
 /***/ }),
 
-/***/ 316:
+/***/ 315:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6999,14 +6921,14 @@ MyApp = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_FileService__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_my_plugin__ = __webpack_require__(120);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_history_myhistory__ = __webpack_require__(61);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_history_myhistory__ = __webpack_require__(62);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_map_map__ = __webpack_require__(37);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_search_search__ = __webpack_require__(63);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_stationwork_stationwork__ = __webpack_require__(64);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_news_news__ = __webpack_require__(65);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__pages_materials_materials__ = __webpack_require__(66);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pages_setting_setting__ = __webpack_require__(67);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__pages_mywork_mywork__ = __webpack_require__(68);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_search_search__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_stationwork_stationwork__ = __webpack_require__(65);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_news_news__ = __webpack_require__(66);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__pages_materials_materials__ = __webpack_require__(67);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pages_setting_setting__ = __webpack_require__(68);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__pages_mywork_mywork__ = __webpack_require__(49);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__providers_DataService__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__providers_ConfigService__ = __webpack_require__(16);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -7051,18 +6973,18 @@ var AppComponentService = (function () {
         if (this.globalService.isChrome) {
             this.myPlugin = this.globalService.getMyPluginMock();
             return this.dataService.init()
-                .then(function (result) { return _this.parsePageIntent(); })
-                .then(function (result) { return _this.dataService.downloadWords(); })
-                .then(function (result) { return _this.dataService.downloadMaterials(); });
+                .then(function (result) { return _this.parsePageIntent(); });
+            //.then(result => this.dataService.downloadWords())
+            //.then(result => this.dataService.downloadMaterials());
             //.then(result => this.dataService.downloadPersonnels())
         }
         else {
             return this.checkPermissions()
                 .then(function (result) { return _this.fileService.createDirRoot(); })
                 .then(function (result) { return _this.dataService.init(); })
-                .then(function (result) { return _this.parsePageIntent(); })
-                .then(function (result) { return _this.dataService.checkIfDownloadWords(); })
-                .then(function (result) { return _this.dataService.checkIfDownloadMaterials(); });
+                .then(function (result) { return _this.parsePageIntent(); });
+            //.then(result => this.dataService.checkIfDownloadWords())
+            //.then(result => this.dataService.checkIfDownloadMaterials());
             //.then(result => this.dataService.checkIfDownloadPersonnels())
         }
     };
@@ -7221,7 +7143,7 @@ AppComponentService = __decorate([
 
 /***/ }),
 
-/***/ 322:
+/***/ 321:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7231,9 +7153,9 @@ AppComponentService = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__DownloadService__ = __webpack_require__(121);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__UploadService__ = __webpack_require__(124);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__GlobalService__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__model_Task__ = __webpack_require__(36);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__DbService__ = __webpack_require__(62);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__DbService__ = __webpack_require__(63);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__MediaService__ = __webpack_require__(126);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__ConfigService__ = __webpack_require__(16);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -8057,7 +7979,7 @@ SyncService = __decorate([
 
 /***/ }),
 
-/***/ 323:
+/***/ 322:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8105,7 +8027,7 @@ var HistoryEx = (function () {
 
 /***/ }),
 
-/***/ 324:
+/***/ 323:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8124,13 +8046,13 @@ var SearchTaskRequest = (function () {
 
 /***/ }),
 
-/***/ 325:
+/***/ 324:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HomePage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8159,16 +8081,16 @@ HomePage = __decorate([
 
 /***/ }),
 
-/***/ 326:
+/***/ 325:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return WelcomePage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__login_login__ = __webpack_require__(241);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__login_login__ = __webpack_require__(239);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_FileService__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_app_version__ = __webpack_require__(246);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_app_version__ = __webpack_require__(244);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__providers_DataService__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__ionic_native_android_permissions__ = __webpack_require__(119);
@@ -8355,7 +8277,7 @@ WelcomePage = __decorate([
 
 /***/ }),
 
-/***/ 328:
+/***/ 327:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8373,14 +8295,14 @@ var UserInfo = (function () {
 
 /***/ }),
 
-/***/ 329:
+/***/ 328:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HttpInterceptorBackend; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(35);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__HttpInterceptor__ = __webpack_require__(247);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__HttpInterceptor__ = __webpack_require__(245);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8416,7 +8338,7 @@ HttpInterceptorBackend = __decorate([
 
 /***/ }),
 
-/***/ 330:
+/***/ 329:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8450,6 +8372,163 @@ ValueValidPipe = __decorate([
 ], ValueValidPipe);
 
 //# sourceMappingURL=ValueValidPipe.js.map
+
+/***/ }),
+
+/***/ 330:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TabsPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mywork_mywork__ = __webpack_require__(49);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__history_myhistory__ = __webpack_require__(62);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__map_map__ = __webpack_require__(37);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__search_search__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__stationwork_stationwork__ = __webpack_require__(65);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__more_more__ = __webpack_require__(246);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__providers_GlobalService__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__providers_ConfigService__ = __webpack_require__(16);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+
+
+// import {MyPlugin} from "@ionic-native/my-plugin";
+
+
+var TabsPage = (function () {
+    function TabsPage(globalService, configService) {
+        this.globalService = globalService;
+        this.configService = configService;
+        this.workerTabsInfo = [
+            { title: '我的任务', icon: 'home', page: __WEBPACK_IMPORTED_MODULE_1__mywork_mywork__["a" /* MyWorkPage */] },
+            { title: '历史记录', icon: 'document', page: __WEBPACK_IMPORTED_MODULE_2__history_myhistory__["a" /* MyHistory */] },
+            { title: '地图', icon: 'map', page: __WEBPACK_IMPORTED_MODULE_3__map_map__["a" /* MapPage */] },
+            { title: '更多', icon: 'more', page: __WEBPACK_IMPORTED_MODULE_6__more_more__["a" /* MorePage */] } // 公告、设置
+        ];
+        this.adminTabsInfo = [
+            { title: '站点任务', icon: 'home', page: __WEBPACK_IMPORTED_MODULE_5__stationwork_stationwork__["a" /* StationWorkPage */] },
+            { title: '查询', icon: 'search', page: __WEBPACK_IMPORTED_MODULE_4__search_search__["a" /* SearchPage */] },
+            { title: '地图', icon: 'map', page: __WEBPACK_IMPORTED_MODULE_3__map_map__["a" /* MapPage */] },
+            { title: '更多', icon: 'more', page: __WEBPACK_IMPORTED_MODULE_6__more_more__["a" /* MorePage */] } // 公告、设置
+        ];
+        this.tabsInfo = this.workerTabsInfo;
+    }
+    TabsPage.prototype.ngOnInit = function () {
+        if (!this.globalService.isChrome) {
+            var _this_1 = this;
+            cordova.plugins.MyPlugin.getPushMessage(function (data) {
+                console.log(data);
+            }, function (error) {
+                console.error(error);
+            });
+            cordova.plugins.MyPlugin.getChangedInfo(function (data) {
+                console.log(data);
+                if (data) {
+                    var values = data.split('#');
+                    if (values[0] === 'outerNetwork' && values[1]) {
+                        _this_1.configService.setIsOuterNet(values[1] === 'true');
+                    }
+                }
+            }, function (error) {
+                console.error(error);
+            });
+        }
+    };
+    TabsPage.prototype.ngOnDestroy = function () {
+    };
+    return TabsPage;
+}());
+TabsPage = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\tabs\tabs.html"*/'<ion-tabs>\n\n  <ion-tab [root]="tabsInfo[0].page" tabTitle="{{tabsInfo[0].title}}" tabIcon="{{tabsInfo[0].icon}}"></ion-tab>\n\n  <ion-tab [root]="tabsInfo[1].page" tabTitle="{{tabsInfo[1].title}}" tabIcon="{{tabsInfo[1].icon}}"></ion-tab>\n\n  <ion-tab [root]="tabsInfo[2].page" tabTitle="{{tabsInfo[2].title}}" tabIcon="{{tabsInfo[2].icon}}"></ion-tab>\n\n  <ion-tab [root]="tabsInfo[3].page" tabTitle="{{tabsInfo[3].title}}" tabIcon="{{tabsInfo[3].icon}}"></ion-tab>\n\n</ion-tabs>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\tabs\tabs.html"*/
+    }),
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_7__providers_GlobalService__["a" /* GlobalService */],
+        __WEBPACK_IMPORTED_MODULE_8__providers_ConfigService__["a" /* ConfigService */]])
+], TabsPage);
+
+//# sourceMappingURL=tabs.js.map
+
+/***/ }),
+
+/***/ 331:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AboutPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var AboutPage = (function () {
+    function AboutPage(navCtrl) {
+        this.navCtrl = navCtrl;
+    }
+    return AboutPage;
+}());
+AboutPage = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+        selector: 'page-about',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\about\about.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <ion-title>\n\n      About\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\about\about.html"*/
+    }),
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */]])
+], AboutPage);
+
+//# sourceMappingURL=about.js.map
+
+/***/ }),
+
+/***/ 332:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ContactPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var ContactPage = (function () {
+    function ContactPage(navCtrl) {
+        this.navCtrl = navCtrl;
+    }
+    return ContactPage;
+}());
+ContactPage = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+        selector: 'page-contact',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\contact\contact.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <ion-title>\n\n      Contact\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content>\n\n  <ion-list>\n\n    <ion-list-header>Follow us on Twitter</ion-list-header>\n\n    <ion-item>\n\n      <ion-icon name="ionic" item-start></ion-icon>\n\n      @ionicframework\n\n    </ion-item>\n\n  </ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\contact\contact.html"*/
+    }),
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */]])
+], ContactPage);
+
+//# sourceMappingURL=contact.js.map
 
 /***/ }),
 
@@ -8898,7 +8977,7 @@ function transform2Task(info, taskEx, processEx) {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MapPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__model_MapParam__ = __webpack_require__(48);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -9147,15 +9226,1274 @@ var MapParam = (function () {
 
 /***/ }),
 
-/***/ 61:
+/***/ 49:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MyWorkPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__workdetail_workdetail__ = __webpack_require__(128);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_DataService__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__model_Task__ = __webpack_require__(36);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__model_Process__ = __webpack_require__(122);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__providers_GlobalService__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__map_map__ = __webpack_require__(37);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__model_MapParam__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__materials_materials__ = __webpack_require__(67);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__providers_ConfigService__ = __webpack_require__(16);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+
+
+
+
+
+
+var FromWhere;
+(function (FromWhere) {
+    FromWhere[FromWhere["Download"] = 0] = "Download";
+    FromWhere[FromWhere["CancelOrReject"] = 1] = "CancelOrReject";
+    FromWhere[FromWhere["Search"] = 2] = "Search";
+    FromWhere[FromWhere["Delete"] = 3] = "Delete";
+})(FromWhere || (FromWhere = {}));
+var MyWorkPage = (function () {
+    function MyWorkPage(navCtrl, dataService, alertCtrl, events, globalService, configService) {
+        this.navCtrl = navCtrl;
+        this.dataService = dataService;
+        this.alertCtrl = alertCtrl;
+        this.events = events;
+        this.globalService = globalService;
+        this.configService = configService;
+        this.tag = "[MyWorkPage]";
+        this.title = '任务列表';
+        this.showToolbar = false;
+        this.showFab = false;
+        this.items = [];
+        this.since = this.globalService.taskSinceDefault;
+        this.count = this.globalService.taskCountDefault10;
+        this.isOperationBusy = false;
+        this.key = '';
+        this.replyHistories = [];
+    }
+    /**
+     * 初始化
+     */
+    MyWorkPage.prototype.ngOnInit = function () {
+        var _this = this;
+        console.log(this.tag, 'ngOnInit');
+        this.subscribeEvent(this.events);
+        this.showFab = false;
+        this.getTasks(this.since, this.count, this.key)
+            .then(function (data) {
+            _this.infiniteScroll.enable(data);
+            _this.getTaskCount();
+        })
+            .catch(function (error) { return console.error(error); });
+    };
+    /**
+     * 销毁
+     */
+    MyWorkPage.prototype.ngOnDestroy = function () {
+        console.log(this.tag, 'ngOnDestroy');
+        this.events.unsubscribe(this.globalService.myWorkDownloadFinishEvent);
+        this.events.unsubscribe(this.globalService.myWorkUpdateEvent);
+    };
+    /**
+     * 下拉同步
+     * @param refresher
+     */
+    MyWorkPage.prototype.doRefresh = function (refresher) {
+        console.log(this.tag, 'doRefresh');
+        // if (this.showToolbar) {
+        //   this.showToolbar = false;
+        //   this.content.resize();
+        // }
+        this.key = '';
+        this.dataService.downloadTasksAndDetails();
+    };
+    /**
+     * 上拉，加载更多项
+     * @param infiniteScroll
+     */
+    MyWorkPage.prototype.doInfinite = function (infiniteScroll) {
+        var _this = this;
+        console.log(this.tag, 'doInfinite begin');
+        setTimeout(function () {
+            _this.since += _this.count;
+            _this.getTasks(_this.since, _this.count, _this.key)
+                .then(function (data) {
+                if (!data) {
+                    infiniteScroll.enable(false);
+                }
+                else {
+                    infiniteScroll.complete();
+                    _this.getTaskDetails(_this.since, _this.count, _this.key);
+                }
+                console.log(_this.tag, 'doInfinite end');
+            })
+                .catch(function (error) {
+                console.error(error);
+                infiniteScroll.complete();
+            })
+                .then(function () {
+                _this.showFab = _this.items.length > _this.count;
+            });
+        }, 100);
+    };
+    /**
+     * 处理各个操作
+     * @param taskEx
+     * @param index
+     */
+    MyWorkPage.prototype.itemSelected = function (taskEx, index) {
+        var _this = this;
+        console.log(this.tag, "Selected Item " + index);
+        this.globalService.getLocation()
+            .then(function (location) {
+            switch (taskEx.processes[index].event) {
+                case 'accept':
+                    _this.accept(taskEx, location);
+                    break;
+                case 'go':
+                    _this.go(taskEx, location);
+                    break;
+                case 'arrive':
+                    _this.arrive(taskEx, location);
+                    break;
+                case 'reply':
+                    _this.reply(taskEx, location);
+                    break;
+                case 'reject':
+                    _this.rejectPrompt(taskEx, location);
+                    break;
+                case 'delay':
+                    _this.delayPrompt(taskEx, location);
+                    break;
+            }
+        })
+            .catch(function (error) {
+            console.error(error);
+            _this.globalService.showToast(error);
+        });
+    };
+    /**
+     * 显示/隐藏搜索框
+     * @param ev
+     */
+    MyWorkPage.prototype.toggleToolbar = function (ev) {
+        this.showToolbar = !this.showToolbar;
+        this.content.resize();
+    };
+    /**
+     * 搜索
+     * @param ev
+     */
+    MyWorkPage.prototype.onInput = function (ev) {
+        if (this.isOperationBusy) {
+            return this.globalService.showToast('后台繁忙...');
+        }
+        // set val to the value of the ev target
+        var val = ev.target.value;
+        if (val && val.trim() != '') {
+            this.key = val;
+        }
+        else {
+            this.key = '';
+        }
+        this.resetTasks(FromWhere.Search);
+    };
+    /**
+     *
+     * @param ev
+     */
+    MyWorkPage.prototype.onCancel = function (ev) {
+        console.log(this.tag, 'onCancel');
+    };
+    /**
+     * list回滚到顶部
+     * @param ev
+     */
+    MyWorkPage.prototype.doScroll2Top = function (ev) {
+        this.content.scrollToTop();
+    };
+    /**
+     * 定位地图
+     * @param taskEx
+     */
+    MyWorkPage.prototype.onLocate = function (taskEx) {
+        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_7__map_map__["a" /* MapPage */], new __WEBPACK_IMPORTED_MODULE_8__model_MapParam__["a" /* MapParam */](__WEBPACK_IMPORTED_MODULE_8__model_MapParam__["b" /* MapType */].Locate, taskEx.location, taskEx.id));
+    };
+    /**
+     * 预览工单
+     * @param taskEx
+     */
+    MyWorkPage.prototype.onPreview = function (taskEx) {
+        taskEx.isPreview = true;
+        var history = this.findReplyHistory(taskEx.id);
+        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_2__workdetail_workdetail__["a" /* WorkDetailPage */], [taskEx, history]);
+    };
+    /**
+     * 材料登记
+     * @param taskEx
+     */
+    MyWorkPage.prototype.onMaterials = function (taskEx) {
+        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_9__materials_materials__["a" /* MaterialsPage */], taskEx.id);
+    };
+    MyWorkPage.prototype.onDelete = function (taskEx) {
+        var _this = this;
+        var alert = this.alertCtrl.create({
+            title: '删除任务',
+            message: '是否删除该任务及其所有操作?',
+            buttons: [
+                {
+                    text: '取消',
+                    role: 'cancel',
+                    handler: function () {
+                        console.log('Cancel clicked');
+                    }
+                },
+                {
+                    text: '确定',
+                    handler: function () {
+                        console.log('Ok clicked');
+                        _this.dataService.deleteOneTaskWithAllInfos(taskEx.id)
+                            .then(function (result) { return _this.resetTasks(FromWhere.Delete); })
+                            .catch(function (err) { return console.error(err); });
+                    }
+                }
+            ]
+        });
+        alert.present();
+    };
+    /**
+     * 获取任务列表
+     * @param since
+     * @param count
+     * @param key
+     * @returns {Promise<boolean>}
+     */
+    MyWorkPage.prototype.getTasks = function (since, count, key) {
+        var _this = this;
+        return this.dataService.getTasks(since, count, key)
+            .then(function (tasks) {
+            console.log(_this.tag + "getTasks: " + tasks.length);
+            if (tasks.length <= 0) {
+                return Promise.resolve(false);
+            }
+            else {
+                var taskExs_1 = __WEBPACK_IMPORTED_MODULE_4__model_Task__["a" /* TaskEx */].transform(tasks, _this.items);
+                return _this.setProcesses(_this.items)
+                    .then(function () { return taskExs_1.map(function (taskEx) { return taskEx.id; }); })
+                    .then(function (taskIds) { return _this.dataService.checkIfExistNotUploadedHistories(taskIds); })
+                    .then(function (histories) {
+                    var _loop_1 = function (taskEx) {
+                        var history_1 = histories.find(function (history) { return history.taskId === taskEx.id; });
+                        if (history_1) {
+                            taskEx.isUploaded = history_1.uploadedFlag === _this.globalService.uploadedFlagForUploaded;
+                        }
+                    };
+                    for (var _i = 0, taskExs_2 = taskExs_1; _i < taskExs_2.length; _i++) {
+                        var taskEx = taskExs_2[_i];
+                        _loop_1(taskEx);
+                    }
+                })
+                    .then(function () { return tasks.filter(function (task) { return task.state === __WEBPACK_IMPORTED_MODULE_4__model_Task__["b" /* TaskState */].Reply; }); })
+                    .then(function (tasks) { return tasks.map(function (task) { return task.taskId; }); })
+                    .then(function (taskIds) { return _this.dataService.getReplyHistories(taskIds); })
+                    .then(function (histories) {
+                    var result = false;
+                    try {
+                        (_a = _this.replyHistories).push.apply(_a, histories);
+                        _this.replyHistories.forEach(function (history) {
+                            if (history.mediaNames && history.mediaNames.length > 0) {
+                                var taskEx = _this.items.find(function (taskEx) { return taskEx.id === history.taskId; });
+                                if (taskEx) {
+                                    var mediaNames = history.mediaNames;
+                                    taskEx.photoCount = mediaNames.filter(function (name) { return name.lastIndexOf(_this.globalService.photoSuffix) !== -1; }).length;
+                                    taskEx.audioCount = mediaNames.filter(function (name) { return name.lastIndexOf(_this.globalService.audioSuffix) !== -1; }).length;
+                                    taskEx.videoCount = mediaNames.filter(function (name) { return name.lastIndexOf(_this.globalService.videoSuffix) !== -1; }).length;
+                                }
+                            }
+                        });
+                        result = true;
+                    }
+                    catch (err) {
+                        console.error(err);
+                    }
+                    return Promise.resolve(result);
+                    var _a;
+                });
+            }
+        });
+    };
+    /**
+     * 读取文件的超期时限
+     */
+    MyWorkPage.prototype.getOverdueFromFile = function () {
+        var _this = this;
+        this.configService.getOverdueTime()
+            .then(function (data) {
+            console.log(_this.tag + data);
+            _this.overdueTime = data;
+            _this.getTaskDetails(_this.since, _this.count, _this.key)
+                .then(function (data) {
+                console.log(_this.tag + data);
+                _this.getTaskDetailOverdueCount()
+                    .then(function (data) {
+                    if (data > 0) {
+                        _this.showOverdueCountAlert(data);
+                    }
+                });
+            })
+                .catch(function (err) {
+                console.log(_this.tag + err);
+            });
+        })
+            .catch(function (err) {
+            console.log(_this.tag + err);
+        });
+    };
+    MyWorkPage.prototype.showOverdueCountAlert = function (count) {
+        var alert = this.alertCtrl.create({
+            title: '提示!',
+            subTitle: '当前有' + count + '个热线工单任务超期',
+            buttons: ['OK']
+        });
+        alert.present();
+    };
+    /**
+     * 获取超期任务数量
+     * @returns {Promise<number>}
+     */
+    MyWorkPage.prototype.getTaskDetailOverdueCount = function () {
+        var _this = this;
+        return this.dataService.getTaskDetailByUserId()
+            .then(function (taskDetails) {
+            console.log(_this.tag + "getTaskDetailOverdueCount");
+            if (!taskDetails || taskDetails.length <= 0) {
+                return Promise.resolve(0);
+            }
+            else {
+                var count_1 = 0;
+                var isOverdueArrived_1 = false;
+                var isOverdueReply_1 = false;
+                taskDetails.forEach(function (taskDetail) {
+                    if (taskDetail.arrivedTime == 0) {
+                        isOverdueArrived_1 = taskDetail.arrivedDeadLine < new Date().getTime() - _this.overdueTime * 60 * 1000;
+                    }
+                    if (taskDetail.replyTime == 0) {
+                        isOverdueReply_1 = taskDetail.replyDeadLine < new Date().getTime() - _this.overdueTime * 60 * 1000;
+                    }
+                    if (isOverdueArrived_1 || isOverdueReply_1) {
+                        count_1++;
+                    }
+                    isOverdueArrived_1 = false;
+                    isOverdueReply_1 = false;
+                });
+                return Promise.resolve(count_1);
+            }
+        }).catch(function (error) { return console.error(error); });
+        ;
+    };
+    /**
+     * 获取任务详情
+     * @param since
+     * @param count
+     * @param key
+     * @returns {Promise<boolean>}
+     */
+    MyWorkPage.prototype.getTaskDetails = function (since, count, key) {
+        var _this = this;
+        return this.dataService.getTasks(since, count, key)
+            .then(function (tasks) {
+            console.log(_this.tag + "getTaskDetails: " + tasks.length);
+            if (tasks.length <= 0) {
+                return Promise.resolve(false);
+            }
+            else {
+                var taskIds = tasks.map(function (tasks) { return tasks.taskId; });
+                if (taskIds && taskIds.length > 0) {
+                    for (var i = 0; i < taskIds.length; i++) {
+                        _this.dataService.getTaskDetail(taskIds[i])
+                            .then((function (detail) {
+                            var taskEx = _this.items.find(function (taskEx) { return taskEx.id === detail.taskId; });
+                            if (taskEx) {
+                                // let mediaNames = history.mediaNames;
+                                if (detail.arrivedTime == 0) {
+                                    taskEx.isOverdueArrivedLine = detail.arrivedDeadLine < new Date().getTime() - _this.overdueTime * 60 * 1000;
+                                }
+                                if (detail.replyTime == 0) {
+                                    taskEx.isOverdueReplyLine = detail.replyDeadLine < new Date().getTime() - _this.overdueTime * 60 * 1000;
+                                }
+                            }
+                            return Promise.resolve(true);
+                        }));
+                    }
+                }
+            }
+        });
+    };
+    /**
+     *
+     * @param taskExs
+     * @returns {Promise<T>}
+     */
+    MyWorkPage.prototype.setProcesses = function (taskExs) {
+        return new Promise(function (resolve, reject) {
+            var result = false;
+            for (var _i = 0, taskExs_3 = taskExs; _i < taskExs_3.length; _i++) {
+                var taskEx = taskExs_3[_i];
+                var processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]();
+                if (!Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(taskEx, processEx)) {
+                    continue;
+                }
+                if (processEx.accept.time) {
+                    processEx.accept.show = true;
+                    processEx.accept.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
+                    processEx.accept.done = true;
+                    taskEx.lastProcess = 'accept';
+                }
+                if (processEx.go.time) {
+                    processEx.go.show = true;
+                    processEx.go.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
+                    processEx.go.done = true;
+                    if (taskEx.lastProcess != 'accept') {
+                        processEx.accept.show = true;
+                        processEx.accept.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
+                        processEx.accept.done = true;
+                    }
+                    taskEx.lastProcess = 'go';
+                }
+                if (processEx.arrive.time) {
+                    processEx.arrive.show = true;
+                    processEx.arrive.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
+                    processEx.arrive.done = true;
+                    if (taskEx.lastProcess != 'go') {
+                        processEx.go.show = true;
+                        processEx.go.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
+                        processEx.go.done = true;
+                    }
+                    taskEx.lastProcess = 'arrive';
+                }
+                if (processEx.reply.time) {
+                    processEx.reply.show = true;
+                    processEx.reply.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
+                    processEx.reply.done = true;
+                    if (taskEx.lastProcess != 'arrive') {
+                        processEx.arrive.show = true;
+                        processEx.arrive.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
+                        processEx.arrive.done = true;
+                    }
+                    taskEx.lastProcess = 'reply';
+                }
+                if (processEx.reject.time) {
+                    processEx.reject.show = true;
+                    processEx.reject.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
+                    processEx.reject.done = true;
+                    taskEx.lastProcess = 'reject';
+                }
+                if (processEx.delay.time) {
+                    processEx.delay.show = true;
+                    processEx.delay.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
+                    processEx.delay.done = true;
+                    taskEx.lastProcess = 'delay';
+                }
+                if (processEx.cancel.time) {
+                    processEx.cancel.show = true;
+                    processEx.cancel.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
+                    processEx.cancel.done = true;
+                    taskEx.lastProcess = 'cancel';
+                }
+                switch (taskEx.lastProcess) {
+                    case 'accept':
+                        processEx.go.show = true;
+                        processEx.reject.show = true;
+                        processEx.delay.show = true;
+                        break;
+                    case 'go':
+                        processEx.arrive.show = true;
+                        processEx.reject.show = true;
+                        processEx.delay.show = true;
+                        break;
+                    case 'arrive':
+                        processEx.reply.show = true;
+                        processEx.reject.show = true;
+                        processEx.delay.show = true;
+                        break;
+                    case 'reply':
+                        processEx.reject.show = false;
+                        processEx.delay.show = processEx.delay.done;
+                        processEx.cancel.show = true;
+                        break;
+                    case 'reject':
+                        processEx.go.show = processEx.go.done;
+                        processEx.arrive.show = processEx.arrive.done;
+                        processEx.reply.show = processEx.reply.done;
+                        processEx.delay.show = processEx.delay.done;
+                        break;
+                    case 'delay':
+                        break;
+                    case 'cancel':
+                        break;
+                    default:
+                        break;
+                }
+                result = true;
+            }
+            resolve(result);
+        });
+    };
+    /**
+     * 获取任务数
+     */
+    MyWorkPage.prototype.getTaskCount = function () {
+        var _this = this;
+        this.dataService.getTaskCount()
+            .then(function (count) {
+            _this.events.publish(_this.globalService.mainUpdateEvent, { type: 'myWorkCount', count: count });
+            _this.getOverdueFromFile();
+        })
+            .catch(function (error) { return console.error(error); });
+    };
+    /**
+     * 接单
+     * @param taskEx
+     * @param location
+     */
+    MyWorkPage.prototype.accept = function (taskEx, location) {
+        var _this = this;
+        var processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]();
+        if (!Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(taskEx, processEx)) {
+            return;
+        }
+        if (!processEx.accept.done) {
+            var time_1 = new Date();
+            var acceptInfo = {
+                acceptTime: time_1.getTime(),
+                location: location,
+                taskId: taskEx.id,
+                userId: this.globalService.userId
+            };
+            var task = Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["d" /* transform2Task */])(acceptInfo, taskEx, processEx);
+            var output_1 = {
+                uploadedFlag: this.globalService.uploadedFlagForLocal
+            };
+            this.dataService.accept(acceptInfo, task, output_1)
+                .then(function (data) {
+                var uploadedFlag = output_1.uploadedFlag === _this.globalService.uploadedFlagForUploaded;
+                processEx.accept.time = time_1;
+                processEx.accept.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
+                processEx.accept.done = true;
+                processEx.accept.isUploaded = uploadedFlag;
+                processEx.go.show = true;
+                processEx.reject.show = true;
+                processEx.delay.show = true;
+                //processEx.cancel.show = true;
+                taskEx.lastProcess = 'accept';
+                taskEx.state = __WEBPACK_IMPORTED_MODULE_4__model_Task__["b" /* TaskState */].Accept;
+                taskEx.isUploaded = taskEx.isUploaded && uploadedFlag;
+            })
+                .catch(function (error) {
+                console.error(_this.tag, error);
+                _this.globalService.showToast(error);
+            });
+        }
+    };
+    /**
+     * 出发
+     * @param taskEx
+     * @param location
+     */
+    MyWorkPage.prototype.go = function (taskEx, location) {
+        var _this = this;
+        var processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]();
+        if (!Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(taskEx, processEx)) {
+            return;
+        }
+        if (!processEx.go.done) {
+            var time = new Date();
+            var goInfo = {
+                goTime: time.getTime(),
+                location: location,
+                taskId: taskEx.id,
+                userId: this.globalService.userId
+            };
+            var task = Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["d" /* transform2Task */])(goInfo, taskEx, processEx);
+            var output_2 = {
+                uploadedFlag: this.globalService.uploadedFlagForLocal
+            };
+            this.dataService.go(goInfo, task, output_2)
+                .then(function (data) {
+                var uploadedFlag = output_2.uploadedFlag === _this.globalService.uploadedFlagForUploaded;
+                processEx.go.time = new Date();
+                processEx.go.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
+                processEx.go.done = true;
+                processEx.go.isUploaded = uploadedFlag;
+                processEx.arrive.show = true;
+                processEx.reject.show = true;
+                processEx.delay.show = true;
+                //processEx.cancel.show = true;
+                taskEx.lastProcess = 'go';
+                taskEx.state = __WEBPACK_IMPORTED_MODULE_4__model_Task__["b" /* TaskState */].Go;
+                taskEx.isUploaded = taskEx.isUploaded && uploadedFlag;
+            })
+                .catch(function (error) {
+                console.error(_this.tag + error);
+                _this.globalService.showToast(error);
+            });
+        }
+    };
+    /**
+     * 到场
+     * @param taskEx
+     * @param location
+     */
+    MyWorkPage.prototype.arrive = function (taskEx, location) {
+        var _this = this;
+        var processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]();
+        if (!Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(taskEx, processEx)) {
+            return;
+        }
+        if (!processEx.arrive.done) {
+            var time_2 = new Date();
+            var arriveInfo = {
+                arrivedTime: time_2.getTime(),
+                location: location,
+                taskId: taskEx.id,
+                userId: this.globalService.userId
+            };
+            var task = Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["d" /* transform2Task */])(arriveInfo, taskEx, processEx);
+            var output_3 = {
+                uploadedFlag: this.globalService.uploadedFlagForLocal
+            };
+            this.dataService.arrive(arriveInfo, task, output_3)
+                .then(function (data) {
+                var uploadedFlag = output_3.uploadedFlag === _this.globalService.uploadedFlagForUploaded;
+                processEx.arrive.time = time_2;
+                processEx.arrive.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
+                processEx.arrive.done = true;
+                processEx.arrive.isUploaded = uploadedFlag;
+                processEx.reply.show = true;
+                processEx.reject.show = true;
+                processEx.delay.show = true;
+                //processEx.cancel.show = true;
+                taskEx.lastProcess = 'arrive';
+                taskEx.state = __WEBPACK_IMPORTED_MODULE_4__model_Task__["b" /* TaskState */].Arrived;
+                taskEx.isUploaded = taskEx.isUploaded && uploadedFlag;
+            })
+                .catch(function (error) {
+                console.error(_this.tag + error);
+                _this.globalService.showToast(error);
+            });
+        }
+    };
+    /**
+     * 回复
+     * @param taskEx
+     * @param location
+     */
+    MyWorkPage.prototype.reply = function (taskEx, location) {
+        var processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]();
+        if (!Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(taskEx, processEx)) {
+            return;
+        }
+        if (!processEx.reply.done || !processEx.reply.isUploaded) {
+            taskEx.isPreview = false;
+            var history_2 = this.findReplyHistory(taskEx.id);
+            this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_2__workdetail_workdetail__["a" /* WorkDetailPage */], [taskEx, history_2]);
+        }
+    };
+    /**
+     * 退单
+     * @param taskEx
+     * @param location
+     */
+    MyWorkPage.prototype.reject = function (taskEx, location) {
+        var _this = this;
+        var processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]();
+        if (!Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(taskEx, processEx)) {
+            return;
+        }
+        if (!processEx.reject.done) {
+            var time_3 = new Date();
+            var rejectExtend = processEx.reject.extend;
+            var rejectInfo = {
+                rejectTime: time_3.getTime(),
+                rejectReason: rejectExtend.reason,
+                location: location,
+                taskId: taskEx.id,
+                userId: this.globalService.userId
+            };
+            var task = Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["d" /* transform2Task */])(rejectInfo, taskEx, processEx);
+            var output_4 = {
+                uploadedFlag: this.globalService.uploadedFlagForLocal
+            };
+            this.dataService.reject(rejectInfo, task, output_4)
+                .then(function (data) {
+                var uploadedFlag = output_4.uploadedFlag === _this.globalService.uploadedFlagForUploaded;
+                processEx.reject.time = time_3;
+                processEx.reject.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
+                processEx.reject.done = true;
+                processEx.reject.isUploaded = uploadedFlag;
+                processEx.go.show = processEx.go.done;
+                processEx.arrive.show = processEx.arrive.done;
+                processEx.reply.show = processEx.reply.done;
+                processEx.delay.show = processEx.delay.done;
+                //processEx.cancel.show = false;
+                taskEx.lastProcess = 'reject';
+                taskEx.state = __WEBPACK_IMPORTED_MODULE_4__model_Task__["b" /* TaskState */].Reject;
+                taskEx.isUploaded = taskEx.isUploaded && uploadedFlag;
+                _this.events.publish(_this.globalService.myWorkUpdateEvent, { type: 'reject' });
+            })
+                .catch(function (error) {
+                console.error(_this.tag + error);
+                _this.globalService.showToast(error);
+            });
+        }
+    };
+    /**
+     * 延迟
+     * @param taskEx
+     * @param location
+     */
+    MyWorkPage.prototype.delay = function (taskEx, location) {
+        var _this = this;
+        var processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]();
+        if (!Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(taskEx, processEx)) {
+            return;
+        }
+        if (!processEx.delay.done) {
+            var isSuccess = false;
+            var lastProcess = "accept";
+            var curEvent = "delay";
+            var curName = "延迟时间";
+            var extend = processEx.delay.extend;
+            if (taskEx.lastProcess === lastProcess
+                && this.sortDelayProcess(taskEx, lastProcess, curEvent, curName, extend)
+                && Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(taskEx, processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]())) {
+                isSuccess = true;
+            }
+            lastProcess = "go";
+            if (taskEx.lastProcess === lastProcess
+                && this.sortDelayProcess(taskEx, lastProcess, curEvent, curName, extend)
+                && Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(taskEx, processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]())) {
+                isSuccess = true;
+            }
+            lastProcess = "arrive";
+            if (taskEx.lastProcess === lastProcess
+                && this.sortDelayProcess(taskEx, lastProcess, curEvent, curName, extend)
+                && Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(taskEx, processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]())) {
+                isSuccess = true;
+            }
+            if (isSuccess) {
+                var time_4 = new Date();
+                var delayExtend = processEx.delay.extend;
+                var delayInfo = {
+                    delayTime: time_4.getTime(),
+                    deadline: delayExtend.deadline.getTime(),
+                    comment: delayExtend.comment,
+                    location: location,
+                    taskId: taskEx.id,
+                    userId: this.globalService.userId
+                };
+                var task = Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["d" /* transform2Task */])(delayInfo, taskEx, processEx);
+                var output_5 = {
+                    uploadedFlag: this.globalService.uploadedFlagForLocal
+                };
+                this.dataService.delay(delayInfo, task, output_5)
+                    .then(function (data) {
+                    var uploadedFlag = output_5.uploadedFlag === _this.globalService.uploadedFlagForUploaded;
+                    processEx.delay.time = time_4;
+                    processEx.delay.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
+                    processEx.delay.done = true;
+                    processEx.delay.isUploaded = uploadedFlag;
+                    taskEx.lastProcess = 'delay';
+                    taskEx.state = __WEBPACK_IMPORTED_MODULE_4__model_Task__["b" /* TaskState */].Delay;
+                    taskEx.isUploaded = taskEx.isUploaded && uploadedFlag;
+                })
+                    .catch(function (error) {
+                    console.error(_this.tag + error);
+                    _this.globalService.showToast(error);
+                });
+            }
+        }
+    };
+    /**
+     * 销单
+     * @param taskEx
+     * @param location
+     */
+    MyWorkPage.prototype.cancel = function (taskEx, location) {
+        var _this = this;
+        var processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]();
+        if (!Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(taskEx, processEx)) {
+            return;
+        }
+        if (!processEx.cancel.done) {
+            var time_5 = new Date();
+            var cancelExtend = processEx.cancel.extend;
+            var cancelInfo = {
+                destroyTime: time_5.getTime(),
+                destroyRemark: cancelExtend.remark,
+                location: location,
+                taskId: taskEx.id,
+                userId: this.globalService.userId
+            };
+            var task = Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["d" /* transform2Task */])(cancelInfo, taskEx, processEx);
+            var output_6 = {
+                uploadedFlag: this.globalService.uploadedFlagForLocal
+            };
+            this.dataService.cancel(cancelInfo, task, output_6)
+                .then(function (data) {
+                var uploadedFlag = output_6.uploadedFlag === _this.globalService.uploadedFlagForUploaded;
+                processEx.cancel.time = time_5;
+                processEx.cancel.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
+                processEx.cancel.done = true;
+                processEx.cancel.isUploaded = uploadedFlag;
+                processEx.go.show = processEx.go.done;
+                processEx.arrive.show = processEx.arrive.done;
+                processEx.reply.show = processEx.reply.done;
+                processEx.reject.show = processEx.reject.done;
+                processEx.delay.show = processEx.delay.done;
+                taskEx.lastProcess = 'cancel';
+                taskEx.state = __WEBPACK_IMPORTED_MODULE_4__model_Task__["b" /* TaskState */].Cancel;
+                taskEx.isUploaded = taskEx.isUploaded && uploadedFlag;
+                _this.events.publish(_this.globalService.myWorkUpdateEvent, { type: 'cancel' });
+            })
+                .catch(function (error) {
+                console.error(_this.tag + error);
+                _this.globalService.showToast(error);
+            });
+        }
+    };
+    /**
+     * 处理步骤数组转对象
+     * @param taskEx
+     * @param processEx
+     * @returns {boolean}
+     */
+    // private transform2ProcessEx(taskEx: TaskEx, processEx: ProcessEx): boolean {
+    //   if (!taskEx && !processEx) {
+    //     return false;
+    //   }
+    //
+    //   for (let i of taskEx.processes) {
+    //     switch (i.event) {
+    //       case 'create':
+    //         processEx.create = i;
+    //         break;
+    //       case 'dispatch':
+    //         processEx.dispatch = i;
+    //         break;
+    //       case 'accept':
+    //         processEx.accept = i;
+    //         break;
+    //       case 'go':
+    //         processEx.go = i;
+    //         break;
+    //       case 'arrive':
+    //         processEx.arrive = i;
+    //         break;
+    //       case 'reply':
+    //         processEx.reply = i;
+    //         break;
+    //       case 'reject':
+    //         processEx.reject = i;
+    //         break;
+    //       case 'delay':
+    //         processEx.delay = i;
+    //         break;
+    //       case 'cancel':
+    //         processEx.cancel = i;
+    //         break;
+    //       default:
+    //         console.error(this.tag, i.event);
+    //         break;
+    //     }
+    //   }
+    //
+    //   return !!(processEx && processEx.create && processEx.dispatch && processEx.accept && processEx.go && processEx.arrive
+    //   && processEx.reply && processEx.reject && processEx.delay && processEx.cancel);
+    // }
+    /**
+     *
+     * @param taskEx
+     * @param lastEvent
+     * @param curEvent
+     * @param curName
+     * @param curExtend
+     * @returns {boolean}
+     */
+    MyWorkPage.prototype.sortDelayProcess = function (taskEx, lastEvent, curEvent, curName, curExtend) {
+        if (taskEx.processes.length > 0 && lastEvent && curEvent && curName && curExtend) {
+            var lastIndex = void 0, curIndex = void 0;
+            var processes = taskEx.processes;
+            for (var i = 0; i < processes.length; i++) {
+                if (processes[i].event === lastEvent) {
+                    lastIndex = i;
+                }
+                else if (processes[i].event === curEvent) {
+                    curIndex = i;
+                }
+            }
+            if (lastIndex >= curIndex) {
+                return false;
+            }
+            for (var i = curIndex; i > lastIndex; i--) {
+                processes[i].event = processes[i - 1].event;
+                processes[i].name = processes[i - 1].name;
+                processes[i].time = processes[i - 1].time;
+                processes[i].show = processes[i - 1].show;
+                processes[i].color = processes[i - 1].color;
+                processes[i].done = processes[i - 1].done;
+                processes[i].extend = processes[i - 1].extend;
+            }
+            processes[lastIndex + 1].event = curEvent;
+            processes[lastIndex + 1].name = curName;
+            processes[lastIndex + 1].extend = curExtend;
+            return true;
+        }
+        return false;
+    };
+    /**
+     * 退单对话框
+     * @param taskEx
+     * @param location
+     */
+    MyWorkPage.prototype.rejectPrompt = function (taskEx, location) {
+        var _this = this;
+        var processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]();
+        if (!Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(taskEx, processEx) || processEx.reject.done) {
+            return;
+        }
+        var prompt = this.alertCtrl.create({
+            title: '退单申请',
+            message: "请填写退单信息!",
+            inputs: [
+                {
+                    name: 'reason',
+                    placeholder: '原因'
+                }
+            ],
+            buttons: [
+                {
+                    text: '取消',
+                    handler: function (data) {
+                    }
+                },
+                {
+                    text: '确定',
+                    handler: function (data) {
+                        console.log(_this.tag, data);
+                        if (!data.reason) {
+                            return _this.globalService.showToast("请填写原因!");
+                        }
+                        processEx.reject.extend = {
+                            reason: data.reason
+                        };
+                        _this.reject(taskEx, location);
+                    }
+                }
+            ]
+        });
+        prompt.present();
+    };
+    /**
+     * 延迟对话框
+     * @param taskEx
+     * @param location
+     */
+    MyWorkPage.prototype.delayPrompt = function (taskEx, location) {
+        var _this = this;
+        var processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]();
+        if (!Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(taskEx, processEx) || processEx.delay.done) {
+            return;
+        }
+        var prompt = this.alertCtrl.create({
+            title: '延迟申请',
+            message: "请填写延迟信息!",
+            inputs: [
+                {
+                    name: 'day',
+                    placeholder: '天数',
+                    type: 'number'
+                },
+                {
+                    name: 'hour',
+                    placeholder: '小时',
+                    type: 'number'
+                },
+                {
+                    name: 'minute',
+                    placeholder: '分钟',
+                    type: 'number'
+                },
+                {
+                    name: 'reason',
+                    placeholder: '原因'
+                }
+            ],
+            buttons: [
+                {
+                    text: '取消',
+                    handler: function (data) {
+                    }
+                },
+                {
+                    text: '确定',
+                    handler: function (data) {
+                        console.log(_this.tag, data);
+                        if (Number.isNaN(data.day)
+                            && Number.isNaN(data.hour)
+                            && Number.isNaN(data.minute)) {
+                            return _this.globalService.showToast("请填写有效的时间!");
+                        }
+                        else if (!data.reason) {
+                            return _this.globalService.showToast("请填写原因!");
+                        }
+                        else {
+                            var day = Number.parseInt(data.day);
+                            var hour = Number.parseInt(data.hour);
+                            var minute = Number.parseInt(data.minute);
+                            if ((Number.isFinite(day) && day < 0)
+                                || (Number.isFinite(hour) && hour < 0)
+                                || (Number.isFinite(minute) && minute < 0)) {
+                                return _this.globalService.showToast("填写的时间必须大于零!");
+                            }
+                            var time = 0;
+                            if (Number.isFinite(day)) {
+                                time += day * 24 * 60;
+                            }
+                            if (Number.isFinite(hour)) {
+                                time += hour * 60;
+                            }
+                            if (Number.isFinite(minute)) {
+                                time += minute;
+                            }
+                            var deadline = new Date(new Date().getTime() + time * 60000);
+                            processEx.delay.extend = {
+                                comment: data.reason,
+                                deadline: deadline
+                            };
+                            _this.judgeDelayTime(taskEx, processEx.delay.extend, location);
+                        }
+                    }
+                }
+            ]
+        });
+        prompt.present();
+    };
+    /**
+     * 判断申请延期时间
+     * @param taskEx
+     * @param extend
+     * @param location
+     */
+    MyWorkPage.prototype.judgeDelayTime = function (taskEx, extend, location) {
+        var _this = this;
+        this.dataService.getTaskDetail(taskEx.id)
+            .then(function (taskDetail) {
+            if (taskDetail && taskDetail.delayReplyDeadLine) {
+                if (extend.deadline.getTime() <= taskDetail.delayReplyDeadLine) {
+                    return _this.globalService.showToast("填写的时间必须大于处理时限!");
+                }
+                else {
+                    _this.delay(taskEx, location);
+                }
+            }
+        })
+            .catch(function (err) {
+            console.log(err);
+        });
+    };
+    /**
+     * 销单对话框
+     * @param taskEx
+     * @param location
+     */
+    MyWorkPage.prototype.cancelPrompt = function (taskEx, location) {
+        var _this = this;
+        var processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]();
+        if (!Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(taskEx, processEx) || processEx.cancel.done) {
+            return;
+        }
+        var prompt = this.alertCtrl.create({
+            title: '销单申请',
+            message: "请填写销单信息!",
+            inputs: [
+                {
+                    name: 'remark',
+                    placeholder: '备注'
+                }
+            ],
+            buttons: [
+                {
+                    text: '取消',
+                    handler: function (data) {
+                    }
+                },
+                {
+                    text: '确定',
+                    handler: function (data) {
+                        console.log(_this.tag, data);
+                        if (!data.remark) {
+                            return _this.globalService.showToast("请填写备注!");
+                        }
+                        processEx.cancel.extend = {
+                            remark: data.remark
+                        };
+                        _this.cancel(taskEx, location);
+                    }
+                }
+            ]
+        });
+        prompt.present();
+    };
+    /**
+     * 订阅事件
+     * @param events
+     */
+    MyWorkPage.prototype.subscribeEvent = function (events) {
+        var _this = this;
+        events.subscribe(this.globalService.myWorkDownloadFinishEvent, function () {
+            _this.resetTasks(FromWhere.Download);
+        });
+        events.subscribe(this.globalService.myWorkUpdateEvent, function (myWorkUpdateEvent) {
+            console.log("my work need to update");
+            if (myWorkUpdateEvent.type === 'reply'
+                && myWorkUpdateEvent.taskEx
+                && myWorkUpdateEvent.history
+                && myWorkUpdateEvent.history.task
+                && myWorkUpdateEvent.history.reply
+                && myWorkUpdateEvent.history.taskDetail) {
+                var processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]();
+                if (!Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(myWorkUpdateEvent.taskEx, processEx)) {
+                    return;
+                }
+                var replyInfo = myWorkUpdateEvent.history.reply;
+                var uploadedFlag = myWorkUpdateEvent.history.uploadedFlag === _this.globalService.uploadedFlagForUploaded;
+                processEx.reply.time = replyInfo && replyInfo.opTime ? new Date(replyInfo.opTime) : new Date();
+                processEx.reply.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
+                processEx.reply.done = true;
+                processEx.reject.show = false;
+                processEx.delay.show = processEx.delay.done;
+                processEx.cancel.show = true;
+                processEx.reply.isUploaded = uploadedFlag;
+                myWorkUpdateEvent.taskEx.lastProcess = 'reply';
+                myWorkUpdateEvent.taskEx.state = __WEBPACK_IMPORTED_MODULE_4__model_Task__["b" /* TaskState */].Reply;
+                myWorkUpdateEvent.taskEx.isUploaded = myWorkUpdateEvent.taskEx.isUploaded && uploadedFlag;
+                var history_3 = _this.findReplyHistory(myWorkUpdateEvent.taskEx.id);
+                if (history_3) {
+                    history_3 = {
+                        userId: _this.globalService.userId,
+                        taskId: myWorkUpdateEvent.taskEx.id,
+                        state: myWorkUpdateEvent.history.state,
+                        task: myWorkUpdateEvent.history.task,
+                        reply: myWorkUpdateEvent.history.reply,
+                        uploadedFlag: myWorkUpdateEvent.history.uploadedFlag,
+                        taskDetail: myWorkUpdateEvent.history.taskDetail,
+                        mediaNames: myWorkUpdateEvent.history.mediaNames
+                    };
+                }
+                else {
+                    _this.replyHistories.push(myWorkUpdateEvent.history);
+                }
+            }
+            else if (myWorkUpdateEvent.type === 'cancel' || myWorkUpdateEvent.type === 'reject') {
+                _this.resetTasks(FromWhere.CancelOrReject);
+            }
+        });
+    };
+    /**
+     * 重置list
+     * @param fromWhere
+     */
+    MyWorkPage.prototype.resetTasks = function (fromWhere) {
+        var _this = this;
+        this.isOperationBusy = true;
+        this.since = this.globalService.taskSinceDefault;
+        while (this.items.shift())
+            ;
+        this.replyHistories = [];
+        this.showFab = false;
+        this.getTasks(this.since, this.count, this.key)
+            .then(function (data) { return _this.infiniteScroll.enable(data); })
+            .catch(function (error) { return console.error(error); })
+            .then(function () {
+            _this.isOperationBusy = false;
+            switch (fromWhere) {
+                case FromWhere.Download:
+                    _this.refresher.complete();
+                    _this.getTaskCount();
+                    break;
+                case FromWhere.CancelOrReject:
+                    _this.getTaskCount();
+                    break;
+                case FromWhere.Search:
+                    break;
+                case FromWhere.Delete:
+                    _this.getTaskCount();
+                    break;
+                default:
+                    break;
+            }
+        });
+    };
+    MyWorkPage.prototype.findReplyHistory = function (taskId) {
+        return this.replyHistories.find(function (history) { return history.taskId === taskId; });
+    };
+    return MyWorkPage;
+}());
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["n" /* Refresher */]),
+    __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["n" /* Refresher */])
+], MyWorkPage.prototype, "refresher", void 0);
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["c" /* Content */]),
+    __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["c" /* Content */])
+], MyWorkPage.prototype, "content", void 0);
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* InfiniteScroll */]),
+    __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* InfiniteScroll */])
+], MyWorkPage.prototype, "infiniteScroll", void 0);
+MyWorkPage = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+        selector: 'page-mywork',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\mywork\mywork.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n    <ion-buttons end>\n\n      <button ion-button icon-only color="white" (click)="toggleToolbar($event)">\n\n        <ion-icon name="search"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n\n\n  <ion-toolbar color="primary" *ngIf="showToolbar">\n\n    <ion-searchbar [(ngModel)]="key" (ionInput)="onInput($event)" (ionCancel)="onCancel($event)"></ion-searchbar>\n\n  </ion-toolbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-mywork">\n\n\n\n  <!--refresher on the top-->\n\n  <ion-refresher (ionRefresh)="doRefresh($event)">\n\n    <ion-refresher-content\n\n      pullingIcon="arrow-dropdown"\n\n      pullingText="Pull to refresh"\n\n      refreshingSpinner="circles"\n\n      refreshingText="Refreshing...">\n\n    </ion-refresher-content>\n\n  </ion-refresher>\n\n\n\n  <!--list content-->\n\n  <ion-list>\n\n    <ion-card *ngFor="let item of items">\n\n      <ion-item (click)="onDelete(item)">\n\n        <ion-avatar item-start>\n\n          <img src="assets/img/ic_mywork_avatar.png">\n\n        </ion-avatar>\n\n        <div><h2 class="card-header-label-hint">任务编号 </h2><h2 class="card-header-label-content">{{item.id.split(\'#\')[0] | valueValid}}</h2></div>\n\n        <div><h2 class="card-header-label-hint">任务类型 </h2><h2 class="card-header-label-content">{{item.type | valueValid}}</h2></div>\n\n        <ion-icon name=\'cloud-upload\' item-end *ngIf="!item.isUploaded"></ion-icon>\n\n        <ion-icon name="timer" item-end color="{{\'danger\'}}" *ngIf="item.isOverdueArrivedLine || item.isOverdueReplyLine"></ion-icon>\n\n      </ion-item>\n\n\n\n      <ion-list>\n\n        <ion-list-header>\n\n          <ion-row>\n\n            <ion-col col-auto>任务描述</ion-col>\n\n            <ion-col>{{item.describe | valueValid}}</ion-col>\n\n          </ion-row>\n\n        </ion-list-header>\n\n\n\n        <!--创建时间-->\n\n        <button ion-item [style.color]="item.processes[0].color" *ngIf="item.processes[0].show">\n\n          <ion-icon name=\'icon-vline\'item-start></ion-icon>\n\n          {{item.processes[0].name}} {{item.processes[0].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <!--<ion-icon name=\'ios-arrow-forward\' item-end></ion-icon>-->\n\n        </button>\n\n\n\n        <!--派发时间-->\n\n        <button ion-item [style.color]="item.processes[1].color" *ngIf="item.processes[1].show">\n\n          <ion-icon name=\'icon-vline\'item-start></ion-icon>\n\n          {{item.processes[1].name}} {{item.processes[1].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <!--<ion-icon name=\'ios-arrow-forward\' item-end></ion-icon>-->\n\n        </button>\n\n\n\n        <!--接单时间-->\n\n        <button ion-item [style.color]="item.processes[2].color" *ngIf="item.processes[2].show" (click)="itemSelected(item, 2)">\n\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[2].color}}"></ion-icon>\n\n          {{item.processes[2].name}} {{item.processes[2].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[2].done" color="{{item.processes[2].color}}"></ion-icon>\n\n        </button>\n\n\n\n        <!--出发时间-->\n\n        <button ion-item [style.color]="item.processes[3].color" *ngIf="item.processes[3].show" (click)="itemSelected(item, 3)">\n\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[3].color}}"></ion-icon>\n\n          {{item.processes[3].name}} {{item.processes[3].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[3].done" color="{{item.processes[3].color}}"></ion-icon>\n\n        </button>\n\n\n\n        <!--到场时间-->\n\n        <button ion-item [style.color]="item.processes[4].color" *ngIf="item.processes[4].show" (click)="itemSelected(item, 4)">\n\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[4].color}}"></ion-icon>\n\n          {{item.processes[4].name}} {{item.processes[4].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[4].done" color="{{item.processes[4].color}}"></ion-icon>\n\n        </button>\n\n\n\n        <!--回复时间-->\n\n        <button ion-item [style.color]="item.processes[5].color" *ngIf="item.processes[5].show" (click)="itemSelected(item, 5)">\n\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[5].color}}"></ion-icon>\n\n          {{item.processes[5].name}} {{item.processes[5].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[5].done" color="{{item.processes[5].color}}"></ion-icon>\n\n        </button>\n\n\n\n        <!--退单时间-->\n\n        <button ion-item [style.color]="item.processes[6].color" *ngIf="item.processes[6].show" (click)="itemSelected(item, 6)">\n\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[6].color}}"></ion-icon>\n\n          {{item.processes[6].name}} {{item.processes[6].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[6].done" color="{{item.processes[6].color}}"></ion-icon>\n\n        </button>\n\n\n\n        <!--延迟时间-->\n\n        <button ion-item [style.color]="item.processes[7].color" *ngIf="item.processes[7].show" (click)="itemSelected(item, 7)">\n\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[7].color}}"></ion-icon>\n\n          {{item.processes[7].name}} {{item.processes[7].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[7].done" color="{{item.processes[7].color}}"></ion-icon>\n\n        </button>\n\n\n\n        <!--销单时间-->\n\n        <!--<button ion-item [style.color]="item.processes[8].color" *ngIf="item.processes[8].show" (click)="itemSelected(item, 8)">-->\n\n          <!--<ion-icon name=\'icon-vline\'item-start color="{{item.processes[8].color}}"></ion-icon>-->\n\n          <!--{{item.processes[8].name}} {{item.processes[8].time | date:\'y-MM-dd HH:mm:ss\'}}-->\n\n          <!--<ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[8].done" color="{{item.processes[8].color}}"></ion-icon>-->\n\n        <!--</button>-->\n\n      </ion-list>\n\n\n\n      <ion-row>\n\n        <ion-col class="card-bottom-btn">\n\n          <button ion-button icon-left clear small color="gray">\n\n            <ion-icon name="images"></ion-icon>\n\n            <div>{{item.photoCount}}</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn">\n\n          <button ion-button icon-left clear small color="gray">\n\n            <ion-icon name="musical-notes"></ion-icon>\n\n            <div>{{item.audioCount}}</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col>\n\n          <button ion-button icon-left clear small color="gray">\n\n            <ion-icon name="videocam"></ion-icon>\n\n            <div>{{item.videoCount}}</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn" *ngIf="item.isLocationValid">\n\n          <button ion-button icon-left clear small (click)="onLocate(item)">\n\n            <ion-icon name="map"></ion-icon>\n\n            <div>地图</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn">\n\n          <button ion-button icon-left clear small (click)="onPreview(item)">\n\n            <ion-icon name="information-circle"></ion-icon>\n\n            <div>预览</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn">\n\n          <button ion-button icon-left clear small (click)="onMaterials(item)">\n\n            <ion-icon name="information-circle"></ion-icon>\n\n            <div>材料</div>\n\n          </button>\n\n        </ion-col>\n\n      </ion-row>\n\n\n\n      <!--<ion-row>-->\n\n        <!--<ion-item>-->\n\n          <!--<button item-right ion-button icon-left clear (click)="onMaterials(item)">-->\n\n            <!--<ion-icon name="clipboard"></ion-icon>-->\n\n            <!--<div>材料登记</div>-->\n\n          <!--</button>-->\n\n        <!--</ion-item>-->\n\n      <!--</ion-row>-->\n\n    </ion-card>\n\n  </ion-list>\n\n\n\n  <!--infinite scroll-->\n\n  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">\n\n    <ion-infinite-scroll-content></ion-infinite-scroll-content>\n\n  </ion-infinite-scroll>\n\n\n\n  <!--fab-->\n\n  <ion-fab right bottom *ngIf="showFab">\n\n    <button ion-fab color="primary" (click)="doScroll2Top($event)">\n\n      <ion-icon name="arrow-dropup"></ion-icon>\n\n    </button>\n\n  </ion-fab>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\mywork\mywork.html"*/
+    }),
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
+        __WEBPACK_IMPORTED_MODULE_3__providers_DataService__["a" /* DataService */],
+        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */],
+        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* Events */],
+        __WEBPACK_IMPORTED_MODULE_6__providers_GlobalService__["a" /* GlobalService */],
+        __WEBPACK_IMPORTED_MODULE_10__providers_ConfigService__["a" /* ConfigService */]])
+], MyWorkPage);
+
+//# sourceMappingURL=mywork.js.map
+
+/***/ }),
+
+/***/ 62:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MyHistory; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_DataService__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__model_History__ = __webpack_require__(323);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__model_History__ = __webpack_require__(322);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__workdetail_workdetail__ = __webpack_require__(128);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__model_Task__ = __webpack_require__(36);
@@ -9448,7 +10786,7 @@ MyHistory = __decorate([
 
 /***/ }),
 
-/***/ 62:
+/***/ 63:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10820,16 +12158,16 @@ DbService = __decorate([
 
 /***/ }),
 
-/***/ 63:
+/***/ 64:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SearchPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_forms__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__searchresult_searchresult__ = __webpack_require__(232);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__model_SearchTaskRequest__ = __webpack_require__(324);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__model_SearchTaskRequest__ = __webpack_require__(323);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_DataService__ = __webpack_require__(13);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -11048,13 +12386,13 @@ SearchPage = __decorate([
 
 /***/ }),
 
-/***/ 64:
+/***/ 65:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return StationWorkPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__workinfo_workinfo__ = __webpack_require__(234);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_DataService__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_GlobalService__ = __webpack_require__(7);
@@ -11492,13 +12830,13 @@ StationWorkPage = __decorate([
 
 /***/ }),
 
-/***/ 65:
+/***/ 66:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return NewsPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__newsdetails_newsdetails__ = __webpack_require__(235);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_DataService__ = __webpack_require__(13);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -11666,13 +13004,13 @@ NewsPage = __decorate([
 
 /***/ }),
 
-/***/ 66:
+/***/ 67:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MaterialsPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__materialsadd_materialsadd__ = __webpack_require__(236);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__model_MaterialsInfo__ = __webpack_require__(127);
@@ -11899,18 +13237,18 @@ MaterialsPage = __decorate([
 
 /***/ }),
 
-/***/ 67:
+/***/ 68:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SettingPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_ConfigService__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_StorageService__ = __webpack_require__(237);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_FileService__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ionic_storage__ = __webpack_require__(59);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ionic_storage__ = __webpack_require__(60);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__networkset__ = __webpack_require__(238);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__providers_DataService__ = __webpack_require__(13);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -12379,1265 +13717,6 @@ SettingPage = __decorate([
 
 /***/ }),
 
-/***/ 68:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MyWorkPage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__workdetail_workdetail__ = __webpack_require__(128);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_DataService__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__model_Task__ = __webpack_require__(36);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__model_Process__ = __webpack_require__(122);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__providers_GlobalService__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__map_map__ = __webpack_require__(37);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__model_MapParam__ = __webpack_require__(48);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__materials_materials__ = __webpack_require__(66);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__providers_ConfigService__ = __webpack_require__(16);
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-
-
-
-
-
-
-
-
-var FromWhere;
-(function (FromWhere) {
-    FromWhere[FromWhere["Download"] = 0] = "Download";
-    FromWhere[FromWhere["CancelOrReject"] = 1] = "CancelOrReject";
-    FromWhere[FromWhere["Search"] = 2] = "Search";
-    FromWhere[FromWhere["Delete"] = 3] = "Delete";
-})(FromWhere || (FromWhere = {}));
-var MyWorkPage = (function () {
-    function MyWorkPage(navCtrl, dataService, alertCtrl, events, globalService, configService) {
-        this.navCtrl = navCtrl;
-        this.dataService = dataService;
-        this.alertCtrl = alertCtrl;
-        this.events = events;
-        this.globalService = globalService;
-        this.configService = configService;
-        this.tag = "[MyWorkPage]";
-        this.title = '任务列表';
-        this.showToolbar = false;
-        this.showFab = false;
-        this.items = [];
-        this.since = this.globalService.taskSinceDefault;
-        this.count = this.globalService.taskCountDefault10;
-        this.isOperationBusy = false;
-        this.key = '';
-        this.replyHistories = [];
-    }
-    /**
-     * 初始化
-     */
-    MyWorkPage.prototype.ngOnInit = function () {
-        var _this = this;
-        console.log(this.tag, 'ngOnInit');
-        this.subscribeEvent(this.events);
-        this.showFab = false;
-        this.getTasks(this.since, this.count, this.key)
-            .then(function (data) {
-            _this.infiniteScroll.enable(data);
-            _this.getTaskCount();
-        })
-            .catch(function (error) { return console.error(error); });
-    };
-    /**
-     * 销毁
-     */
-    MyWorkPage.prototype.ngOnDestroy = function () {
-        console.log(this.tag, 'ngOnDestroy');
-        this.events.unsubscribe(this.globalService.myWorkDownloadFinishEvent);
-        this.events.unsubscribe(this.globalService.myWorkUpdateEvent);
-    };
-    /**
-     * 下拉同步
-     * @param refresher
-     */
-    MyWorkPage.prototype.doRefresh = function (refresher) {
-        console.log(this.tag, 'doRefresh');
-        // if (this.showToolbar) {
-        //   this.showToolbar = false;
-        //   this.content.resize();
-        // }
-        this.key = '';
-        this.dataService.downloadTasksAndDetails();
-    };
-    /**
-     * 上拉，加载更多项
-     * @param infiniteScroll
-     */
-    MyWorkPage.prototype.doInfinite = function (infiniteScroll) {
-        var _this = this;
-        console.log(this.tag, 'doInfinite begin');
-        setTimeout(function () {
-            _this.since += _this.count;
-            _this.getTasks(_this.since, _this.count, _this.key)
-                .then(function (data) {
-                if (!data) {
-                    infiniteScroll.enable(false);
-                }
-                else {
-                    infiniteScroll.complete();
-                    _this.getTaskDetails(_this.since, _this.count, _this.key);
-                }
-                console.log(_this.tag, 'doInfinite end');
-            })
-                .catch(function (error) {
-                console.error(error);
-                infiniteScroll.complete();
-            })
-                .then(function () {
-                _this.showFab = _this.items.length > _this.count;
-            });
-        }, 100);
-    };
-    /**
-     * 处理各个操作
-     * @param taskEx
-     * @param index
-     */
-    MyWorkPage.prototype.itemSelected = function (taskEx, index) {
-        var _this = this;
-        console.log(this.tag, "Selected Item " + index);
-        this.globalService.getLocation()
-            .then(function (location) {
-            switch (taskEx.processes[index].event) {
-                case 'accept':
-                    _this.accept(taskEx, location);
-                    break;
-                case 'go':
-                    _this.go(taskEx, location);
-                    break;
-                case 'arrive':
-                    _this.arrive(taskEx, location);
-                    break;
-                case 'reply':
-                    _this.reply(taskEx, location);
-                    break;
-                case 'reject':
-                    _this.rejectPrompt(taskEx, location);
-                    break;
-                case 'delay':
-                    _this.delayPrompt(taskEx, location);
-                    break;
-            }
-        })
-            .catch(function (error) {
-            console.error(error);
-            _this.globalService.showToast(error);
-        });
-    };
-    /**
-     * 显示/隐藏搜索框
-     * @param ev
-     */
-    MyWorkPage.prototype.toggleToolbar = function (ev) {
-        this.showToolbar = !this.showToolbar;
-        this.content.resize();
-    };
-    /**
-     * 搜索
-     * @param ev
-     */
-    MyWorkPage.prototype.onInput = function (ev) {
-        if (this.isOperationBusy) {
-            return this.globalService.showToast('后台繁忙...');
-        }
-        // set val to the value of the ev target
-        var val = ev.target.value;
-        if (val && val.trim() != '') {
-            this.key = val;
-        }
-        else {
-            this.key = '';
-        }
-        this.resetTasks(FromWhere.Search);
-    };
-    /**
-     *
-     * @param ev
-     */
-    MyWorkPage.prototype.onCancel = function (ev) {
-        console.log(this.tag, 'onCancel');
-    };
-    /**
-     * list回滚到顶部
-     * @param ev
-     */
-    MyWorkPage.prototype.doScroll2Top = function (ev) {
-        this.content.scrollToTop();
-    };
-    /**
-     * 定位地图
-     * @param taskEx
-     */
-    MyWorkPage.prototype.onLocate = function (taskEx) {
-        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_7__map_map__["a" /* MapPage */], new __WEBPACK_IMPORTED_MODULE_8__model_MapParam__["a" /* MapParam */](__WEBPACK_IMPORTED_MODULE_8__model_MapParam__["b" /* MapType */].Locate, taskEx.location, taskEx.id));
-    };
-    /**
-     * 预览工单
-     * @param taskEx
-     */
-    MyWorkPage.prototype.onPreview = function (taskEx) {
-        taskEx.isPreview = true;
-        var history = this.findReplyHistory(taskEx.id);
-        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_2__workdetail_workdetail__["a" /* WorkDetailPage */], [taskEx, history]);
-    };
-    /**
-     * 材料登记
-     * @param taskEx
-     */
-    MyWorkPage.prototype.onMaterials = function (taskEx) {
-        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_9__materials_materials__["a" /* MaterialsPage */], taskEx.id);
-    };
-    MyWorkPage.prototype.onDelete = function (taskEx) {
-        var _this = this;
-        var alert = this.alertCtrl.create({
-            title: '删除任务',
-            message: '是否删除该任务及其所有操作?',
-            buttons: [
-                {
-                    text: '取消',
-                    role: 'cancel',
-                    handler: function () {
-                        console.log('Cancel clicked');
-                    }
-                },
-                {
-                    text: '确定',
-                    handler: function () {
-                        console.log('Ok clicked');
-                        _this.dataService.deleteOneTaskWithAllInfos(taskEx.id)
-                            .then(function (result) { return _this.resetTasks(FromWhere.Delete); })
-                            .catch(function (err) { return console.error(err); });
-                    }
-                }
-            ]
-        });
-        alert.present();
-    };
-    /**
-     * 获取任务列表
-     * @param since
-     * @param count
-     * @param key
-     * @returns {Promise<boolean>}
-     */
-    MyWorkPage.prototype.getTasks = function (since, count, key) {
-        var _this = this;
-        return this.dataService.getTasks(since, count, key)
-            .then(function (tasks) {
-            console.log(_this.tag + "getTasks: " + tasks.length);
-            if (tasks.length <= 0) {
-                return Promise.resolve(false);
-            }
-            else {
-                var taskExs_1 = __WEBPACK_IMPORTED_MODULE_4__model_Task__["a" /* TaskEx */].transform(tasks, _this.items);
-                return _this.setProcesses(_this.items)
-                    .then(function () { return taskExs_1.map(function (taskEx) { return taskEx.id; }); })
-                    .then(function (taskIds) { return _this.dataService.checkIfExistNotUploadedHistories(taskIds); })
-                    .then(function (histories) {
-                    var _loop_1 = function (taskEx) {
-                        var history_1 = histories.find(function (history) { return history.taskId === taskEx.id; });
-                        if (history_1) {
-                            taskEx.isUploaded = history_1.uploadedFlag === _this.globalService.uploadedFlagForUploaded;
-                        }
-                    };
-                    for (var _i = 0, taskExs_2 = taskExs_1; _i < taskExs_2.length; _i++) {
-                        var taskEx = taskExs_2[_i];
-                        _loop_1(taskEx);
-                    }
-                })
-                    .then(function () { return tasks.filter(function (task) { return task.state === __WEBPACK_IMPORTED_MODULE_4__model_Task__["b" /* TaskState */].Reply; }); })
-                    .then(function (tasks) { return tasks.map(function (task) { return task.taskId; }); })
-                    .then(function (taskIds) { return _this.dataService.getReplyHistories(taskIds); })
-                    .then(function (histories) {
-                    var result = false;
-                    try {
-                        (_a = _this.replyHistories).push.apply(_a, histories);
-                        _this.replyHistories.forEach(function (history) {
-                            if (history.mediaNames && history.mediaNames.length > 0) {
-                                var taskEx = _this.items.find(function (taskEx) { return taskEx.id === history.taskId; });
-                                if (taskEx) {
-                                    var mediaNames = history.mediaNames;
-                                    taskEx.photoCount = mediaNames.filter(function (name) { return name.lastIndexOf(_this.globalService.photoSuffix) !== -1; }).length;
-                                    taskEx.audioCount = mediaNames.filter(function (name) { return name.lastIndexOf(_this.globalService.audioSuffix) !== -1; }).length;
-                                    taskEx.videoCount = mediaNames.filter(function (name) { return name.lastIndexOf(_this.globalService.videoSuffix) !== -1; }).length;
-                                }
-                            }
-                        });
-                        result = true;
-                    }
-                    catch (err) {
-                        console.error(err);
-                    }
-                    return Promise.resolve(result);
-                    var _a;
-                });
-            }
-        });
-    };
-    /**
-     * 读取文件的超期时限
-     */
-    MyWorkPage.prototype.getOverdueFromFile = function () {
-        var _this = this;
-        this.configService.getOverdueTime()
-            .then(function (data) {
-            console.log(_this.tag + data);
-            _this.overdueTime = data;
-            _this.getTaskDetails(_this.since, _this.count, _this.key)
-                .then(function (data) {
-                console.log(_this.tag + data);
-                _this.getTaskDetailOverdueCount()
-                    .then(function (data) {
-                    if (data > 0) {
-                        _this.showOverdueCountAlert(data);
-                    }
-                });
-            })
-                .catch(function (err) {
-                console.log(_this.tag + err);
-            });
-        })
-            .catch(function (err) {
-            console.log(_this.tag + err);
-        });
-    };
-    MyWorkPage.prototype.showOverdueCountAlert = function (count) {
-        var alert = this.alertCtrl.create({
-            title: '提示!',
-            subTitle: '当前有' + count + '个热线工单任务超期',
-            buttons: ['OK']
-        });
-        alert.present();
-    };
-    /**
-     * 获取超期任务数量
-     * @returns {Promise<number>}
-     */
-    MyWorkPage.prototype.getTaskDetailOverdueCount = function () {
-        var _this = this;
-        return this.dataService.getTaskDetailByUserId()
-            .then(function (taskDetails) {
-            console.log(_this.tag + "getTaskDetailOverdueCount");
-            if (!taskDetails || taskDetails.length <= 0) {
-                return Promise.resolve(0);
-            }
-            else {
-                var count_1 = 0;
-                var isOverdueArrived_1 = false;
-                var isOverdueReply_1 = false;
-                taskDetails.forEach(function (taskDetail) {
-                    if (taskDetail.arrivedTime == 0) {
-                        isOverdueArrived_1 = taskDetail.arrivedDeadLine < new Date().getTime() - _this.overdueTime * 60 * 1000;
-                    }
-                    if (taskDetail.replyTime == 0) {
-                        isOverdueReply_1 = taskDetail.replyDeadLine < new Date().getTime() - _this.overdueTime * 60 * 1000;
-                    }
-                    if (isOverdueArrived_1 || isOverdueReply_1) {
-                        count_1++;
-                    }
-                    isOverdueArrived_1 = false;
-                    isOverdueReply_1 = false;
-                });
-                return Promise.resolve(count_1);
-            }
-        }).catch(function (error) { return console.error(error); });
-        ;
-    };
-    /**
-     * 获取任务详情
-     * @param since
-     * @param count
-     * @param key
-     * @returns {Promise<boolean>}
-     */
-    MyWorkPage.prototype.getTaskDetails = function (since, count, key) {
-        var _this = this;
-        return this.dataService.getTasks(since, count, key)
-            .then(function (tasks) {
-            console.log(_this.tag + "getTaskDetails: " + tasks.length);
-            if (tasks.length <= 0) {
-                return Promise.resolve(false);
-            }
-            else {
-                var taskIds = tasks.map(function (tasks) { return tasks.taskId; });
-                if (taskIds && taskIds.length > 0) {
-                    for (var i = 0; i < taskIds.length; i++) {
-                        _this.dataService.getTaskDetail(taskIds[i])
-                            .then((function (detail) {
-                            var taskEx = _this.items.find(function (taskEx) { return taskEx.id === detail.taskId; });
-                            if (taskEx) {
-                                // let mediaNames = history.mediaNames;
-                                if (detail.arrivedTime == 0) {
-                                    taskEx.isOverdueArrivedLine = detail.arrivedDeadLine < new Date().getTime() - _this.overdueTime * 60 * 1000;
-                                }
-                                if (detail.replyTime == 0) {
-                                    taskEx.isOverdueReplyLine = detail.replyDeadLine < new Date().getTime() - _this.overdueTime * 60 * 1000;
-                                }
-                            }
-                            return Promise.resolve(true);
-                        }));
-                    }
-                }
-            }
-        });
-    };
-    /**
-     *
-     * @param taskExs
-     * @returns {Promise<T>}
-     */
-    MyWorkPage.prototype.setProcesses = function (taskExs) {
-        return new Promise(function (resolve, reject) {
-            var result = false;
-            for (var _i = 0, taskExs_3 = taskExs; _i < taskExs_3.length; _i++) {
-                var taskEx = taskExs_3[_i];
-                var processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]();
-                if (!Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(taskEx, processEx)) {
-                    continue;
-                }
-                if (processEx.accept.time) {
-                    processEx.accept.show = true;
-                    processEx.accept.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
-                    processEx.accept.done = true;
-                    taskEx.lastProcess = 'accept';
-                }
-                if (processEx.go.time) {
-                    processEx.go.show = true;
-                    processEx.go.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
-                    processEx.go.done = true;
-                    if (taskEx.lastProcess != 'accept') {
-                        processEx.accept.show = true;
-                        processEx.accept.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
-                        processEx.accept.done = true;
-                    }
-                    taskEx.lastProcess = 'go';
-                }
-                if (processEx.arrive.time) {
-                    processEx.arrive.show = true;
-                    processEx.arrive.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
-                    processEx.arrive.done = true;
-                    if (taskEx.lastProcess != 'go') {
-                        processEx.go.show = true;
-                        processEx.go.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
-                        processEx.go.done = true;
-                    }
-                    taskEx.lastProcess = 'arrive';
-                }
-                if (processEx.reply.time) {
-                    processEx.reply.show = true;
-                    processEx.reply.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
-                    processEx.reply.done = true;
-                    if (taskEx.lastProcess != 'arrive') {
-                        processEx.arrive.show = true;
-                        processEx.arrive.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
-                        processEx.arrive.done = true;
-                    }
-                    taskEx.lastProcess = 'reply';
-                }
-                if (processEx.reject.time) {
-                    processEx.reject.show = true;
-                    processEx.reject.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
-                    processEx.reject.done = true;
-                    taskEx.lastProcess = 'reject';
-                }
-                if (processEx.delay.time) {
-                    processEx.delay.show = true;
-                    processEx.delay.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
-                    processEx.delay.done = true;
-                    taskEx.lastProcess = 'delay';
-                }
-                if (processEx.cancel.time) {
-                    processEx.cancel.show = true;
-                    processEx.cancel.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
-                    processEx.cancel.done = true;
-                    taskEx.lastProcess = 'cancel';
-                }
-                switch (taskEx.lastProcess) {
-                    case 'accept':
-                        processEx.go.show = true;
-                        processEx.reject.show = true;
-                        processEx.delay.show = true;
-                        break;
-                    case 'go':
-                        processEx.arrive.show = true;
-                        processEx.reject.show = true;
-                        processEx.delay.show = true;
-                        break;
-                    case 'arrive':
-                        processEx.reply.show = true;
-                        processEx.reject.show = true;
-                        processEx.delay.show = true;
-                        break;
-                    case 'reply':
-                        processEx.reject.show = false;
-                        processEx.delay.show = processEx.delay.done;
-                        processEx.cancel.show = true;
-                        break;
-                    case 'reject':
-                        processEx.go.show = processEx.go.done;
-                        processEx.arrive.show = processEx.arrive.done;
-                        processEx.reply.show = processEx.reply.done;
-                        processEx.delay.show = processEx.delay.done;
-                        break;
-                    case 'delay':
-                        break;
-                    case 'cancel':
-                        break;
-                    default:
-                        break;
-                }
-                result = true;
-            }
-            resolve(result);
-        });
-    };
-    /**
-     * 获取任务数
-     */
-    MyWorkPage.prototype.getTaskCount = function () {
-        var _this = this;
-        this.dataService.getTaskCount()
-            .then(function (count) {
-            _this.events.publish(_this.globalService.mainUpdateEvent, { type: 'myWorkCount', count: count });
-            _this.getOverdueFromFile();
-        })
-            .catch(function (error) { return console.error(error); });
-    };
-    /**
-     * 接单
-     * @param taskEx
-     * @param location
-     */
-    MyWorkPage.prototype.accept = function (taskEx, location) {
-        var _this = this;
-        var processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]();
-        if (!Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(taskEx, processEx)) {
-            return;
-        }
-        if (!processEx.accept.done) {
-            var time_1 = new Date();
-            var acceptInfo = {
-                acceptTime: time_1.getTime(),
-                location: location,
-                taskId: taskEx.id,
-                userId: this.globalService.userId
-            };
-            var task = Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["d" /* transform2Task */])(acceptInfo, taskEx, processEx);
-            var output_1 = {
-                uploadedFlag: this.globalService.uploadedFlagForLocal
-            };
-            this.dataService.accept(acceptInfo, task, output_1)
-                .then(function (data) {
-                var uploadedFlag = output_1.uploadedFlag === _this.globalService.uploadedFlagForUploaded;
-                processEx.accept.time = time_1;
-                processEx.accept.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
-                processEx.accept.done = true;
-                processEx.accept.isUploaded = uploadedFlag;
-                processEx.go.show = true;
-                processEx.reject.show = true;
-                processEx.delay.show = true;
-                //processEx.cancel.show = true;
-                taskEx.lastProcess = 'accept';
-                taskEx.state = __WEBPACK_IMPORTED_MODULE_4__model_Task__["b" /* TaskState */].Accept;
-                taskEx.isUploaded = taskEx.isUploaded && uploadedFlag;
-            })
-                .catch(function (error) {
-                console.error(_this.tag, error);
-                _this.globalService.showToast(error);
-            });
-        }
-    };
-    /**
-     * 出发
-     * @param taskEx
-     * @param location
-     */
-    MyWorkPage.prototype.go = function (taskEx, location) {
-        var _this = this;
-        var processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]();
-        if (!Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(taskEx, processEx)) {
-            return;
-        }
-        if (!processEx.go.done) {
-            var time = new Date();
-            var goInfo = {
-                goTime: time.getTime(),
-                location: location,
-                taskId: taskEx.id,
-                userId: this.globalService.userId
-            };
-            var task = Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["d" /* transform2Task */])(goInfo, taskEx, processEx);
-            var output_2 = {
-                uploadedFlag: this.globalService.uploadedFlagForLocal
-            };
-            this.dataService.go(goInfo, task, output_2)
-                .then(function (data) {
-                var uploadedFlag = output_2.uploadedFlag === _this.globalService.uploadedFlagForUploaded;
-                processEx.go.time = new Date();
-                processEx.go.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
-                processEx.go.done = true;
-                processEx.go.isUploaded = uploadedFlag;
-                processEx.arrive.show = true;
-                processEx.reject.show = true;
-                processEx.delay.show = true;
-                //processEx.cancel.show = true;
-                taskEx.lastProcess = 'go';
-                taskEx.state = __WEBPACK_IMPORTED_MODULE_4__model_Task__["b" /* TaskState */].Go;
-                taskEx.isUploaded = taskEx.isUploaded && uploadedFlag;
-            })
-                .catch(function (error) {
-                console.error(_this.tag + error);
-                _this.globalService.showToast(error);
-            });
-        }
-    };
-    /**
-     * 到场
-     * @param taskEx
-     * @param location
-     */
-    MyWorkPage.prototype.arrive = function (taskEx, location) {
-        var _this = this;
-        var processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]();
-        if (!Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(taskEx, processEx)) {
-            return;
-        }
-        if (!processEx.arrive.done) {
-            var time_2 = new Date();
-            var arriveInfo = {
-                arrivedTime: time_2.getTime(),
-                location: location,
-                taskId: taskEx.id,
-                userId: this.globalService.userId
-            };
-            var task = Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["d" /* transform2Task */])(arriveInfo, taskEx, processEx);
-            var output_3 = {
-                uploadedFlag: this.globalService.uploadedFlagForLocal
-            };
-            this.dataService.arrive(arriveInfo, task, output_3)
-                .then(function (data) {
-                var uploadedFlag = output_3.uploadedFlag === _this.globalService.uploadedFlagForUploaded;
-                processEx.arrive.time = time_2;
-                processEx.arrive.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
-                processEx.arrive.done = true;
-                processEx.arrive.isUploaded = uploadedFlag;
-                processEx.reply.show = true;
-                processEx.reject.show = true;
-                processEx.delay.show = true;
-                //processEx.cancel.show = true;
-                taskEx.lastProcess = 'arrive';
-                taskEx.state = __WEBPACK_IMPORTED_MODULE_4__model_Task__["b" /* TaskState */].Arrived;
-                taskEx.isUploaded = taskEx.isUploaded && uploadedFlag;
-            })
-                .catch(function (error) {
-                console.error(_this.tag + error);
-                _this.globalService.showToast(error);
-            });
-        }
-    };
-    /**
-     * 回复
-     * @param taskEx
-     * @param location
-     */
-    MyWorkPage.prototype.reply = function (taskEx, location) {
-        var processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]();
-        if (!Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(taskEx, processEx)) {
-            return;
-        }
-        if (!processEx.reply.done || !processEx.reply.isUploaded) {
-            taskEx.isPreview = false;
-            var history_2 = this.findReplyHistory(taskEx.id);
-            this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_2__workdetail_workdetail__["a" /* WorkDetailPage */], [taskEx, history_2]);
-        }
-    };
-    /**
-     * 退单
-     * @param taskEx
-     * @param location
-     */
-    MyWorkPage.prototype.reject = function (taskEx, location) {
-        var _this = this;
-        var processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]();
-        if (!Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(taskEx, processEx)) {
-            return;
-        }
-        if (!processEx.reject.done) {
-            var time_3 = new Date();
-            var rejectExtend = processEx.reject.extend;
-            var rejectInfo = {
-                rejectTime: time_3.getTime(),
-                rejectReason: rejectExtend.reason,
-                location: location,
-                taskId: taskEx.id,
-                userId: this.globalService.userId
-            };
-            var task = Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["d" /* transform2Task */])(rejectInfo, taskEx, processEx);
-            var output_4 = {
-                uploadedFlag: this.globalService.uploadedFlagForLocal
-            };
-            this.dataService.reject(rejectInfo, task, output_4)
-                .then(function (data) {
-                var uploadedFlag = output_4.uploadedFlag === _this.globalService.uploadedFlagForUploaded;
-                processEx.reject.time = time_3;
-                processEx.reject.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
-                processEx.reject.done = true;
-                processEx.reject.isUploaded = uploadedFlag;
-                processEx.go.show = processEx.go.done;
-                processEx.arrive.show = processEx.arrive.done;
-                processEx.reply.show = processEx.reply.done;
-                processEx.delay.show = processEx.delay.done;
-                //processEx.cancel.show = false;
-                taskEx.lastProcess = 'reject';
-                taskEx.state = __WEBPACK_IMPORTED_MODULE_4__model_Task__["b" /* TaskState */].Reject;
-                taskEx.isUploaded = taskEx.isUploaded && uploadedFlag;
-                _this.events.publish(_this.globalService.myWorkUpdateEvent, { type: 'reject' });
-            })
-                .catch(function (error) {
-                console.error(_this.tag + error);
-                _this.globalService.showToast(error);
-            });
-        }
-    };
-    /**
-     * 延迟
-     * @param taskEx
-     * @param location
-     */
-    MyWorkPage.prototype.delay = function (taskEx, location) {
-        var _this = this;
-        var processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]();
-        if (!Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(taskEx, processEx)) {
-            return;
-        }
-        if (!processEx.delay.done) {
-            var isSuccess = false;
-            var lastProcess = "accept";
-            var curEvent = "delay";
-            var curName = "延迟时间";
-            var extend = processEx.delay.extend;
-            if (taskEx.lastProcess === lastProcess
-                && this.sortDelayProcess(taskEx, lastProcess, curEvent, curName, extend)
-                && Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(taskEx, processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]())) {
-                isSuccess = true;
-            }
-            lastProcess = "go";
-            if (taskEx.lastProcess === lastProcess
-                && this.sortDelayProcess(taskEx, lastProcess, curEvent, curName, extend)
-                && Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(taskEx, processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]())) {
-                isSuccess = true;
-            }
-            lastProcess = "arrive";
-            if (taskEx.lastProcess === lastProcess
-                && this.sortDelayProcess(taskEx, lastProcess, curEvent, curName, extend)
-                && Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(taskEx, processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]())) {
-                isSuccess = true;
-            }
-            if (isSuccess) {
-                var time_4 = new Date();
-                var delayExtend = processEx.delay.extend;
-                var delayInfo = {
-                    delayTime: time_4.getTime(),
-                    deadline: delayExtend.deadline.getTime(),
-                    comment: delayExtend.comment,
-                    location: location,
-                    taskId: taskEx.id,
-                    userId: this.globalService.userId
-                };
-                var task = Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["d" /* transform2Task */])(delayInfo, taskEx, processEx);
-                var output_5 = {
-                    uploadedFlag: this.globalService.uploadedFlagForLocal
-                };
-                this.dataService.delay(delayInfo, task, output_5)
-                    .then(function (data) {
-                    var uploadedFlag = output_5.uploadedFlag === _this.globalService.uploadedFlagForUploaded;
-                    processEx.delay.time = time_4;
-                    processEx.delay.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
-                    processEx.delay.done = true;
-                    processEx.delay.isUploaded = uploadedFlag;
-                    taskEx.lastProcess = 'delay';
-                    taskEx.state = __WEBPACK_IMPORTED_MODULE_4__model_Task__["b" /* TaskState */].Delay;
-                    taskEx.isUploaded = taskEx.isUploaded && uploadedFlag;
-                })
-                    .catch(function (error) {
-                    console.error(_this.tag + error);
-                    _this.globalService.showToast(error);
-                });
-            }
-        }
-    };
-    /**
-     * 销单
-     * @param taskEx
-     * @param location
-     */
-    MyWorkPage.prototype.cancel = function (taskEx, location) {
-        var _this = this;
-        var processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]();
-        if (!Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(taskEx, processEx)) {
-            return;
-        }
-        if (!processEx.cancel.done) {
-            var time_5 = new Date();
-            var cancelExtend = processEx.cancel.extend;
-            var cancelInfo = {
-                destroyTime: time_5.getTime(),
-                destroyRemark: cancelExtend.remark,
-                location: location,
-                taskId: taskEx.id,
-                userId: this.globalService.userId
-            };
-            var task = Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["d" /* transform2Task */])(cancelInfo, taskEx, processEx);
-            var output_6 = {
-                uploadedFlag: this.globalService.uploadedFlagForLocal
-            };
-            this.dataService.cancel(cancelInfo, task, output_6)
-                .then(function (data) {
-                var uploadedFlag = output_6.uploadedFlag === _this.globalService.uploadedFlagForUploaded;
-                processEx.cancel.time = time_5;
-                processEx.cancel.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
-                processEx.cancel.done = true;
-                processEx.cancel.isUploaded = uploadedFlag;
-                processEx.go.show = processEx.go.done;
-                processEx.arrive.show = processEx.arrive.done;
-                processEx.reply.show = processEx.reply.done;
-                processEx.reject.show = processEx.reject.done;
-                processEx.delay.show = processEx.delay.done;
-                taskEx.lastProcess = 'cancel';
-                taskEx.state = __WEBPACK_IMPORTED_MODULE_4__model_Task__["b" /* TaskState */].Cancel;
-                taskEx.isUploaded = taskEx.isUploaded && uploadedFlag;
-                _this.events.publish(_this.globalService.myWorkUpdateEvent, { type: 'cancel' });
-            })
-                .catch(function (error) {
-                console.error(_this.tag + error);
-                _this.globalService.showToast(error);
-            });
-        }
-    };
-    /**
-     * 处理步骤数组转对象
-     * @param taskEx
-     * @param processEx
-     * @returns {boolean}
-     */
-    // private transform2ProcessEx(taskEx: TaskEx, processEx: ProcessEx): boolean {
-    //   if (!taskEx && !processEx) {
-    //     return false;
-    //   }
-    //
-    //   for (let i of taskEx.processes) {
-    //     switch (i.event) {
-    //       case 'create':
-    //         processEx.create = i;
-    //         break;
-    //       case 'dispatch':
-    //         processEx.dispatch = i;
-    //         break;
-    //       case 'accept':
-    //         processEx.accept = i;
-    //         break;
-    //       case 'go':
-    //         processEx.go = i;
-    //         break;
-    //       case 'arrive':
-    //         processEx.arrive = i;
-    //         break;
-    //       case 'reply':
-    //         processEx.reply = i;
-    //         break;
-    //       case 'reject':
-    //         processEx.reject = i;
-    //         break;
-    //       case 'delay':
-    //         processEx.delay = i;
-    //         break;
-    //       case 'cancel':
-    //         processEx.cancel = i;
-    //         break;
-    //       default:
-    //         console.error(this.tag, i.event);
-    //         break;
-    //     }
-    //   }
-    //
-    //   return !!(processEx && processEx.create && processEx.dispatch && processEx.accept && processEx.go && processEx.arrive
-    //   && processEx.reply && processEx.reject && processEx.delay && processEx.cancel);
-    // }
-    /**
-     *
-     * @param taskEx
-     * @param lastEvent
-     * @param curEvent
-     * @param curName
-     * @param curExtend
-     * @returns {boolean}
-     */
-    MyWorkPage.prototype.sortDelayProcess = function (taskEx, lastEvent, curEvent, curName, curExtend) {
-        if (taskEx.processes.length > 0 && lastEvent && curEvent && curName && curExtend) {
-            var lastIndex = void 0, curIndex = void 0;
-            var processes = taskEx.processes;
-            for (var i = 0; i < processes.length; i++) {
-                if (processes[i].event === lastEvent) {
-                    lastIndex = i;
-                }
-                else if (processes[i].event === curEvent) {
-                    curIndex = i;
-                }
-            }
-            if (lastIndex >= curIndex) {
-                return false;
-            }
-            for (var i = curIndex; i > lastIndex; i--) {
-                processes[i].event = processes[i - 1].event;
-                processes[i].name = processes[i - 1].name;
-                processes[i].time = processes[i - 1].time;
-                processes[i].show = processes[i - 1].show;
-                processes[i].color = processes[i - 1].color;
-                processes[i].done = processes[i - 1].done;
-                processes[i].extend = processes[i - 1].extend;
-            }
-            processes[lastIndex + 1].event = curEvent;
-            processes[lastIndex + 1].name = curName;
-            processes[lastIndex + 1].extend = curExtend;
-            return true;
-        }
-        return false;
-    };
-    /**
-     * 退单对话框
-     * @param taskEx
-     * @param location
-     */
-    MyWorkPage.prototype.rejectPrompt = function (taskEx, location) {
-        var _this = this;
-        var processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]();
-        if (!Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(taskEx, processEx) || processEx.reject.done) {
-            return;
-        }
-        var prompt = this.alertCtrl.create({
-            title: '退单申请',
-            message: "请填写退单信息!",
-            inputs: [
-                {
-                    name: 'reason',
-                    placeholder: '原因'
-                }
-            ],
-            buttons: [
-                {
-                    text: '取消',
-                    handler: function (data) {
-                    }
-                },
-                {
-                    text: '确定',
-                    handler: function (data) {
-                        console.log(_this.tag, data);
-                        if (!data.reason) {
-                            return _this.globalService.showToast("请填写原因!");
-                        }
-                        processEx.reject.extend = {
-                            reason: data.reason
-                        };
-                        _this.reject(taskEx, location);
-                    }
-                }
-            ]
-        });
-        prompt.present();
-    };
-    /**
-     * 延迟对话框
-     * @param taskEx
-     * @param location
-     */
-    MyWorkPage.prototype.delayPrompt = function (taskEx, location) {
-        var _this = this;
-        var processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]();
-        if (!Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(taskEx, processEx) || processEx.delay.done) {
-            return;
-        }
-        var prompt = this.alertCtrl.create({
-            title: '延迟申请',
-            message: "请填写延迟信息!",
-            inputs: [
-                {
-                    name: 'day',
-                    placeholder: '天数',
-                    type: 'number'
-                },
-                {
-                    name: 'hour',
-                    placeholder: '小时',
-                    type: 'number'
-                },
-                {
-                    name: 'minute',
-                    placeholder: '分钟',
-                    type: 'number'
-                },
-                {
-                    name: 'reason',
-                    placeholder: '原因'
-                }
-            ],
-            buttons: [
-                {
-                    text: '取消',
-                    handler: function (data) {
-                    }
-                },
-                {
-                    text: '确定',
-                    handler: function (data) {
-                        console.log(_this.tag, data);
-                        if (Number.isNaN(data.day)
-                            && Number.isNaN(data.hour)
-                            && Number.isNaN(data.minute)) {
-                            return _this.globalService.showToast("请填写有效的时间!");
-                        }
-                        else if (!data.reason) {
-                            return _this.globalService.showToast("请填写原因!");
-                        }
-                        else {
-                            var day = Number.parseInt(data.day);
-                            var hour = Number.parseInt(data.hour);
-                            var minute = Number.parseInt(data.minute);
-                            if ((Number.isFinite(day) && day < 0)
-                                || (Number.isFinite(hour) && hour < 0)
-                                || (Number.isFinite(minute) && minute < 0)) {
-                                return _this.globalService.showToast("填写的时间必须大于零!");
-                            }
-                            var time = 0;
-                            if (Number.isFinite(day)) {
-                                time += day * 24 * 60;
-                            }
-                            if (Number.isFinite(hour)) {
-                                time += hour * 60;
-                            }
-                            if (Number.isFinite(minute)) {
-                                time += minute;
-                            }
-                            var deadline = new Date(new Date().getTime() + time * 60000);
-                            processEx.delay.extend = {
-                                comment: data.reason,
-                                deadline: deadline
-                            };
-                            _this.judgeDelayTime(taskEx, processEx.delay.extend, location);
-                        }
-                    }
-                }
-            ]
-        });
-        prompt.present();
-    };
-    /**
-     * 判断申请延期时间
-     * @param taskEx
-     * @param extend
-     * @param location
-     */
-    MyWorkPage.prototype.judgeDelayTime = function (taskEx, extend, location) {
-        var _this = this;
-        this.dataService.getTaskDetail(taskEx.id)
-            .then(function (taskDetail) {
-            if (taskDetail && taskDetail.delayReplyDeadLine) {
-                if (extend.deadline.getTime() <= taskDetail.delayReplyDeadLine) {
-                    return _this.globalService.showToast("填写的时间必须大于处理时限!");
-                }
-                else {
-                    _this.delay(taskEx, location);
-                }
-            }
-        })
-            .catch(function (err) {
-            console.log(err);
-        });
-    };
-    /**
-     * 销单对话框
-     * @param taskEx
-     * @param location
-     */
-    MyWorkPage.prototype.cancelPrompt = function (taskEx, location) {
-        var _this = this;
-        var processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]();
-        if (!Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(taskEx, processEx) || processEx.cancel.done) {
-            return;
-        }
-        var prompt = this.alertCtrl.create({
-            title: '销单申请',
-            message: "请填写销单信息!",
-            inputs: [
-                {
-                    name: 'remark',
-                    placeholder: '备注'
-                }
-            ],
-            buttons: [
-                {
-                    text: '取消',
-                    handler: function (data) {
-                    }
-                },
-                {
-                    text: '确定',
-                    handler: function (data) {
-                        console.log(_this.tag, data);
-                        if (!data.remark) {
-                            return _this.globalService.showToast("请填写备注!");
-                        }
-                        processEx.cancel.extend = {
-                            remark: data.remark
-                        };
-                        _this.cancel(taskEx, location);
-                    }
-                }
-            ]
-        });
-        prompt.present();
-    };
-    /**
-     * 订阅事件
-     * @param events
-     */
-    MyWorkPage.prototype.subscribeEvent = function (events) {
-        var _this = this;
-        events.subscribe(this.globalService.myWorkDownloadFinishEvent, function () {
-            _this.resetTasks(FromWhere.Download);
-        });
-        events.subscribe(this.globalService.myWorkUpdateEvent, function (myWorkUpdateEvent) {
-            console.log("my work need to update");
-            if (myWorkUpdateEvent.type === 'reply'
-                && myWorkUpdateEvent.taskEx
-                && myWorkUpdateEvent.history
-                && myWorkUpdateEvent.history.task
-                && myWorkUpdateEvent.history.reply
-                && myWorkUpdateEvent.history.taskDetail) {
-                var processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]();
-                if (!Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(myWorkUpdateEvent.taskEx, processEx)) {
-                    return;
-                }
-                var replyInfo = myWorkUpdateEvent.history.reply;
-                var uploadedFlag = myWorkUpdateEvent.history.uploadedFlag === _this.globalService.uploadedFlagForUploaded;
-                processEx.reply.time = replyInfo && replyInfo.opTime ? new Date(replyInfo.opTime) : new Date();
-                processEx.reply.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
-                processEx.reply.done = true;
-                processEx.reject.show = false;
-                processEx.delay.show = processEx.delay.done;
-                processEx.cancel.show = true;
-                processEx.reply.isUploaded = uploadedFlag;
-                myWorkUpdateEvent.taskEx.lastProcess = 'reply';
-                myWorkUpdateEvent.taskEx.state = __WEBPACK_IMPORTED_MODULE_4__model_Task__["b" /* TaskState */].Reply;
-                myWorkUpdateEvent.taskEx.isUploaded = myWorkUpdateEvent.taskEx.isUploaded && uploadedFlag;
-                var history_3 = _this.findReplyHistory(myWorkUpdateEvent.taskEx.id);
-                if (history_3) {
-                    history_3 = {
-                        userId: _this.globalService.userId,
-                        taskId: myWorkUpdateEvent.taskEx.id,
-                        state: myWorkUpdateEvent.history.state,
-                        task: myWorkUpdateEvent.history.task,
-                        reply: myWorkUpdateEvent.history.reply,
-                        uploadedFlag: myWorkUpdateEvent.history.uploadedFlag,
-                        taskDetail: myWorkUpdateEvent.history.taskDetail,
-                        mediaNames: myWorkUpdateEvent.history.mediaNames
-                    };
-                }
-                else {
-                    _this.replyHistories.push(myWorkUpdateEvent.history);
-                }
-            }
-            else if (myWorkUpdateEvent.type === 'cancel' || myWorkUpdateEvent.type === 'reject') {
-                _this.resetTasks(FromWhere.CancelOrReject);
-            }
-        });
-    };
-    /**
-     * 重置list
-     * @param fromWhere
-     */
-    MyWorkPage.prototype.resetTasks = function (fromWhere) {
-        var _this = this;
-        this.isOperationBusy = true;
-        this.since = this.globalService.taskSinceDefault;
-        while (this.items.shift())
-            ;
-        this.replyHistories = [];
-        this.showFab = false;
-        this.getTasks(this.since, this.count, this.key)
-            .then(function (data) { return _this.infiniteScroll.enable(data); })
-            .catch(function (error) { return console.error(error); })
-            .then(function () {
-            _this.isOperationBusy = false;
-            switch (fromWhere) {
-                case FromWhere.Download:
-                    _this.refresher.complete();
-                    _this.getTaskCount();
-                    break;
-                case FromWhere.CancelOrReject:
-                    _this.getTaskCount();
-                    break;
-                case FromWhere.Search:
-                    break;
-                case FromWhere.Delete:
-                    _this.getTaskCount();
-                    break;
-                default:
-                    break;
-            }
-        });
-    };
-    MyWorkPage.prototype.findReplyHistory = function (taskId) {
-        return this.replyHistories.find(function (history) { return history.taskId === taskId; });
-    };
-    return MyWorkPage;
-}());
-__decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["n" /* Refresher */]),
-    __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["n" /* Refresher */])
-], MyWorkPage.prototype, "refresher", void 0);
-__decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["c" /* Content */]),
-    __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["c" /* Content */])
-], MyWorkPage.prototype, "content", void 0);
-__decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* InfiniteScroll */]),
-    __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* InfiniteScroll */])
-], MyWorkPage.prototype, "infiniteScroll", void 0);
-MyWorkPage = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-mywork',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\mywork\mywork.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n    <ion-buttons end>\n\n      <button ion-button icon-only color="white" (click)="toggleToolbar($event)">\n\n        <ion-icon name="search"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n\n\n  <ion-toolbar color="primary" *ngIf="showToolbar">\n\n    <ion-searchbar [(ngModel)]="key" (ionInput)="onInput($event)" (ionCancel)="onCancel($event)"></ion-searchbar>\n\n  </ion-toolbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-mywork">\n\n\n\n  <!--refresher on the top-->\n\n  <ion-refresher (ionRefresh)="doRefresh($event)">\n\n    <ion-refresher-content\n\n      pullingIcon="arrow-dropdown"\n\n      pullingText="Pull to refresh"\n\n      refreshingSpinner="circles"\n\n      refreshingText="Refreshing...">\n\n    </ion-refresher-content>\n\n  </ion-refresher>\n\n\n\n  <!--list content-->\n\n  <ion-list>\n\n    <ion-card *ngFor="let item of items">\n\n      <ion-item (click)="onDelete(item)">\n\n        <ion-avatar item-start>\n\n          <img src="assets/img/ic_mywork_avatar.png">\n\n        </ion-avatar>\n\n        <div><h2 class="card-header-label-hint">任务编号 </h2><h2 class="card-header-label-content">{{item.id.split(\'#\')[0] | valueValid}}</h2></div>\n\n        <div><h2 class="card-header-label-hint">任务类型 </h2><h2 class="card-header-label-content">{{item.type | valueValid}}</h2></div>\n\n        <ion-icon name=\'cloud-upload\' item-end *ngIf="!item.isUploaded"></ion-icon>\n\n        <ion-icon name="timer" item-end color="{{\'danger\'}}" *ngIf="item.isOverdueArrivedLine || item.isOverdueReplyLine"></ion-icon>\n\n      </ion-item>\n\n\n\n      <ion-list>\n\n        <ion-list-header>\n\n          <ion-row>\n\n            <ion-col col-auto>任务描述</ion-col>\n\n            <ion-col>{{item.describe | valueValid}}</ion-col>\n\n          </ion-row>\n\n        </ion-list-header>\n\n\n\n        <!--创建时间-->\n\n        <button ion-item [style.color]="item.processes[0].color" *ngIf="item.processes[0].show">\n\n          <ion-icon name=\'icon-vline\'item-start></ion-icon>\n\n          {{item.processes[0].name}} {{item.processes[0].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <!--<ion-icon name=\'ios-arrow-forward\' item-end></ion-icon>-->\n\n        </button>\n\n\n\n        <!--派发时间-->\n\n        <button ion-item [style.color]="item.processes[1].color" *ngIf="item.processes[1].show">\n\n          <ion-icon name=\'icon-vline\'item-start></ion-icon>\n\n          {{item.processes[1].name}} {{item.processes[1].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <!--<ion-icon name=\'ios-arrow-forward\' item-end></ion-icon>-->\n\n        </button>\n\n\n\n        <!--接单时间-->\n\n        <button ion-item [style.color]="item.processes[2].color" *ngIf="item.processes[2].show" (click)="itemSelected(item, 2)">\n\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[2].color}}"></ion-icon>\n\n          {{item.processes[2].name}} {{item.processes[2].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[2].done" color="{{item.processes[2].color}}"></ion-icon>\n\n        </button>\n\n\n\n        <!--出发时间-->\n\n        <button ion-item [style.color]="item.processes[3].color" *ngIf="item.processes[3].show" (click)="itemSelected(item, 3)">\n\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[3].color}}"></ion-icon>\n\n          {{item.processes[3].name}} {{item.processes[3].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[3].done" color="{{item.processes[3].color}}"></ion-icon>\n\n        </button>\n\n\n\n        <!--到场时间-->\n\n        <button ion-item [style.color]="item.processes[4].color" *ngIf="item.processes[4].show" (click)="itemSelected(item, 4)">\n\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[4].color}}"></ion-icon>\n\n          {{item.processes[4].name}} {{item.processes[4].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[4].done" color="{{item.processes[4].color}}"></ion-icon>\n\n        </button>\n\n\n\n        <!--回复时间-->\n\n        <button ion-item [style.color]="item.processes[5].color" *ngIf="item.processes[5].show" (click)="itemSelected(item, 5)">\n\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[5].color}}"></ion-icon>\n\n          {{item.processes[5].name}} {{item.processes[5].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[5].done" color="{{item.processes[5].color}}"></ion-icon>\n\n        </button>\n\n\n\n        <!--退单时间-->\n\n        <button ion-item [style.color]="item.processes[6].color" *ngIf="item.processes[6].show" (click)="itemSelected(item, 6)">\n\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[6].color}}"></ion-icon>\n\n          {{item.processes[6].name}} {{item.processes[6].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[6].done" color="{{item.processes[6].color}}"></ion-icon>\n\n        </button>\n\n\n\n        <!--延迟时间-->\n\n        <button ion-item [style.color]="item.processes[7].color" *ngIf="item.processes[7].show" (click)="itemSelected(item, 7)">\n\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[7].color}}"></ion-icon>\n\n          {{item.processes[7].name}} {{item.processes[7].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[7].done" color="{{item.processes[7].color}}"></ion-icon>\n\n        </button>\n\n\n\n        <!--销单时间-->\n\n        <!--<button ion-item [style.color]="item.processes[8].color" *ngIf="item.processes[8].show" (click)="itemSelected(item, 8)">-->\n\n          <!--<ion-icon name=\'icon-vline\'item-start color="{{item.processes[8].color}}"></ion-icon>-->\n\n          <!--{{item.processes[8].name}} {{item.processes[8].time | date:\'y-MM-dd HH:mm:ss\'}}-->\n\n          <!--<ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[8].done" color="{{item.processes[8].color}}"></ion-icon>-->\n\n        <!--</button>-->\n\n      </ion-list>\n\n\n\n      <ion-row>\n\n        <ion-col class="card-bottom-btn">\n\n          <button ion-button icon-left clear small color="gray">\n\n            <ion-icon name="images"></ion-icon>\n\n            <div>{{item.photoCount}}</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn">\n\n          <button ion-button icon-left clear small color="gray">\n\n            <ion-icon name="musical-notes"></ion-icon>\n\n            <div>{{item.audioCount}}</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col>\n\n          <button ion-button icon-left clear small color="gray">\n\n            <ion-icon name="videocam"></ion-icon>\n\n            <div>{{item.videoCount}}</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn" *ngIf="item.isLocationValid">\n\n          <button ion-button icon-left clear small (click)="onLocate(item)">\n\n            <ion-icon name="map"></ion-icon>\n\n            <div>地图</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn">\n\n          <button ion-button icon-left clear small (click)="onPreview(item)">\n\n            <ion-icon name="information-circle"></ion-icon>\n\n            <div>预览</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn">\n\n          <button ion-button icon-left clear small (click)="onMaterials(item)">\n\n            <ion-icon name="information-circle"></ion-icon>\n\n            <div>材料</div>\n\n          </button>\n\n        </ion-col>\n\n      </ion-row>\n\n\n\n      <!--<ion-row>-->\n\n        <!--<ion-item>-->\n\n          <!--<button item-right ion-button icon-left clear (click)="onMaterials(item)">-->\n\n            <!--<ion-icon name="clipboard"></ion-icon>-->\n\n            <!--<div>材料登记</div>-->\n\n          <!--</button>-->\n\n        <!--</ion-item>-->\n\n      <!--</ion-row>-->\n\n    </ion-card>\n\n  </ion-list>\n\n\n\n  <!--infinite scroll-->\n\n  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">\n\n    <ion-infinite-scroll-content></ion-infinite-scroll-content>\n\n  </ion-infinite-scroll>\n\n\n\n  <!--fab-->\n\n  <ion-fab right bottom *ngIf="showFab">\n\n    <button ion-fab color="primary" (click)="doScroll2Top($event)">\n\n      <ion-icon name="arrow-dropup"></ion-icon>\n\n    </button>\n\n  </ion-fab>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\mywork\mywork.html"*/
-    }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
-        __WEBPACK_IMPORTED_MODULE_3__providers_DataService__["a" /* DataService */],
-        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */],
-        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* Events */],
-        __WEBPACK_IMPORTED_MODULE_6__providers_GlobalService__["a" /* GlobalService */],
-        __WEBPACK_IMPORTED_MODULE_10__providers_ConfigService__["a" /* ConfigService */]])
-], MyWorkPage);
-
-//# sourceMappingURL=mywork.js.map
-
-/***/ }),
-
 /***/ 7:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -13645,8 +13724,8 @@ MyWorkPage = __decorate([
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return MyPluginMock; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return GlobalService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_storage__ = __webpack_require__(59);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_storage__ = __webpack_require__(60);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_my_plugin__ = __webpack_require__(120);
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -13903,5 +13982,5 @@ GlobalService = __decorate([
 
 /***/ })
 
-},[248]);
+},[247]);
 //# sourceMappingURL=main.js.map
