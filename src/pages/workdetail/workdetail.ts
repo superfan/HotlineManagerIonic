@@ -14,6 +14,7 @@ import {History} from "../../model/History";
 import {FileService} from "../../providers/FileService";
 import {Personnel} from "../../model/Personnel";
 import {ConfigService} from "../../providers/ConfigService";
+import {OverdueTime} from "../../model/OverdueTime";
 
 interface Detail {
   name: string;
@@ -65,7 +66,7 @@ export class WorkDetailPage implements OnInit, OnDestroy {
   title: string = '工单处理';
   segmentName: string = "detailInfo";
 
-  overdueTime: number;//超期时限
+  overdueTime: OverdueTime;//超期时限
 
   detail: Detail[] = [
     {name: '联系人名', value: '', key: 'contactName', isTime: false,isShowOverdue:false},
@@ -157,7 +158,7 @@ export class WorkDetailPage implements OnInit, OnDestroy {
       .then(taskDetail => {
         console.log(this.tag + "getTaskDetail: " + taskDetail);
         this.taskDetail = taskDetail;
-        this.getOverdueFromFile();
+        //this.getOverdueFromFile();
       })
       .catch(error => console.error(error));
 
@@ -561,46 +562,46 @@ export class WorkDetailPage implements OnInit, OnDestroy {
    * 转换显示信息
    * @param taskDetail
    */
-  private convertTaskDetail(taskDetail: TaskDetail): void {
-
-    if (taskDetail.arrivedTime == 0){
-      this.detail[9].isShowOverdue = taskDetail.arrivedDeadLine < new Date().getTime() - this.overdueTime*60*1000;
-    }
-    if (taskDetail.replyTime == 0) {
-      this.detail[10].isShowOverdue = taskDetail.replyDeadLine < new Date().getTime() - this.overdueTime * 60 * 1000;
-    }
-    // if (taskDetail.completedTime == 0) {
-    // this.detail[11].isShowOverdue = taskDetail.delayReplyDeadLine < new Date().getTime() - this.overdueTime*60*1000;
-    // }
-
-    for (let item of this.detail) {
-      item.value = taskDetail[item.key];
-      if (item.key === 'issueTime'
-        || item.key === 'bookingStartTime'
-        || item.key === 'bookingEndTime'
-        || item.key === 'arrivedDeadLine'
-        || item.key === 'replyDeadLine'
-        || item.key === 'delayReplyDeadLine'
-        || typeof item.value === 'number') {
-        item.value = item.value > 0 ? new Date(item.value as number) : '';
-      }
-    }
-  }
+  // private convertTaskDetail(taskDetail: TaskDetail): void {
+  //
+  //   if (taskDetail.arrivedTime == 0){
+  //     this.detail[9].isShowOverdue = taskDetail.arrivedDeadLine < new Date().getTime() - this.overdueTime*60*1000;
+  //   }
+  //   if (taskDetail.replyTime == 0) {
+  //     this.detail[10].isShowOverdue = taskDetail.replyDeadLine < new Date().getTime() - this.overdueTime * 60 * 1000;
+  //   }
+  //   // if (taskDetail.completedTime == 0) {
+  //   // this.detail[11].isShowOverdue = taskDetail.delayReplyDeadLine < new Date().getTime() - this.overdueTime*60*1000;
+  //   // }
+  //
+  //   for (let item of this.detail) {
+  //     item.value = taskDetail[item.key];
+  //     if (item.key === 'issueTime'
+  //       || item.key === 'bookingStartTime'
+  //       || item.key === 'bookingEndTime'
+  //       || item.key === 'arrivedDeadLine'
+  //       || item.key === 'replyDeadLine'
+  //       || item.key === 'delayReplyDeadLine'
+  //       || typeof item.value === 'number') {
+  //       item.value = item.value > 0 ? new Date(item.value as number) : '';
+  //     }
+  //   }
+  // }
 
   /**
    * 读取文件的超期时限
    */
-  getOverdueFromFile() {
-    this.configService.getOverdueTime()
-      .then(data => {
-        console.log(this.tag + data);
-        this.overdueTime = data;
-        this.convertTaskDetail(this.taskDetail);
-      })
-      .catch(err => {
-        console.log(this.tag + err);
-      })
-  }
+  // getOverdueFromFile() {
+  //   this.configService.getOverdueTime()
+  //     .then(data => {
+  //       console.log(this.tag + data);
+  //       this.overdueTime = data;
+  //       //this.convertTaskDetail(this.taskDetail);
+  //     })
+  //     .catch(err => {
+  //       console.log(this.tag + err);
+  //     })
+  // }
 
   /**
    * 设置回复信息

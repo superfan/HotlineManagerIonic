@@ -1884,7 +1884,7 @@ var WorkDetailPage = (function () {
             .then(function (taskDetail) {
             console.log(_this.tag + "getTaskDetail: " + taskDetail);
             _this.taskDetail = taskDetail;
-            _this.getOverdueFromFile();
+            //this.getOverdueFromFile();
         })
             .catch(function (error) { return console.error(error); });
         if (this.history && this.history.reply) {
@@ -2249,45 +2249,45 @@ var WorkDetailPage = (function () {
      * 转换显示信息
      * @param taskDetail
      */
-    WorkDetailPage.prototype.convertTaskDetail = function (taskDetail) {
-        if (taskDetail.arrivedTime == 0) {
-            this.detail[9].isShowOverdue = taskDetail.arrivedDeadLine < new Date().getTime() - this.overdueTime * 60 * 1000;
-        }
-        if (taskDetail.replyTime == 0) {
-            this.detail[10].isShowOverdue = taskDetail.replyDeadLine < new Date().getTime() - this.overdueTime * 60 * 1000;
-        }
-        // if (taskDetail.completedTime == 0) {
-        // this.detail[11].isShowOverdue = taskDetail.delayReplyDeadLine < new Date().getTime() - this.overdueTime*60*1000;
-        // }
-        for (var _i = 0, _a = this.detail; _i < _a.length; _i++) {
-            var item = _a[_i];
-            item.value = taskDetail[item.key];
-            if (item.key === 'issueTime'
-                || item.key === 'bookingStartTime'
-                || item.key === 'bookingEndTime'
-                || item.key === 'arrivedDeadLine'
-                || item.key === 'replyDeadLine'
-                || item.key === 'delayReplyDeadLine'
-                || typeof item.value === 'number') {
-                item.value = item.value > 0 ? new Date(item.value) : '';
-            }
-        }
-    };
+    // private convertTaskDetail(taskDetail: TaskDetail): void {
+    //
+    //   if (taskDetail.arrivedTime == 0){
+    //     this.detail[9].isShowOverdue = taskDetail.arrivedDeadLine < new Date().getTime() - this.overdueTime*60*1000;
+    //   }
+    //   if (taskDetail.replyTime == 0) {
+    //     this.detail[10].isShowOverdue = taskDetail.replyDeadLine < new Date().getTime() - this.overdueTime * 60 * 1000;
+    //   }
+    //   // if (taskDetail.completedTime == 0) {
+    //   // this.detail[11].isShowOverdue = taskDetail.delayReplyDeadLine < new Date().getTime() - this.overdueTime*60*1000;
+    //   // }
+    //
+    //   for (let item of this.detail) {
+    //     item.value = taskDetail[item.key];
+    //     if (item.key === 'issueTime'
+    //       || item.key === 'bookingStartTime'
+    //       || item.key === 'bookingEndTime'
+    //       || item.key === 'arrivedDeadLine'
+    //       || item.key === 'replyDeadLine'
+    //       || item.key === 'delayReplyDeadLine'
+    //       || typeof item.value === 'number') {
+    //       item.value = item.value > 0 ? new Date(item.value as number) : '';
+    //     }
+    //   }
+    // }
     /**
      * 读取文件的超期时限
      */
-    WorkDetailPage.prototype.getOverdueFromFile = function () {
-        var _this = this;
-        this.configService.getOverdueTime()
-            .then(function (data) {
-            console.log(_this.tag + data);
-            _this.overdueTime = data;
-            _this.convertTaskDetail(_this.taskDetail);
-        })
-            .catch(function (err) {
-            console.log(_this.tag + err);
-        });
-    };
+    // getOverdueFromFile() {
+    //   this.configService.getOverdueTime()
+    //     .then(data => {
+    //       console.log(this.tag + data);
+    //       this.overdueTime = data;
+    //       //this.convertTaskDetail(this.taskDetail);
+    //     })
+    //     .catch(err => {
+    //       console.log(this.tag + err);
+    //     })
+    // }
     /**
      * 设置回复信息
      */
@@ -2821,7 +2821,7 @@ var DataService = (function (_super) {
             return this.downloadService.getTasks(this.globalService.userId, since, count);
         }
         else {
-            return this.dbService.getTasks(this.globalService.userId, since, count, [__WEBPACK_IMPORTED_MODULE_2__model_Task__["b" /* TaskState */].Dispatch, __WEBPACK_IMPORTED_MODULE_2__model_Task__["b" /* TaskState */].Accept, __WEBPACK_IMPORTED_MODULE_2__model_Task__["b" /* TaskState */].Go, __WEBPACK_IMPORTED_MODULE_2__model_Task__["b" /* TaskState */].Arrived, __WEBPACK_IMPORTED_MODULE_2__model_Task__["b" /* TaskState */].Reply, __WEBPACK_IMPORTED_MODULE_2__model_Task__["b" /* TaskState */].Delay, __WEBPACK_IMPORTED_MODULE_2__model_Task__["b" /* TaskState */].Continue], key);
+            return this.dbService.getTasks(this.globalService.userId, since, count, [__WEBPACK_IMPORTED_MODULE_2__model_Task__["b" /* TaskState */].Dispatch, __WEBPACK_IMPORTED_MODULE_2__model_Task__["b" /* TaskState */].Accept, __WEBPACK_IMPORTED_MODULE_2__model_Task__["b" /* TaskState */].Go, __WEBPACK_IMPORTED_MODULE_2__model_Task__["b" /* TaskState */].Arrived, __WEBPACK_IMPORTED_MODULE_2__model_Task__["b" /* TaskState */].Delay, __WEBPACK_IMPORTED_MODULE_2__model_Task__["b" /* TaskState */].Continue], key);
         }
     };
     /**
@@ -2854,27 +2854,73 @@ var DataService = (function (_super) {
                     : _this.downloadService.getTaskDetail(taskId.split('#')[0])
                         .then(function (detail) {
                         detail.taskId = taskId;
-                        return _this.dbService.saveTaskDetail(detail);
+                        return _this.dbService.saveTaskDetail(detail)
+                            .then(function (result) { return result ? _this.dbService.updateTaskExtendInfo(detail) : false; });
                     })
                         .then(function (result) { return _this.dbService.getTaskDetail(taskId); });
             });
         }
     };
     /**
+     * 检查超期工单
+     * @param overdueTime
+     * @returns {any}
+     */
+    DataService.prototype.checkOverdueTimeTasks = function (overdueTime) {
+        var _this = this;
+        if (this.globalService.isChrome) {
+            if (!overdueTime) {
+                return Promise.resolve([]);
+            }
+            return this.downloadService.getTasks(this.globalService.userId, 1, 100)
+                .then(function (tasks) {
+                if (!tasks || tasks.length <= 0) {
+                    return Promise.resolve([]);
+                }
+                var promises = tasks.map(function (task) { return _this.downloadService.getTaskDetail(task.taskId); });
+                return Promise.all(promises)
+                    .then(function (taskDetails) {
+                    if (!taskDetails || taskDetails.length <= 0) {
+                        return Promise.resolve([]);
+                    }
+                    var currentTime = new Date().getTime();
+                    var arrivedTime = overdueTime.arrived + currentTime;
+                    var replyTime = overdueTime.reply + currentTime;
+                    var candidateTasks = [];
+                    var _loop_1 = function (taskDetail) {
+                        if ((taskDetail.arrivedDeadLine && taskDetail.arrivedDeadLine < arrivedTime)
+                            || (taskDetail.replyDeadLine && taskDetail.replyDeadLine < replyTime)) {
+                            var task = tasks.find(function (task) { return task.taskId === taskDetail.taskId; });
+                            if (task) {
+                                candidateTasks.push(task);
+                            }
+                        }
+                    };
+                    for (var _i = 0, taskDetails_1 = taskDetails; _i < taskDetails_1.length; _i++) {
+                        var taskDetail = taskDetails_1[_i];
+                        _loop_1(taskDetail);
+                    }
+                    return Promise.resolve(candidateTasks);
+                });
+            });
+        }
+        else {
+            return this.dbService.checkOverdueTimeTasks(this.globalService.userId, overdueTime, new Date().getTime());
+        }
+    };
+    /**
      * 获取任务详情
      * @returns {Promise<Array<TaskDetail>>}
      */
-    DataService.prototype.getTaskDetailByUserId = function () {
-        var _this = this;
-        if (this.globalService.isChrome) {
-            return Promise.reject([]);
-        }
-        else {
-            return this.dbService.getTaskIds(this.globalService.userId)
-                .then(function (taskIds) { return _this.dbService.getTaskDetails(taskIds); })
-                .catch(function (error) { return console.error(error); });
-        }
-    };
+    // public getTaskDetailByUserId(): Promise<Array<TaskDetail>> {
+    //   if (this.globalService.isChrome) {
+    //     return Promise.reject([]);
+    //   } else {
+    //     return this.dbService.getTaskIds(this.globalService.userId)
+    //       .then(taskIds => this.dbService.getTaskDetails(taskIds))
+    //       .catch(error => console.error(error));
+    //   }
+    // }
     /**
      * 历史工单获取记录
      * @param since
@@ -3896,7 +3942,7 @@ var ConfigService = ConfigService_1 = (function () {
     };
     /**
      * 获取超期时限设置
-     * @returns {Promise<T>}
+     * @returns {Promise<OverdueTime>|Promise<T>}
      */
     ConfigService.prototype.getOverdueTime = function () {
         var _this = this;
@@ -4108,19 +4154,19 @@ var ConfigService = ConfigService_1 = (function () {
     };
     /**
      * 设置超期时限
-     * @param keepAlive
+     * @param overdueTime
      * @returns {any}
      */
-    ConfigService.prototype.setOverdue = function (overdue) {
+    ConfigService.prototype.setOverdueTime = function (overdueTime) {
         var _this = this;
         if (ConfigService_1.isValid(this.systemConfig, 'overdueTime')) {
             return new Promise(function (resolve, reject) {
                 var systemConfig = Object.create(_this.systemConfig);
-                systemConfig.overdueTime = overdue;
+                systemConfig.overdueTime = overdueTime;
                 _this.writeSystemConfig(systemConfig)
                     .then(function (result) {
                     if (result) {
-                        _this.systemConfig.overdueTime = overdue;
+                        _this.systemConfig.overdueTime = overdueTime;
                     }
                     resolve(!!result);
                 })
@@ -7158,10 +7204,14 @@ var AppComponentService = (function () {
 }());
 AppComponentService = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["B" /* Injectable */])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__ionic_native_android_permissions__["a" /* AndroidPermissions */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__ionic_native_android_permissions__["a" /* AndroidPermissions */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__providers_GlobalService__["a" /* GlobalService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__providers_GlobalService__["a" /* GlobalService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__providers_FileService__["a" /* FileService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__providers_FileService__["a" /* FileService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_13__providers_DataService__["a" /* DataService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_13__providers_DataService__["a" /* DataService */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_4__ionic_native_my_plugin__["a" /* MyPlugin */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__ionic_native_my_plugin__["a" /* MyPlugin */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_14__providers_ConfigService__["a" /* ConfigService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_14__providers_ConfigService__["a" /* ConfigService */]) === "function" && _f || Object])
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__ionic_native_android_permissions__["a" /* AndroidPermissions */],
+        __WEBPACK_IMPORTED_MODULE_2__providers_GlobalService__["a" /* GlobalService */],
+        __WEBPACK_IMPORTED_MODULE_3__providers_FileService__["a" /* FileService */],
+        __WEBPACK_IMPORTED_MODULE_13__providers_DataService__["a" /* DataService */],
+        __WEBPACK_IMPORTED_MODULE_4__ionic_native_my_plugin__["a" /* MyPlugin */],
+        __WEBPACK_IMPORTED_MODULE_14__providers_ConfigService__["a" /* ConfigService */]])
 ], AppComponentService);
 
-var _a, _b, _c, _d, _e, _f;
 //# sourceMappingURL=app.component.service.js.map
 
 /***/ }),
@@ -7689,7 +7739,8 @@ var SyncService = (function () {
                     return _this.downloadService.getTaskDetail(taskId_1.split('#')[0])
                         .then(function (detail) {
                         detail.taskId = taskId_1; // modify for the rejected task
-                        return _this.dbService.saveTaskDetail(detail);
+                        return _this.dbService.saveTaskDetail(detail)
+                            .then(function (result) { return result ? _this.dbService.updateTaskExtendInfo(detail) : false; });
                     })
                         .catch(function (error) { return console.error(error); })
                         .then(function (result) { return _this.events.publish(_this.downloadTaskDetailEvent, msgType, taskIds); });
@@ -9288,7 +9339,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var FromWhere;
 (function (FromWhere) {
     FromWhere[FromWhere["Download"] = 0] = "Download";
-    FromWhere[FromWhere["CancelOrReject"] = 1] = "CancelOrReject";
+    //CancelOrReject,
+    FromWhere[FromWhere["ReplyOrReject"] = 1] = "ReplyOrReject";
     FromWhere[FromWhere["Search"] = 2] = "Search";
     FromWhere[FromWhere["Delete"] = 3] = "Delete";
 })(FromWhere || (FromWhere = {}));
@@ -9305,11 +9357,13 @@ var MyWorkPage = (function () {
         this.showToolbar = false;
         this.showFab = false;
         this.items = [];
+        this.overdueTime = null; //超期时限
         this.since = this.globalService.taskSinceDefault;
         this.count = this.globalService.taskCountDefault10;
         this.isOperationBusy = false;
         this.key = '';
         this.replyHistories = [];
+        this.isCheckingOverdueTime = false;
     }
     /**
      * 初始化
@@ -9319,10 +9373,12 @@ var MyWorkPage = (function () {
         console.log(this.tag, 'ngOnInit');
         this.subscribeEvent(this.events);
         this.showFab = false;
+        this.getOverdueTime();
         this.getTasks(this.since, this.count, this.key)
             .then(function (data) {
             _this.infiniteScroll.enable(data);
             _this.getTaskCount();
+            _this.intevalId = setInterval(_this.checkOverdueTimeTasks(), 60000);
         })
             .catch(function (error) { return console.error(error); });
     };
@@ -9333,6 +9389,9 @@ var MyWorkPage = (function () {
         console.log(this.tag, 'ngOnDestroy');
         this.events.unsubscribe(this.globalService.myWorkDownloadFinishEvent);
         this.events.unsubscribe(this.globalService.myWorkUpdateEvent);
+        if (this.intevalId) {
+            clearInterval(this.intevalId);
+        }
     };
     /**
      * 下拉同步
@@ -9360,10 +9419,11 @@ var MyWorkPage = (function () {
                 .then(function (data) {
                 if (!data) {
                     infiniteScroll.enable(false);
+                    _this.checkOverdueTimeTasks();
                 }
                 else {
                     infiniteScroll.complete();
-                    _this.getTaskDetails(_this.since, _this.count, _this.key);
+                    //this.getTaskDetails(this.since, this.count, this.key);
                 }
                 console.log(_this.tag, 'doInfinite end');
             })
@@ -9475,6 +9535,10 @@ var MyWorkPage = (function () {
     MyWorkPage.prototype.onMaterials = function (taskEx) {
         this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_9__materials_materials__["a" /* MaterialsPage */], taskEx.id);
     };
+    /**
+     * 删除任务
+     * @param taskEx
+     */
     MyWorkPage.prototype.onDelete = function (taskEx) {
         var _this = this;
         var alert = this.alertCtrl.create({
@@ -9532,63 +9596,126 @@ var MyWorkPage = (function () {
                         var taskEx = taskExs_2[_i];
                         _loop_1(taskEx);
                     }
-                })
-                    .then(function () { return tasks.filter(function (task) { return task.state === __WEBPACK_IMPORTED_MODULE_4__model_Task__["b" /* TaskState */].Reply; }); })
-                    .then(function (tasks) { return tasks.map(function (task) { return task.taskId; }); })
-                    .then(function (taskIds) { return _this.dataService.getReplyHistories(taskIds); })
-                    .then(function (histories) {
-                    var result = false;
-                    try {
-                        (_a = _this.replyHistories).push.apply(_a, histories);
-                        _this.replyHistories.forEach(function (history) {
-                            if (history.mediaNames && history.mediaNames.length > 0) {
-                                var taskEx = _this.items.find(function (taskEx) { return taskEx.id === history.taskId; });
-                                if (taskEx) {
-                                    var mediaNames = history.mediaNames;
-                                    taskEx.photoCount = mediaNames.filter(function (name) { return name.lastIndexOf(_this.globalService.photoSuffix) !== -1; }).length;
-                                    taskEx.audioCount = mediaNames.filter(function (name) { return name.lastIndexOf(_this.globalService.audioSuffix) !== -1; }).length;
-                                    taskEx.videoCount = mediaNames.filter(function (name) { return name.lastIndexOf(_this.globalService.videoSuffix) !== -1; }).length;
-                                }
-                            }
-                        });
-                        result = true;
-                    }
-                    catch (err) {
-                        console.error(err);
-                    }
-                    return Promise.resolve(result);
-                    var _a;
+                    return Promise.resolve(true);
                 });
+                /*.then(() => tasks.filter(task => task.state === TaskState.Reply))
+                 .then(tasks => tasks.map(task => task.taskId))
+                 .then(taskIds => this.dataService.getReplyHistories(taskIds))
+                 .then(histories => {
+                 let result: boolean = false;
+                 try {
+                 this.replyHistories.push(...histories);
+                 this.replyHistories.forEach(history => {
+                 if (history.mediaNames && history.mediaNames.length > 0) {
+                 let taskEx: TaskEx = this.items.find(taskEx => taskEx.id === history.taskId);
+                 if (taskEx) {
+                 let mediaNames = history.mediaNames;
+                 taskEx.photoCount = mediaNames.filter(name => name.lastIndexOf(this.globalService.photoSuffix) !== -1).length;
+                 taskEx.audioCount = mediaNames.filter(name => name.lastIndexOf(this.globalService.audioSuffix) !== -1).length;
+                 taskEx.videoCount = mediaNames.filter(name => name.lastIndexOf(this.globalService.videoSuffix) !== -1).length;
+                 }
+                 }
+                 });
+                 result = true;
+                 } catch (err) {
+                 console.error(err);
+                 }
+      
+                 return Promise.resolve(result);
+                 });*/
             }
         });
     };
     /**
-     * 读取文件的超期时限
+     * 获取超期时限
      */
-    MyWorkPage.prototype.getOverdueFromFile = function () {
+    MyWorkPage.prototype.getOverdueTime = function () {
         var _this = this;
         this.configService.getOverdueTime()
-            .then(function (data) {
-            console.log(_this.tag + data);
-            _this.overdueTime = data;
-            _this.getTaskDetails(_this.since, _this.count, _this.key)
-                .then(function (data) {
-                console.log(_this.tag + data);
-                _this.getTaskDetailOverdueCount()
-                    .then(function (data) {
-                    if (data > 0) {
-                        _this.showOverdueCountAlert(data);
-                    }
-                });
-            })
-                .catch(function (err) {
-                console.log(_this.tag + err);
-            });
-        })
-            .catch(function (err) {
-            console.log(_this.tag + err);
+            .then(function (overdueTime) { return _this.overdueTime = overdueTime; })
+            .catch(function (err) { return console.error(_this.tag + err); })
+            .then(function () {
+            if (!_this.overdueTime) {
+                _this.overdueTime = {
+                    arrived: 30,
+                    reply: 30,
+                    delayReply: 30
+                };
+            }
         });
     };
+    /**
+     * 检查超期工单
+     */
+    MyWorkPage.prototype.checkOverdueTimeTasks = function () {
+        var _this = this;
+        if (this.isCheckingOverdueTime) {
+            return;
+        }
+        this.isCheckingOverdueTime = true;
+        this.dataService.checkOverdueTimeTasks(this.overdueTime)
+            .then(function (tasks) {
+            if (!tasks || tasks.length <= 0) {
+                return;
+            }
+            var count = 0;
+            var _loop_2 = function (task) {
+                if (!task.extendedInfo) {
+                    return "continue";
+                }
+                var taskEx = _this.items.find(function (taskEx) { return taskEx.id === task.taskId; });
+                if (taskEx) {
+                    if (task.extendedInfo.arrivedDeadLine) {
+                        taskEx.isOverdueArrivedLine = true;
+                        count++;
+                    }
+                    else if (task.extendedInfo.replyDeadLine) {
+                        taskEx.isOverdueReplyLine = true;
+                        count++;
+                    }
+                }
+            };
+            for (var _i = 0, tasks_1 = tasks; _i < tasks_1.length; _i++) {
+                var task = tasks_1[_i];
+                _loop_2(task);
+            }
+            if (count > 0) {
+                _this.showOverdueCountAlert(count);
+            }
+        })
+            .catch(function (err) { return console.error(_this.tag + err); })
+            .then(function () { return _this.isCheckingOverdueTime = false; });
+    };
+    /**
+     * 读取文件的超期时限
+     */
+    // private getOverdueFromFile(): void {
+    //   this.configService.getOverdueTime()
+    //     .then(data => {
+    //       console.log(this.tag + data);
+    //       this.overdueTime = data;
+    //       this.getTaskDetails(this.since, this.count, this.key)
+    //         .then(data => {
+    //           console.log(this.tag + data);
+    //           this.getTaskDetailOverdueCount()
+    //             .then(data => {
+    //               if (data > 0) {
+    //                 this.showOverdueCountAlert(data);
+    //               }
+    //             });
+    //         })
+    //         .catch(err => {
+    //           console.log(this.tag + err);
+    //         });
+    //     })
+    //     .catch(err => {
+    //       console.log(this.tag + err);
+    //     })
+    // }
+    /**
+     *
+     * @param count
+     */
     MyWorkPage.prototype.showOverdueCountAlert = function (count) {
         var alert = this.alertCtrl.create({
             title: '提示!',
@@ -9601,36 +9728,36 @@ var MyWorkPage = (function () {
      * 获取超期任务数量
      * @returns {Promise<number>}
      */
-    MyWorkPage.prototype.getTaskDetailOverdueCount = function () {
-        var _this = this;
-        return this.dataService.getTaskDetailByUserId()
-            .then(function (taskDetails) {
-            console.log(_this.tag + "getTaskDetailOverdueCount");
-            if (!taskDetails || taskDetails.length <= 0) {
-                return Promise.resolve(0);
-            }
-            else {
-                var count_1 = 0;
-                var isOverdueArrived_1 = false;
-                var isOverdueReply_1 = false;
-                taskDetails.forEach(function (taskDetail) {
-                    if (taskDetail.arrivedTime == 0) {
-                        isOverdueArrived_1 = taskDetail.arrivedDeadLine < new Date().getTime() - _this.overdueTime * 60 * 1000;
-                    }
-                    if (taskDetail.replyTime == 0) {
-                        isOverdueReply_1 = taskDetail.replyDeadLine < new Date().getTime() - _this.overdueTime * 60 * 1000;
-                    }
-                    if (isOverdueArrived_1 || isOverdueReply_1) {
-                        count_1++;
-                    }
-                    isOverdueArrived_1 = false;
-                    isOverdueReply_1 = false;
-                });
-                return Promise.resolve(count_1);
-            }
-        }).catch(function (error) { return console.error(error); });
-        ;
-    };
+    // private getTaskDetailOverdueCount(): Promise<number> {
+    //   return this.dataService.getTaskDetailByUserId()
+    //     .then(taskDetails => {
+    //       console.log(this.tag + "getTaskDetailOverdueCount");
+    //       if (!taskDetails || taskDetails.length <= 0) {
+    //         return Promise.resolve(0)
+    //       } else {
+    //         let count: number = 0;
+    //         let isOverdueArrived: boolean = false;
+    //         let isOverdueReply: boolean = false;
+    //         taskDetails.forEach(taskDetail => {
+    //           if (taskDetail.arrivedTime == 0) {
+    //             isOverdueArrived = taskDetail.arrivedDeadLine < new Date().getTime() - this.overdueTime * 60 * 1000;
+    //           }
+    //
+    //           if (taskDetail.replyTime == 0) {
+    //             isOverdueReply = taskDetail.replyDeadLine < new Date().getTime() - this.overdueTime * 60 * 1000;
+    //           }
+    //           if (isOverdueArrived || isOverdueReply) {
+    //             count++;
+    //           }
+    //
+    //           isOverdueArrived = false;
+    //           isOverdueReply = false;
+    //
+    //         });
+    //         return Promise.resolve(count)
+    //       }
+    //     }) .catch(error => console.error(error));
+    // }
     /**
      * 获取任务详情
      * @param since
@@ -9638,37 +9765,36 @@ var MyWorkPage = (function () {
      * @param key
      * @returns {Promise<boolean>}
      */
-    MyWorkPage.prototype.getTaskDetails = function (since, count, key) {
-        var _this = this;
-        return this.dataService.getTasks(since, count, key)
-            .then(function (tasks) {
-            console.log(_this.tag + "getTaskDetails: " + tasks.length);
-            if (tasks.length <= 0) {
-                return Promise.resolve(false);
-            }
-            else {
-                var taskIds = tasks.map(function (tasks) { return tasks.taskId; });
-                if (taskIds && taskIds.length > 0) {
-                    for (var i = 0; i < taskIds.length; i++) {
-                        _this.dataService.getTaskDetail(taskIds[i])
-                            .then((function (detail) {
-                            var taskEx = _this.items.find(function (taskEx) { return taskEx.id === detail.taskId; });
-                            if (taskEx) {
-                                // let mediaNames = history.mediaNames;
-                                if (detail.arrivedTime == 0) {
-                                    taskEx.isOverdueArrivedLine = detail.arrivedDeadLine < new Date().getTime() - _this.overdueTime * 60 * 1000;
-                                }
-                                if (detail.replyTime == 0) {
-                                    taskEx.isOverdueReplyLine = detail.replyDeadLine < new Date().getTime() - _this.overdueTime * 60 * 1000;
-                                }
-                            }
-                            return Promise.resolve(true);
-                        }));
-                    }
-                }
-            }
-        });
-    };
+    // private getTaskDetails(since: number, count: number, key: string): Promise<boolean> {
+    //   return this.dataService.getTasks(since, count, key)
+    //     .then(tasks => {
+    //       console.log(this.tag + "getTaskDetails: " + tasks.length);
+    //       if (tasks.length <= 0) {
+    //         return Promise.resolve(false)
+    //       } else {
+    //         let taskIds: Array<string> = tasks.map(tasks => tasks.taskId);
+    //         if (taskIds && taskIds.length > 0) {
+    //           for (let i = 0; i < taskIds.length; i++) {
+    //             this.dataService.getTaskDetail(taskIds[i])
+    //               .then((detail => {
+    //                 let taskEx: TaskEx = this.items.find(taskEx => taskEx.id === detail.taskId);
+    //                 if (taskEx) {
+    //                   // let mediaNames = history.mediaNames;
+    //                   if (detail.arrivedTime == 0) {
+    //                     taskEx.isOverdueArrivedLine = detail.arrivedDeadLine < new Date().getTime() - this.overdueTime * 60 * 1000;
+    //                   }
+    //
+    //                   if (detail.replyTime == 0) {
+    //                     taskEx.isOverdueReplyLine = detail.replyDeadLine < new Date().getTime() - this.overdueTime * 60 * 1000;
+    //                   }
+    //                 }
+    //                 return Promise.resolve(true);
+    //               }));
+    //           }
+    //         }
+    //       }
+    //     });
+    // }
     /**
      *
      * @param taskExs
@@ -9787,7 +9913,9 @@ var MyWorkPage = (function () {
         this.dataService.getTaskCount()
             .then(function (count) {
             _this.events.publish(_this.globalService.mainUpdateEvent, { type: 'myWorkCount', count: count });
-            _this.getOverdueFromFile();
+            if (count > 0) {
+                _this.checkOverdueTimeTasks();
+            }
         })
             .catch(function (error) { return console.error(error); });
     };
@@ -10434,9 +10562,10 @@ var MyWorkPage = (function () {
                 else {
                     _this.replyHistories.push(myWorkUpdateEvent.history);
                 }
+                _this.resetTasks(FromWhere.ReplyOrReject);
             }
-            else if (myWorkUpdateEvent.type === 'cancel' || myWorkUpdateEvent.type === 'reject') {
-                _this.resetTasks(FromWhere.CancelOrReject);
+            else if (myWorkUpdateEvent.type === 'reject') {
+                _this.resetTasks(FromWhere.ReplyOrReject);
             }
         });
     };
@@ -10462,7 +10591,7 @@ var MyWorkPage = (function () {
                     _this.refresher.complete();
                     _this.getTaskCount();
                     break;
-                case FromWhere.CancelOrReject:
+                case FromWhere.ReplyOrReject:
                     _this.getTaskCount();
                     break;
                 case FromWhere.Search:
@@ -11357,6 +11486,87 @@ var DbService = (function () {
         }
     };
     /**
+     * 更新task extend info字段
+     * @param taskDetail
+     * @returns {any}
+     */
+    DbService.prototype.updateTaskExtendInfo = function (taskDetail) {
+        var _this = this;
+        if (this.globalService.isChrome || !taskDetail) {
+            return Promise.reject(this.paramError);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var sql = "SELECT * FROM GD_TASKS WHERE S_TASKID = '" + taskDetail.taskId + "';";
+                return db.executeSql(sql, {})
+                    .then(function (data) {
+                    var rows = data.rows;
+                    var sql;
+                    var extendedInfo;
+                    if (rows && rows.length > 0) {
+                        var item = rows.item(0);
+                        if (item.hasOwnProperty('S_EXTENDEDINFO')) {
+                            extendedInfo = item['S_EXTENDEDINFO'];
+                        }
+                    }
+                    else {
+                        return Promise.resolve(false);
+                    }
+                    sql = _this.toTaskUpdateExtendedInfoSql(taskDetail, extendedInfo);
+                    return db.executeSql(sql, {});
+                });
+            });
+        }
+    };
+    /**
+     * 检查超期工单
+     * @param userId
+     * @param overdueTime
+     * @param currentTime
+     * @returns {any}
+     */
+    DbService.prototype.checkOverdueTimeTasks = function (userId, overdueTime, currentTime) {
+        var _this = this;
+        if (this.globalService.isChrome || !overdueTime) {
+            return Promise.reject(this.paramError);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var arrivedTime = overdueTime.arrived + currentTime;
+                var replyTime = overdueTime.reply + currentTime;
+                var sql = "SELECT * FROM GD_TASKS WHERE I_USERID = " + userId + " ORDER BY ID;";
+                return db.executeSql(sql, {})
+                    .then(function (data) {
+                    var rows = data.rows;
+                    var tasks = [];
+                    if (rows && rows.length > 0) {
+                        for (var i = 0; i < rows.length; i++) {
+                            var localTask = rows.item(i);
+                            if (!localTask || !localTask.S_TASKID) {
+                                continue;
+                            }
+                            var task = _this.toTask(localTask);
+                            if (task.extendedInfo) {
+                                if (task.extendedInfo.arrivedDeadLine && task.extendedInfo.arrivedDeadLine < currentTime) {
+                                    task.extendedInfo.replyDeadLine = undefined;
+                                    task.extendedInfo.delayReplyDeadLine = undefined;
+                                }
+                                else if (task.extendedInfo.replyDeadLine && task.extendedInfo.replyDeadLine < currentTime) {
+                                    task.extendedInfo.arrivedDeadLine = undefined;
+                                    task.extendedInfo.delayReplyDeadLine = undefined;
+                                }
+                                tasks.push(task);
+                            }
+                        }
+                    }
+                    return Promise.resolve(tasks);
+                });
+            });
+        }
+    };
+    /**
      * 获取任务详情
      * @param taskId
      * @returns {any}
@@ -11804,6 +12014,11 @@ var DbService = (function () {
      * @returns {Promise<boolean>}
      */
     DbService.prototype.updateTables = function () {
+        // return this.openDb()
+        //   .then(db => {
+        //     let sql = `ALTER TABLE GD_TASKS ALTER COLUMN [D_ARRIVEDDEADLINE] INTEGER DEFAULT 0, [D_REPLYDEADLINE] INTEGER DEFAULT 0, [D_DELAYREPLYDEADLINE] INTEGER DEFAULT 0;`;
+        //     return this.sqlitePorter.importSqlToDb(db, sql);
+        //   });
         return Promise.resolve(true);
     };
     /**
@@ -11955,6 +12170,32 @@ var DbService = (function () {
     /**
      *
      * @param taskDetail
+     * @param extendedInfo
+     * @returns {string}
+     */
+    DbService.prototype.toTaskUpdateExtendedInfoSql = function (taskDetail, extendedInfo) {
+        var localTaskExtendedInfo = {};
+        try {
+            if (extendedInfo) {
+                localTaskExtendedInfo = JSON.parse(extendedInfo);
+            }
+        }
+        catch (e) {
+            console.error(e);
+        }
+        localTaskExtendedInfo.arrivedDeadLine = taskDetail.arrivedDeadLine;
+        localTaskExtendedInfo.replyDeadLine = taskDetail.replyDeadLine;
+        localTaskExtendedInfo.delayReplyDeadLine = taskDetail.delayReplyDeadLine;
+        var sql = "UPDATE GD_TASKS SET S_DETAILINFO = '" + JSON.stringify(taskDetail) + "'";
+        if (taskDetail.extendedInfo) {
+            sql += ", S_EXTENDEDINFO = '" + taskDetail.extendedInfo + "'}";
+        }
+        sql += " WHERE S_TASKID = '" + taskDetail.taskId + "';";
+        return sql;
+    };
+    /**
+     *
+     * @param taskDetail
      * @returns {string}
      */
     DbService.prototype.toTaskDetailInsertSql = function (taskDetail) {
@@ -12009,6 +12250,13 @@ var DbService = (function () {
      * @returns {{acceptTime: number, arrivedTime: number, assignTime: number, compltedTime: number, createTime: number, desc: string, goTime: number, location: {type: string, lng: string, lat: string}, replyTime: number, source: string, state: number, taskId: string, taskType: string}}
      */
     DbService.prototype.toTask = function (localTask) {
+        var extendedInfo;
+        try {
+            extendedInfo = JSON.parse(localTask.S_EXTENDEDINFO);
+        }
+        catch (e) {
+            console.error(e);
+        }
         return {
             acceptTime: localTask.D_ACCEPTTIME,
             arrivedTime: localTask.D_ARRIVEDTIME,
@@ -12026,7 +12274,8 @@ var DbService = (function () {
             source: localTask.S_SOURCE,
             state: localTask.I_STATE,
             taskId: localTask.S_TASKID,
-            taskType: localTask.S_TASKTYPE
+            taskType: localTask.S_TASKTYPE,
+            extendedInfo: extendedInfo
         };
     };
     /**
@@ -13441,10 +13690,10 @@ var SettingPage = (function () {
     SettingPage.prototype.getOverdueFromFile = function () {
         var _this = this;
         this.configService.getOverdueTime()
-            .then(function (data) {
-            console.log(_this.tag + data);
-            _this.overdueTime = data;
-            _this.showOverdueSetting();
+            .then(function (overdueTime) {
+            console.log(_this.tag + overdueTime);
+            _this.overdueTime = overdueTime;
+            //this.showOverdueSetting();
         })
             .catch(function (err) {
             console.log(_this.tag + err);
@@ -13544,42 +13793,41 @@ var SettingPage = (function () {
     /**
      * 超期设置
      */
-    SettingPage.prototype.showOverdueSetting = function () {
-        var _this = this;
-        var alert = this.alertCtrl.create({
-            title: '超期设置',
-            message: '时限设置(分钟):',
-            inputs: [
-                {
-                    name: 'overdueTime',
-                    value: this.overdueTime.toString(),
-                    placeholder: '请输入超期时限',
-                }
-            ],
-            buttons: [
-                {
-                    text: '取消',
-                    role: 'cancel',
-                    handler: function (data) {
-                        console.log(_this.tag + 'showOverdueSetting Cancel clicked');
-                    }
-                },
-                {
-                    text: '保存',
-                    handler: function (data) {
-                        _this.configService.setOverdue(data.overdueTime)
-                            .then(function (result) {
-                            _this.overdueTime = data.overdueTime;
-                        })
-                            .catch(function (error) {
-                            console.log(_this.tag + 'showOverdueSetting:' + error);
-                        });
-                    }
-                }
-            ]
-        });
-        alert.present();
-    };
+    // showOverdueSetting() {
+    //   let alert = this.alertCtrl.create({
+    //     title: '超期设置',
+    //     message: '时限设置(分钟):',
+    //     inputs: [
+    //       {
+    //         name: 'overdueTime',
+    //         value: this.overdueTime.toString(),
+    //         placeholder: '请输入超期时限',
+    //       }
+    //     ],
+    //     buttons: [
+    //       {
+    //         text: '取消',
+    //         role: 'cancel',
+    //         handler: data => {
+    //           console.log(this.tag + 'showOverdueSetting Cancel clicked');
+    //         }
+    //       },
+    //       {
+    //         text: '保存',
+    //         handler: data => {
+    //           this.configService.setOverdue(data.overdueTime)
+    //             .then(result => {
+    //               this.overdueTime = data.overdueTime;
+    //             })
+    //             .catch(error => {
+    //               console.log(this.tag + 'showOverdueSetting:' + error);
+    //             })
+    //         }
+    //       }
+    //     ]
+    //   });
+    //   alert.present();
+    // }
     /**
      * 心跳设置
      */
