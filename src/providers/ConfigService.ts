@@ -6,6 +6,7 @@ import {File} from "@ionic-native/file";
 import 'rxjs/add/operator/toPromise';
 import {FileService} from "./FileService";
 import {MaterialUnit} from "../model/MaterialUnit";
+import {OverdueTime} from "../model/OverdueTime";
 
 interface SystemConfig {
   outerBaseUri: string;
@@ -18,7 +19,7 @@ interface SystemConfig {
   isGridStyle: boolean;
   isDebugMode: boolean;
   keepAliveInterval: number;
-  overdueTime: number;
+  overdueTime: OverdueTime;
   sysRegion: string;
   materialUnit: Array<MaterialUnit>;
 }
@@ -249,9 +250,9 @@ export class ConfigService {
 
   /**
    * 获取超期时限设置
-   * @returns {Promise<T>}
+   * @returns {Promise<OverdueTime>|Promise<T>}
    */
-  public getOverdueTime(): Promise<number> {
+  public getOverdueTime(): Promise<OverdueTime> {
     return ConfigService.isValid<SystemConfig>(this.systemConfig, 'overdueTime')
       ? Promise.resolve(this.systemConfig.overdueTime)
       : new Promise((resolve, reject) => {
@@ -456,18 +457,18 @@ export class ConfigService {
 
   /**
    * 设置超期时限
-   * @param keepAlive
+   * @param overdueTime
    * @returns {any}
    */
-  public setOverdue(overdue: number): Promise<boolean> {
+  public setOverdueTime(overdueTime: OverdueTime): Promise<boolean> {
     if (ConfigService.isValid<SystemConfig>(this.systemConfig, 'overdueTime')) {
       return new Promise((resolve, reject) => {
         let systemConfig: SystemConfig = Object.create(this.systemConfig);
-        systemConfig.overdueTime = overdue;
+        systemConfig.overdueTime = overdueTime;
         this.writeSystemConfig(systemConfig)
           .then(result => {
             if (result) {
-              this.systemConfig.overdueTime = overdue;
+              this.systemConfig.overdueTime = overdueTime;
             }
             resolve(!!result);
           })

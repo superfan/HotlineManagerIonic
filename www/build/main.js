@@ -6890,9 +6890,9 @@ var MyApp = (function () {
             _this.globalService.showToast(error);
             _this.rootPage = __WEBPACK_IMPORTED_MODULE_6__pages_mywork_mywork__["a" /* MyWorkPage */];
         })
-            .then(function () {
-            _this.globalService.hideLoading();
-        });
+            .then(function () { return appComponentService.downloadConstantData(); })
+            .catch(function (error) { return console.error(error); })
+            .then(function () { return _this.globalService.hideLoading(); });
     }
     return MyApp;
 }());
@@ -6974,18 +6974,25 @@ var AppComponentService = (function () {
             this.myPlugin = this.globalService.getMyPluginMock();
             return this.dataService.init()
                 .then(function (result) { return _this.parsePageIntent(); });
-            //.then(result => this.dataService.downloadWords())
-            //.then(result => this.dataService.downloadMaterials());
-            //.then(result => this.dataService.downloadPersonnels())
         }
         else {
             return this.checkPermissions()
                 .then(function (result) { return _this.fileService.createDirRoot(); })
                 .then(function (result) { return _this.dataService.init(); })
                 .then(function (result) { return _this.parsePageIntent(); });
-            //.then(result => this.dataService.checkIfDownloadWords())
-            //.then(result => this.dataService.checkIfDownloadMaterials());
-            //.then(result => this.dataService.checkIfDownloadPersonnels())
+        }
+    };
+    AppComponentService.prototype.downloadConstantData = function () {
+        var _this = this;
+        if (this.globalService.isChrome) {
+            return this.dataService.downloadWords()
+                .then(function (result) { return _this.dataService.downloadMaterials(); })
+                .then(function (result) { return _this.globalService.isWorker ? true : _this.dataService.downloadPersonnels(); });
+        }
+        else {
+            return this.dataService.checkIfDownloadWords()
+                .then(function (result) { return _this.dataService.checkIfDownloadMaterials(); })
+                .then(function (result) { return _this.globalService.isWorker ? true : _this.dataService.checkIfDownloadPersonnels(); });
         }
     };
     /**
@@ -7017,6 +7024,12 @@ var AppComponentService = (function () {
             .then(function (pageIntent) {
             console.log(pageIntent);
             if (!pageIntent.roles) {
+                pageIntent.roles = _this.globalService.worker;
+            }
+            else if (pageIntent.roles.includes('PDA热线管理人员')) {
+                pageIntent.roles = _this.globalService.manager;
+            }
+            else {
                 pageIntent.roles = _this.globalService.worker;
             }
             if (!pageIntent.account
@@ -7080,40 +7093,54 @@ var AppComponentService = (function () {
      */
     AppComponentService.prototype.setUserDetailInfo = function (pageIntent) {
         var _this = this;
-        return this.globalService.getUserDetailInfo()
-            .then(function (userDetailInfo) {
-            // userId passed from main shell is not same as saved id
-            // it will be changed in future
-            //pageIntent.userId = userDetailInfo.userId;
-            if (pageIntent.account === userDetailInfo.account
-                && pageIntent.userId === userDetailInfo.userId
-                && pageIntent.userName === userDetailInfo.userName) {
-                return Promise.resolve(true);
-            }
-            else {
-                return Promise.reject('different user');
-            }
-        })
-            .catch(function (error) {
+        return this.globalService.saveUserDetailInfo({
+            account: pageIntent.account,
+            userId: pageIntent.userId,
+            userName: pageIntent.userName,
+            roles: pageIntent.roles,
+            department: pageIntent.departmentAndId.split('#')[0],
+            departmentId: 0
+        }).catch(function (error) {
             console.error(error);
-            return _this.dataService.doLogin({
-                userName: pageIntent.account,
-                password: pageIntent.password,
-                role: pageIntent.roles
-            }).then(function (userResult) { return _this.globalService.saveUserDetailInfo({
-                account: pageIntent.account,
-                userId: userResult.userId,
-                userName: pageIntent.userName,
-                roles: pageIntent.roles,
-                department: userResult.Department,
-                departmentId: 0
-            }); }).catch(function (error) {
-                console.error(error);
-                _this.globalService.account = pageIntent.account;
-                _this.globalService.userId = pageIntent.userId;
-                _this.globalService.userName = pageIntent.userName;
-            });
+            _this.globalService.account = pageIntent.account;
+            _this.globalService.userId = pageIntent.userId;
+            _this.globalService.userName = pageIntent.userName;
+            _this.globalService.isWorker = pageIntent.roles === _this.globalService.worker;
         });
+        /*return this.globalService.getUserDetailInfo()
+         .then(userDetailInfo => {
+         // userId passed from main shell is not same as saved id
+         // it will be changed in future
+         //pageIntent.userId = userDetailInfo.userId;
+         if (pageIntent.account === userDetailInfo.account
+         && pageIntent.userId === userDetailInfo.userId
+         && pageIntent.userName === userDetailInfo.userName) {
+         return Promise.resolve(true);
+         } else {
+         return Promise.reject('different user');
+         }
+         })
+         .catch(error => {
+         console.error(error);
+         return this.dataService.doLogin({
+         userName: pageIntent.account,
+         password: pageIntent.password,
+         role: pageIntent.roles
+         }).then(userResult => this.globalService.saveUserDetailInfo({
+         account: pageIntent.account,
+         userId: userResult.userId,
+         userName: pageIntent.userName,
+         roles: pageIntent.roles,
+         department: userResult.Department,
+         departmentId: 0
+         })).catch(error => {
+         console.error(error);
+         this.globalService.account = pageIntent.account;
+         this.globalService.userId = pageIntent.userId;
+         this.globalService.userName = pageIntent.userName;
+         this.globalService.isWorker = pageIntent.roles === this.globalService.worker;
+         });
+         });*/
     };
     AppComponentService.prototype.getExtendedInfo = function (extendedInfo) {
         var info;
@@ -7131,14 +7158,10 @@ var AppComponentService = (function () {
 }());
 AppComponentService = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["B" /* Injectable */])(),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__ionic_native_android_permissions__["a" /* AndroidPermissions */],
-        __WEBPACK_IMPORTED_MODULE_2__providers_GlobalService__["a" /* GlobalService */],
-        __WEBPACK_IMPORTED_MODULE_3__providers_FileService__["a" /* FileService */],
-        __WEBPACK_IMPORTED_MODULE_13__providers_DataService__["a" /* DataService */],
-        __WEBPACK_IMPORTED_MODULE_4__ionic_native_my_plugin__["a" /* MyPlugin */],
-        __WEBPACK_IMPORTED_MODULE_14__providers_ConfigService__["a" /* ConfigService */]])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__ionic_native_android_permissions__["a" /* AndroidPermissions */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__ionic_native_android_permissions__["a" /* AndroidPermissions */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__providers_GlobalService__["a" /* GlobalService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__providers_GlobalService__["a" /* GlobalService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__providers_FileService__["a" /* FileService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__providers_FileService__["a" /* FileService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_13__providers_DataService__["a" /* DataService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_13__providers_DataService__["a" /* DataService */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_4__ionic_native_my_plugin__["a" /* MyPlugin */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__ionic_native_my_plugin__["a" /* MyPlugin */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_14__providers_ConfigService__["a" /* ConfigService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_14__providers_ConfigService__["a" /* ConfigService */]) === "function" && _f || Object])
 ], AppComponentService);
 
+var _a, _b, _c, _d, _e, _f;
 //# sourceMappingURL=app.component.service.js.map
 
 /***/ }),
@@ -13811,6 +13834,7 @@ var GlobalService = (function () {
         this.userDetailInfoStorageName = 'userDetailInfo';
         this.locationType = 'bd09ll';
         this.worker = 'worker';
+        this.manager = 'manager';
         this.photoSuffix = '.jpg';
         this.audioSuffix = '.mp3';
         this.videoSuffix = '.mp4';

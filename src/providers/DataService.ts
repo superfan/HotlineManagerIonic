@@ -26,6 +26,7 @@ import {Material} from "../model/Material";
 import {MaintainInfo} from "../model/MaintainInfo";
 import {DataMaterialInfo, MaterialInfoEx, MaterialsInfo, UploadMaterials} from "../model/MaterialsInfo";
 import {ConfigService} from "./ConfigService";
+import {OverdueTime} from "../model/OverdueTime";
 
 @Injectable()
 export class DataService extends SyncService {
@@ -122,7 +123,7 @@ export class DataService extends SyncService {
       return this.downloadService.getTasks(this.globalService.userId, since, count);
     } else {
       return this.dbService.getTasks(this.globalService.userId, since, count,
-        [TaskState.Dispatch, TaskState.Accept, TaskState.Go, TaskState.Arrived, TaskState.Reply, TaskState.Delay, TaskState.Continue],
+        [TaskState.Dispatch, TaskState.Accept, TaskState.Go, TaskState.Arrived, TaskState.Delay, TaskState.Continue],
         key);
     }
   }
@@ -156,6 +157,7 @@ export class DataService extends SyncService {
               .then(detail => {
                 detail.taskId = taskId;
                 return this.dbService.saveTaskDetail(detail)
+                  .then(result => result ? this.dbService.updateTaskExtendInfo(detail) : false);
               })
               .then(result => this.dbService.getTaskDetail(taskId));
         });
@@ -163,18 +165,64 @@ export class DataService extends SyncService {
   }
 
   /**
+   * 检查超期工单
+   * @param overdueTime
+   * @returns {any}
+   */
+  public checkOverdueTimeTasks(overdueTime: OverdueTime): Promise<Array<Task>> {
+    if (this.globalService.isChrome) {
+      if (!overdueTime) {
+        return Promise.resolve([]);
+      }
+
+      return this.downloadService.getTasks(this.globalService.userId, 1, 100)
+        .then(tasks => {
+          if (!tasks || tasks.length <= 0) {
+            return Promise.resolve([]);
+          }
+
+          let promises: Promise<TaskDetail>[] = tasks.map(task => this.downloadService.getTaskDetail(task.taskId));
+          return Promise.all(promises)
+            .then(taskDetails => {
+              if (!taskDetails || taskDetails.length <= 0) {
+                return Promise.resolve([]);
+              }
+
+              let currentTime: number = new Date().getTime();
+              let arrivedTime: number = overdueTime.arrived + currentTime;
+              let replyTime: number = overdueTime.reply + currentTime;
+              let candidateTasks: Task[] = [];
+              for (let taskDetail of taskDetails) {
+                if ((taskDetail.arrivedDeadLine && taskDetail.arrivedDeadLine < arrivedTime)
+                  || (taskDetail.replyDeadLine && taskDetail.replyDeadLine < replyTime)) {
+                  let task: Task = tasks.find(task => task.taskId === taskDetail.taskId);
+                  if (task) {
+                    candidateTasks.push(task);
+                  }
+                }
+              }
+
+              return Promise.resolve(candidateTasks);
+            });
+        });
+    } else {
+      return this.dbService.checkOverdueTimeTasks(this.globalService.userId, overdueTime, new Date().getTime());
+    }
+  }
+
+  /**
    * 获取任务详情
    * @returns {Promise<Array<TaskDetail>>}
    */
-  public getTaskDetailByUserId(): Promise<Array<TaskDetail>> {
-    if (this.globalService.isChrome) {
-      return Promise.reject([]);
-    } else {
-      return this.dbService.getTaskIds(this.globalService.userId)
-        .then(taskIds => this.dbService.getTaskDetails(taskIds))
-        .catch(error => console.error(error));
-    }
-  }
+  // public getTaskDetailByUserId(): Promise<Array<TaskDetail>> {
+  //   if (this.globalService.isChrome) {
+  //     return Promise.reject([]);
+  //   } else {
+  //     return this.dbService.getTaskIds(this.globalService.userId)
+  //       .then(taskIds => this.dbService.getTaskDetails(taskIds))
+  //       .catch(error => console.error(error));
+  //   }
+  // }
 
   /**
    * 历史工单获取记录

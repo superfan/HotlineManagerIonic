@@ -20,10 +20,13 @@ export enum TaskState {
   Continue    // 8
 }
 
-interface TaskExtendedInfo {
+export interface TaskExtendedInfo {
   rejectTime?: number;
   delayTime?: number;
   destroyTime?: number;
+  arrivedDeadLine?: number;
+  replyDeadLine?: number;
+  delayReplyDeadLine?: number;
 }
 
 export interface Task {

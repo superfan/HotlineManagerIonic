@@ -4,7 +4,7 @@ import {SQLitePorter} from '@ionic-native/sqlite-porter';
 import {GlobalService} from "./GlobalService";
 import {FileService} from "./FileService";
 import {Word} from "../model/Word";
-import {Task} from "../model/Task";
+import {Task, TaskExtendedInfo} from "../model/Task";
 import {TaskDetail} from "../model/TaskDetail";
 import {History} from "../model/History";
 import {Media} from "../model/Media";
@@ -12,6 +12,7 @@ import {Material} from "../model/Material";
 import {DataMaterialInfo} from "../model/MaterialsInfo";
 import {MaintainInfo} from "../model/MaintainInfo";
 import {Personnel} from "../model/Personnel";
+import {OverdueTime} from "../model/OverdueTime";
 
 interface LocalWord {
   ID: number;
@@ -111,6 +112,15 @@ interface LocalPersonnel {
   I_FIELDPERSONNELID: number;
   S_FIELDPERSONNELNAME: string;
   S_ROLES: string
+}
+
+interface LocalTaskExtendedInfo {
+  rejectTime?: number;
+  delayTime?: number;
+  destroyTime?: number;
+  arrivedDeadLine?: number;
+  replyDeadLine?: number;
+  delayReplyDeadLine?: number;
 }
 
 @Injectable()
@@ -618,6 +628,85 @@ export class DbService {
                 sql = this.toTaskDetailInsertSql(taskDetail);
               }
               return db.executeSql(sql, {});
+            });
+        });
+    }
+  }
+
+  /**
+   * 更新task extend info字段
+   * @param taskDetail
+   * @returns {any}
+   */
+  public updateTaskExtendInfo(taskDetail: TaskDetail): Promise<boolean> {
+    if (this.globalService.isChrome || !taskDetail) {
+      return Promise.reject(this.paramError);
+    } else {
+      return this.openDb()
+        .then(db => {
+          let sql: string = `SELECT * FROM GD_TASKS WHERE S_TASKID = '${taskDetail.taskId}';`;
+          return db.executeSql(sql, {})
+            .then(data => {
+              let rows: any = data.rows;
+              let sql: string;
+              let extendedInfo: string;
+              if (rows && rows.length > 0) {
+                let item: any = rows.item(0);
+                if (item.hasOwnProperty('S_EXTENDEDINFO')) {
+                  extendedInfo = item['S_EXTENDEDINFO'];
+                }
+              } else {
+                return Promise.resolve(false);
+              }
+
+              sql = this.toTaskUpdateExtendedInfoSql(taskDetail, extendedInfo);
+              return db.executeSql(sql, {});
+            });
+        });
+    }
+  }
+
+  /**
+   * 检查超期工单
+   * @param userId
+   * @param overdueTime
+   * @param currentTime
+   * @returns {any}
+   */
+  public checkOverdueTimeTasks(userId: number, overdueTime: OverdueTime, currentTime: number): Promise<Array<Task>> {
+    if (this.globalService.isChrome || !overdueTime) {
+      return Promise.reject(this.paramError);
+    } else {
+      return this.openDb()
+        .then(db => {
+          let arrivedTime: number = overdueTime.arrived + currentTime;
+          let replyTime: number = overdueTime.reply + currentTime;
+          let sql: string = `SELECT * FROM GD_TASKS WHERE I_USERID = ${userId} ORDER BY ID;`;
+          return db.executeSql(sql, {})
+            .then(data => {
+              let rows: any = data.rows;
+              let tasks: Array<Task> = [];
+              if (rows && rows.length > 0) {
+                for (let i = 0; i < rows.length; i++) {
+                  let localTask: LocalTask = rows.item(i) as LocalTask;
+                  if (!localTask || !localTask.S_TASKID) {
+                    continue;
+                  }
+
+                  let task: Task = this.toTask(localTask);
+                  if (task.extendedInfo) {
+                    if (task.extendedInfo.arrivedDeadLine && task.extendedInfo.arrivedDeadLine < currentTime) {
+                      task.extendedInfo.replyDeadLine = undefined;
+                      task.extendedInfo.delayReplyDeadLine = undefined;
+                    } else if (task.extendedInfo.replyDeadLine && task.extendedInfo.replyDeadLine < currentTime) {
+                      task.extendedInfo.arrivedDeadLine = undefined;
+                      task.extendedInfo.delayReplyDeadLine = undefined;
+                    }
+                    tasks.push(task);
+                  }
+                }
+              }
+              return Promise.resolve(tasks);
             });
         });
     }
@@ -1166,6 +1255,11 @@ export class DbService {
    * @returns {Promise<boolean>}
    */
   private updateTables(): Promise<boolean> {
+    // return this.openDb()
+    //   .then(db => {
+    //     let sql = `ALTER TABLE GD_TASKS ALTER COLUMN [D_ARRIVEDDEADLINE] INTEGER DEFAULT 0, [D_REPLYDEADLINE] INTEGER DEFAULT 0, [D_DELAYREPLYDEADLINE] INTEGER DEFAULT 0;`;
+    //     return this.sqlitePorter.importSqlToDb(db, sql);
+    //   });
     return Promise.resolve(true);
   }
 
@@ -1346,6 +1440,34 @@ export class DbService {
   /**
    *
    * @param taskDetail
+   * @param extendedInfo
+   * @returns {string}
+   */
+  private toTaskUpdateExtendedInfoSql(taskDetail: TaskDetail, extendedInfo: string): string {
+    let localTaskExtendedInfo: LocalTaskExtendedInfo = {};
+    try {
+      if (extendedInfo) {
+        localTaskExtendedInfo = JSON.parse(extendedInfo);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+
+    localTaskExtendedInfo.arrivedDeadLine = taskDetail.arrivedDeadLine;
+    localTaskExtendedInfo.replyDeadLine = taskDetail.replyDeadLine;
+    localTaskExtendedInfo.delayReplyDeadLine = taskDetail.delayReplyDeadLine;
+
+    let sql: string = `UPDATE GD_TASKS SET S_DETAILINFO = '${JSON.stringify(taskDetail)}'`;
+    if (taskDetail.extendedInfo) {
+      sql += `, S_EXTENDEDINFO = '${taskDetail.extendedInfo}'}`;
+    }
+    sql += ` WHERE S_TASKID = '${taskDetail.taskId}';`;
+    return sql
+  }
+
+  /**
+   *
+   * @param taskDetail
    * @returns {string}
    */
   private toTaskDetailInsertSql(taskDetail: TaskDetail): string {
@@ -1408,6 +1530,12 @@ export class DbService {
    * @returns {{acceptTime: number, arrivedTime: number, assignTime: number, compltedTime: number, createTime: number, desc: string, goTime: number, location: {type: string, lng: string, lat: string}, replyTime: number, source: string, state: number, taskId: string, taskType: string}}
    */
   private toTask(localTask: LocalTask): Task {
+    let extendedInfo: TaskExtendedInfo;
+    try {
+      extendedInfo = JSON.parse(localTask.S_EXTENDEDINFO);
+    } catch (e) {
+      console.error(e);
+    }
     return {
       acceptTime: localTask.D_ACCEPTTIME,
       arrivedTime: localTask.D_ARRIVEDTIME,
@@ -1425,7 +1553,8 @@ export class DbService {
       source: localTask.S_SOURCE,
       state: localTask.I_STATE,
       taskId: localTask.S_TASKID,
-      taskType: localTask.S_TASKTYPE
+      taskType: localTask.S_TASKTYPE,
+      extendedInfo
     };
   }
 

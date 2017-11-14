@@ -507,6 +507,7 @@ export abstract class SyncService {
             .then(detail => {
               detail.taskId = taskId; // modify for the rejected task
               return this.dbService.saveTaskDetail(detail)
+                .then(result => result ? this.dbService.updateTaskExtendInfo(detail) : false);
             })
             .catch(error => console.error(error))
             .then((result) => this.events.publish(this.downloadTaskDetailEvent, msgType, taskIds));

@@ -7,7 +7,11 @@
   "sys.grid.style": true,
   "sys.debug.mode": true,
   "sys.keep.alive.interval": 60000,
-  "sys.overdue.time": 30,
+  "sys.overdue.time": {
+    "arrived": 30,
+    "reply": 30,
+    "delayReply": 30
+  }
   "sys.region": "shanghai",
   "sys.material.unit": [
     {

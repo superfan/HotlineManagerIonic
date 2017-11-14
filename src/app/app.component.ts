@@ -35,9 +35,9 @@ export class MyApp {
         this.globalService.showToast(error);
         this.rootPage = MyWorkPage;
       })
-      .then(() => {
-        this.globalService.hideLoading();
-      });
+      .then(() => appComponentService.downloadConstantData())
+      .catch(error => console.error(error))
+      .then(() => this.globalService.hideLoading());
   }
 }
 

@@ -18,10 +18,12 @@ import {MaterialsPage} from "../materials/materials";
 import {History} from "../../model/History";
 import {ReplyInfo} from "../../model/ReplyInfo";
 import {ConfigService} from "../../providers/ConfigService";
+import {OverdueTime} from "../../model/OverdueTime";
 
 enum FromWhere {
   Download,
-  CancelOrReject,
+    //CancelOrReject,
+  ReplyOrReject,
   Search,
   Delete
 }
@@ -45,19 +47,21 @@ export class MyWorkPage implements OnInit, OnDestroy {
   showFab: boolean = false;
 
   items: TaskEx[] = [];
-  overdueTime: number;//超期时限
+  private overdueTime: OverdueTime = null;//超期时限
   private since: number = this.globalService.taskSinceDefault;
   private count: number = this.globalService.taskCountDefault10;
   private isOperationBusy: boolean = false;
   private key: string = '';
   private replyHistories: History[] = [];
+  private isCheckingOverdueTime: boolean = false;
+  private intevalId: number;
 
   constructor(public navCtrl: NavController,
               private dataService: DataService,
               private alertCtrl: AlertController,
               private events: Events,
               private globalService: GlobalService,
-              public configService: ConfigService,) {
+              public configService: ConfigService) {
   }
 
   /**
@@ -67,10 +71,12 @@ export class MyWorkPage implements OnInit, OnDestroy {
     console.log(this.tag, 'ngOnInit');
     this.subscribeEvent(this.events);
     this.showFab = false;
+    this.getOverdueTime();
     this.getTasks(this.since, this.count, this.key)
       .then(data => {
         this.infiniteScroll.enable(data);
         this.getTaskCount();
+        this.intevalId = setInterval(this.checkOverdueTimeTasks(), 60000);
       })
       .catch(error => console.error(error));
   }
@@ -82,6 +88,9 @@ export class MyWorkPage implements OnInit, OnDestroy {
     console.log(this.tag, 'ngOnDestroy');
     this.events.unsubscribe(this.globalService.myWorkDownloadFinishEvent);
     this.events.unsubscribe(this.globalService.myWorkUpdateEvent);
+    if (this.intevalId) {
+      clearInterval(this.intevalId);
+    }
   }
 
   /**
@@ -112,9 +121,10 @@ export class MyWorkPage implements OnInit, OnDestroy {
         .then(data => {
           if (!data) {
             infiniteScroll.enable(false);
+            this.checkOverdueTimeTasks();
           } else {
             infiniteScroll.complete();
-            this.getTaskDetails(this.since, this.count, this.key);
+            //this.getTaskDetails(this.since, this.count, this.key);
           }
           console.log(this.tag, 'doInfinite end');
         })
@@ -237,6 +247,10 @@ export class MyWorkPage implements OnInit, OnDestroy {
     this.navCtrl.push(MaterialsPage, taskEx.id);
   }
 
+  /**
+   * 删除任务
+   * @param taskEx
+   */
   onDelete(taskEx: TaskEx): void {
     let alert = this.alertCtrl.create({
       title: '删除任务',
@@ -288,67 +302,131 @@ export class MyWorkPage implements OnInit, OnDestroy {
                   taskEx.isUploaded = history.uploadedFlag === this.globalService.uploadedFlagForUploaded;
                 }
               }
-            })
-            .then(() => tasks.filter(task => task.state === TaskState.Reply))
-            .then(tasks => tasks.map(task => task.taskId))
-            .then(taskIds => this.dataService.getReplyHistories(taskIds))
-            .then(histories => {
-              let result: boolean = false;
-              try {
-                this.replyHistories.push(...histories);
-                this.replyHistories.forEach(history => {
-                  if (history.mediaNames && history.mediaNames.length > 0) {
-                    let taskEx: TaskEx = this.items.find(taskEx => taskEx.id === history.taskId);
-                    if (taskEx) {
-                      let mediaNames = history.mediaNames;
-                      taskEx.photoCount = mediaNames.filter(name => name.lastIndexOf(this.globalService.photoSuffix) !== -1).length;
-                      taskEx.audioCount = mediaNames.filter(name => name.lastIndexOf(this.globalService.audioSuffix) !== -1).length;
-                      taskEx.videoCount =  mediaNames.filter(name => name.lastIndexOf(this.globalService.videoSuffix) !== -1).length;
-                    }
-                  }
-                });
-                result = true;
-              } catch (err) {
-                console.error(err);
-              }
-
-              return Promise.resolve(result);
+              return Promise.resolve(true);
             });
+          /*.then(() => tasks.filter(task => task.state === TaskState.Reply))
+           .then(tasks => tasks.map(task => task.taskId))
+           .then(taskIds => this.dataService.getReplyHistories(taskIds))
+           .then(histories => {
+           let result: boolean = false;
+           try {
+           this.replyHistories.push(...histories);
+           this.replyHistories.forEach(history => {
+           if (history.mediaNames && history.mediaNames.length > 0) {
+           let taskEx: TaskEx = this.items.find(taskEx => taskEx.id === history.taskId);
+           if (taskEx) {
+           let mediaNames = history.mediaNames;
+           taskEx.photoCount = mediaNames.filter(name => name.lastIndexOf(this.globalService.photoSuffix) !== -1).length;
+           taskEx.audioCount = mediaNames.filter(name => name.lastIndexOf(this.globalService.audioSuffix) !== -1).length;
+           taskEx.videoCount = mediaNames.filter(name => name.lastIndexOf(this.globalService.videoSuffix) !== -1).length;
+           }
+           }
+           });
+           result = true;
+           } catch (err) {
+           console.error(err);
+           }
+
+           return Promise.resolve(result);
+           });*/
         }
       });
   }
 
   /**
-   * 读取文件的超期时限
+   * 获取超期时限
    */
-  getOverdueFromFile() {
+  private getOverdueTime(): void {
     this.configService.getOverdueTime()
-      .then(data => {
-        console.log(this.tag + data);
-        this.overdueTime = data;
-        this.getTaskDetails(this.since, this.count, this.key)
-          .then(data => {
-            console.log(this.tag + data);
-            this.getTaskDetailOverdueCount()
-              .then(data =>{
-                if(data >0){
-                  this.showOverdueCountAlert(data);
-                }
-              });
-          })
-          .catch(err => {
-            console.log(this.tag + err);
-          });
-      })
-      .catch(err => {
-        console.log(this.tag + err);
-      })
+      .then(overdueTime => this.overdueTime = overdueTime)
+      .catch(err => console.error(this.tag + err))
+      .then(() => {
+        if (!this.overdueTime) {
+          this.overdueTime = {
+            arrived: 30,
+            reply: 30,
+            delayReply: 30
+          }
+        }
+      });
   }
 
-  showOverdueCountAlert(count :number) {
+  /**
+   * 检查超期工单
+   */
+  private checkOverdueTimeTasks(): void {
+    if (this.isCheckingOverdueTime) {
+      return;
+    }
+
+    this.isCheckingOverdueTime = true;
+    this.dataService.checkOverdueTimeTasks(this.overdueTime)
+      .then(tasks => {
+        if (!tasks || tasks.length <= 0) {
+          return;
+        }
+
+        let count: number = 0;
+        for (let task of tasks) {
+          if (!task.extendedInfo) {
+            continue;
+          }
+
+          let taskEx: TaskEx = this.items.find(taskEx => taskEx.id === task.taskId);
+          if (taskEx) {
+            if (task.extendedInfo.arrivedDeadLine) {
+              taskEx.isOverdueArrivedLine = true;
+              count++;
+            } else if (task.extendedInfo.replyDeadLine) {
+              taskEx.isOverdueReplyLine = true;
+              count++;
+            }
+          }
+        }
+
+        if (count > 0) {
+          this.showOverdueCountAlert(count);
+        }
+      })
+      .catch(err => console.error(this.tag + err))
+      .then(() => this.isCheckingOverdueTime = false);
+  }
+
+  /**
+   * 读取文件的超期时限
+   */
+  // private getOverdueFromFile(): void {
+  //   this.configService.getOverdueTime()
+  //     .then(data => {
+  //       console.log(this.tag + data);
+  //       this.overdueTime = data;
+  //       this.getTaskDetails(this.since, this.count, this.key)
+  //         .then(data => {
+  //           console.log(this.tag + data);
+  //           this.getTaskDetailOverdueCount()
+  //             .then(data => {
+  //               if (data > 0) {
+  //                 this.showOverdueCountAlert(data);
+  //               }
+  //             });
+  //         })
+  //         .catch(err => {
+  //           console.log(this.tag + err);
+  //         });
+  //     })
+  //     .catch(err => {
+  //       console.log(this.tag + err);
+  //     })
+  // }
+
+  /**
+   * 
+   * @param count
+   */
+  private showOverdueCountAlert(count: number): void {
     let alert = this.alertCtrl.create({
       title: '提示!',
-      subTitle: '当前有'+ count +'个热线工单任务超期',
+      subTitle: '当前有' + count + '个热线工单任务超期',
       buttons: ['OK']
     });
     alert.present();
@@ -358,37 +436,36 @@ export class MyWorkPage implements OnInit, OnDestroy {
    * 获取超期任务数量
    * @returns {Promise<number>}
    */
-  private getTaskDetailOverdueCount(): Promise<number> {
-    return this.dataService.getTaskDetailByUserId()
-      .then(taskDetails => {
-        console.log(this.tag + "getTaskDetailOverdueCount");
-        if (!taskDetails || taskDetails.length <= 0) {
-          return Promise.resolve(0)
-        } else {
-          let count: number = 0;
-          let isOverdueArrived: boolean = false;
-          let isOverdueReply: boolean = false;
-          taskDetails.forEach(taskDetail => {
-            if (taskDetail.arrivedTime == 0) {
-              isOverdueArrived = taskDetail.arrivedDeadLine < new Date().getTime() - this.overdueTime * 60 * 1000;
-            }
-
-            if (taskDetail.replyTime == 0) {
-              isOverdueReply = taskDetail.replyDeadLine < new Date().getTime() - this.overdueTime * 60 * 1000;
-            }
-            if (isOverdueArrived || isOverdueReply){
-              count++;
-            }
-
-            isOverdueArrived = false;
-            isOverdueReply = false;
-
-          });
-          return Promise.resolve(count)
-        }
-      }) .catch(error => console.error(error));;
-  }
-
+  // private getTaskDetailOverdueCount(): Promise<number> {
+  //   return this.dataService.getTaskDetailByUserId()
+  //     .then(taskDetails => {
+  //       console.log(this.tag + "getTaskDetailOverdueCount");
+  //       if (!taskDetails || taskDetails.length <= 0) {
+  //         return Promise.resolve(0)
+  //       } else {
+  //         let count: number = 0;
+  //         let isOverdueArrived: boolean = false;
+  //         let isOverdueReply: boolean = false;
+  //         taskDetails.forEach(taskDetail => {
+  //           if (taskDetail.arrivedTime == 0) {
+  //             isOverdueArrived = taskDetail.arrivedDeadLine < new Date().getTime() - this.overdueTime * 60 * 1000;
+  //           }
+  //
+  //           if (taskDetail.replyTime == 0) {
+  //             isOverdueReply = taskDetail.replyDeadLine < new Date().getTime() - this.overdueTime * 60 * 1000;
+  //           }
+  //           if (isOverdueArrived || isOverdueReply) {
+  //             count++;
+  //           }
+  //
+  //           isOverdueArrived = false;
+  //           isOverdueReply = false;
+  //
+  //         });
+  //         return Promise.resolve(count)
+  //       }
+  //     }) .catch(error => console.error(error));
+  // }
 
   /**
    * 获取任务详情
@@ -397,36 +474,36 @@ export class MyWorkPage implements OnInit, OnDestroy {
    * @param key
    * @returns {Promise<boolean>}
    */
-  private getTaskDetails(since: number, count: number, key: string): Promise<boolean> {
-    return this.dataService.getTasks(since, count, key)
-      .then(tasks => {
-        console.log(this.tag + "getTaskDetails: " + tasks.length);
-        if (tasks.length <= 0) {
-          return Promise.resolve(false)
-        } else {
-          let taskIds: Array<string> = tasks.map(tasks => tasks.taskId);
-          if (taskIds && taskIds.length > 0) {
-            for (let i = 0; i < taskIds.length; i++) {
-              this.dataService.getTaskDetail(taskIds[i])
-                .then((detail => {
-                  let taskEx: TaskEx = this.items.find(taskEx => taskEx.id === detail.taskId);
-                  if (taskEx) {
-                    // let mediaNames = history.mediaNames;
-                    if (detail.arrivedTime == 0) {
-                      taskEx.isOverdueArrivedLine = detail.arrivedDeadLine < new Date().getTime() - this.overdueTime * 60 * 1000;
-                    }
-
-                    if (detail.replyTime == 0) {
-                      taskEx.isOverdueReplyLine = detail.replyDeadLine < new Date().getTime() - this.overdueTime * 60 * 1000;
-                    }
-                  }
-                  return Promise.resolve(true);
-                }));
-            }
-          }
-        }
-      });
-  }
+  // private getTaskDetails(since: number, count: number, key: string): Promise<boolean> {
+  //   return this.dataService.getTasks(since, count, key)
+  //     .then(tasks => {
+  //       console.log(this.tag + "getTaskDetails: " + tasks.length);
+  //       if (tasks.length <= 0) {
+  //         return Promise.resolve(false)
+  //       } else {
+  //         let taskIds: Array<string> = tasks.map(tasks => tasks.taskId);
+  //         if (taskIds && taskIds.length > 0) {
+  //           for (let i = 0; i < taskIds.length; i++) {
+  //             this.dataService.getTaskDetail(taskIds[i])
+  //               .then((detail => {
+  //                 let taskEx: TaskEx = this.items.find(taskEx => taskEx.id === detail.taskId);
+  //                 if (taskEx) {
+  //                   // let mediaNames = history.mediaNames;
+  //                   if (detail.arrivedTime == 0) {
+  //                     taskEx.isOverdueArrivedLine = detail.arrivedDeadLine < new Date().getTime() - this.overdueTime * 60 * 1000;
+  //                   }
+  //
+  //                   if (detail.replyTime == 0) {
+  //                     taskEx.isOverdueReplyLine = detail.replyDeadLine < new Date().getTime() - this.overdueTime * 60 * 1000;
+  //                   }
+  //                 }
+  //                 return Promise.resolve(true);
+  //               }));
+  //           }
+  //         }
+  //       }
+  //     });
+  // }
 
   /**
    *
@@ -554,7 +631,9 @@ export class MyWorkPage implements OnInit, OnDestroy {
     this.dataService.getTaskCount()
       .then(count => {
         this.events.publish(this.globalService.mainUpdateEvent, {type: 'myWorkCount', count});
-        this.getOverdueFromFile();
+        if (count > 0) {
+          this.checkOverdueTimeTasks();
+        }
       })
       .catch(error => console.error(error));
   }
@@ -1234,8 +1313,9 @@ export class MyWorkPage implements OnInit, OnDestroy {
           this.replyHistories.push(myWorkUpdateEvent.history);
         }
 
-      } else if (myWorkUpdateEvent.type === 'cancel' || myWorkUpdateEvent.type === 'reject') {
-        this.resetTasks(FromWhere.CancelOrReject);
+        this.resetTasks(FromWhere.ReplyOrReject);
+      } else if (/*myWorkUpdateEvent.type === 'cancel' || */myWorkUpdateEvent.type === 'reject') {
+        this.resetTasks(FromWhere.ReplyOrReject);
       }
     });
   }
@@ -1260,7 +1340,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
             this.refresher.complete();
             this.getTaskCount();
             break;
-          case FromWhere.CancelOrReject:
+          case FromWhere.ReplyOrReject:
             this.getTaskCount();
             break;
           case FromWhere.Search:

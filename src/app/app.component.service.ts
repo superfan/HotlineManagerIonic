@@ -33,17 +33,23 @@ export class AppComponentService {
       this.myPlugin = this.globalService.getMyPluginMock();
       return this.dataService.init()
         .then(result => this.parsePageIntent());
-        //.then(result => this.dataService.downloadWords())
-        //.then(result => this.dataService.downloadMaterials());
-        //.then(result => this.dataService.downloadPersonnels())
     } else {
       return this.checkPermissions()
         .then(result => this.fileService.createDirRoot())
         .then(result => this.dataService.init())
         .then(result => this.parsePageIntent());
-        //.then(result => this.dataService.checkIfDownloadWords())
-        //.then(result => this.dataService.checkIfDownloadMaterials());
-        //.then(result => this.dataService.checkIfDownloadPersonnels())
+    }
+  }
+
+  public downloadConstantData(): Promise<any> {
+    if (this.globalService.isChrome) {
+      return this.dataService.downloadWords()
+      .then(result => this.dataService.downloadMaterials())
+      .then(result => this.globalService.isWorker ? true : this.dataService.downloadPersonnels());
+    } else {
+      return this.dataService.checkIfDownloadWords()
+      .then(result => this.dataService.checkIfDownloadMaterials())
+      .then(result => this.globalService.isWorker ? true : this.dataService.checkIfDownloadPersonnels());
     }
   }
 
@@ -78,6 +84,10 @@ export class AppComponentService {
       .then(pageIntent => {
         console.log(pageIntent);
         if (!pageIntent.roles) {
+          pageIntent.roles = this.globalService.worker;
+        } else if (pageIntent.roles.includes('PDA热线管理人员')) {
+          pageIntent.roles = this.globalService.manager;
+        } else {
           pageIntent.roles = this.globalService.worker;
         }
 
@@ -143,40 +153,55 @@ export class AppComponentService {
    * @returns {Promise<TResult|boolean>}
    */
   private setUserDetailInfo(pageIntent: PageIntent): Promise<any> {
-    return this.globalService.getUserDetailInfo()
-      .then(userDetailInfo => {
-        // userId passed from main shell is not same as saved id
-        // it will be changed in future
-        //pageIntent.userId = userDetailInfo.userId;
+    return this.globalService.saveUserDetailInfo({
+      account: pageIntent.account,
+      userId: pageIntent.userId,
+      userName: pageIntent.userName,
+      roles: pageIntent.roles,
+      department: pageIntent.departmentAndId.split('#')[0],
+      departmentId: 0
+    }).catch(error => {
+      console.error(error);
+      this.globalService.account = pageIntent.account;
+      this.globalService.userId = pageIntent.userId;
+      this.globalService.userName = pageIntent.userName;
+      this.globalService.isWorker = pageIntent.roles === this.globalService.worker;
+    });
 
-        if (pageIntent.account === userDetailInfo.account
-          && pageIntent.userId === userDetailInfo.userId
-          && pageIntent.userName === userDetailInfo.userName) {
-          return Promise.resolve(true);
-        } else {
-          return Promise.reject('different user');
-        }
-      })
-      .catch(error => {
-        console.error(error);
-        return this.dataService.doLogin({
-          userName: pageIntent.account,
-          password: pageIntent.password,
-          role: pageIntent.roles
-        }).then(userResult => this.globalService.saveUserDetailInfo({
-          account: pageIntent.account,
-          userId: userResult.userId,
-          userName: pageIntent.userName,
-          roles: pageIntent.roles,
-          department: userResult.Department,
-          departmentId: 0
-        })).catch(error => {
-          console.error(error);
-          this.globalService.account = pageIntent.account;
-          this.globalService.userId = pageIntent.userId;
-          this.globalService.userName = pageIntent.userName;
-        });
-      });
+    /*return this.globalService.getUserDetailInfo()
+     .then(userDetailInfo => {
+     // userId passed from main shell is not same as saved id
+     // it will be changed in future
+     //pageIntent.userId = userDetailInfo.userId;
+     if (pageIntent.account === userDetailInfo.account
+     && pageIntent.userId === userDetailInfo.userId
+     && pageIntent.userName === userDetailInfo.userName) {
+     return Promise.resolve(true);
+     } else {
+     return Promise.reject('different user');
+     }
+     })
+     .catch(error => {
+     console.error(error);
+     return this.dataService.doLogin({
+     userName: pageIntent.account,
+     password: pageIntent.password,
+     role: pageIntent.roles
+     }).then(userResult => this.globalService.saveUserDetailInfo({
+     account: pageIntent.account,
+     userId: userResult.userId,
+     userName: pageIntent.userName,
+     roles: pageIntent.roles,
+     department: userResult.Department,
+     departmentId: 0
+     })).catch(error => {
+     console.error(error);
+     this.globalService.account = pageIntent.account;
+     this.globalService.userId = pageIntent.userId;
+     this.globalService.userName = pageIntent.userName;
+     this.globalService.isWorker = pageIntent.roles === this.globalService.worker;
+     });
+     });*/
   }
 
   private getExtendedInfo(extendedInfo: string): Promise<any> {

@@ -76,6 +76,7 @@ export class GlobalService {
   readonly locationType: string = 'bd09ll';
   private myPluginMock: MyPluginMock;
   readonly worker: string = 'worker';
+  readonly manager: string = 'manager';
   readonly photoSuffix: string = '.jpg';
   readonly audioSuffix: string = '.mp3';
   readonly videoSuffix: string = '.mp4';
