@@ -186,7 +186,7 @@
   "cordova.plugin.MyPlugin": {
     "source": {
       "type": "local",
-      "path": "D:\\cordova_ionic\\HotlineManagerIonic\\node_modules\\MyPlugin"
+      "path": "E:\\git_HotlineManagerIonic_new\\HotlineManagerIonic\\node_modules\\MyPlugin"
     },
     "is_top_level": true,
     "variables": {}
