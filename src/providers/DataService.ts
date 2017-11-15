@@ -65,7 +65,12 @@ export class DataService extends SyncService {
     } else {
       super.init();
       return this.dbService.init()
-        .then(result => this.isInitialized = result);
+        .then(result => this.configService.initConfigs())
+        .then(result => this.isInitialized = true)
+        .catch(error => {
+          console.error(error);
+          this.isInitialized = false;
+        });
     }
   }
 
@@ -197,6 +202,15 @@ export class DataService extends SyncService {
                   || (taskDetail.replyDeadLine && taskDetail.replyDeadLine < replyTime)) {
                   let task: Task = tasks.find(task => task.taskId === taskDetail.taskId);
                   if (task) {
+                    if (taskDetail.arrivedDeadLine < arrivedTime) {
+                      task.extendedInfo = {
+                        arrivedDeadLine: taskDetail.arrivedDeadLine
+                      };
+                    } else if (taskDetail.replyDeadLine < replyTime) {
+                      task.extendedInfo = {
+                        replyDeadLine: taskDetail.replyDeadLine
+                      };
+                    }
                     candidateTasks.push(task);
                   }
                 }
@@ -374,12 +388,19 @@ export class DataService extends SyncService {
    * 下载材料信息
    */
   public downloadMaterials(): Promise<boolean> {
-    return this.downloadService.getAllMaterials('all')
-      .then(materials => this.dbService.saveMaterials(materials))
-      .catch(error => {
-        console.error(error);
-        this.globalService.showToast(error);
-        return Promise.resolve(false);
+    return this.configService.getSysRegion()
+      .then(region => {
+        if (region && region === ConfigService.fushunRegion) {
+          return this.downloadService.getAllMaterials('all')
+            .then(materials => this.dbService.saveMaterials(materials))
+            .catch(error => {
+              console.error(error);
+              this.globalService.showToast(error);
+              return Promise.resolve(false);
+            });
+        } else {
+          return Promise.resolve(true);
+        }
       });
   }
 

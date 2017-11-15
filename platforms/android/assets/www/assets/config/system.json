@@ -8,10 +8,11 @@
   "sys.debug.mode": true,
   "sys.keep.alive.interval": 60000,
   "sys.overdue.time": {
-    "arrived": 30,
-    "reply": 30,
-    "delayReply": 30
-  }
+    "arrived": 1800000,
+    "reply": 1800000,
+    "delayReply": 1800000,
+    "checkInterval": 60000
+  },
   "sys.region": "shanghai",
   "sys.material.unit": [
     {

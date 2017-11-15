@@ -93,9 +93,9 @@ public class MyPlugin extends CordovaPlugin {
         accessToken = getString(bundle.getString(ACCESS_TOKEN));
         extendedInfo = getString(bundle.getString(EXTENDED_INFO));
       } else {
-        account = "123456";
+        account = "wqry";
         password = "0000";
-        userId = 797782;
+        userId = 797789;
         userName = "ss1";
         department = "上水";
         departmentId = 1;

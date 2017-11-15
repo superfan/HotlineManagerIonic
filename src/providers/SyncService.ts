@@ -104,7 +104,11 @@ export abstract class SyncService {
     if (!acceptInfo || !task) {
       return Promise.reject('param is error');
     } else if (this.globalService.isChrome) {
-      return this.uploadService.accept(acceptInfo);
+      return this.uploadService.accept(acceptInfo)
+        .then(result => {
+          output.uploadedFlag = result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal;
+          return result;
+        });
     } else {
       return this.dbService.getHistories(acceptInfo.userId, acceptInfo.taskId)
         .then(histories => {
@@ -150,7 +154,11 @@ export abstract class SyncService {
     if (!goInfo || !task) {
       return Promise.reject('param is error');
     } else if (this.globalService.isChrome) {
-      return this.uploadService.go(goInfo);
+      return this.uploadService.go(goInfo)
+        .then(result => {
+          output.uploadedFlag = result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal;
+          return result;
+        });
     } else {
       return this.dbService.getHistories(goInfo.userId, goInfo.taskId)
         .then(histories => {
@@ -196,7 +204,11 @@ export abstract class SyncService {
     if (!arriveInfo || !task) {
       return Promise.reject('param is error');
     } else if (this.globalService.isChrome) {
-      return this.uploadService.arrive(arriveInfo);
+      return this.uploadService.arrive(arriveInfo)
+        .then(result => {
+          output.uploadedFlag = result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal;
+          return result;
+        });
     } else {
       return this.dbService.getHistories(arriveInfo.userId, arriveInfo.taskId)
         .then(histories => {
@@ -244,7 +256,11 @@ export abstract class SyncService {
     if (!replyInfo || !task || !taskDetail || !mediaNames) {
       return Promise.reject('param is error');
     } else if (this.globalService.isChrome) {
-      return this.uploadService.reply(replyInfo);
+      return this.uploadService.reply(replyInfo)
+        .then(result => {
+          output.uploadedFlag = result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal;
+          return result;
+        });
     } else {
       return this.dbService.getHistories(replyInfo.userId, replyInfo.taskId)
         .then(histories => {
@@ -294,7 +310,11 @@ export abstract class SyncService {
     if (!rejectInfo || !task) {
       return Promise.reject('param is error');
     } else if (this.globalService.isChrome) {
-      return this.uploadService.reject(rejectInfo);
+      return this.uploadService.reject(rejectInfo)
+        .then(result => {
+          output.uploadedFlag = result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal;
+          return result;
+        });
     } else {
       return this.dbService.getHistories(rejectInfo.userId, rejectInfo.taskId)
         .then(histories => {
@@ -340,7 +360,11 @@ export abstract class SyncService {
     if (!delayInfo || !task) {
       return Promise.reject('param is error');
     } else if (this.globalService.isChrome) {
-      return this.uploadService.delay(delayInfo);
+      return this.uploadService.delay(delayInfo)
+        .then(result => {
+          output.uploadedFlag = result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal;
+          return result;
+        });
     } else {
       return this.dbService.getHistories(delayInfo.userId, delayInfo.taskId)
         .then(histories => {
@@ -386,7 +410,11 @@ export abstract class SyncService {
     if (!cancelInfo || !task) {
       return Promise.reject('param is error');
     } else if (this.globalService.isChrome) {
-      return this.uploadService.cancel(cancelInfo);
+      return this.uploadService.cancel(cancelInfo)
+        .then(result => {
+          output.uploadedFlag = result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal;
+          return result;
+        });
     } else {
       return this.dbService.getHistories(cancelInfo.userId, cancelInfo.taskId)
         .then(histories => {

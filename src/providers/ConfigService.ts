@@ -44,6 +44,7 @@ export class ConfigService {
   private readonly mapStorageName: string = 'map';
   private systemConfig: SystemConfig;
   private mapConfig: MapConfig;
+  public static readonly fushunRegion: string = "fushun";
 
   constructor(private http: Http,
               private storage: Storage,
@@ -53,6 +54,17 @@ export class ConfigService {
     if (this.globalService.isChrome) {
       this.storage.clear();
     }
+  }
+
+  /**
+   * 初始化
+   * @returns {Promise<boolean|boolean>}
+   */
+  public initConfigs(): Promise<any> {
+    return this.readSystemConfig()
+      .then(data => this.systemConfig = data as SystemConfig)
+      .then(() => this.readMapConfig())
+      .then(data => this.mapConfig = data as MapConfig);
   }
 
   /**

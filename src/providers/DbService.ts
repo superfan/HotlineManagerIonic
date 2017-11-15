@@ -536,7 +536,7 @@ export class DbService {
           if (key) {
             sql += ` AND S_TASKID LIKE '%${key}%'`;
           }
-          sql += ` ORDER BY ID LIMIT ${count} OFFSET ${since};`;
+          sql += ` ORDER BY D_ASSGINTIME DESC LIMIT ${count} OFFSET ${since};`;
           return db.executeSql(sql, {})
             .then(data => {
               let rows: any = data.rows;
@@ -695,10 +695,10 @@ export class DbService {
 
                   let task: Task = this.toTask(localTask);
                   if (task.extendedInfo) {
-                    if (task.extendedInfo.arrivedDeadLine && task.extendedInfo.arrivedDeadLine < currentTime) {
+                    if (task.extendedInfo.arrivedDeadLine && task.extendedInfo.arrivedDeadLine < arrivedTime) {
                       task.extendedInfo.replyDeadLine = undefined;
                       task.extendedInfo.delayReplyDeadLine = undefined;
-                    } else if (task.extendedInfo.replyDeadLine && task.extendedInfo.replyDeadLine < currentTime) {
+                    } else if (task.extendedInfo.replyDeadLine && task.extendedInfo.replyDeadLine < replyTime) {
                       task.extendedInfo.arrivedDeadLine = undefined;
                       task.extendedInfo.delayReplyDeadLine = undefined;
                     }
@@ -1457,11 +1457,7 @@ export class DbService {
     localTaskExtendedInfo.replyDeadLine = taskDetail.replyDeadLine;
     localTaskExtendedInfo.delayReplyDeadLine = taskDetail.delayReplyDeadLine;
 
-    let sql: string = `UPDATE GD_TASKS SET S_DETAILINFO = '${JSON.stringify(taskDetail)}'`;
-    if (taskDetail.extendedInfo) {
-      sql += `, S_EXTENDEDINFO = '${taskDetail.extendedInfo}'}`;
-    }
-    sql += ` WHERE S_TASKID = '${taskDetail.taskId}';`;
+    let sql: string = `UPDATE GD_TASKS SET S_EXTENDEDINFO = '${JSON.stringify(localTaskExtendedInfo)}' WHERE S_TASKID = '${taskDetail.taskId}';`;
     return sql
   }
 

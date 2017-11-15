@@ -27,7 +27,7 @@ export class MyApp {
         // Here you can do any higher level native things you might need.
         statusBar.styleDefault();
         splashScreen.hide();
-        return appComponentService.init();
+        return this.appComponentService.init();
       })
       .then(page => this.rootPage = page)
       .catch(error => {
@@ -35,7 +35,7 @@ export class MyApp {
         this.globalService.showToast(error);
         this.rootPage = MyWorkPage;
       })
-      .then(() => appComponentService.downloadConstantData())
+      .then(() => this.appComponentService.downloadConstantData())
       .catch(error => console.error(error))
       .then(() => this.globalService.hideLoading());
   }
