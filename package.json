@@ -45,7 +45,7 @@
     "@ionic-native/zip": "^4.3.3",
     "@ionic/storage": "2.1.1",
     "MyPlugin": "file:3hplugins/MyPlugin",
-    "cordova-android": "6.3.0",
+    "cordova-android": "^6.3.0",
     "cordova-plugin-android-permissions": "^1.0.0",
     "cordova-plugin-app-preferences": "^0.99.3",
     "cordova-plugin-app-version": "^0.1.9",
@@ -69,6 +69,7 @@
     "cordova-plugin-x-toast": "^2.6.0",
     "cordova-plugin-zip": "^3.1.0",
     "cordova-sqlite-storage": "^2.1.0",
+    "cordova.plugin.MyPlugin": ".\\3hplugins\\MyPlugin",
     "ionic-angular": "3.8.0",
     "ionic-plugin-keyboard": "^2.2.1",
     "ionicons": "3.0.0",
@@ -76,7 +77,7 @@
     "sw-toolbox": "3.6.0",
     "uk.co.workingedge.cordova.plugin.sqliteporter": "^1.0.2",
     "zone.js": "0.8.18",
-    "cordova.plugin.MyPlugin": ".\\3hplugins\\MyPlugin"
+    "com.moust.cordova.videoplayer": "~1.0.1"
   },
   "devDependencies": {
     "@ionic/app-scripts": "3.0.1",

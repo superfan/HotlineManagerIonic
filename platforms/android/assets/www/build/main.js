@@ -925,7 +925,7 @@ BaseService = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__BaseService__ = __webpack_require__(123);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_file_transfer__ = __webpack_require__(224);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ionic_native_file__ = __webpack_require__(60);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ionic_native_file__ = __webpack_require__(61);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__model_Media__ = __webpack_require__(125);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__FileService__ = __webpack_require__(25);
 var __extends = (this && this.__extends) || (function () {
@@ -1460,7 +1460,7 @@ var MediaType;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__BaseService__ = __webpack_require__(123);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__GlobalService__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__DbService__ = __webpack_require__(62);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__DbService__ = __webpack_require__(63);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__FileService__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_camera__ = __webpack_require__(227);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ionic_native_media__ = __webpack_require__(228);
@@ -1758,7 +1758,7 @@ var MaterialInfoEx = (function () {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return WorkDetailPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__model_Task__ = __webpack_require__(36);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_DataService__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_GlobalService__ = __webpack_require__(7);
@@ -1884,7 +1884,7 @@ var WorkDetailPage = (function () {
             .then(function (taskDetail) {
             console.log(_this.tag + "getTaskDetail: " + taskDetail);
             _this.taskDetail = taskDetail;
-            _this.getOverdueFromFile();
+            //this.getOverdueFromFile();
         })
             .catch(function (error) { return console.error(error); });
         if (this.history && this.history.reply) {
@@ -2249,45 +2249,45 @@ var WorkDetailPage = (function () {
      * 转换显示信息
      * @param taskDetail
      */
-    WorkDetailPage.prototype.convertTaskDetail = function (taskDetail) {
-        if (taskDetail.arrivedTime == 0) {
-            this.detail[9].isShowOverdue = taskDetail.arrivedDeadLine < new Date().getTime() - this.overdueTime * 60 * 1000;
-        }
-        if (taskDetail.replyTime == 0) {
-            this.detail[10].isShowOverdue = taskDetail.replyDeadLine < new Date().getTime() - this.overdueTime * 60 * 1000;
-        }
-        // if (taskDetail.completedTime == 0) {
-        // this.detail[11].isShowOverdue = taskDetail.delayReplyDeadLine < new Date().getTime() - this.overdueTime*60*1000;
-        // }
-        for (var _i = 0, _a = this.detail; _i < _a.length; _i++) {
-            var item = _a[_i];
-            item.value = taskDetail[item.key];
-            if (item.key === 'issueTime'
-                || item.key === 'bookingStartTime'
-                || item.key === 'bookingEndTime'
-                || item.key === 'arrivedDeadLine'
-                || item.key === 'replyDeadLine'
-                || item.key === 'delayReplyDeadLine'
-                || typeof item.value === 'number') {
-                item.value = item.value > 0 ? new Date(item.value) : '';
-            }
-        }
-    };
+    // private convertTaskDetail(taskDetail: TaskDetail): void {
+    //
+    //   if (taskDetail.arrivedTime == 0){
+    //     this.detail[9].isShowOverdue = taskDetail.arrivedDeadLine < new Date().getTime() - this.overdueTime*60*1000;
+    //   }
+    //   if (taskDetail.replyTime == 0) {
+    //     this.detail[10].isShowOverdue = taskDetail.replyDeadLine < new Date().getTime() - this.overdueTime * 60 * 1000;
+    //   }
+    //   // if (taskDetail.completedTime == 0) {
+    //   // this.detail[11].isShowOverdue = taskDetail.delayReplyDeadLine < new Date().getTime() - this.overdueTime*60*1000;
+    //   // }
+    //
+    //   for (let item of this.detail) {
+    //     item.value = taskDetail[item.key];
+    //     if (item.key === 'issueTime'
+    //       || item.key === 'bookingStartTime'
+    //       || item.key === 'bookingEndTime'
+    //       || item.key === 'arrivedDeadLine'
+    //       || item.key === 'replyDeadLine'
+    //       || item.key === 'delayReplyDeadLine'
+    //       || typeof item.value === 'number') {
+    //       item.value = item.value > 0 ? new Date(item.value as number) : '';
+    //     }
+    //   }
+    // }
     /**
      * 读取文件的超期时限
      */
-    WorkDetailPage.prototype.getOverdueFromFile = function () {
-        var _this = this;
-        this.configService.getOverdueTime()
-            .then(function (data) {
-            console.log(_this.tag + data);
-            _this.overdueTime = data;
-            _this.convertTaskDetail(_this.taskDetail);
-        })
-            .catch(function (err) {
-            console.log(_this.tag + err);
-        });
-    };
+    // getOverdueFromFile() {
+    //   this.configService.getOverdueTime()
+    //     .then(data => {
+    //       console.log(this.tag + data);
+    //       this.overdueTime = data;
+    //       //this.convertTaskDetail(this.taskDetail);
+    //     })
+    //     .catch(err => {
+    //       console.log(this.tag + err);
+    //     })
+    // }
     /**
      * 设置回复信息
      */
@@ -2685,7 +2685,7 @@ var WorkDetailPage = (function () {
 }());
 WorkDetailPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-workdetail',template:/*ion-inline-start:"D:\cordova_ionic\HotlineManagerIonic\src\pages\workdetail\workdetail.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n\n\n    <ion-buttons end *ngIf="!isPreview">\n\n      <button ion-button icon-only color="white" *ngIf="isLocationValid" (click)="onLocate($event)">\n\n        <ion-icon name="map"></ion-icon>\n\n      </button>\n\n\n\n      <button ion-button icon-only color="white" (click)="onReply($event)">\n\n        <ion-icon name="checkmark-circle"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n\n\n  <ion-toolbar no-border-top>\n\n    <ion-segment [(ngModel)]="segmentName" (ionChange)="segmentChanged($event)">\n\n      <ion-segment-button value="detailInfo">\n\n        基本信息\n\n      </ion-segment-button>\n\n      <ion-segment-button value="replyInfo">\n\n        回填信息\n\n      </ion-segment-button>\n\n      <ion-segment-button value="mediaInfo">\n\n        多媒体\n\n      </ion-segment-button>\n\n    </ion-segment>\n\n  </ion-toolbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-workdetail">\n\n\n\n  <div [ngSwitch]="segmentName">\n\n    <!--基本信息-->\n\n    <ion-list *ngSwitchCase="\'detailInfo\'">\n\n      <ion-item *ngFor="let item of detail">\n\n        <ion-label fixed class="label-name">\n\n          {{item.name}}\n\n        </ion-label>\n\n        <div item-content *ngIf="item.isTime">\n\n          {{item.value | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <ion-icon *ngIf="item.isShowOverdue" name="timer" color="{{\'danger\'}}"></ion-icon>\n\n        </div>\n\n        <div item-content *ngIf="!item.isTime">\n\n          {{item.value}}\n\n        </div>\n\n      </ion-item>\n\n    </ion-list>\n\n\n\n    <!--回填信息-->\n\n    <ion-list *ngSwitchCase="\'replyInfo\'">\n\n      <ion-item *ngFor="let item of reply" class="reply-item" (click)="itemSelected(item)">\n\n        <ion-label fixed class="label-name">\n\n          {{item.name}}\n\n        </ion-label>\n\n        <div item-content>\n\n          {{item.value}}\n\n        </div>\n\n        <ion-icon name="ios-arrow-forward" item-end *ngIf="item.isActive"></ion-icon>\n\n      </ion-item>\n\n\n\n      <!--<ion-row>-->\n\n      <!--<ion-col class="col-button">-->\n\n      <!--<button ion-button icon-left>-->\n\n      <!--<ion-icon name="camera"></ion-icon>-->\n\n      <!--拍照-->\n\n      <!--</button>-->\n\n      <!--</ion-col>-->\n\n      <!--<ion-col class="col-button">-->\n\n      <!--<button ion-button icon-left>-->\n\n      <!--<ion-icon name="microphone"></ion-icon>-->\n\n      <!--录音-->\n\n      <!--</button>-->\n\n      <!--</ion-col>-->\n\n      <!--<ion-col class="col-button">-->\n\n      <!--<button ion-button icon-left>-->\n\n      <!--<ion-icon name="videocam"></ion-icon>-->\n\n      <!--视频-->\n\n      <!--</button>-->\n\n      <!--</ion-col>-->\n\n      <!--</ion-row>-->\n\n    </ion-list>\n\n\n\n    <!--多媒体-->\n\n    <div *ngSwitchCase="\'mediaInfo\'">\n\n      <button ion-item icon-left (click)="onTakePicture($event)">\n\n        <ion-icon name="camera"></ion-icon>\n\n        拍照\n\n      </button>\n\n\n\n      <ion-grid style="width: 100%; height: 100px;">\n\n        <ion-row>\n\n          <ion-col col-4 class="col-img" *ngIf="pictures[0]">\n\n            <img class="picture" src="{{pictures[0]}}"/>\n\n            <ion-icon name="close" (click)="onDeletePicture(pictures[0])"></ion-icon>\n\n          </ion-col>\n\n\n\n          <ion-col col-4 class="col-img" *ngIf="pictures[1]">\n\n            <img class="picture" src="{{pictures[1]}}"/>\n\n            <ion-icon name="close" (click)="onDeletePicture(pictures[1])"></ion-icon>\n\n          </ion-col>\n\n\n\n          <ion-col col-4 class="col-img" *ngIf="pictures[2]">\n\n            <img class="picture" src="{{pictures[2]}}"/>\n\n            <ion-icon name="close" (click)="onDeletePicture(pictures[2])"></ion-icon>\n\n          </ion-col>\n\n        </ion-row>\n\n      </ion-grid>\n\n\n\n      <br>\n\n      <br>\n\n\n\n      <button ion-item icon-left (click)="onRecordAudio($event)">\n\n        <ion-icon name="microphone"></ion-icon>\n\n        录音\n\n      </button>\n\n\n\n      <ion-grid style="width: 100%; height: 100px;">\n\n        <ion-row *ngIf="audios[0].time > 0" class="audio">\n\n          <ion-col col-6 class="audio-info">{{audios[0].time}}s</ion-col>\n\n          <ion-col col-2><ion-icon name="play" class="audio-btn" (click)="onPlay(audios[0])"></ion-icon></ion-col>\n\n          <ion-col col-1><ion-icon name="close" class="audio-btn" (click)="onDeleteAudio(audios[0])"></ion-icon></ion-col>\n\n          <ion-col></ion-col>\n\n        </ion-row>\n\n\n\n        <ion-row *ngIf="audios[1].time > 0" class="audio">\n\n          <ion-col col-6 class="audio-info">{{audios[1].time}}s</ion-col>\n\n          <ion-col col-2><ion-icon name="play" class="audio-btn" (click)="onPlay(audios[1])"></ion-icon></ion-col>\n\n          <ion-col col-1><ion-icon name="close" class="audio-btn" (click)="onDeleteAudio(audios[1])"></ion-icon></ion-col>\n\n          <ion-col></ion-col>\n\n        </ion-row>\n\n\n\n        <ion-row *ngIf="audios[2].time > 0" class="audio">\n\n          <ion-col col-6 class="audio-info">{{audios[2].time}}s</ion-col>\n\n          <ion-col col-2><ion-icon name="play" class="audio-btn" (click)="onPlay(audios[2])"></ion-icon></ion-col>\n\n          <ion-col col-1><ion-icon name="close" class="audio-btn" (click)="onDeleteAudio(audios[2])"></ion-icon></ion-col>\n\n          <ion-col></ion-col>\n\n        </ion-row>\n\n      </ion-grid>\n\n\n\n      <br>\n\n      <br>\n\n      <button ion-item icon-left (click)="onTakeVideo($event)">\n\n      <ion-icon name="videocam"></ion-icon>\n\n      视频\n\n      </button>\n\n\n\n      <ion-grid style="width: 100%; height: 100px;">\n\n        <ion-row>\n\n          <ion-col col-4 class="col-img" *ngIf="videos[0]">\n\n            <video class="video" (click)="onPlayVideo(videos[0])"></video>\n\n            <ion-icon name="close" (click)="onDeleteVideo(videos[0])"></ion-icon>\n\n          </ion-col>\n\n\n\n          <ion-col col-4 class="col-img" *ngIf="videos[1]">\n\n            <video class="video" (click)="onPlayVideo(videos[1])"></video>\n\n            <ion-icon name="close" (click)="onDeleteVideo(videos[1])"></ion-icon>\n\n          </ion-col>\n\n\n\n          <ion-col col-4 class="col-img" *ngIf="pictures[2]">\n\n            <video class="video" (click)="onPlayVideo(videos[2])"></video>\n\n            <ion-icon name="close" (click)="onDeleteVideo(videos[2])"></ion-icon>\n\n          </ion-col>\n\n        </ion-row>\n\n      </ion-grid>\n\n      <br>\n\n      <br>\n\n      <!--<ion-row>-->\n\n      <!--<ion-col class="col-img">-->\n\n      <!--<img width="80" height="80" src="assets/img/ic_video_default.png"/>-->\n\n      <!--</ion-col>-->\n\n\n\n      <!--<ion-col class="col-img">-->\n\n      <!--<img width="80" height="80" src="assets/img/ic_video_default.png"/>-->\n\n      <!--</ion-col>-->\n\n\n\n      <!--<ion-col class="col-img">-->\n\n      <!--<img width="80" height="80" src="assets/img/ic_video_default.png"/>-->\n\n      <!--</ion-col>-->\n\n      <!--</ion-row>-->\n\n    </div>\n\n  </div>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"D:\cordova_ionic\HotlineManagerIonic\src\pages\workdetail\workdetail.html"*/
+        selector: 'page-workdetail',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\workdetail\workdetail.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n\n\n    <ion-buttons end *ngIf="!isPreview">\n\n      <button ion-button icon-only color="white" *ngIf="isLocationValid" (click)="onLocate($event)">\n\n        <ion-icon name="map"></ion-icon>\n\n      </button>\n\n\n\n      <button ion-button icon-only color="white" (click)="onReply($event)">\n\n        <ion-icon name="checkmark-circle"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n\n\n  <ion-toolbar no-border-top>\n\n    <ion-segment [(ngModel)]="segmentName" (ionChange)="segmentChanged($event)">\n\n      <ion-segment-button value="detailInfo">\n\n        基本信息\n\n      </ion-segment-button>\n\n      <ion-segment-button value="replyInfo">\n\n        回填信息\n\n      </ion-segment-button>\n\n      <ion-segment-button value="mediaInfo">\n\n        多媒体\n\n      </ion-segment-button>\n\n    </ion-segment>\n\n  </ion-toolbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-workdetail">\n\n\n\n  <div [ngSwitch]="segmentName">\n\n    <!--基本信息-->\n\n    <ion-list *ngSwitchCase="\'detailInfo\'">\n\n      <ion-item *ngFor="let item of detail">\n\n        <ion-label fixed class="label-name">\n\n          {{item.name}}\n\n        </ion-label>\n\n        <div item-content *ngIf="item.isTime">\n\n          {{item.value | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <ion-icon *ngIf="item.isShowOverdue" name="timer" color="{{\'danger\'}}"></ion-icon>\n\n        </div>\n\n        <div item-content *ngIf="!item.isTime">\n\n          {{item.value}}\n\n        </div>\n\n      </ion-item>\n\n    </ion-list>\n\n\n\n    <!--回填信息-->\n\n    <ion-list *ngSwitchCase="\'replyInfo\'">\n\n      <ion-item *ngFor="let item of reply" class="reply-item" (click)="itemSelected(item)">\n\n        <ion-label fixed class="label-name">\n\n          {{item.name}}\n\n        </ion-label>\n\n        <div item-content>\n\n          {{item.value}}\n\n        </div>\n\n        <ion-icon name="ios-arrow-forward" item-end *ngIf="item.isActive"></ion-icon>\n\n      </ion-item>\n\n\n\n      <!--<ion-row>-->\n\n      <!--<ion-col class="col-button">-->\n\n      <!--<button ion-button icon-left>-->\n\n      <!--<ion-icon name="camera"></ion-icon>-->\n\n      <!--拍照-->\n\n      <!--</button>-->\n\n      <!--</ion-col>-->\n\n      <!--<ion-col class="col-button">-->\n\n      <!--<button ion-button icon-left>-->\n\n      <!--<ion-icon name="microphone"></ion-icon>-->\n\n      <!--录音-->\n\n      <!--</button>-->\n\n      <!--</ion-col>-->\n\n      <!--<ion-col class="col-button">-->\n\n      <!--<button ion-button icon-left>-->\n\n      <!--<ion-icon name="videocam"></ion-icon>-->\n\n      <!--视频-->\n\n      <!--</button>-->\n\n      <!--</ion-col>-->\n\n      <!--</ion-row>-->\n\n    </ion-list>\n\n\n\n    <!--多媒体-->\n\n    <div *ngSwitchCase="\'mediaInfo\'">\n\n      <button ion-item icon-left (click)="onTakePicture($event)">\n\n        <ion-icon name="camera"></ion-icon>\n\n        拍照\n\n      </button>\n\n\n\n      <ion-grid style="width: 100%; height: 100px;">\n\n        <ion-row>\n\n          <ion-col col-4 class="col-img" *ngIf="pictures[0]">\n\n            <img class="picture" src="{{pictures[0]}}"/>\n\n            <ion-icon name="close" (click)="onDeletePicture(pictures[0])"></ion-icon>\n\n          </ion-col>\n\n\n\n          <ion-col col-4 class="col-img" *ngIf="pictures[1]">\n\n            <img class="picture" src="{{pictures[1]}}"/>\n\n            <ion-icon name="close" (click)="onDeletePicture(pictures[1])"></ion-icon>\n\n          </ion-col>\n\n\n\n          <ion-col col-4 class="col-img" *ngIf="pictures[2]">\n\n            <img class="picture" src="{{pictures[2]}}"/>\n\n            <ion-icon name="close" (click)="onDeletePicture(pictures[2])"></ion-icon>\n\n          </ion-col>\n\n        </ion-row>\n\n      </ion-grid>\n\n\n\n      <br>\n\n      <br>\n\n\n\n      <button ion-item icon-left (click)="onRecordAudio($event)">\n\n        <ion-icon name="microphone"></ion-icon>\n\n        录音\n\n      </button>\n\n\n\n      <ion-grid style="width: 100%; height: 100px;">\n\n        <ion-row *ngIf="audios[0].time > 0" class="audio">\n\n          <ion-col col-6 class="audio-info">{{audios[0].time}}s</ion-col>\n\n          <ion-col col-2><ion-icon name="play" class="audio-btn" (click)="onPlay(audios[0])"></ion-icon></ion-col>\n\n          <ion-col col-1><ion-icon name="close" class="audio-btn" (click)="onDeleteAudio(audios[0])"></ion-icon></ion-col>\n\n          <ion-col></ion-col>\n\n        </ion-row>\n\n\n\n        <ion-row *ngIf="audios[1].time > 0" class="audio">\n\n          <ion-col col-6 class="audio-info">{{audios[1].time}}s</ion-col>\n\n          <ion-col col-2><ion-icon name="play" class="audio-btn" (click)="onPlay(audios[1])"></ion-icon></ion-col>\n\n          <ion-col col-1><ion-icon name="close" class="audio-btn" (click)="onDeleteAudio(audios[1])"></ion-icon></ion-col>\n\n          <ion-col></ion-col>\n\n        </ion-row>\n\n\n\n        <ion-row *ngIf="audios[2].time > 0" class="audio">\n\n          <ion-col col-6 class="audio-info">{{audios[2].time}}s</ion-col>\n\n          <ion-col col-2><ion-icon name="play" class="audio-btn" (click)="onPlay(audios[2])"></ion-icon></ion-col>\n\n          <ion-col col-1><ion-icon name="close" class="audio-btn" (click)="onDeleteAudio(audios[2])"></ion-icon></ion-col>\n\n          <ion-col></ion-col>\n\n        </ion-row>\n\n      </ion-grid>\n\n\n\n      <br>\n\n      <br>\n\n      <button ion-item icon-left (click)="onTakeVideo($event)">\n\n      <ion-icon name="videocam"></ion-icon>\n\n      视频\n\n      </button>\n\n\n\n      <ion-grid style="width: 100%; height: 100px;">\n\n        <ion-row>\n\n          <ion-col col-4 class="col-img" *ngIf="videos[0]">\n\n            <video class="video" (click)="onPlayVideo(videos[0])"></video>\n\n            <ion-icon name="close" (click)="onDeleteVideo(videos[0])"></ion-icon>\n\n          </ion-col>\n\n\n\n          <ion-col col-4 class="col-img" *ngIf="videos[1]">\n\n            <video class="video" (click)="onPlayVideo(videos[1])"></video>\n\n            <ion-icon name="close" (click)="onDeleteVideo(videos[1])"></ion-icon>\n\n          </ion-col>\n\n\n\n          <ion-col col-4 class="col-img" *ngIf="pictures[2]">\n\n            <video class="video" (click)="onPlayVideo(videos[2])"></video>\n\n            <ion-icon name="close" (click)="onDeleteVideo(videos[2])"></ion-icon>\n\n          </ion-col>\n\n        </ion-row>\n\n      </ion-grid>\n\n      <br>\n\n      <br>\n\n      <!--<ion-row>-->\n\n      <!--<ion-col class="col-img">-->\n\n      <!--<img width="80" height="80" src="assets/img/ic_video_default.png"/>-->\n\n      <!--</ion-col>-->\n\n\n\n      <!--<ion-col class="col-img">-->\n\n      <!--<img width="80" height="80" src="assets/img/ic_video_default.png"/>-->\n\n      <!--</ion-col>-->\n\n\n\n      <!--<ion-col class="col-img">-->\n\n      <!--<img width="80" height="80" src="assets/img/ic_video_default.png"/>-->\n\n      <!--</ion-col>-->\n\n      <!--</ion-row>-->\n\n    </div>\n\n  </div>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\workdetail\workdetail.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* NavParams */],
@@ -2712,11 +2712,11 @@ WorkDetailPage = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__model_Task__ = __webpack_require__(36);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__UploadService__ = __webpack_require__(124);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__DbService__ = __webpack_require__(62);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__DbService__ = __webpack_require__(63);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__MediaService__ = __webpack_require__(126);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__model_Media__ = __webpack_require__(125);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__SyncService__ = __webpack_require__(322);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__SyncService__ = __webpack_require__(321);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__model_MaterialsInfo__ = __webpack_require__(127);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__ConfigService__ = __webpack_require__(16);
 var __extends = (this && this.__extends) || (function () {
@@ -2821,7 +2821,7 @@ var DataService = (function (_super) {
             return this.downloadService.getTasks(this.globalService.userId, since, count);
         }
         else {
-            return this.dbService.getTasks(this.globalService.userId, since, count, [__WEBPACK_IMPORTED_MODULE_2__model_Task__["b" /* TaskState */].Dispatch, __WEBPACK_IMPORTED_MODULE_2__model_Task__["b" /* TaskState */].Accept, __WEBPACK_IMPORTED_MODULE_2__model_Task__["b" /* TaskState */].Go, __WEBPACK_IMPORTED_MODULE_2__model_Task__["b" /* TaskState */].Arrived, __WEBPACK_IMPORTED_MODULE_2__model_Task__["b" /* TaskState */].Reply, __WEBPACK_IMPORTED_MODULE_2__model_Task__["b" /* TaskState */].Delay, __WEBPACK_IMPORTED_MODULE_2__model_Task__["b" /* TaskState */].Continue], key);
+            return this.dbService.getTasks(this.globalService.userId, since, count, [__WEBPACK_IMPORTED_MODULE_2__model_Task__["b" /* TaskState */].Dispatch, __WEBPACK_IMPORTED_MODULE_2__model_Task__["b" /* TaskState */].Accept, __WEBPACK_IMPORTED_MODULE_2__model_Task__["b" /* TaskState */].Go, __WEBPACK_IMPORTED_MODULE_2__model_Task__["b" /* TaskState */].Arrived, __WEBPACK_IMPORTED_MODULE_2__model_Task__["b" /* TaskState */].Delay, __WEBPACK_IMPORTED_MODULE_2__model_Task__["b" /* TaskState */].Continue], key);
         }
     };
     /**
@@ -2854,27 +2854,73 @@ var DataService = (function (_super) {
                     : _this.downloadService.getTaskDetail(taskId.split('#')[0])
                         .then(function (detail) {
                         detail.taskId = taskId;
-                        return _this.dbService.saveTaskDetail(detail);
+                        return _this.dbService.saveTaskDetail(detail)
+                            .then(function (result) { return result ? _this.dbService.updateTaskExtendInfo(detail) : false; });
                     })
                         .then(function (result) { return _this.dbService.getTaskDetail(taskId); });
             });
         }
     };
     /**
+     * 检查超期工单
+     * @param overdueTime
+     * @returns {any}
+     */
+    DataService.prototype.checkOverdueTimeTasks = function (overdueTime) {
+        var _this = this;
+        if (this.globalService.isChrome) {
+            if (!overdueTime) {
+                return Promise.resolve([]);
+            }
+            return this.downloadService.getTasks(this.globalService.userId, 1, 100)
+                .then(function (tasks) {
+                if (!tasks || tasks.length <= 0) {
+                    return Promise.resolve([]);
+                }
+                var promises = tasks.map(function (task) { return _this.downloadService.getTaskDetail(task.taskId); });
+                return Promise.all(promises)
+                    .then(function (taskDetails) {
+                    if (!taskDetails || taskDetails.length <= 0) {
+                        return Promise.resolve([]);
+                    }
+                    var currentTime = new Date().getTime();
+                    var arrivedTime = overdueTime.arrived + currentTime;
+                    var replyTime = overdueTime.reply + currentTime;
+                    var candidateTasks = [];
+                    var _loop_1 = function (taskDetail) {
+                        if ((taskDetail.arrivedDeadLine && taskDetail.arrivedDeadLine < arrivedTime)
+                            || (taskDetail.replyDeadLine && taskDetail.replyDeadLine < replyTime)) {
+                            var task = tasks.find(function (task) { return task.taskId === taskDetail.taskId; });
+                            if (task) {
+                                candidateTasks.push(task);
+                            }
+                        }
+                    };
+                    for (var _i = 0, taskDetails_1 = taskDetails; _i < taskDetails_1.length; _i++) {
+                        var taskDetail = taskDetails_1[_i];
+                        _loop_1(taskDetail);
+                    }
+                    return Promise.resolve(candidateTasks);
+                });
+            });
+        }
+        else {
+            return this.dbService.checkOverdueTimeTasks(this.globalService.userId, overdueTime, new Date().getTime());
+        }
+    };
+    /**
      * 获取任务详情
      * @returns {Promise<Array<TaskDetail>>}
      */
-    DataService.prototype.getTaskDetailByUserId = function () {
-        var _this = this;
-        if (this.globalService.isChrome) {
-            return Promise.reject([]);
-        }
-        else {
-            return this.dbService.getTaskIds(this.globalService.userId)
-                .then(function (taskIds) { return _this.dbService.getTaskDetails(taskIds); })
-                .catch(function (error) { return console.error(error); });
-        }
-    };
+    // public getTaskDetailByUserId(): Promise<Array<TaskDetail>> {
+    //   if (this.globalService.isChrome) {
+    //     return Promise.reject([]);
+    //   } else {
+    //     return this.dbService.getTaskIds(this.globalService.userId)
+    //       .then(taskIds => this.dbService.getTaskDetails(taskIds))
+    //       .catch(error => console.error(error));
+    //   }
+    // }
     /**
      * 历史工单获取记录
      * @param since
@@ -3653,10 +3699,10 @@ webpackEmptyAsyncContext.id = 137;
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ConfigService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(35);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_storage__ = __webpack_require__(59);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_storage__ = __webpack_require__(60);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__GlobalService__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_file__ = __webpack_require__(60);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_toPromise__ = __webpack_require__(320);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_file__ = __webpack_require__(61);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_toPromise__ = __webpack_require__(319);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_toPromise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_toPromise__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__FileService__ = __webpack_require__(25);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -3896,7 +3942,7 @@ var ConfigService = ConfigService_1 = (function () {
     };
     /**
      * 获取超期时限设置
-     * @returns {Promise<T>}
+     * @returns {Promise<OverdueTime>|Promise<T>}
      */
     ConfigService.prototype.getOverdueTime = function () {
         var _this = this;
@@ -4108,19 +4154,19 @@ var ConfigService = ConfigService_1 = (function () {
     };
     /**
      * 设置超期时限
-     * @param keepAlive
+     * @param overdueTime
      * @returns {any}
      */
-    ConfigService.prototype.setOverdue = function (overdue) {
+    ConfigService.prototype.setOverdueTime = function (overdueTime) {
         var _this = this;
         if (ConfigService_1.isValid(this.systemConfig, 'overdueTime')) {
             return new Promise(function (resolve, reject) {
                 var systemConfig = Object.create(_this.systemConfig);
-                systemConfig.overdueTime = overdue;
+                systemConfig.overdueTime = overdueTime;
                 _this.writeSystemConfig(systemConfig)
                     .then(function (result) {
                     if (result) {
-                        _this.systemConfig.overdueTime = overdue;
+                        _this.systemConfig.overdueTime = overdueTime;
                     }
                     resolve(!!result);
                 })
@@ -4296,7 +4342,7 @@ webpackEmptyAsyncContext.id = 178;
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PopoverRecordPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_DataService__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_GlobalService__ = __webpack_require__(7);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -4406,7 +4452,7 @@ PopoverRecordPage = __decorate([
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SearchResultPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__searchdetail_searchdetails__ = __webpack_require__(233);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_DataService__ = __webpack_require__(13);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -4551,7 +4597,7 @@ var SearchResultPage = (function () {
 }());
 SearchResultPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-searchresult',template:/*ion-inline-start:"D:\cordova_ionic\HotlineManagerIonic\src\pages\searchresult\searchresult.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-searchresult">\n\n  <ion-grid no-padding>\n\n    <ion-row>\n\n      <ion-col>\n\n        <div class="allTasks">总共单:{{totalTaskCount}}</div>\n\n      </ion-col>\n\n      <ion-col>\n\n        <div class="finishedTasks">已完成:{{completedTaskCount}}</div>\n\n      </ion-col>\n\n      <ion-col>\n\n        <div class="unFinishedTasks">未完成:{{unCompletedTaskCount}}</div>\n\n      </ion-col>\n\n    </ion-row>\n\n  </ion-grid>\n\n  <!--总工单-->\n\n  <ion-list>\n\n    <ion-card *ngFor="let item of items">\n\n      <ion-item>\n\n        <ion-avatar item-start>\n\n          <img src="assets/img/ic_mywork_avatar.png">\n\n        </ion-avatar>\n\n        <div><h2 class="card-header-label-hint">客服编号</h2>\n\n          <h2 class="card-header-label-content">{{item.customerId}}</h2></div>\n\n        <div><h2 class="card-header-label-hint">任务编号</h2>\n\n          <h2 class="card-header-label-content">{{item.taskId}}</h2></div>\n\n      </ion-item>\n\n\n\n      <ion-list>\n\n        <ion-item *ngFor="let content of item.contents">\n\n          <ion-label fixed class="label-name">{{content.name}}</ion-label>\n\n          <div item-content>{{content.value}}</div>\n\n        </ion-item>\n\n        <ion-item (click)="onDetails(item.taskId)">\n\n          <ion-label fixed class="label-name">详细信息</ion-label>\n\n          <ion-icon name=\'arrow-forward\' item-end></ion-icon>\n\n        </ion-item>\n\n      </ion-list>\n\n    </ion-card>\n\n  </ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"D:\cordova_ionic\HotlineManagerIonic\src\pages\searchresult\searchresult.html"*/
+        selector: 'page-searchresult',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\searchresult\searchresult.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-searchresult">\n\n  <ion-grid no-padding>\n\n    <ion-row>\n\n      <ion-col>\n\n        <div class="allTasks">总共单:{{totalTaskCount}}</div>\n\n      </ion-col>\n\n      <ion-col>\n\n        <div class="finishedTasks">已完成:{{completedTaskCount}}</div>\n\n      </ion-col>\n\n      <ion-col>\n\n        <div class="unFinishedTasks">未完成:{{unCompletedTaskCount}}</div>\n\n      </ion-col>\n\n    </ion-row>\n\n  </ion-grid>\n\n  <!--总工单-->\n\n  <ion-list>\n\n    <ion-card *ngFor="let item of items">\n\n      <ion-item>\n\n        <ion-avatar item-start>\n\n          <img src="assets/img/ic_mywork_avatar.png">\n\n        </ion-avatar>\n\n        <div><h2 class="card-header-label-hint">客服编号</h2>\n\n          <h2 class="card-header-label-content">{{item.customerId}}</h2></div>\n\n        <div><h2 class="card-header-label-hint">任务编号</h2>\n\n          <h2 class="card-header-label-content">{{item.taskId}}</h2></div>\n\n      </ion-item>\n\n\n\n      <ion-list>\n\n        <ion-item *ngFor="let content of item.contents">\n\n          <ion-label fixed class="label-name">{{content.name}}</ion-label>\n\n          <div item-content>{{content.value}}</div>\n\n        </ion-item>\n\n        <ion-item (click)="onDetails(item.taskId)">\n\n          <ion-label fixed class="label-name">详细信息</ion-label>\n\n          <ion-icon name=\'arrow-forward\' item-end></ion-icon>\n\n        </ion-item>\n\n      </ion-list>\n\n    </ion-card>\n\n  </ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\searchresult\searchresult.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* NavParams */],
@@ -4571,7 +4617,7 @@ SearchResultPage = __decorate([
 /* unused harmony export TaskState */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SearchDetailsPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_DataService__ = __webpack_require__(13);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -4737,7 +4783,7 @@ var SearchDetailsPage = (function () {
 }());
 SearchDetailsPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-searchdetails',template:/*ion-inline-start:"D:\cordova_ionic\HotlineManagerIonic\src\pages\searchdetail\searchdetails.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n  </ion-navbar>\n\n\n\n  <ion-segment [(ngModel)]="segmentName">\n\n    <ion-segment-button value="basicInfo">\n\n      基本信息\n\n    </ion-segment-button>\n\n    <ion-segment-button value="taskState">\n\n      任务状态\n\n    </ion-segment-button>\n\n  </ion-segment>\n\n</ion-header>\n\n\n\n<ion-content class="page-searchdetails">\n\n\n\n\n\n  <div [ngSwitch]="segmentName">\n\n    <!--基本信息-->\n\n    <ion-list *ngSwitchCase="\'basicInfo\'">\n\n      <ion-item *ngFor="let detail of details">\n\n        <ion-label fixed class="label-name">\n\n          {{detail.name}}\n\n        </ion-label>\n\n        <div item-content>\n\n          {{detail.value}}\n\n        </div>\n\n      </ion-item>\n\n    </ion-list>\n\n\n\n\n\n    <!--任务状态-->\n\n    <ion-list *ngSwitchCase="\'taskState\'">\n\n      <ul class="list">\n\n        <li *ngFor="let state of states" [ngClass]="{\'current\':state==states[0]}">{{state.state}}<br/>{{state.time}}\n\n          <div class="circle"><b class="circle"></b></div>\n\n        </li>\n\n      </ul>\n\n    </ion-list>\n\n\n\n  </div>\n\n</ion-content>\n\n'/*ion-inline-end:"D:\cordova_ionic\HotlineManagerIonic\src\pages\searchdetail\searchdetails.html"*/
+        selector: 'page-searchdetails',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\searchdetail\searchdetails.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n  </ion-navbar>\n\n\n\n  <ion-segment [(ngModel)]="segmentName">\n\n    <ion-segment-button value="basicInfo">\n\n      基本信息\n\n    </ion-segment-button>\n\n    <ion-segment-button value="taskState">\n\n      任务状态\n\n    </ion-segment-button>\n\n  </ion-segment>\n\n</ion-header>\n\n\n\n<ion-content class="page-searchdetails">\n\n\n\n\n\n  <div [ngSwitch]="segmentName">\n\n    <!--基本信息-->\n\n    <ion-list *ngSwitchCase="\'basicInfo\'">\n\n      <ion-item *ngFor="let detail of details">\n\n        <ion-label fixed class="label-name">\n\n          {{detail.name}}\n\n        </ion-label>\n\n        <div item-content>\n\n          {{detail.value}}\n\n        </div>\n\n      </ion-item>\n\n    </ion-list>\n\n\n\n\n\n    <!--任务状态-->\n\n    <ion-list *ngSwitchCase="\'taskState\'">\n\n      <ul class="list">\n\n        <li *ngFor="let state of states" [ngClass]="{\'current\':state==states[0]}">{{state.state}}<br/>{{state.time}}\n\n          <div class="circle"><b class="circle"></b></div>\n\n        </li>\n\n      </ul>\n\n    </ion-list>\n\n\n\n  </div>\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\searchdetail\searchdetails.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* NavParams */],
@@ -4754,7 +4800,7 @@ SearchDetailsPage = __decorate([
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return WorkInfoPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_DataService__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_GlobalService__ = __webpack_require__(7);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -5000,7 +5046,7 @@ var WorkInfoPage = (function () {
 }());
 WorkInfoPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-workinfo',template:/*ion-inline-start:"D:\cordova_ionic\HotlineManagerIonic\src\pages\workinfo\workinfo.html"*/'<ion-header>\n  <ion-navbar color="primary">\n    <ion-title>\n      {{title}}\n    </ion-title>\n\n    <ion-buttons end>\n      <button ion-button icon-only color="white" (click)="onDispatch($event)">\n        <ion-icon name="checkmark-circle"></ion-icon>\n      </button>\n    </ion-buttons>\n  </ion-navbar>\n\n  <ion-toolbar no-border-top>\n    <ion-segment [(ngModel)]="segmentName" (ionChange)="segmentChanged($event)">\n      <ion-segment-button value="detailInfo">\n        基本信息\n      </ion-segment-button>\n      <ion-segment-button value="dispatchInfo">\n        派工信息\n      </ion-segment-button>\n    </ion-segment>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content class="page-workinfo">\n\n  <div [ngSwitch]="segmentName">\n    <ion-list *ngSwitchCase="\'detailInfo\'">\n      <ion-item *ngFor="let detail of details">\n        <ion-label fixed class="label-name">\n          {{detail.name}}\n        </ion-label>\n        <div item-content>\n          {{detail.value}}\n        </div>\n      </ion-item>\n    </ion-list>\n\n    <ion-list *ngSwitchCase="\'dispatchInfo\'">\n      <ion-item *ngFor="let dispatch of dispatches" class="dispatch-item" (click)="itemSelected(dispatch)">\n        <ion-label fixed class="label-name">\n          {{dispatch.name}}\n        </ion-label>\n        <div item-content *ngIf="!dispatch.isDate&&!dispatch.isTime">\n          {{dispatch.value}}\n        </div>\n        <ion-datetime *ngIf="dispatch.isDate" style="padding-left: 0px;"\n                      cancelText=\'取消\' doneText=\'确定\' displayFormat="YYYY-MM-DD"\n                      pickerFormat="YYYY-MM-DD" [(ngModel)]="dispatch.value"></ion-datetime>\n        <ion-datetime *ngIf="dispatch.isTime" style="padding-left: 0px;"\n                      cancelText=\'取消\' doneText=\'确定\' displayFormat="HH:mm:ss"\n                      pickerFormat="HH:mm:ss" [(ngModel)]="dispatch.value"></ion-datetime>\n        <ion-icon name="ios-arrow-forward" item-end *ngIf="dispatch.isActive"></ion-icon>\n      </ion-item>\n    </ion-list>\n  </div>\n\n</ion-content>\n'/*ion-inline-end:"D:\cordova_ionic\HotlineManagerIonic\src\pages\workinfo\workinfo.html"*/
+        selector: 'page-workinfo',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\workinfo\workinfo.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n\n\n    <ion-buttons end>\n\n      <button ion-button icon-only color="white" (click)="onDispatch($event)">\n\n        <ion-icon name="checkmark-circle"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n\n\n  <ion-toolbar no-border-top>\n\n    <ion-segment [(ngModel)]="segmentName" (ionChange)="segmentChanged($event)">\n\n      <ion-segment-button value="detailInfo">\n\n        基本信息\n\n      </ion-segment-button>\n\n      <ion-segment-button value="dispatchInfo">\n\n        派工信息\n\n      </ion-segment-button>\n\n    </ion-segment>\n\n  </ion-toolbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-workinfo">\n\n\n\n  <div [ngSwitch]="segmentName">\n\n    <ion-list *ngSwitchCase="\'detailInfo\'">\n\n      <ion-item *ngFor="let detail of details">\n\n        <ion-label fixed class="label-name">\n\n          {{detail.name}}\n\n        </ion-label>\n\n        <div item-content>\n\n          {{detail.value}}\n\n        </div>\n\n      </ion-item>\n\n    </ion-list>\n\n\n\n    <ion-list *ngSwitchCase="\'dispatchInfo\'">\n\n      <ion-item *ngFor="let dispatch of dispatches" class="dispatch-item" (click)="itemSelected(dispatch)">\n\n        <ion-label fixed class="label-name">\n\n          {{dispatch.name}}\n\n        </ion-label>\n\n        <div item-content *ngIf="!dispatch.isDate&&!dispatch.isTime">\n\n          {{dispatch.value}}\n\n        </div>\n\n        <ion-datetime *ngIf="dispatch.isDate" style="padding-left: 0px;"\n\n                      cancelText=\'取消\' doneText=\'确定\' displayFormat="YYYY-MM-DD"\n\n                      pickerFormat="YYYY-MM-DD" [(ngModel)]="dispatch.value"></ion-datetime>\n\n        <ion-datetime *ngIf="dispatch.isTime" style="padding-left: 0px;"\n\n                      cancelText=\'取消\' doneText=\'确定\' displayFormat="HH:mm:ss"\n\n                      pickerFormat="HH:mm:ss" [(ngModel)]="dispatch.value"></ion-datetime>\n\n        <ion-icon name="ios-arrow-forward" item-end *ngIf="dispatch.isActive"></ion-icon>\n\n      </ion-item>\n\n    </ion-list>\n\n  </div>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\workinfo\workinfo.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* NavParams */],
@@ -5020,7 +5066,7 @@ WorkInfoPage = __decorate([
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return NewsDetailsPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -5045,7 +5091,7 @@ var NewsDetailsPage = (function () {
 }());
 NewsDetailsPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-newsdetails',template:/*ion-inline-start:"D:\cordova_ionic\HotlineManagerIonic\src\pages\newsdetails\newsdetails.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-newsdetails">\n\n\n\n  <h2>{{newsTitle}}</h2>\n\n  <h3>{{newsTime}}</h3>\n\n  <p>{{newsContent}}</p>\n\n</ion-content>\n\n'/*ion-inline-end:"D:\cordova_ionic\HotlineManagerIonic\src\pages\newsdetails\newsdetails.html"*/
+        selector: 'page-newsdetails',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\newsdetails\newsdetails.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-newsdetails">\n\n\n\n  <h2>{{newsTitle}}</h2>\n\n  <h3>{{newsTime}}</h3>\n\n  <p>{{newsContent}}</p>\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\newsdetails\newsdetails.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* NavParams */]])
@@ -5061,7 +5107,7 @@ NewsDetailsPage = __decorate([
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MaterialsAddPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__model_MaterialsInfo__ = __webpack_require__(127);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_DataService__ = __webpack_require__(13);
@@ -5370,7 +5416,7 @@ var MaterialsAddPage = (function () {
 }());
 MaterialsAddPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-materialsadd',template:/*ion-inline-start:"D:\cordova_ionic\HotlineManagerIonic\src\pages\materialsadd\materialsadd.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content>\n\n\n\n  <ion-list>\n\n\n\n    <ion-item>\n\n      <ion-label>材料类别：</ion-label>\n\n      <ion-select okText="确定" cancelText="取消" [(ngModel)]="materialLBID" (ionChange)="selectMaterialLB()">\n\n        <ion-option *ngFor="let type of optMaterialsLB" value={{type.id}}>{{type.name}}</ion-option>\n\n      </ion-select>\n\n    </ion-item>\n\n\n\n\n\n    <ion-item>\n\n      <ion-label>材料型号：</ion-label>\n\n      <ion-select okText="确定" cancelText="取消" [(ngModel)]="materialXHID" (ionChange)="selectMaterialXH()">\n\n        <ion-option *ngFor="let type of optMaterialsXH" value={{type.id}}>{{type.name}}</ion-option>\n\n      </ion-select>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label>材料规格：</ion-label>\n\n      <ion-select okText="确定" cancelText="取消" [(ngModel)]="materialGGID" (ionChange)="selectMaterialGG()">\n\n        <ion-option *ngFor="let type of optMaterialsGG" value={{type.id}}>{{type.name}}</ion-option>\n\n      </ion-select>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label>生产厂家：</ion-label>\n\n      <ion-select okText="确定" cancelText="取消" [(ngModel)]="materialCJID">\n\n        <ion-option *ngFor="let type of optMaterialsCJ" value={{type.id}}>{{type.name}}</ion-option>\n\n      </ion-select>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label>单位：</ion-label>\n\n      <ion-select okText="确定" cancelText="取消" [(ngModel)]="unitID" (ionChange)="selectMaterialUnit()">\n\n        <ion-option *ngFor="let type of materialsUnits" value={{type.id}}>{{type.text}}</ion-option>\n\n      </ion-select>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <button item-left ion-button color="primary" clear icon-only (click)="reduceAccount()">\n\n        <ion-icon name=\'remove-circle\' is-active="false"></ion-icon>\n\n      </button>\n\n      <ion-label class="account">{{count}}</ion-label>\n\n      <button item-right ion-button color="primary" clear icon-only (click)="addAccount()">\n\n        <ion-icon name=\'add-circle\' is-active="false"></ion-icon>\n\n      </button>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label>备注：</ion-label>\n\n      <ion-input type="text" [(ngModel)]="remark"></ion-input>\n\n    </ion-item>\n\n  </ion-list>\n\n\n\n  <ion-row>\n\n    <ion-col>\n\n      <div class="add-button">\n\n        <button ion-button [disabled]="!materialLBID||!materialXHID||!materialGGID||!materialCJID||!unitID||count==0"\n\n                type="submit" block (click)="addClick()">{{buttonStr}}\n\n        </button>\n\n      </div>\n\n    </ion-col>\n\n  </ion-row>\n\n</ion-content>\n\n'/*ion-inline-end:"D:\cordova_ionic\HotlineManagerIonic\src\pages\materialsadd\materialsadd.html"*/
+        selector: 'page-materialsadd',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\materialsadd\materialsadd.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content>\n\n\n\n  <ion-list>\n\n\n\n    <ion-item>\n\n      <ion-label>材料类别：</ion-label>\n\n      <ion-select okText="确定" cancelText="取消" [(ngModel)]="materialLBID" (ionChange)="selectMaterialLB()">\n\n        <ion-option *ngFor="let type of optMaterialsLB" value={{type.id}}>{{type.name}}</ion-option>\n\n      </ion-select>\n\n    </ion-item>\n\n\n\n\n\n    <ion-item>\n\n      <ion-label>材料型号：</ion-label>\n\n      <ion-select okText="确定" cancelText="取消" [(ngModel)]="materialXHID" (ionChange)="selectMaterialXH()">\n\n        <ion-option *ngFor="let type of optMaterialsXH" value={{type.id}}>{{type.name}}</ion-option>\n\n      </ion-select>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label>材料规格：</ion-label>\n\n      <ion-select okText="确定" cancelText="取消" [(ngModel)]="materialGGID" (ionChange)="selectMaterialGG()">\n\n        <ion-option *ngFor="let type of optMaterialsGG" value={{type.id}}>{{type.name}}</ion-option>\n\n      </ion-select>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label>生产厂家：</ion-label>\n\n      <ion-select okText="确定" cancelText="取消" [(ngModel)]="materialCJID">\n\n        <ion-option *ngFor="let type of optMaterialsCJ" value={{type.id}}>{{type.name}}</ion-option>\n\n      </ion-select>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label>单位：</ion-label>\n\n      <ion-select okText="确定" cancelText="取消" [(ngModel)]="unitID" (ionChange)="selectMaterialUnit()">\n\n        <ion-option *ngFor="let type of materialsUnits" value={{type.id}}>{{type.text}}</ion-option>\n\n      </ion-select>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <button item-left ion-button color="primary" clear icon-only (click)="reduceAccount()">\n\n        <ion-icon name=\'remove-circle\' is-active="false"></ion-icon>\n\n      </button>\n\n      <ion-label class="account">{{count}}</ion-label>\n\n      <button item-right ion-button color="primary" clear icon-only (click)="addAccount()">\n\n        <ion-icon name=\'add-circle\' is-active="false"></ion-icon>\n\n      </button>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label>备注：</ion-label>\n\n      <ion-input type="text" [(ngModel)]="remark"></ion-input>\n\n    </ion-item>\n\n  </ion-list>\n\n\n\n  <ion-row>\n\n    <ion-col>\n\n      <div class="add-button">\n\n        <button ion-button [disabled]="!materialLBID||!materialXHID||!materialGGID||!materialCJID||!unitID||count==0"\n\n                type="submit" block (click)="addClick()">{{buttonStr}}\n\n        </button>\n\n      </div>\n\n    </ion-col>\n\n  </ion-row>\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\materialsadd\materialsadd.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_2__providers_GlobalService__["a" /* GlobalService */],
@@ -5446,7 +5492,7 @@ StorageService = __decorate([
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return NetworkSetPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_ConfigService__ = __webpack_require__(16);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -5599,199 +5645,17 @@ NetworkSetPage = __decorate([
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TabsPage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mywork_mywork__ = __webpack_require__(68);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__history_myhistory__ = __webpack_require__(61);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__map_map__ = __webpack_require__(37);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__search_search__ = __webpack_require__(63);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__stationwork_stationwork__ = __webpack_require__(64);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__more_more__ = __webpack_require__(240);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__providers_GlobalService__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__providers_ConfigService__ = __webpack_require__(16);
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-
-
-
-
-// import {MyPlugin} from "@ionic-native/my-plugin";
-
-
-var TabsPage = (function () {
-    function TabsPage(globalService, configService) {
-        this.globalService = globalService;
-        this.configService = configService;
-        this.workerTabsInfo = [
-            { title: '我的任务', icon: 'home', page: __WEBPACK_IMPORTED_MODULE_1__mywork_mywork__["a" /* MyWorkPage */] },
-            { title: '历史记录', icon: 'document', page: __WEBPACK_IMPORTED_MODULE_2__history_myhistory__["a" /* MyHistory */] },
-            { title: '地图', icon: 'map', page: __WEBPACK_IMPORTED_MODULE_3__map_map__["a" /* MapPage */] },
-            { title: '更多', icon: 'more', page: __WEBPACK_IMPORTED_MODULE_6__more_more__["a" /* MorePage */] } // 公告、设置
-        ];
-        this.adminTabsInfo = [
-            { title: '站点任务', icon: 'home', page: __WEBPACK_IMPORTED_MODULE_5__stationwork_stationwork__["a" /* StationWorkPage */] },
-            { title: '查询', icon: 'search', page: __WEBPACK_IMPORTED_MODULE_4__search_search__["a" /* SearchPage */] },
-            { title: '地图', icon: 'map', page: __WEBPACK_IMPORTED_MODULE_3__map_map__["a" /* MapPage */] },
-            { title: '更多', icon: 'more', page: __WEBPACK_IMPORTED_MODULE_6__more_more__["a" /* MorePage */] } // 公告、设置
-        ];
-        this.tabsInfo = this.workerTabsInfo;
-    }
-    TabsPage.prototype.ngOnInit = function () {
-        if (!this.globalService.isChrome) {
-            var _this_1 = this;
-            cordova.plugins.MyPlugin.getPushMessage(function (data) {
-                console.log(data);
-            }, function (error) {
-                console.error(error);
-            });
-            cordova.plugins.MyPlugin.getChangedInfo(function (data) {
-                console.log(data);
-                if (data) {
-                    var values = data.split('#');
-                    if (values[0] === 'outerNetwork' && values[1]) {
-                        _this_1.configService.setIsOuterNet(values[1] === 'true');
-                    }
-                }
-            }, function (error) {
-                console.error(error);
-            });
-        }
-    };
-    TabsPage.prototype.ngOnDestroy = function () {
-    };
-    return TabsPage;
-}());
-TabsPage = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({template:/*ion-inline-start:"D:\cordova_ionic\HotlineManagerIonic\src\pages\tabs\tabs.html"*/'<ion-tabs>\n  <ion-tab [root]="tabsInfo[0].page" tabTitle="{{tabsInfo[0].title}}" tabIcon="{{tabsInfo[0].icon}}"></ion-tab>\n  <ion-tab [root]="tabsInfo[1].page" tabTitle="{{tabsInfo[1].title}}" tabIcon="{{tabsInfo[1].icon}}"></ion-tab>\n  <ion-tab [root]="tabsInfo[2].page" tabTitle="{{tabsInfo[2].title}}" tabIcon="{{tabsInfo[2].icon}}"></ion-tab>\n  <ion-tab [root]="tabsInfo[3].page" tabTitle="{{tabsInfo[3].title}}" tabIcon="{{tabsInfo[3].icon}}"></ion-tab>\n</ion-tabs>\n'/*ion-inline-end:"D:\cordova_ionic\HotlineManagerIonic\src\pages\tabs\tabs.html"*/
-    }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_7__providers_GlobalService__["a" /* GlobalService */],
-        __WEBPACK_IMPORTED_MODULE_8__providers_ConfigService__["a" /* ConfigService */]])
-], TabsPage);
-
-//# sourceMappingURL=tabs.js.map
-
-/***/ }),
-
-/***/ 240:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MorePage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_GlobalService__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__setting_setting__ = __webpack_require__(67);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__news_news__ = __webpack_require__(65);
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-
-
-/**
- * Created by zhangjing on 2017/8/23.
- */
-var ItemId;
-(function (ItemId) {
-    ItemId[ItemId["News"] = 0] = "News";
-    ItemId[ItemId["Setting"] = 1] = "Setting";
-})(ItemId || (ItemId = {}));
-var MorePage = (function () {
-    function MorePage(navCtrl, globalService) {
-        this.navCtrl = navCtrl;
-        this.globalService = globalService;
-        //private readonly tag: string = "[MorePage]";
-        this.title = '更多';
-        this.imgWidth = 64;
-        this.imgHeight = 64;
-        this.listItems = [];
-    }
-    /**
-     * 初始化list
-     */
-    MorePage.prototype.initListItem = function () {
-        this.listItems.push({
-            id: ItemId.News,
-            src: 'assets/img/ic_news.png',
-            name: '公告',
-            active: true,
-            count: 0
-        });
-        this.listItems.push({
-            id: ItemId.Setting,
-            src: 'assets/img/ic_setting.png',
-            name: '设置',
-            active: true,
-            count: 0
-        });
-    };
-    MorePage.prototype.ngOnInit = function () {
-        this.initListItem();
-    };
-    /**
-     * 选择功能按钮
-     * @param id
-     */
-    MorePage.prototype.itemSelected = function (id) {
-        console.log(id);
-        switch (id) {
-            case ItemId.News:
-                this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_4__news_news__["a" /* NewsPage */]);
-                break;
-            case ItemId.Setting:
-                this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_3__setting_setting__["a" /* SettingPage */]);
-                break;
-            default:
-                break;
-        }
-    };
-    return MorePage;
-}());
-MorePage = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-main',template:/*ion-inline-start:"D:\cordova_ionic\HotlineManagerIonic\src\pages\more\more.html"*/'<ion-header>\n\n  <ion-toolbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n  </ion-toolbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-main">\n\n  <!--list style-->\n\n  <ion-list>\n\n    <ion-item *ngFor="let item of listItems">\n\n      <div class="list-item" *ngIf="item.active" (click)="itemSelected(item.id)">\n\n        <img src="{{item.src}}" width="{{imgWidth}}" height="{{imgHeight}}" class="item-img"/>\n\n        <p class="item-name">{{item.name}}</p>\n\n        <ion-badge color="danger" class="list-item-badge" *ngIf="item.count>0">{{item.count}}</ion-badge>\n\n      </div>\n\n    </ion-item>\n\n  </ion-list>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"D:\cordova_ionic\HotlineManagerIonic\src\pages\more\more.html"*/
-    }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
-        __WEBPACK_IMPORTED_MODULE_2__providers_GlobalService__["a" /* GlobalService */]])
-], MorePage);
-
-//# sourceMappingURL=more.js.map
-
-/***/ }),
-
-/***/ 241:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoginPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__main_main__ = __webpack_require__(242);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__main_main__ = __webpack_require__(240);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_forms__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_app_preferences__ = __webpack_require__(243);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_network__ = __webpack_require__(244);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_app_preferences__ = __webpack_require__(241);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_network__ = __webpack_require__(242);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__providers_GlobalService__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__model_UserInfo__ = __webpack_require__(328);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__model_UserInfo__ = __webpack_require__(327);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__providers_DataService__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__ionic_native_device__ = __webpack_require__(245);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__ionic_native_device__ = __webpack_require__(243);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -6012,7 +5876,7 @@ var LoginPage = (function () {
 }());
 LoginPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-login',template:/*ion-inline-start:"D:\cordova_ionic\HotlineManagerIonic\src\pages\login\login.html"*/'<ion-header>\n\n</ion-header>\n\n\n\n<ion-content>\n\n  <div class="login-logo">\n\n    <img src="assets/img/login_logo.png">\n\n  </div>\n\n\n\n  <ion-row>\n\n    <ion-col>\n\n      <ion-list>\n\n        <form [formGroup]="loginForm">\n\n          <ion-item>\n\n            <ion-icon name="person" item-start></ion-icon>\n\n            <ion-input type="text" formControlName="LoginID" clearInput></ion-input>\n\n          </ion-item>\n\n          <p *ngIf="!loginForm.controls.LoginID.valid && loginForm.controls.LoginID.touched" color="danger">请输入有效的用户名.</p>\n\n\n\n          <ion-item>\n\n            <ion-icon name="lock" item-start></ion-icon>\n\n            <ion-input type="password" formControlName="LoginPwd" clearInput></ion-input>\n\n          </ion-item>\n\n          <p *ngIf="!loginForm.controls.LoginPwd.valid && loginForm.controls.LoginPwd.touched" color="danger">请输入有效的密码.</p>\n\n\n\n          <ion-item>\n\n            <ion-label>选择人员</ion-label>\n\n            <ion-select okText="确定" cancelText="取消" formControlName="LoginSelect">\n\n              <ion-option value="worker">外勤人员</ion-option>\n\n              <ion-option value="manager">管理人员</ion-option>\n\n            </ion-select>\n\n          </ion-item>\n\n          <p *ngIf="!loginForm.controls.LoginSelect.valid && loginForm.controls.LoginSelect.touched" color="danger">请选择人员.</p>\n\n        </form>\n\n      </ion-list>\n\n    </ion-col>\n\n  </ion-row>\n\n\n\n  <ion-row>\n\n    <ion-col>\n\n      <div class="login-button">\n\n        <button ion-button type="submit" [disabled]="!loginForm.valid" block (click)="loginClick(loginForm.value)">登录</button>\n\n      </div>\n\n    </ion-col>\n\n  </ion-row>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"D:\cordova_ionic\HotlineManagerIonic\src\pages\login\login.html"*/,
+        selector: 'page-login',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\login\login.html"*/'<ion-header>\n\n</ion-header>\n\n\n\n<ion-content>\n\n  <div class="login-logo">\n\n    <img src="assets/img/login_logo.png">\n\n  </div>\n\n\n\n  <ion-row>\n\n    <ion-col>\n\n      <ion-list>\n\n        <form [formGroup]="loginForm">\n\n          <ion-item>\n\n            <ion-icon name="person" item-start></ion-icon>\n\n            <ion-input type="text" formControlName="LoginID" clearInput></ion-input>\n\n          </ion-item>\n\n          <p *ngIf="!loginForm.controls.LoginID.valid && loginForm.controls.LoginID.touched" color="danger">请输入有效的用户名.</p>\n\n\n\n          <ion-item>\n\n            <ion-icon name="lock" item-start></ion-icon>\n\n            <ion-input type="password" formControlName="LoginPwd" clearInput></ion-input>\n\n          </ion-item>\n\n          <p *ngIf="!loginForm.controls.LoginPwd.valid && loginForm.controls.LoginPwd.touched" color="danger">请输入有效的密码.</p>\n\n\n\n          <ion-item>\n\n            <ion-label>选择人员</ion-label>\n\n            <ion-select okText="确定" cancelText="取消" formControlName="LoginSelect">\n\n              <ion-option value="worker">外勤人员</ion-option>\n\n              <ion-option value="manager">管理人员</ion-option>\n\n            </ion-select>\n\n          </ion-item>\n\n          <p *ngIf="!loginForm.controls.LoginSelect.valid && loginForm.controls.LoginSelect.touched" color="danger">请选择人员.</p>\n\n        </form>\n\n      </ion-list>\n\n    </ion-col>\n\n  </ion-row>\n\n\n\n  <ion-row>\n\n    <ion-col>\n\n      <div class="login-button">\n\n        <button ion-button type="submit" [disabled]="!loginForm.valid" block (click)="loginClick(loginForm.value)">登录</button>\n\n      </div>\n\n    </ion-col>\n\n  </ion-row>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\login\login.html"*/,
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */],
@@ -6029,25 +5893,25 @@ LoginPage = __decorate([
 
 /***/ }),
 
-/***/ 242:
+/***/ 240:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MainPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mywork_mywork__ = __webpack_require__(68);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__news_news__ = __webpack_require__(65);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__stationwork_stationwork__ = __webpack_require__(64);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__search_search__ = __webpack_require__(63);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mywork_mywork__ = __webpack_require__(49);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__news_news__ = __webpack_require__(66);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__stationwork_stationwork__ = __webpack_require__(65);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__search_search__ = __webpack_require__(64);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__providers_DataService__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__setting_setting__ = __webpack_require__(67);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__history_myhistory__ = __webpack_require__(61);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__setting_setting__ = __webpack_require__(68);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__history_myhistory__ = __webpack_require__(62);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__providers_ConfigService__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__map_map__ = __webpack_require__(37);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__model_MapParam__ = __webpack_require__(48);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__materials_materials__ = __webpack_require__(66);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__materials_materials__ = __webpack_require__(67);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -6301,7 +6165,7 @@ var MainPage = (function () {
 }());
 MainPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-main',template:/*ion-inline-start:"D:\cordova_ionic\HotlineManagerIonic\src\pages\main\main.html"*/'<ion-header>\n  <ion-toolbar color="primary">\n    <ion-title>\n      {{title}}\n    </ion-title>\n    <ion-buttons end>\n      <button ion-button icon-only color="white" (click)="selectSettings($event)">\n        <ion-icon name="settings"></ion-icon>\n      </button>\n    </ion-buttons>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content class="page-main">\n  <!--grid style-->\n  <ion-grid *ngIf="gridStyle">\n    <ion-row *ngFor="let item of gridItems">\n      <ion-col col-4 (click)="itemSelected(item[0].id)" *ngIf="item[0] && item[0].active">\n        <img src="{{item[0].src}}" width="{{imgWidth}}" height="{{imgHeight}}"/>\n        <ion-badge color="danger" class="grid-item-badge" *ngIf="item[0].count>0">{{item[0].count}}</ion-badge>\n        <ion-label>{{item[0].name}}</ion-label>\n      </ion-col>\n      <ion-col col-4 (click)="itemSelected(item[1].id)" *ngIf="item[1] && item[1].active">\n        <img src="{{item[1].src}}" width="{{imgWidth}}" height="{{imgHeight}}"/>\n        <ion-badge color="danger" class="grid-item-badge" *ngIf="item[1].count>0">{{item[1].count}}</ion-badge>\n        <ion-label>{{item[1].name}}</ion-label>\n      </ion-col>\n      <ion-col col-4 (click)="itemSelected(item[2].id)" *ngIf="item[2] && item[2].active">\n        <img src="{{item[2].src}}" width="{{imgWidth}}" height="{{imgHeight}}"/>\n        <ion-badge color="danger" class="grid-item-badge" *ngIf="item[2].count>0">{{item[2].count}}</ion-badge>\n        <ion-label>{{item[2].name}}</ion-label>\n      </ion-col>\n    </ion-row>\n  </ion-grid>\n\n  <!--list style-->\n  <ion-list *ngIf="!gridStyle">\n    <ion-item *ngFor="let item of listItems">\n      <div class="list-item" *ngIf="item.active" (click)="itemSelected(item.id)">\n        <img src="{{item.src}}" width="{{imgWidth}}" height="imgHeight" class="item-img"/>\n        <p class="item-name">{{item.name}}</p>\n        <ion-badge color="danger" class="list-item-badge" *ngIf="item.count>0">{{item.count}}</ion-badge>\n      </div>\n    </ion-item>\n  </ion-list>\n\n</ion-content>\n'/*ion-inline-end:"D:\cordova_ionic\HotlineManagerIonic\src\pages\main\main.html"*/
+        selector: 'page-main',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\main\main.html"*/'<ion-header>\n\n  <ion-toolbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n    <ion-buttons end>\n\n      <button ion-button icon-only color="white" (click)="selectSettings($event)">\n\n        <ion-icon name="settings"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-toolbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-main">\n\n  <!--grid style-->\n\n  <ion-grid *ngIf="gridStyle">\n\n    <ion-row *ngFor="let item of gridItems">\n\n      <ion-col col-4 (click)="itemSelected(item[0].id)" *ngIf="item[0] && item[0].active">\n\n        <img src="{{item[0].src}}" width="{{imgWidth}}" height="{{imgHeight}}"/>\n\n        <ion-badge color="danger" class="grid-item-badge" *ngIf="item[0].count>0">{{item[0].count}}</ion-badge>\n\n        <ion-label>{{item[0].name}}</ion-label>\n\n      </ion-col>\n\n      <ion-col col-4 (click)="itemSelected(item[1].id)" *ngIf="item[1] && item[1].active">\n\n        <img src="{{item[1].src}}" width="{{imgWidth}}" height="{{imgHeight}}"/>\n\n        <ion-badge color="danger" class="grid-item-badge" *ngIf="item[1].count>0">{{item[1].count}}</ion-badge>\n\n        <ion-label>{{item[1].name}}</ion-label>\n\n      </ion-col>\n\n      <ion-col col-4 (click)="itemSelected(item[2].id)" *ngIf="item[2] && item[2].active">\n\n        <img src="{{item[2].src}}" width="{{imgWidth}}" height="{{imgHeight}}"/>\n\n        <ion-badge color="danger" class="grid-item-badge" *ngIf="item[2].count>0">{{item[2].count}}</ion-badge>\n\n        <ion-label>{{item[2].name}}</ion-label>\n\n      </ion-col>\n\n    </ion-row>\n\n  </ion-grid>\n\n\n\n  <!--list style-->\n\n  <ion-list *ngIf="!gridStyle">\n\n    <ion-item *ngFor="let item of listItems">\n\n      <div class="list-item" *ngIf="item.active" (click)="itemSelected(item.id)">\n\n        <img src="{{item.src}}" width="{{imgWidth}}" height="imgHeight" class="item-img"/>\n\n        <p class="item-name">{{item.name}}</p>\n\n        <ion-badge color="danger" class="list-item-badge" *ngIf="item.count>0">{{item.count}}</ion-badge>\n\n      </div>\n\n    </ion-item>\n\n  </ion-list>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\main\main.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* Events */],
@@ -6314,7 +6178,7 @@ MainPage = __decorate([
 
 /***/ }),
 
-/***/ 247:
+/***/ 245:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6350,13 +6214,108 @@ HttpInterceptor = __decorate([
 
 /***/ }),
 
-/***/ 248:
+/***/ 246:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MorePage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_GlobalService__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__setting_setting__ = __webpack_require__(68);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__news_news__ = __webpack_require__(66);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+/**
+ * Created by zhangjing on 2017/8/23.
+ */
+var ItemId;
+(function (ItemId) {
+    ItemId[ItemId["News"] = 0] = "News";
+    ItemId[ItemId["Setting"] = 1] = "Setting";
+})(ItemId || (ItemId = {}));
+var MorePage = (function () {
+    function MorePage(navCtrl, globalService) {
+        this.navCtrl = navCtrl;
+        this.globalService = globalService;
+        //private readonly tag: string = "[MorePage]";
+        this.title = '更多';
+        this.imgWidth = 64;
+        this.imgHeight = 64;
+        this.listItems = [];
+    }
+    /**
+     * 初始化list
+     */
+    MorePage.prototype.initListItem = function () {
+        this.listItems.push({
+            id: ItemId.News,
+            src: 'assets/img/ic_news.png',
+            name: '公告',
+            active: true,
+            count: 0
+        });
+        this.listItems.push({
+            id: ItemId.Setting,
+            src: 'assets/img/ic_setting.png',
+            name: '设置',
+            active: true,
+            count: 0
+        });
+    };
+    MorePage.prototype.ngOnInit = function () {
+        this.initListItem();
+    };
+    /**
+     * 选择功能按钮
+     * @param id
+     */
+    MorePage.prototype.itemSelected = function (id) {
+        console.log(id);
+        switch (id) {
+            case ItemId.News:
+                this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_4__news_news__["a" /* NewsPage */]);
+                break;
+            case ItemId.Setting:
+                this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_3__setting_setting__["a" /* SettingPage */]);
+                break;
+            default:
+                break;
+        }
+    };
+    return MorePage;
+}());
+MorePage = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+        selector: 'page-main',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\more\more.html"*/'<ion-header>\n\n  <ion-toolbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n  </ion-toolbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-main">\n\n  <!--list style-->\n\n  <ion-list>\n\n    <ion-item *ngFor="let item of listItems">\n\n      <div class="list-item" *ngIf="item.active" (click)="itemSelected(item.id)">\n\n        <img src="{{item.src}}" width="{{imgWidth}}" height="{{imgHeight}}" class="item-img"/>\n\n        <p class="item-name">{{item.name}}</p>\n\n        <ion-badge color="danger" class="list-item-badge" *ngIf="item.count>0">{{item.count}}</ion-badge>\n\n      </div>\n\n    </ion-item>\n\n  </ion-list>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\more\more.html"*/
+    }),
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
+        __WEBPACK_IMPORTED_MODULE_2__providers_GlobalService__["a" /* GlobalService */]])
+], MorePage);
+
+//# sourceMappingURL=more.js.map
+
+/***/ }),
+
+/***/ 247:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(249);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(266);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(248);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(265);
 
 
 Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* platformBrowserDynamic */])().bootstrapModule(__WEBPACK_IMPORTED_MODULE_1__app_module__["a" /* AppModule */]);
@@ -6370,9 +6329,9 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return FileService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ionic_native_file__ = __webpack_require__(60);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ionic_native_file__ = __webpack_require__(61);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_transfer__ = __webpack_require__(221);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_zip__ = __webpack_require__(222);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_file_opener__ = __webpack_require__(223);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -6677,33 +6636,33 @@ FileService = __decorate([
 
 /***/ }),
 
-/***/ 266:
+/***/ 265:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__ = __webpack_require__(32);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__ = __webpack_require__(218);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_status_bar__ = __webpack_require__(220);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__app_component__ = __webpack_require__(315);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_home_home__ = __webpack_require__(325);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_welcome_welcome__ = __webpack_require__(326);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_login_login__ = __webpack_require__(241);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_main_main__ = __webpack_require__(242);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__pages_mywork_mywork__ = __webpack_require__(68);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pages_news_news__ = __webpack_require__(65);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__app_component__ = __webpack_require__(314);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_home_home__ = __webpack_require__(324);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_welcome_welcome__ = __webpack_require__(325);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_login_login__ = __webpack_require__(239);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_main_main__ = __webpack_require__(240);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__pages_mywork_mywork__ = __webpack_require__(49);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pages_news_news__ = __webpack_require__(66);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__pages_workdetail_workdetail__ = __webpack_require__(128);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__pages_stationwork_stationwork__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__pages_stationwork_stationwork__ = __webpack_require__(65);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__pages_workinfo_workinfo__ = __webpack_require__(234);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__pages_history_myhistory__ = __webpack_require__(61);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__ionic_native_file__ = __webpack_require__(60);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__pages_history_myhistory__ = __webpack_require__(62);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__ionic_native_file__ = __webpack_require__(61);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__providers_FileService__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__ionic_native_transfer__ = __webpack_require__(221);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__providers_StorageService__ = __webpack_require__(237);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__angular_http__ = __webpack_require__(35);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__ionic_native_app_version__ = __webpack_require__(246);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__ionic_native_app_version__ = __webpack_require__(244);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__ionic_native_zip__ = __webpack_require__(222);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__providers_ConfigService__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__ionic_native_file_opener__ = __webpack_require__(223);
@@ -6711,21 +6670,21 @@ FileService = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_26__providers_DownloadService__ = __webpack_require__(121);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_27__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_28__providers_UploadService__ = __webpack_require__(124);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_29__ionic_native_network__ = __webpack_require__(244);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_30__pages_search_search__ = __webpack_require__(63);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_31__ionic_native_app_preferences__ = __webpack_require__(243);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_29__ionic_native_network__ = __webpack_require__(242);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_30__pages_search_search__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_31__ionic_native_app_preferences__ = __webpack_require__(241);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_32__pages_searchresult_searchresult__ = __webpack_require__(232);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_33__pages_searchdetail_searchdetails__ = __webpack_require__(233);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_34__pages_newsdetails_newsdetails__ = __webpack_require__(235);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_35__pages_setting_setting__ = __webpack_require__(67);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_36__providers_HttpInterceptorBackend__ = __webpack_require__(329);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_37__providers_HttpInterceptor__ = __webpack_require__(247);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_35__pages_setting_setting__ = __webpack_require__(68);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_36__providers_HttpInterceptorBackend__ = __webpack_require__(328);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_37__providers_HttpInterceptor__ = __webpack_require__(245);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_38__ionic_native_sqlite__ = __webpack_require__(225);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_39__ionic_native_sqlite_porter__ = __webpack_require__(226);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_40__providers_DbService__ = __webpack_require__(62);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_41__ionic_storage__ = __webpack_require__(59);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_42__ionic_native_device__ = __webpack_require__(245);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_43__pipes_ValueValidPipe__ = __webpack_require__(330);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_40__providers_DbService__ = __webpack_require__(63);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_41__ionic_storage__ = __webpack_require__(60);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_42__ionic_native_device__ = __webpack_require__(243);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_43__pipes_ValueValidPipe__ = __webpack_require__(329);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_44__ionic_native_camera__ = __webpack_require__(227);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_45__ionic_native_media_capture__ = __webpack_require__(229);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_46__ionic_native_video_player__ = __webpack_require__(230);
@@ -6735,12 +6694,14 @@ FileService = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_50__pages_record_PopoverRecordPage__ = __webpack_require__(231);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_51__ionic_native_file_transfer__ = __webpack_require__(224);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_52__pages_map_map__ = __webpack_require__(37);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_53__pages_materials_materials__ = __webpack_require__(66);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_53__pages_materials_materials__ = __webpack_require__(67);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_54__pages_materialsadd_materialsadd__ = __webpack_require__(236);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_55__ionic_native_my_plugin__ = __webpack_require__(120);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_56__pages_tabs_tabs__ = __webpack_require__(239);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_57__pages_more_more__ = __webpack_require__(240);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_56__pages_tabs_tabs__ = __webpack_require__(330);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_57__pages_more_more__ = __webpack_require__(246);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_58__pages_setting_networkset__ = __webpack_require__(238);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_59__pages_about_about__ = __webpack_require__(331);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_60__pages_contact_contact__ = __webpack_require__(332);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -6807,6 +6768,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
+
+
 var AppModule = (function () {
     function AppModule() {
     }
@@ -6840,13 +6803,15 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_50__pages_record_PopoverRecordPage__["a" /* PopoverRecordPage */],
             __WEBPACK_IMPORTED_MODULE_56__pages_tabs_tabs__["a" /* TabsPage */],
             __WEBPACK_IMPORTED_MODULE_57__pages_more_more__["a" /* MorePage */],
-            __WEBPACK_IMPORTED_MODULE_58__pages_setting_networkset__["a" /* NetworkSetPage */]
+            __WEBPACK_IMPORTED_MODULE_58__pages_setting_networkset__["a" /* NetworkSetPage */],
+            __WEBPACK_IMPORTED_MODULE_59__pages_about_about__["a" /* AboutPage */],
+            __WEBPACK_IMPORTED_MODULE_60__pages_contact_contact__["a" /* ContactPage */]
         ],
         imports: [
             __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
             __WEBPACK_IMPORTED_MODULE_20__angular_http__["c" /* HttpModule */],
             __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["h" /* IonicModule */].forRoot(__WEBPACK_IMPORTED_MODULE_5__app_component__["a" /* MyApp */], {
-                tabsHideOnSubPages: 'true' //隐藏全部子页面tabs
+                tabsHideOnSubPages: 'true' //����ȫ����ҳ��tabs
             }, {
                 links: []
             }),
@@ -6876,7 +6841,9 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_54__pages_materialsadd_materialsadd__["a" /* MaterialsAddPage */],
             __WEBPACK_IMPORTED_MODULE_56__pages_tabs_tabs__["a" /* TabsPage */],
             __WEBPACK_IMPORTED_MODULE_57__pages_more_more__["a" /* MorePage */],
-            __WEBPACK_IMPORTED_MODULE_58__pages_setting_networkset__["a" /* NetworkSetPage */]
+            __WEBPACK_IMPORTED_MODULE_58__pages_setting_networkset__["a" /* NetworkSetPage */],
+            __WEBPACK_IMPORTED_MODULE_59__pages_about_about__["a" /* AboutPage */],
+            __WEBPACK_IMPORTED_MODULE_60__pages_contact_contact__["a" /* ContactPage */]
         ],
         providers: [
             __WEBPACK_IMPORTED_MODULE_4__ionic_native_status_bar__["a" /* StatusBar */],
@@ -6919,18 +6886,18 @@ AppModule = __decorate([
 
 /***/ }),
 
-/***/ 315:
+/***/ 314:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MyApp; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__ = __webpack_require__(220);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__ = __webpack_require__(218);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__app_component_service__ = __webpack_require__(316);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__app_component_service__ = __webpack_require__(315);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_GlobalService__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_tabs_tabs__ = __webpack_require__(239);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_mywork_mywork__ = __webpack_require__(49);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -6947,6 +6914,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+//import {TabsPage} from "../pages/tabs/tabs";
 var MyApp = (function () {
     function MyApp(platform, statusBar, splashScreen, appComponentService, globalService) {
         var _this = this;
@@ -6962,20 +6930,20 @@ var MyApp = (function () {
             splashScreen.hide();
             return appComponentService.init();
         })
-            .then(function (result) { return console.log(result); })
+            .then(function (page) { return _this.rootPage = page; })
             .catch(function (error) {
             console.error(error);
             _this.globalService.showToast(error);
+            _this.rootPage = __WEBPACK_IMPORTED_MODULE_6__pages_mywork_mywork__["a" /* MyWorkPage */];
         })
-            .then(function () {
-            _this.globalService.hideLoading();
-            _this.rootPage = __WEBPACK_IMPORTED_MODULE_6__pages_tabs_tabs__["a" /* TabsPage */];
-        });
+            .then(function () { return appComponentService.downloadConstantData(); })
+            .catch(function (error) { return console.error(error); })
+            .then(function () { return _this.globalService.hideLoading(); });
     }
     return MyApp;
 }());
 MyApp = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({template:/*ion-inline-start:"D:\cordova_ionic\HotlineManagerIonic\src\app\app.html"*/'<ion-nav [root]="rootPage"></ion-nav>\n'/*ion-inline-end:"D:\cordova_ionic\HotlineManagerIonic\src\app\app.html"*/,
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\app\app.html"*/'<ion-nav [root]="rootPage"></ion-nav>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\app\app.html"*/,
         providers: [__WEBPACK_IMPORTED_MODULE_4__app_component_service__["a" /* AppComponentService */]]
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["l" /* Platform */],
@@ -6989,7 +6957,7 @@ MyApp = __decorate([
 
 /***/ }),
 
-/***/ 316:
+/***/ 315:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6999,14 +6967,14 @@ MyApp = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_FileService__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_my_plugin__ = __webpack_require__(120);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_history_myhistory__ = __webpack_require__(61);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_history_myhistory__ = __webpack_require__(62);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_map_map__ = __webpack_require__(37);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_search_search__ = __webpack_require__(63);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_stationwork_stationwork__ = __webpack_require__(64);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_news_news__ = __webpack_require__(65);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__pages_materials_materials__ = __webpack_require__(66);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pages_setting_setting__ = __webpack_require__(67);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__pages_mywork_mywork__ = __webpack_require__(68);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_search_search__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_stationwork_stationwork__ = __webpack_require__(65);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_news_news__ = __webpack_require__(66);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__pages_materials_materials__ = __webpack_require__(67);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pages_setting_setting__ = __webpack_require__(68);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__pages_mywork_mywork__ = __webpack_require__(49);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__providers_DataService__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__providers_ConfigService__ = __webpack_require__(16);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -7051,19 +7019,26 @@ var AppComponentService = (function () {
         if (this.globalService.isChrome) {
             this.myPlugin = this.globalService.getMyPluginMock();
             return this.dataService.init()
-                .then(function (result) { return _this.parsePageIntent(); })
-                .then(function (result) { return _this.dataService.downloadWords(); })
-                .then(function (result) { return _this.dataService.downloadMaterials(); });
-            //.then(result => this.dataService.downloadPersonnels())
+                .then(function (result) { return _this.parsePageIntent(); });
         }
         else {
             return this.checkPermissions()
                 .then(function (result) { return _this.fileService.createDirRoot(); })
                 .then(function (result) { return _this.dataService.init(); })
-                .then(function (result) { return _this.parsePageIntent(); })
-                .then(function (result) { return _this.dataService.checkIfDownloadWords(); })
-                .then(function (result) { return _this.dataService.checkIfDownloadMaterials(); });
-            //.then(result => this.dataService.checkIfDownloadPersonnels())
+                .then(function (result) { return _this.parsePageIntent(); });
+        }
+    };
+    AppComponentService.prototype.downloadConstantData = function () {
+        var _this = this;
+        if (this.globalService.isChrome) {
+            return this.dataService.downloadWords()
+                .then(function (result) { return _this.dataService.downloadMaterials(); })
+                .then(function (result) { return _this.globalService.isWorker ? true : _this.dataService.downloadPersonnels(); });
+        }
+        else {
+            return this.dataService.checkIfDownloadWords()
+                .then(function (result) { return _this.dataService.checkIfDownloadMaterials(); })
+                .then(function (result) { return _this.globalService.isWorker ? true : _this.dataService.checkIfDownloadPersonnels(); });
         }
     };
     /**
@@ -7095,6 +7070,12 @@ var AppComponentService = (function () {
             .then(function (pageIntent) {
             console.log(pageIntent);
             if (!pageIntent.roles) {
+                pageIntent.roles = _this.globalService.worker;
+            }
+            else if (pageIntent.roles.includes('PDA热线管理人员')) {
+                pageIntent.roles = _this.globalService.manager;
+            }
+            else {
                 pageIntent.roles = _this.globalService.worker;
             }
             if (!pageIntent.account
@@ -7158,40 +7139,54 @@ var AppComponentService = (function () {
      */
     AppComponentService.prototype.setUserDetailInfo = function (pageIntent) {
         var _this = this;
-        return this.globalService.getUserDetailInfo()
-            .then(function (userDetailInfo) {
-            // userId passed from main shell is not same as saved id
-            // it will be changed in future
-            //pageIntent.userId = userDetailInfo.userId;
-            if (pageIntent.account === userDetailInfo.account
-                && pageIntent.userId === userDetailInfo.userId
-                && pageIntent.userName === userDetailInfo.userName) {
-                return Promise.resolve(true);
-            }
-            else {
-                return Promise.reject('different user');
-            }
-        })
-            .catch(function (error) {
+        return this.globalService.saveUserDetailInfo({
+            account: pageIntent.account,
+            userId: pageIntent.userId,
+            userName: pageIntent.userName,
+            roles: pageIntent.roles,
+            department: pageIntent.departmentAndId.split('#')[0],
+            departmentId: 0
+        }).catch(function (error) {
             console.error(error);
-            return _this.dataService.doLogin({
-                userName: pageIntent.account,
-                password: pageIntent.password,
-                role: pageIntent.roles
-            }).then(function (userResult) { return _this.globalService.saveUserDetailInfo({
-                account: pageIntent.account,
-                userId: userResult.userId,
-                userName: pageIntent.userName,
-                roles: pageIntent.roles,
-                department: userResult.Department,
-                departmentId: 0
-            }); }).catch(function (error) {
-                console.error(error);
-                _this.globalService.account = pageIntent.account;
-                _this.globalService.userId = pageIntent.userId;
-                _this.globalService.userName = pageIntent.userName;
-            });
+            _this.globalService.account = pageIntent.account;
+            _this.globalService.userId = pageIntent.userId;
+            _this.globalService.userName = pageIntent.userName;
+            _this.globalService.isWorker = pageIntent.roles === _this.globalService.worker;
         });
+        /*return this.globalService.getUserDetailInfo()
+         .then(userDetailInfo => {
+         // userId passed from main shell is not same as saved id
+         // it will be changed in future
+         //pageIntent.userId = userDetailInfo.userId;
+         if (pageIntent.account === userDetailInfo.account
+         && pageIntent.userId === userDetailInfo.userId
+         && pageIntent.userName === userDetailInfo.userName) {
+         return Promise.resolve(true);
+         } else {
+         return Promise.reject('different user');
+         }
+         })
+         .catch(error => {
+         console.error(error);
+         return this.dataService.doLogin({
+         userName: pageIntent.account,
+         password: pageIntent.password,
+         role: pageIntent.roles
+         }).then(userResult => this.globalService.saveUserDetailInfo({
+         account: pageIntent.account,
+         userId: userResult.userId,
+         userName: pageIntent.userName,
+         roles: pageIntent.roles,
+         department: userResult.Department,
+         departmentId: 0
+         })).catch(error => {
+         console.error(error);
+         this.globalService.account = pageIntent.account;
+         this.globalService.userId = pageIntent.userId;
+         this.globalService.userName = pageIntent.userName;
+         this.globalService.isWorker = pageIntent.roles === this.globalService.worker;
+         });
+         });*/
     };
     AppComponentService.prototype.getExtendedInfo = function (extendedInfo) {
         var info;
@@ -7221,7 +7216,7 @@ AppComponentService = __decorate([
 
 /***/ }),
 
-/***/ 322:
+/***/ 321:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7231,9 +7226,9 @@ AppComponentService = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__DownloadService__ = __webpack_require__(121);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__UploadService__ = __webpack_require__(124);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__GlobalService__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__model_Task__ = __webpack_require__(36);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__DbService__ = __webpack_require__(62);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__DbService__ = __webpack_require__(63);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__MediaService__ = __webpack_require__(126);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__ConfigService__ = __webpack_require__(16);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -7744,7 +7739,8 @@ var SyncService = (function () {
                     return _this.downloadService.getTaskDetail(taskId_1.split('#')[0])
                         .then(function (detail) {
                         detail.taskId = taskId_1; // modify for the rejected task
-                        return _this.dbService.saveTaskDetail(detail);
+                        return _this.dbService.saveTaskDetail(detail)
+                            .then(function (result) { return result ? _this.dbService.updateTaskExtendInfo(detail) : false; });
                     })
                         .catch(function (error) { return console.error(error); })
                         .then(function (result) { return _this.events.publish(_this.downloadTaskDetailEvent, msgType, taskIds); });
@@ -8057,7 +8053,7 @@ SyncService = __decorate([
 
 /***/ }),
 
-/***/ 323:
+/***/ 322:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8105,7 +8101,7 @@ var HistoryEx = (function () {
 
 /***/ }),
 
-/***/ 324:
+/***/ 323:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8124,13 +8120,13 @@ var SearchTaskRequest = (function () {
 
 /***/ }),
 
-/***/ 325:
+/***/ 324:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HomePage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8150,7 +8146,7 @@ var HomePage = (function () {
 }());
 HomePage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-home',template:/*ion-inline-start:"D:\cordova_ionic\HotlineManagerIonic\src\pages\home\home.html"*/'<ion-header>\n  <ion-navbar>\n    <ion-title>\n      Ionic Blank\n    </ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content padding>\n  The world is your oyster.\n  <p>\n    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.\n  </p>\n</ion-content>\n'/*ion-inline-end:"D:\cordova_ionic\HotlineManagerIonic\src\pages\home\home.html"*/
+        selector: 'page-home',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\home\home.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <ion-title>\n\n      Ionic Blank\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n  The world is your oyster.\n\n  <p>\n\n    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.\n\n  </p>\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\home\home.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */]])
 ], HomePage);
@@ -8159,16 +8155,16 @@ HomePage = __decorate([
 
 /***/ }),
 
-/***/ 326:
+/***/ 325:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return WelcomePage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__login_login__ = __webpack_require__(241);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__login_login__ = __webpack_require__(239);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_FileService__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_app_version__ = __webpack_require__(246);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_app_version__ = __webpack_require__(244);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__providers_DataService__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__ionic_native_android_permissions__ = __webpack_require__(119);
@@ -8339,7 +8335,7 @@ var WelcomePage = (function () {
 }());
 WelcomePage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-welcome',template:/*ion-inline-start:"D:\cordova_ionic\HotlineManagerIonic\src\pages\welcome\welcome.html"*/'<ion-header>\n</ion-header>\n\n<ion-content class="page-content">\n  <div class="welcome-logo">\n    <img src="assets/img/splash_logo.png">\n  </div>\n\n\n  <div class="welcome-info">\n    <p>\n      Copyright@2017 ShangHai 3H Ver:{{version}}\n    </p>\n  </div>\n</ion-content>\n'/*ion-inline-end:"D:\cordova_ionic\HotlineManagerIonic\src\pages\welcome\welcome.html"*/
+        selector: 'page-welcome',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\welcome\welcome.html"*/'<ion-header>\n\n</ion-header>\n\n\n\n<ion-content class="page-content">\n\n  <div class="welcome-logo">\n\n    <img src="assets/img/splash_logo.png">\n\n  </div>\n\n\n\n\n\n  <div class="welcome-info">\n\n    <p>\n\n      Copyright@2017 ShangHai 3H Ver:{{version}}\n\n    </p>\n\n  </div>\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\welcome\welcome.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* LoadingController */],
@@ -8355,7 +8351,7 @@ WelcomePage = __decorate([
 
 /***/ }),
 
-/***/ 328:
+/***/ 327:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8373,14 +8369,14 @@ var UserInfo = (function () {
 
 /***/ }),
 
-/***/ 329:
+/***/ 328:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HttpInterceptorBackend; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(35);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__HttpInterceptor__ = __webpack_require__(247);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__HttpInterceptor__ = __webpack_require__(245);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8416,7 +8412,7 @@ HttpInterceptorBackend = __decorate([
 
 /***/ }),
 
-/***/ 330:
+/***/ 329:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8450,6 +8446,163 @@ ValueValidPipe = __decorate([
 ], ValueValidPipe);
 
 //# sourceMappingURL=ValueValidPipe.js.map
+
+/***/ }),
+
+/***/ 330:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TabsPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mywork_mywork__ = __webpack_require__(49);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__history_myhistory__ = __webpack_require__(62);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__map_map__ = __webpack_require__(37);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__search_search__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__stationwork_stationwork__ = __webpack_require__(65);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__more_more__ = __webpack_require__(246);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__providers_GlobalService__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__providers_ConfigService__ = __webpack_require__(16);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+
+
+// import {MyPlugin} from "@ionic-native/my-plugin";
+
+
+var TabsPage = (function () {
+    function TabsPage(globalService, configService) {
+        this.globalService = globalService;
+        this.configService = configService;
+        this.workerTabsInfo = [
+            { title: '我的任务', icon: 'home', page: __WEBPACK_IMPORTED_MODULE_1__mywork_mywork__["a" /* MyWorkPage */] },
+            { title: '历史记录', icon: 'document', page: __WEBPACK_IMPORTED_MODULE_2__history_myhistory__["a" /* MyHistory */] },
+            { title: '地图', icon: 'map', page: __WEBPACK_IMPORTED_MODULE_3__map_map__["a" /* MapPage */] },
+            { title: '更多', icon: 'more', page: __WEBPACK_IMPORTED_MODULE_6__more_more__["a" /* MorePage */] } // 公告、设置
+        ];
+        this.adminTabsInfo = [
+            { title: '站点任务', icon: 'home', page: __WEBPACK_IMPORTED_MODULE_5__stationwork_stationwork__["a" /* StationWorkPage */] },
+            { title: '查询', icon: 'search', page: __WEBPACK_IMPORTED_MODULE_4__search_search__["a" /* SearchPage */] },
+            { title: '地图', icon: 'map', page: __WEBPACK_IMPORTED_MODULE_3__map_map__["a" /* MapPage */] },
+            { title: '更多', icon: 'more', page: __WEBPACK_IMPORTED_MODULE_6__more_more__["a" /* MorePage */] } // 公告、设置
+        ];
+        this.tabsInfo = this.workerTabsInfo;
+    }
+    TabsPage.prototype.ngOnInit = function () {
+        if (!this.globalService.isChrome) {
+            var _this_1 = this;
+            cordova.plugins.MyPlugin.getPushMessage(function (data) {
+                console.log(data);
+            }, function (error) {
+                console.error(error);
+            });
+            cordova.plugins.MyPlugin.getChangedInfo(function (data) {
+                console.log(data);
+                if (data) {
+                    var values = data.split('#');
+                    if (values[0] === 'outerNetwork' && values[1]) {
+                        _this_1.configService.setIsOuterNet(values[1] === 'true');
+                    }
+                }
+            }, function (error) {
+                console.error(error);
+            });
+        }
+    };
+    TabsPage.prototype.ngOnDestroy = function () {
+    };
+    return TabsPage;
+}());
+TabsPage = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\tabs\tabs.html"*/'<ion-tabs>\n\n  <ion-tab [root]="tabsInfo[0].page" tabTitle="{{tabsInfo[0].title}}" tabIcon="{{tabsInfo[0].icon}}"></ion-tab>\n\n  <ion-tab [root]="tabsInfo[1].page" tabTitle="{{tabsInfo[1].title}}" tabIcon="{{tabsInfo[1].icon}}"></ion-tab>\n\n  <ion-tab [root]="tabsInfo[2].page" tabTitle="{{tabsInfo[2].title}}" tabIcon="{{tabsInfo[2].icon}}"></ion-tab>\n\n  <ion-tab [root]="tabsInfo[3].page" tabTitle="{{tabsInfo[3].title}}" tabIcon="{{tabsInfo[3].icon}}"></ion-tab>\n\n</ion-tabs>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\tabs\tabs.html"*/
+    }),
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_7__providers_GlobalService__["a" /* GlobalService */],
+        __WEBPACK_IMPORTED_MODULE_8__providers_ConfigService__["a" /* ConfigService */]])
+], TabsPage);
+
+//# sourceMappingURL=tabs.js.map
+
+/***/ }),
+
+/***/ 331:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AboutPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var AboutPage = (function () {
+    function AboutPage(navCtrl) {
+        this.navCtrl = navCtrl;
+    }
+    return AboutPage;
+}());
+AboutPage = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+        selector: 'page-about',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\about\about.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <ion-title>\n\n      About\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\about\about.html"*/
+    }),
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */]])
+], AboutPage);
+
+//# sourceMappingURL=about.js.map
+
+/***/ }),
+
+/***/ 332:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ContactPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var ContactPage = (function () {
+    function ContactPage(navCtrl) {
+        this.navCtrl = navCtrl;
+    }
+    return ContactPage;
+}());
+ContactPage = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+        selector: 'page-contact',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\contact\contact.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <ion-title>\n\n      Contact\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content>\n\n  <ion-list>\n\n    <ion-list-header>Follow us on Twitter</ion-list-header>\n\n    <ion-item>\n\n      <ion-icon name="ionic" item-start></ion-icon>\n\n      @ionicframework\n\n    </ion-item>\n\n  </ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\contact\contact.html"*/
+    }),
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */]])
+], ContactPage);
+
+//# sourceMappingURL=contact.js.map
 
 /***/ }),
 
@@ -8898,7 +9051,7 @@ function transform2Task(info, taskEx, processEx) {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MapPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__model_MapParam__ = __webpack_require__(48);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -9104,7 +9257,7 @@ __decorate([
 ], MapPage.prototype, "mapElement", void 0);
 MapPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-map',template:/*ion-inline-start:"D:\cordova_ionic\HotlineManagerIonic\src\pages\map\map.html"*/'<ion-header>\n  <ion-navbar color="primary">\n    <ion-title>地图</ion-title>\n\n    <ion-buttons end>\n      <button ion-button icon-only color="white" (click)="getCurrentLocation($event)">\n        <ion-icon name="locate"></ion-icon>\n      </button>\n\n      <button ion-button *ngIf="isMark" icon-only color="white" (click)="markLocation($event)">\n        <ion-icon name="checkmark"></ion-icon>\n      </button>\n    </ion-buttons>\n\n  </ion-navbar>\n</ion-header>\n\n<ion-content>\n  <div id="map" #map>\n    <div class="markMap">\n      <ion-icon name="add" color="danger"></ion-icon>\n    </div>\n  </div>\n</ion-content>\n'/*ion-inline-end:"D:\cordova_ionic\HotlineManagerIonic\src\pages\map\map.html"*/
+        selector: 'page-map',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\map\map.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>地图</ion-title>\n\n\n\n    <ion-buttons end>\n\n      <button ion-button icon-only color="white" (click)="getCurrentLocation($event)">\n\n        <ion-icon name="locate"></ion-icon>\n\n      </button>\n\n\n\n      <button ion-button *ngIf="isMark" icon-only color="white" (click)="markLocation($event)">\n\n        <ion-icon name="checkmark"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content>\n\n  <div id="map" #map>\n\n    <div class="markMap">\n\n      <ion-icon name="add" color="danger"></ion-icon>\n\n    </div>\n\n  </div>\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\map\map.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* NavParams */],
@@ -9147,3245 +9300,13 @@ var MapParam = (function () {
 
 /***/ }),
 
-/***/ 61:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MyHistory; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_DataService__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__model_History__ = __webpack_require__(323);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_GlobalService__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__workdetail_workdetail__ = __webpack_require__(128);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__model_Task__ = __webpack_require__(36);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__map_map__ = __webpack_require__(37);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__model_MapParam__ = __webpack_require__(48);
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-
-
-
-
-
-
-var MyHistory = (function () {
-    function MyHistory(navCtrl, dataService, alertCtrl, globalService, events) {
-        this.navCtrl = navCtrl;
-        this.dataService = dataService;
-        this.alertCtrl = alertCtrl;
-        this.globalService = globalService;
-        this.events = events;
-        this.tag = "[Myhistory]";
-        this.title = '历史记录';
-        this.showToolbar = false;
-        this.showFab = false;
-        this.items = [];
-        this.isDownloadFinished = true;
-        this.since = this.globalService.taskSinceDefault;
-        this.count = this.globalService.taskCountDefault10;
-        this.searchKey = '';
-        this.isOperationBusy = false;
-        this.replyHistories = [];
-        this.onServerFlag = this.globalService.uploadedFlagForUploaded;
-    }
-    MyHistory.prototype.ngOnInit = function () {
-        var _this = this;
-        console.log(this.tag, 'ngOnInit');
-        this.subscribeEvent(this.events);
-        this.getHistories(this.since, this.count, this.searchKey)
-            .then(function (flag) { return _this.infiniteScroll.enable(flag); })
-            .catch(function (error) { return console.error(error); });
-    };
-    MyHistory.prototype.ngOnDestroy = function () {
-        console.log(this.tag, 'ngOnDestroy');
-        this.events.unsubscribe(this.globalService.historyUploadFinishEvent);
-        //this.events.unsubscribe(this.globalService.materialInfoFinishEvent);
-    };
-    //搜索
-    MyHistory.prototype.onInput = function (ev) {
-        var _this = this;
-        if (this.isOperationBusy) {
-            return this.globalService.showToast('后台繁忙...');
-        }
-        var val = ev.target.value;
-        if (val && val.trim() != '') {
-            this.searchKey = val;
-        }
-        else {
-            this.searchKey = '';
-        }
-        this.isOperationBusy = true;
-        this.since = this.globalService.taskSinceDefault;
-        while (this.items.shift())
-            ;
-        this.showFab = false;
-        this.replyHistories = [];
-        this.getHistories(this.since, this.count, this.searchKey)
-            .then(function (data) { return _this.infiniteScroll.enable(data); })
-            .catch(function (error) {
-            console.error(error);
-        }).then(function () { return _this.isOperationBusy = false; });
-    };
-    /**
-     *
-     * @param ev
-     */
-    MyHistory.prototype.onCancel = function (ev) {
-        console.log(this.tag, 'onCancel');
-    };
-    MyHistory.prototype.doRefresh = function (refresher) {
-        console.log(this.tag, 'doRefresh');
-        this.dataService.uploadAllInfos();
-    };
-    /**
-     * 上拉加载更多
-     * @param infiniteScroll
-     */
-    MyHistory.prototype.doInfinite = function (infiniteScroll) {
-        var _this = this;
-        console.log(this.tag, 'doInfinite begin');
-        setTimeout(function () {
-            _this.isDownloadFinished = false;
-            _this.showFab = false;
-            _this.getHistories(_this.since, _this.count, _this.searchKey)
-                .then(function (data) {
-                if (!data) {
-                    infiniteScroll.enable(false);
-                }
-                else {
-                    infiniteScroll.complete();
-                }
-                console.log(_this.tag, 'doInfinite end');
-            }).catch(function (error) {
-                console.error(error);
-                infiniteScroll.complete();
-            }).then(function () {
-                _this.isDownloadFinished = true;
-                _this.showFab = _this.items.length > _this.count;
-            });
-        }, 100);
-    };
-    /**
-     *滑动到顶部
-     * @param ev
-     */
-    MyHistory.prototype.doScroll2Top = function (ev) {
-        this.showFab = false;
-        this.content.scrollToTop();
-    };
-    MyHistory.prototype.toggleToolbar = function (ev) {
-        this.showToolbar = !this.showToolbar;
-        this.content.resize();
-    };
-    MyHistory.prototype.getHistories = function (since, count, key) {
-        var _this = this;
-        return this.dataService
-            .getHistories(since, count, key)
-            .then(function (histories) {
-            console.log(_this.tag + "getHistory" + histories.length);
-            if (histories.length <= 0) {
-                return Promise.resolve(false);
-            }
-            else {
-                __WEBPACK_IMPORTED_MODULE_3__model_History__["a" /* HistoryEx */].transformToHistoryEx(_this.items, histories);
-                _this.since = _this.items.length;
-                return Promise.resolve(histories.map(function (history) { return history.taskId; }))
-                    .then(function (taskIds) { return _this.dataService.getReplyHistories(taskIds); })
-                    .then(function (histories) {
-                    var result = false;
-                    try {
-                        (_a = _this.replyHistories).push.apply(_a, histories);
-                        _this.replyHistories.forEach(function (history) {
-                            if (history.mediaNames && history.mediaNames.length > 0) {
-                                var historyEx = _this.items.find(function (historyEx) { return historyEx.taskId === history.taskId; });
-                                if (historyEx) {
-                                    var mediaNames = history.mediaNames;
-                                    historyEx.photoCount = mediaNames.filter(function (name) { return name.lastIndexOf(_this.globalService.photoSuffix) !== -1; }).length;
-                                    historyEx.audioCount = mediaNames.filter(function (name) { return name.lastIndexOf(_this.globalService.audioSuffix) !== -1; }).length;
-                                }
-                            }
-                        });
-                        result = true;
-                    }
-                    catch (err) {
-                        console.error(err);
-                    }
-                    return Promise.resolve(result);
-                    var _a;
-                });
-            }
-        });
-    };
-    MyHistory.prototype.toRejectedInfo = function (item) {
-        return item;
-    };
-    MyHistory.prototype.toReplyInfo = function (item) {
-        return item;
-    };
-    MyHistory.prototype.onDelay = function (historyEx) {
-        var _this = this;
-        this.dataService.getHistory(historyEx.taskId, __WEBPACK_IMPORTED_MODULE_6__model_Task__["b" /* TaskState */].Delay)
-            .then(function (history) {
-            if (history.reply) {
-                var delayInfo = history.reply;
-                if (delayInfo.comment) {
-                    _this.globalService.showToast("\u5EF6\u8FDF\u539F\u56E0: " + delayInfo.comment);
-                }
-            }
-        })
-            .catch(function (err) { return console.error(err); });
-    };
-    MyHistory.prototype.onReply = function (historyEx) {
-        var taskEx = new __WEBPACK_IMPORTED_MODULE_6__model_Task__["a" /* TaskEx */](historyEx.task);
-        taskEx.isPreview = true;
-        var history = this.findReplyHistory(taskEx.id);
-        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_5__workdetail_workdetail__["a" /* WorkDetailPage */], [taskEx, history]);
-    };
-    MyHistory.prototype.onReject = function (historyEx) {
-        var rejectInfo = this.toRejectedInfo(historyEx.reply);
-        if (rejectInfo && rejectInfo.rejectReason) {
-            this.globalService.showToast("\u9000\u5355\u539F\u56E0: " + rejectInfo.rejectReason);
-        }
-    };
-    MyHistory.prototype.onLocate = function (historyEx) {
-        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_7__map_map__["a" /* MapPage */], new __WEBPACK_IMPORTED_MODULE_8__model_MapParam__["a" /* MapParam */](__WEBPACK_IMPORTED_MODULE_8__model_MapParam__["b" /* MapType */].Locate, historyEx.task.location, historyEx.task.taskId));
-    };
-    MyHistory.prototype.onDelete = function (historyEx) {
-        var _this = this;
-        var alert = this.alertCtrl.create({
-            title: '删除任务',
-            message: '是否删除该任务及其所有操作?',
-            buttons: [
-                {
-                    text: '取消',
-                    role: 'cancel',
-                    handler: function () {
-                        console.log('Cancel clicked');
-                    }
-                },
-                {
-                    text: '确定',
-                    handler: function () {
-                        console.log('Ok clicked');
-                        _this.dataService.deleteOneTaskWithAllInfos(historyEx.taskId)
-                            .then(function (result) { return _this.resetList(); })
-                            .catch(function (err) { return console.error(err); });
-                    }
-                }
-            ]
-        });
-        alert.present();
-    };
-    /**
-     * 订阅事件
-     * @param events
-     */
-    MyHistory.prototype.subscribeEvent = function (events) {
-        var _this = this;
-        events.subscribe(this.globalService.historyUploadFinishEvent, function () {
-            //this.dataService.uploadNotUploadMaterialInfos();
-            _this.refresher.complete();
-            _this.resetList();
-        });
-        // events.subscribe(this.globalService.materialInfoFinishEvent, () => {
-        //   console.log(this.tag, "materialInfoFinishEvent");
-        //   this.refresher.complete();
-        // })
-    };
-    MyHistory.prototype.findReplyHistory = function (taskId) {
-        return this.replyHistories.find(function (history) { return history.taskId === taskId; });
-    };
-    MyHistory.prototype.resetList = function () {
-        var _this = this;
-        this.isOperationBusy = false;
-        this.searchKey = '';
-        this.since = this.globalService.taskSinceDefault;
-        while (this.items.shift())
-            ;
-        this.showFab = false;
-        this.replyHistories = [];
-        this.getHistories(this.since, this.count, this.searchKey)
-            .then(function (data) { return _this.infiniteScroll.enable(data); })
-            .catch(function (error) { return console.error(error); });
-    };
-    return MyHistory;
-}());
-__decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["n" /* Refresher */]),
-    __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["n" /* Refresher */])
-], MyHistory.prototype, "refresher", void 0);
-__decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["c" /* Content */]),
-    __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["c" /* Content */])
-], MyHistory.prototype, "content", void 0);
-__decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* InfiniteScroll */]),
-    __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* InfiniteScroll */])
-], MyHistory.prototype, "infiniteScroll", void 0);
-MyHistory = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-myhistory',template:/*ion-inline-start:"D:\cordova_ionic\HotlineManagerIonic\src\pages\history\myhistory.html"*/'<ion-header>\n  <ion-navbar color="primary">\n    <ion-title>\n      {{title}}\n    </ion-title>\n    <ion-buttons end>\n      <button ion-button icon-only color="white" (click)="toggleToolbar($event)" *ngIf="showToolbar">\n        <ion-icon name="search"></ion-icon>\n      </button>\n    </ion-buttons>\n  </ion-navbar>\n  <ion-toolbar color="primary" *ngIf="showToolbar">\n    <ion-searchbar (input)="onInput($event)" (ionCancel)="onCancel($event)"></ion-searchbar>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content class="page-myhistory">\n\n  <ion-refresher (ionRefresh)="doRefresh($event)">\n    <ion-refresher-content\n      pullingIcon="arrow_dropdown"\n      pullingText="Pull to refresh"\n      refreshingSpinner="circles"\n      refreshingText="Refreshing...">\n    </ion-refresher-content>\n  </ion-refresher>\n\n  <ion-list>\n    <ion-card *ngFor="let item of items">\n      <ion-item (click)="onDelete(item)">\n        <ion-avatar item-start>\n          <img src="assets/img/ic_mywork_avatar.png">\n        </ion-avatar>\n        <div><h2 class="card-header-label-hint">任务编号 </h2>\n          <h2 class="card-header-label-content">{{item.taskId.split(\'#\')[0] | valueValid}}</h2></div>\n        <div><h2 class="card-header-label-hint">任务类型 </h2>\n          <h2 class="card-header-label-content">{{item.task.taskType | valueValid}}</h2></div>\n        <ion-icon name=\'cloud-upload\' item-end *ngIf="item.uploadedFlag !== onServerFlag"></ion-icon>\n      </ion-item>\n\n      <ion-list>\n        <ion-list-header>\n          <ion-row>\n            <ion-col col-auto>任务描述</ion-col>\n            <ion-col>{{item.task.desc| valueValid}}</ion-col>\n          </ion-row>\n        </ion-list-header>\n\n        <!--创建时间-->\n        <button ion-item class="gray-text">\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n          创建时间 {{item.task.createTime| date:\'y-MM-dd HH:mm:ss\'}}\n        </button>\n\n        <!--派发时间-->\n        <button ion-item class="gray-text">\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n          派发时间 {{item.task.assignTime | date:\'y-MM-dd HH:mm:ss\'}}\n        </button>\n\n        <!--接单时间 -->\n        <button ion-item class="gray-text">\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n          接单时间 {{item.task.acceptTime | date:\'y-MM-dd HH:mm:ss\'}}\n        </button>\n\n        <!--延迟时间-->\n        <button ion-item class="gray-text" *ngIf="item.delayBeyond === \'accept\'" (click)="onDelay(item)">\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n          延迟时间 {{item.delayTime | date:\'y-MM-dd HH:mm:ss\'}}\n        </button>\n\n        <!--出发时间-->\n        <button ion-item class="gray-text" *ngIf="item.task.goTime">\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n          出发时间 {{item.task.goTime| date:\'y-MM-dd HH:mm:ss\'}}\n        </button>\n\n        <!--延迟时间-->\n        <button ion-item class="gray-text" *ngIf="item.delayBeyond === \'go\'" (click)="onDelay(item)">\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n          延迟时间 {{item.delayTime | date:\'y-MM-dd HH:mm:ss\'}}\n        </button>\n\n        <!--到场时间-->\n        <button ion-item class="gray-text" *ngIf="item.task.arrivedTime">\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n          到场时间 {{item.task.arrivedTime | date:\'y-MM-dd HH:mm:ss\'}}\n        </button>\n\n        <!--延迟时间-->\n        <button ion-item class="gray-text" *ngIf="item.delayBeyond === \'arrived\'" (click)="onDelay(item)">\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n          延迟时间 {{item.delayTime | date:\'y-MM-dd HH:mm:ss\'}}\n        </button>\n\n        <!--回复时间-->\n        <button ion-item class="gray-text" *ngIf="item.task.replyTime" (click)="onReply(item)">\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n          回复时间 {{item.task.replyTime | date:\'y-MM-dd HH:mm:ss\'}}\n        </button>\n\n        <!--退单时间-->\n        <button ion-item class="gray-text" *ngIf="item.isRejected" (click)="onReject(item)">\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n          退单时间 {{ toRejectedInfo(item.reply).rejectTime | date:\'y-MM-dd HH:mm:ss\'}}\n        </button>\n\n        <!--销单时间-->\n        <button ion-item class="gray-text" *ngIf="item.isCanceled">\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n          销单时间 {{toReplyInfo(item.reply).destroyTime | date:\'y-MM-dd HH:mm:ss\'}}\n        </button>\n      </ion-list>\n      <ion-row>\n        <ion-col class="card-bottom-btn">\n          <button ion-button icon-left clear small color="gray">\n            <ion-icon name="images"></ion-icon>\n            <div>{{item.photoCount}}</div>\n          </button>\n        </ion-col>\n\n        <ion-col class="card-bottom-btn">\n          <button ion-button icon-left clear small color="gray">\n            <ion-icon name="musical-notes"></ion-icon>\n            <div>{{item.audioCount}}</div>\n          </button>\n        </ion-col>\n\n        <!-- <ion-col>\n           <button ion-button icon-left clear small color="gray">\n             <ion-icon name="videocam"></ion-icon>\n             <div>{{item.videoCount}}</div>\n           </button>\n         </ion-col>-->\n\n        <ion-col class="card-bottom-btn" *ngIf="item.isLocationValid">\n          <button ion-button icon-left clear small (click)="onLocate(item)">\n            <ion-icon name="map"></ion-icon>\n            <div>地图</div>\n          </button>\n        </ion-col>\n      </ion-row>\n    </ion-card>\n  </ion-list>\n\n  <!--infinite scroll-->\n  <ion-infinite-scroll (ionInfinite)="doInfinite($event)" immediate-check="false" distance=1%>\n    <ion-infinite-scroll-content></ion-infinite-scroll-content>\n  </ion-infinite-scroll>\n\n  <!--fab-->\n  <ion-fab right bottom *ngIf="showFab">\n    <button ion-fab color="primary" (click)="doScroll2Top($event)">\n      <ion-icon name="arrow-dropup"></ion-icon>\n    </button>\n  </ion-fab>\n</ion-content>\n'/*ion-inline-end:"D:\cordova_ionic\HotlineManagerIonic\src\pages\history\myhistory.html"*/
-    }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
-        __WEBPACK_IMPORTED_MODULE_2__providers_DataService__["a" /* DataService */],
-        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */],
-        __WEBPACK_IMPORTED_MODULE_4__providers_GlobalService__["a" /* GlobalService */],
-        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* Events */]])
-], MyHistory);
-
-//# sourceMappingURL=myhistory.js.map
-
-/***/ }),
-
-/***/ 62:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DbService; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ionic_native_sqlite__ = __webpack_require__(225);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_sqlite_porter__ = __webpack_require__(226);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__GlobalService__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__FileService__ = __webpack_require__(25);
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-
-
-var DbService = (function () {
-    function DbService(sqlite, sqlitePorter, globalService, fileService) {
-        this.sqlite = sqlite;
-        this.sqlitePorter = sqlitePorter;
-        this.globalService = globalService;
-        this.fileService = fileService;
-        this.dbName = 'main.db';
-        //private readonly dbVersion: string = '1.0';
-        this.paramError = 'param is error';
-    }
-    /**
-     * 初始化
-     * @returns {Promise<boolean>}
-     */
-    DbService.prototype.init = function () {
-        var _this = this;
-        if (this.globalService.isChrome) {
-            this.dbPath = this.dbName;
-            return Promise.resolve(true);
-        }
-        else {
-            this.dbPath = this.fileService.getDbDir() + "/" + this.dbName;
-            return this.createTables()
-                .then(function (result) { return _this.updateTables(); });
-        }
-    };
-    /**
-     * 销毁
-     */
-    DbService.prototype.destroy = function () {
-        if (this.globalService.isChrome) {
-        }
-        else {
-        }
-    };
-    /**
-     * 保存词语信息
-     * @param words
-     * @returns {any}
-     */
-    DbService.prototype.saveWords = function (words) {
-        var _this = this;
-        if (this.globalService.isChrome || !words || words.length <= 0) {
-            return Promise.resolve(false);
-        }
-        else {
-            return this.openDb()
-                .then(function (db) {
-                var sql = "DELETE FROM GD_WORDS;";
-                for (var _i = 0, words_1 = words; _i < words_1.length; _i++) {
-                    var word = words_1[_i];
-                    sql += _this.toWordInsertSql(word);
-                }
-                return _this.sqlitePorter.importSqlToDb(db, sql);
-            });
-        }
-    };
-    /**
-     * 保存材料信息
-     * @param materials
-     * @returns {any}
-     */
-    DbService.prototype.saveMaterials = function (materials) {
-        var _this = this;
-        if (this.globalService.isChrome || !materials || materials.length <= 0) {
-            return Promise.resolve(false);
-        }
-        else {
-            return this.openDb()
-                .then(function (db) {
-                var sql = "DELETE FROM GD_MATERIALS;";
-                for (var _i = 0, materials_1 = materials; _i < materials_1.length; _i++) {
-                    var material = materials_1[_i];
-                    sql += _this.toMaterialInsertSql(material);
-                }
-                return _this.sqlitePorter.importSqlToDb(db, sql);
-            });
-        }
-    };
-    /**
-     * 保存维修信息
-     * @param maintainInfo
-     * @returns {any}
-     */
-    DbService.prototype.saveMaintainInfo = function (maintainInfo) {
-        var _this = this;
-        if (this.globalService.isChrome || !maintainInfo) {
-            return Promise.resolve(false);
-        }
-        else {
-            return this.openDb()
-                .then(function (db) {
-                var sql;
-                sql = _this.toMaintainInfoInsertSql(maintainInfo);
-                return _this.sqlitePorter.importSqlToDb(db, sql);
-            });
-        }
-    };
-    /**
-     * 查询维修信息
-     * @param taskId
-     * @returns {any}
-     */
-    DbService.prototype.queryMaintainInfo = function (taskId) {
-        var _this = this;
-        if (this.globalService.isChrome || !taskId) {
-            return Promise.reject(this.paramError);
-        }
-        else {
-            return this.openDb()
-                .then(function (db) {
-                var selectSql = "SELECT * FROM GD_MAINTAININFO WHERE S_TASKID = '" + taskId + "';";
-                return db.executeSql(selectSql, {})
-                    .then(function (data) {
-                    var rows = data.rows;
-                    var maintainInfo;
-                    if (rows && rows.length == 1) {
-                        var localMaintainInfo = rows.item(0);
-                        maintainInfo = _this.toMaintainInfo(localMaintainInfo);
-                    }
-                    return maintainInfo ? Promise.resolve(maintainInfo) : Promise.reject('no maintainInfo');
-                });
-            });
-        }
-    };
-    /**
-     * 材料清单保存至本地
-     * @param materialInfo
-     * @returns {any}
-     */
-    DbService.prototype.saveMaterialInfo = function (materialInfo) {
-        var _this = this;
-        if (!materialInfo || !materialInfo.taskId || materialInfo.infos.length <= 0) {
-            return Promise.resolve(false);
-        }
-        else {
-            return this.openDb()
-                .then(function (db) {
-                var selectSql = "SELECT * FROM GD_MATERIALINFO WHERE S_TASKID = '" + materialInfo.taskId + "';";
-                var sql;
-                return db.executeSql(selectSql, {})
-                    .then(function (data) {
-                    var rows = data.rows;
-                    if (rows && rows.length > 0) {
-                        sql = _this.toMaterialInfoUpdateSql(materialInfo);
-                    }
-                    else {
-                        sql = _this.toMaterialInfoInsertSql(materialInfo);
-                    }
-                    return _this.sqlitePorter.importSqlToDb(db, sql);
-                })
-                    .catch(function (error) {
-                    console.log(error);
-                });
-            });
-        }
-    };
-    /**
-     * 材料清单更新上传标志
-     * @param materialInfo
-     * @returns {any}
-     */
-    DbService.prototype.updateFlagMaterials = function (materialInfo) {
-        var _this = this;
-        if (!materialInfo || !materialInfo.taskId || materialInfo.infos.length <= 0) {
-            return Promise.resolve(false);
-        }
-        else {
-            return this.openDb()
-                .then(function (db) {
-                materialInfo.uploadFlag = _this.globalService.uploadedFlagForUploaded;
-                var sql = _this.toMaterialInfoUpdateSql(materialInfo);
-                return _this.sqlitePorter.importSqlToDb(db, sql);
-            });
-        }
-    };
-    /**
-     * 获取材料
-     * @param group
-     */
-    DbService.prototype.getMaterials = function (groupKey) {
-        var _this = this;
-        if (this.globalService.isChrome || !groupKey) {
-            return Promise.reject(this.paramError);
-        }
-        else {
-            return this.openDb()
-                .then(function (db) {
-                var sql = "SELECT * FROM GD_MATERIALS WHERE S_GROUPKEY = '" + groupKey + "';";
-                return db.executeSql(sql, {})
-                    .then(function (data) {
-                    var rows = data.rows;
-                    var materials = [];
-                    if (rows && rows.length > 0) {
-                        for (var i = 0; i < rows.length; i++) {
-                            var localMaterial = rows.item(i);
-                            if (!localMaterial) {
-                                continue;
-                            }
-                            materials.push(_this.toMaterial(localMaterial));
-                        }
-                    }
-                    return materials.length ? Promise.resolve(materials) : Promise.reject('no materials');
-                });
-            });
-        }
-    };
-    DbService.prototype.getMaterialsCount = function () {
-        if (this.globalService.isChrome) {
-            return Promise.resolve(0);
-        }
-        else {
-            return this.openDb()
-                .then(function (db) {
-                var sql = "SELECT COUNT(*) FROM GD_MATERIALS;";
-                return db.executeSql(sql, {})
-                    .then(function (data) { return data.rows && data.rows.length > 0 ? data.rows.item(0)["COUNT(*)"] : 0; });
-            });
-        }
-    };
-    /**
-     * 根据id查询材料信息
-     * @param mid
-     * @returns {any}
-     */
-    DbService.prototype.getMaterial = function (mid) {
-        var _this = this;
-        if (this.globalService.isChrome || !mid) {
-            return Promise.reject(this.paramError);
-        }
-        else {
-            return this.openDb()
-                .then(function (db) {
-                var sql = "SELECT * FROM GD_MATERIALS WHERE I_MID =" + mid + ";";
-                return db.executeSql(sql, {})
-                    .then(function (data) {
-                    var rows = data.rows;
-                    var result;
-                    if (rows && rows.length == 1) {
-                        result = _this.toMaterial(rows.item(0));
-                    }
-                    return result ? Promise.resolve(result) : Promise.reject('no material');
-                });
-            });
-        }
-    };
-    /**
-     * 查询材料清单
-     * @param taskId
-     * @returns {any}
-     */
-    DbService.prototype.getMaterialInfo = function (taskId) {
-        var _this = this;
-        if (this.globalService.isChrome || !taskId) {
-            return Promise.reject(this.paramError);
-        }
-        else {
-            return this.openDb()
-                .then(function (db) {
-                var sql = "SELECT * FROM GD_MATERIALINFO WHERE S_TASKID = '" + taskId + "';";
-                return db.executeSql(sql, {})
-                    .then(function (data) {
-                    var rows = data.rows;
-                    var result;
-                    if (rows && rows.length == 1) {
-                        var localMaterialInfo = rows.item(0);
-                        if (localMaterialInfo) {
-                            result = _this.toMaterialInfo(localMaterialInfo);
-                        }
-                    }
-                    return result ? Promise.resolve(result) : Promise.reject('no materialInfo');
-                });
-            });
-        }
-    };
-    DbService.prototype.toMaterialInfo = function (localMaterialInfo) {
-        return {
-            taskId: localMaterialInfo.S_TASKID,
-            infos: JSON.parse(localMaterialInfo.S_INFOS),
-            uploadFlag: localMaterialInfo.I_UPLOADEDFLAG
-        };
-    };
-    /**
-     * 获取词语
-     * @param group
-     * @returns {any}
-     */
-    DbService.prototype.getWords = function (group) {
-        var _this = this;
-        if (this.globalService.isChrome || !group) {
-            return Promise.reject(this.paramError);
-        }
-        else {
-            return this.openDb()
-                .then(function (db) {
-                var sql = "SELECT * FROM GD_WORDS WHERE S_WGROUP = '" + group + "';";
-                return db.executeSql(sql, {})
-                    .then(function (data) {
-                    var rows = data.rows;
-                    var words = [];
-                    if (rows && rows.length > 0) {
-                        for (var i = 0; i < rows.length; i++) {
-                            var localWord = rows.item(i);
-                            if (!localWord) {
-                                continue;
-                            }
-                            words.push(_this.toWord(localWord));
-                        }
-                    }
-                    return words.length ? Promise.resolve(words) : Promise.reject('no words');
-                });
-            });
-        }
-    };
-    /**
-     * 获取词语数目
-     * @returns {any}
-     */
-    DbService.prototype.getWordsCount = function () {
-        if (this.globalService.isChrome) {
-            return Promise.resolve(0);
-        }
-        else {
-            return this.openDb()
-                .then(function (db) {
-                var sql = "SELECT COUNT(*) FROM GD_WORDS;";
-                return db.executeSql(sql, {})
-                    .then(function (data) { return data.rows && data.rows.length > 0 ? data.rows.item(0)["COUNT(*)"] : 0; });
-            });
-        }
-    };
-    /**
-     * 保存任务列表
-     * @param userId
-     * @param serverTasks
-     * @returns {any}
-     */
-    DbService.prototype.saveTasks = function (userId, serverTasks) {
-        var _this = this;
-        if (this.globalService.isChrome || !serverTasks || serverTasks.length <= 0) {
-            return Promise.reject(this.paramError);
-        }
-        else {
-            return this.openDb()
-                .then(function (db) {
-                var sql = "SELECT * FROM GD_TASKS WHERE I_USERID = " + userId + ";";
-                return db.executeSql(sql, {})
-                    .then(function (data) {
-                    var rows = data.rows;
-                    var sql = '';
-                    if (rows && rows.length > 0) {
-                        for (var _i = 0, serverTasks_1 = serverTasks; _i < serverTasks_1.length; _i++) {
-                            var serverTask = serverTasks_1[_i];
-                            var foundLocalTask = void 0;
-                            for (var i = 0; i < rows.length; i++) {
-                                var localTask = rows.item(i);
-                                if (!localTask || !localTask.S_TASKID) {
-                                    continue;
-                                }
-                                if (localTask.S_TASKID === serverTask.taskId) {
-                                    foundLocalTask = localTask;
-                                    break;
-                                }
-                            }
-                            if (foundLocalTask) {
-                                sql += _this.toTaskUpdateSql(serverTask, foundLocalTask);
-                            }
-                            else {
-                                sql += _this.toTaskInsertSql(serverTask);
-                            }
-                        }
-                    }
-                    else {
-                        for (var _a = 0, serverTasks_2 = serverTasks; _a < serverTasks_2.length; _a++) {
-                            var task = serverTasks_2[_a];
-                            sql += _this.toTaskInsertSql(task);
-                        }
-                    }
-                    return sql && sql.length > 0 ? _this.sqlitePorter.importSqlToDb(db, sql) : Promise.reject('failure to saveTasks');
-                });
-            });
-        }
-    };
-    /**
-     * 保存任务
-     * @param task
-     * @returns {any}
-     */
-    DbService.prototype.saveTask = function (task) {
-        var _this = this;
-        if (this.globalService.isChrome || !task) {
-            return Promise.reject(this.paramError);
-        }
-        else {
-            return this.openDb()
-                .then(function (db) {
-                var sql = _this.toTaskUpdateSql(task);
-                return sql && sql.length > 0 ? db.executeSql(sql, {}) : Promise.reject('failure to saveTask');
-            });
-        }
-    };
-    /**
-     * 获取任务
-     * @param userId
-     * @param since
-     * @param count
-     * @param states
-     * @param key
-     * @returns {any}
-     */
-    DbService.prototype.getTasks = function (userId, since, count, states, key) {
-        var _this = this;
-        if (this.globalService.isChrome) {
-            return Promise.reject(this.paramError);
-        }
-        else {
-            return this.openDb()
-                .then(function (db) {
-                var sql = "SELECT * FROM GD_TASKS WHERE I_USERID = " + userId;
-                if (states && states.length > 0) {
-                    sql += " AND I_STATE IN (" + states.join(',') + ")";
-                }
-                if (key) {
-                    sql += " AND S_TASKID LIKE '%" + key + "%'";
-                }
-                sql += " ORDER BY ID LIMIT " + count + " OFFSET " + since + ";";
-                return db.executeSql(sql, {})
-                    .then(function (data) {
-                    var rows = data.rows;
-                    var tasks = [];
-                    if (rows && rows.length > 0) {
-                        for (var i = 0; i < rows.length; i++) {
-                            var localTask = rows.item(i);
-                            if (!localTask || !localTask.S_TASKID) {
-                                continue;
-                            }
-                            tasks.push(_this.toTask(localTask));
-                        }
-                    }
-                    return Promise.resolve(tasks);
-                });
-            });
-        }
-    };
-    /**
-     * 获取任务数
-     * @param userId
-     * @returns {any}
-     */
-    DbService.prototype.getTaskCount = function (userId) {
-        if (this.globalService.isChrome) {
-            return Promise.reject(this.paramError);
-        }
-        else {
-            return this.openDb()
-                .then(function (db) {
-                var sql = "SELECT COUNT(*) FROM GD_TASKS WHERE I_USERID = " + userId + ";";
-                return db.executeSql(sql, {})
-                    .then(function (data) {
-                    return Promise.resolve(data);
-                });
-            });
-        }
-    };
-    /**
-     * 获取当前登录人TaskIds
-     * @param userId
-     * @returns {Array<string>}
-     */
-    DbService.prototype.getTaskIds = function (userId) {
-        if (this.globalService.isChrome) {
-            return Promise.reject(this.paramError);
-        }
-        else {
-            return this.openDb()
-                .then(function (db) {
-                var sql = "SELECT S_TASKID FROM GD_TASKS WHERE I_USERID = " + userId + ";";
-                return db.executeSql(sql, {})
-                    .then(function (data) {
-                    var rows = data.rows;
-                    var taskIds = [];
-                    if (rows && rows.length > 0) {
-                        for (var i = 0; i < rows.length; i++) {
-                            var item = rows.item(i);
-                            if (item.hasOwnProperty('S_TASKID') && item['S_TASKID']) {
-                                taskIds.push(item['S_TASKID']);
-                            }
-                        }
-                    }
-                    return Promise.resolve(taskIds);
-                });
-            });
-        }
-    };
-    /**
-     * 保存任务详情
-     * @param taskDetail
-     * @returns {any}
-     */
-    DbService.prototype.saveTaskDetail = function (taskDetail) {
-        var _this = this;
-        if (this.globalService.isChrome || !taskDetail) {
-            return Promise.reject(this.paramError);
-        }
-        else {
-            return this.openDb()
-                .then(function (db) {
-                var sql = "SELECT * FROM GD_TASKDETAILS WHERE S_TASKID = '" + taskDetail.taskId + "';";
-                return db.executeSql(sql, {})
-                    .then(function (data) {
-                    var rows = data.rows;
-                    var sql;
-                    if (rows && rows.length > 0) {
-                        sql = _this.toTaskDetailUpdateSql(taskDetail);
-                    }
-                    else {
-                        sql = _this.toTaskDetailInsertSql(taskDetail);
-                    }
-                    return db.executeSql(sql, {});
-                });
-            });
-        }
-    };
-    /**
-     * 获取任务详情
-     * @param taskId
-     * @returns {any}
-     */
-    DbService.prototype.getTaskDetail = function (taskId) {
-        var _this = this;
-        if (this.globalService.isChrome || !taskId) {
-            return Promise.reject(this.paramError);
-        }
-        else {
-            return this.openDb()
-                .then(function (db) {
-                var sql = "SELECT * FROM GD_TASKDETAILS WHERE S_TASKID = '" + taskId + "';";
-                return db.executeSql(sql, {})
-                    .then(function (data) {
-                    var rows = data.rows;
-                    var taskDetail;
-                    if (rows && rows.length > 0) {
-                        for (var i = 0; i < rows.length; i++) {
-                            var localTaskDetail = rows.item(i);
-                            if (!localTaskDetail || !localTaskDetail.S_TASKID) {
-                                continue;
-                            }
-                            taskDetail = _this.toTaskDetail(localTaskDetail);
-                        }
-                    }
-                    return Promise.resolve(taskDetail);
-                });
-            });
-        }
-    };
-    /**
-     * 获取任务详情
-     * @param taskIds
-     * @returns {Array<TaskDetail>}
-     */
-    DbService.prototype.getTaskDetails = function (taskIds) {
-        var _this = this;
-        if (this.globalService.isChrome || !taskIds || taskIds.length <= 0) {
-            return Promise.reject(this.paramError);
-        }
-        else {
-            return this.openDb()
-                .then(function (db) {
-                var sql = "SELECT * FROM GD_TASKDETAILS WHERE";
-                var ids = taskIds.map(function (id) { return "'" + id + "'"; });
-                sql += " S_TASKID IN (" + ids.join(',') + ")";
-                return db.executeSql(sql, {})
-                    .then(function (data) {
-                    var rows = data.rows;
-                    var taskDetails = [];
-                    if (rows && rows.length > 0) {
-                        for (var i = 0; i < rows.length; i++) {
-                            var localTaskDetail = rows.item(i);
-                            if (!localTaskDetail) {
-                                continue;
-                            }
-                            taskDetails.push(_this.toTaskDetail(localTaskDetail));
-                        }
-                    }
-                    return Promise.resolve(taskDetails);
-                });
-            });
-        }
-    };
-    /**
-     * 获取无详细信息的taskId列表
-     * @param userId
-     * @returns {any}
-     */
-    DbService.prototype.getNoDetailTaskIds = function (userId) {
-        if (this.globalService.isChrome) {
-            return Promise.reject(this.paramError);
-        }
-        else {
-            return this.openDb()
-                .then(function (db) {
-                var sql = "SELECT S_TASKID FROM GD_TASKS WHERE I_USERID = " + userId + " AND S_TASKID NOT IN (SELECT S_TASKID FROM GD_TASKDETAILS);";
-                return db.executeSql(sql, {})
-                    .then(function (data) {
-                    var rows = data.rows;
-                    var taskIds = [];
-                    if (rows && rows.length > 0) {
-                        for (var i = 0; i < rows.length; i++) {
-                            var item = rows.item(i);
-                            if (item.hasOwnProperty('S_TASKID') && item['S_TASKID']) {
-                                taskIds.push(item['S_TASKID']);
-                            }
-                        }
-                    }
-                    return Promise.resolve(taskIds);
-                });
-            });
-        }
-    };
-    /**
-     * 保存每次操作到历史表
-     * @param history
-     * @returns {any}
-     */
-    DbService.prototype.saveHistory = function (history) {
-        var _this = this;
-        if (this.globalService.isChrome || !history) {
-            return Promise.reject(this.paramError);
-        }
-        else {
-            return this.openDb()
-                .then(function (db) {
-                var sql = "SELECT * FROM GD_HISTORIES WHERE I_USERID = " + history.userId + " AND S_TASKID = '" + history.taskId + "' AND I_STATE = " + history.state + " ORDER BY ID;";
-                return db.executeSql(sql, {})
-                    .then(function (data) {
-                    var rows = data.rows;
-                    var sql;
-                    if (rows && rows.length > 0) {
-                        //let localHistory: LocalHistory = rows.item(0) as LocalHistory;
-                        sql = _this.toHistoryUpdateSql(history);
-                    }
-                    else {
-                        sql = _this.toHistoryInsertSql(history);
-                    }
-                    return db.executeSql(sql, {});
-                });
-            });
-        }
-    };
-    /**
-     * 获取历史记录
-     * @param userId
-     * @param taskId
-     * @param states
-     * @param uploadedFlags
-     * @param key
-     * @param since
-     * @param count
-     * @returns {any}
-     */
-    DbService.prototype.getHistories = function (userId, taskId, states, uploadedFlags, key, since, count) {
-        var _this = this;
-        if (this.globalService.isChrome) {
-            return Promise.reject(this.paramError);
-        }
-        else {
-            return this.openDb()
-                .then(function (db) {
-                var sql = "SELECT * FROM GD_HISTORIES WHERE I_USERID = " + userId;
-                if (taskId != undefined && taskId != null) {
-                    sql += " AND S_TASKID = '" + taskId + "'";
-                }
-                if (states && states.length > 0) {
-                    sql += " AND I_STATE IN (" + states.join(',') + ")";
-                }
-                if (uploadedFlags && uploadedFlags.length > 0) {
-                    sql += " AND I_UPLOADEDFLAG IN (" + uploadedFlags.join(',') + ")";
-                }
-                if (key) {
-                    sql += " AND S_TASKID LIKE '%" + key + "%'";
-                }
-                if (since !== undefined && since !== null && count !== undefined && count !== null) {
-                    sql += " ORDER BY ID LIMIT " + count + " OFFSET " + since + ";";
-                }
-                else {
-                    sql += ' ORDER BY ID;';
-                }
-                return db.executeSql(sql, {});
-            })
-                .then(function (data) {
-                var rows = data.rows;
-                var histories = [];
-                if (rows && rows.length > 0) {
-                    for (var i = 0; i < rows.length; i++) {
-                        var localHistory = rows.item(i);
-                        if (!localHistory) {
-                            continue;
-                        }
-                        histories.push(_this.toHistory(localHistory));
-                    }
-                }
-                return Promise.resolve(histories);
-            });
-        }
-    };
-    /**
-     *
-     * @param userId
-     * @param taskIds
-     * @param state
-     * @param uploadedFlags
-     * @returns {any}
-     */
-    DbService.prototype.getSpecialHistories = function (userId, taskIds, state, uploadedFlags) {
-        var _this = this;
-        if (this.globalService.isChrome || !taskIds || taskIds.length <= 0) {
-            return Promise.resolve([]);
-        }
-        else {
-            return this.openDb()
-                .then(function (db) {
-                var ids = taskIds.map(function (id) { return "'" + id + "'"; });
-                var sql = "SELECT * FROM GD_HISTORIES WHERE I_USERID = " + userId + " AND S_TASKID IN (" + ids.join(',') + ")";
-                if (state !== undefined && state !== null) {
-                    sql += " AND I_STATE = " + state;
-                }
-                if (uploadedFlags && uploadedFlags.length > 0) {
-                    sql += " AND I_UPLOADEDFLAG IN (" + uploadedFlags.join(',') + ")";
-                }
-                sql += " ORDER BY ID;";
-                return db.executeSql(sql, {});
-            })
-                .then(function (data) {
-                var rows = data.rows;
-                var histories = [];
-                if (rows && rows.length > 0) {
-                    for (var i = 0; i < rows.length; i++) {
-                        var localHistory = rows.item(i);
-                        if (!localHistory) {
-                            continue;
-                        }
-                        histories.push(_this.toHistory(localHistory));
-                    }
-                }
-                return Promise.resolve(histories);
-            });
-        }
-    };
-    /**
-     * 销单删除任务及详情
-     * @param userId
-     * @param taskId
-     * @returns {any}
-     */
-    // public deleteTaskAndDetail(userId: number, taskId: string) {
-    //   if (this.globalService.isChrome) {
-    //     return Promise.reject('chrome');
-    //   } else {
-    //     return this.openDb()
-    //       .then(db => {
-    //         let sql = `DELETE FROM GD_TASKS WHERE I_USERID = ${userId} AND S_TASKID = '${taskId}';`
-    //           + `DELETE FROM GD_TASKDETAILS WHERE S_TASKID = '${taskId}';`;
-    //         return this.sqlitePorter.importSqlToDb(db, sql);
-    //       });
-    //   }
-    // }
-    /**
-     * 保存多媒体信息
-     * @param media
-     * @returns {any}
-     */
-    DbService.prototype.saveMedia = function (media) {
-        var _this = this;
-        if (this.globalService.isChrome || !media) {
-            return Promise.reject(this.paramError);
-        }
-        else {
-            return this.openDb()
-                .then(function (db) {
-                var sql = "SELECT * FROM GD_MULTIMEDIAS WHERE I_USERID = " + media.userId + " AND S_TASKID = '" + media.taskId + "' AND I_FILETYPE = " + media.fileType + " AND S_FILENAME = '" + media.fileName + "';";
-                return db.executeSql(sql, {})
-                    .then(function (data) {
-                    var rows = data.rows;
-                    if (rows && rows.length > 0) {
-                        var localMedia = rows.item(0);
-                        sql = _this.toMediaUpdateSql(media, localMedia);
-                    }
-                    else {
-                        sql = _this.toMediaInsertSql(media);
-                    }
-                    return db.executeSql(sql, {});
-                });
-            });
-        }
-    };
-    /**
-     * 获取多媒体列表
-     * @param userId
-     * @param taskId
-     * @param fileNames
-     * @param uploadedFlags
-     * @returns {any}
-     */
-    DbService.prototype.getMediaList = function (userId, taskId, fileNames, uploadedFlags) {
-        var _this = this;
-        if (this.globalService.isChrome || !taskId) {
-            return Promise.reject(this.paramError);
-        }
-        else if (fileNames.length <= 0) {
-            return Promise.reject([]);
-        }
-        else {
-            return this.openDb()
-                .then(function (db) {
-                var names = fileNames.map(function (name) { return "'" + name + "'"; });
-                var sql = "SELECT * FROM GD_MULTIMEDIAS WHERE I_USERID = " + userId + " AND S_TASKID = '" + taskId + "'\n           AND S_FILENAME IN (" + names.join(',') + ")";
-                if (uploadedFlags && uploadedFlags.length > 0) {
-                    sql += " AND I_UPLOADEDFLAG IN (" + uploadedFlags.join(',') + ")";
-                }
-                sql += ' ORDER BY ID;';
-                return db.executeSql(sql, {});
-            })
-                .then(function (data) {
-                var rows = data.rows;
-                var mediaList = [];
-                if (rows && rows.length > 0) {
-                    for (var i = 0; i < rows.length; i++) {
-                        var localMedia = rows.item(i);
-                        if (!localMedia) {
-                            continue;
-                        }
-                        mediaList.push(_this.toMedia(localMedia));
-                    }
-                }
-                return Promise.resolve(mediaList);
-            });
-        }
-    };
-    /**
-     *
-     * @param userId
-     * @param taskId
-     * @returns {any}
-     */
-    DbService.prototype.deleteOneTaskWithAllInfos = function (userId, taskId) {
-        var _this = this;
-        if (this.globalService.isChrome) {
-            return Promise.reject('chrome');
-        }
-        else {
-            return this.openDb()
-                .then(function (db) {
-                var sql = "DELETE FROM GD_TASKS WHERE I_USERID = " + userId + " AND S_TASKID = '" + taskId + "';"
-                    + ("DELETE FROM GD_TASKDETAILS WHERE S_TASKID = '" + taskId + "';")
-                    + ("DELETE FROM GD_HISTORIES WHERE I_USERID = " + userId + " AND S_TASKID = '" + taskId + "';")
-                    + ("DELETE FROM GD_MULTIMEDIAS WHERE I_USERID = " + userId + " AND S_TASKID = '" + taskId + "';");
-                return _this.sqlitePorter.importSqlToDb(db, sql);
-            });
-        }
-    };
-    /**
-     *
-     * @param userId
-     * @param fileNames
-     * @returns {any}
-     */
-    DbService.prototype.deleteOneMedia = function (userId, fileNames) {
-        var _this = this;
-        if (this.globalService.isChrome) {
-            return Promise.reject('chrome');
-        }
-        else {
-            return this.openDb()
-                .then(function (db) {
-                var sql = "DELETE FROM GD_MULTIMEDIAS WHERE S_FILENAME = '" + fileNames + "' AND I_USERID = " + userId + ";";
-                return _this.sqlitePorter.importSqlToDb(db, sql);
-            });
-        }
-    };
-    /**
-     *
-     * @param personnels
-     * @returns {any}
-     */
-    DbService.prototype.savePersonnels = function (personnels) {
-        var _this = this;
-        if (this.globalService.isChrome || !personnels || personnels.length <= 0) {
-            return Promise.resolve(false);
-        }
-        else {
-            return this.openDb()
-                .then(function (db) {
-                var sql = "DELETE FROM GD_PERSONNELS;";
-                for (var _i = 0, personnels_1 = personnels; _i < personnels_1.length; _i++) {
-                    var personnel = personnels_1[_i];
-                    sql += _this.toPersonnelInsertSql(personnel);
-                }
-                return _this.sqlitePorter.importSqlToDb(db, sql);
-            });
-        }
-    };
-    /**
-     *
-     * @returns {any}
-     */
-    DbService.prototype.getPersonnels = function () {
-        var _this = this;
-        if (this.globalService.isChrome) {
-            return Promise.reject(this.paramError);
-        }
-        else {
-            return this.openDb()
-                .then(function (db) {
-                var sql = "SELECT * FROM GD_PERSONNELS;";
-                return db.executeSql(sql, {})
-                    .then(function (data) {
-                    var rows = data.rows;
-                    var personnels = [];
-                    if (rows && rows.length > 0) {
-                        for (var i = 0; i < rows.length; i++) {
-                            var localPersonnel = rows.item(i);
-                            if (!localPersonnel) {
-                                continue;
-                            }
-                            personnels.push(_this.toPersonnel(localPersonnel));
-                        }
-                    }
-                    return personnels.length ? Promise.resolve(personnels) : Promise.reject('no personnels');
-                });
-            });
-        }
-    };
-    DbService.prototype.getPersonnelsCount = function () {
-        if (this.globalService.isChrome) {
-            return Promise.resolve(0);
-        }
-        else {
-            return this.openDb()
-                .then(function (db) {
-                var sql = "SELECT COUNT(*) FROM GD_PERSONNELS;";
-                return db.executeSql(sql, {})
-                    .then(function (data) { return data.rows && data.rows.length > 0 ? data.rows.item(0)["COUNT(*)"] : 0; });
-            });
-        }
-    };
-    /**
-     * 打开数据库
-     * @returns {any}
-     */
-    DbService.prototype.openDb = function () {
-        return this.sqlite.create({
-            name: this.dbPath,
-            location: 'default'
-        });
-    };
-    /**
-     * 创建tables
-     */
-    DbService.prototype.createTables = function () {
-        var _this = this;
-        var sql = "CREATE TABLE IF NOT EXISTS [GD_HISTORIES] (\n        [ID] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n        [I_USERID] INTEGER NOT NULL, \n        [S_TASKID] TEXT(50) NOT NULL,\n        [I_STATE] INTEGER NOT NULL,\n        [S_CONTENT] TEXT NOT NULL,\n        [S_REPLY] TEXT,\n        [I_UPLOADEDFLAG] INTEGER NOT NULL DEFAULT 0,\n        [S_EXTENDEDINFO] TEXT);\n           \n      CREATE TABLE IF NOT EXISTS [GD_MULTIMEDIAS] (\n        [ID] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n        [I_USERID] INTEGER NOT NULL,\n        [S_TASKID] TEXT(50) NOT NULL,\n        [I_FILETYPE] INTEGER NOT NULL,\n        [S_FILENAME] TEXT(100) NOT NULL,\n        [I_UPLOADEDFLAG] INTEGER NOT NULL DEFAULT 0,\n        [S_FILEID] TEXT,\n        [S_EXTENDEDINFO] TEXT);\n      \n      CREATE TABLE IF NOT EXISTS [GD_NEWS] (\n        [ID] INTEGER NOT NULL, \n        [S_TITLE] TEXT(100) NOT NULL,\n        [D_PUBTIME] INTEGER NOT NULL,\n        [S_CONTENT] TEXT NOT NULL,\n        [I_READFLAG] INTEGER NOT NULL DEFAULT 0,\n        [S_EXTENDEDINFO] TEXT);\n      \n      CREATE TABLE IF NOT EXISTS [GD_TASKDETAILS] (\n        [ID] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n        [S_TASKID] TEXT(50) NOT NULL,\n        [S_DETAILINFO] TEXT NOT NULL,\n        [S_EXTENDEDINFO] TEXT);\n      \n      CREATE TABLE IF NOT EXISTS [GD_TASKS] (\n        [ID] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n        [I_USERID] INTEGER NOT NULL, \n        [S_TASKID] TEXT(50) NOT NULL,\n        [S_TASKTYPE] TEXT(50) NOT NULL,\n        [S_DESC] TEXT(50),\n        [S_SOURCE] TEXT(50),\n        [D_CREATETIME] INTEGER,\n        [D_ASSGINTIME] INTEGER,\n        [D_ACCEPTTIME] INTEGER,\n        [D_GOTIME] INTEGER,\n        [D_ARRIVEDTIME] INTEGER,\n        [D_REPLYTIME] INTEGER,\n        [D_COMPLETEDTIME] INTEGER,\n        [I_STATE] INTEGER NOT NULL,\n        [S_LNGLATTYPE] TEXT(50),\n        [S_LONGITUDE] TEXT(50),\n        [S_LATITUDE] TEXT(50),\n        [S_EXTENDEDINFO] TEXT);\n      \n      CREATE TABLE IF NOT EXISTS [GD_WORDS] (\n        [ID] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n        [I_WID] INTEGER NOT NULL,\n        [S_WNAME] TEXT(100) NOT NULL,\n        [S_WVALUE] TEXT(100) NOT NULL,\n        [S_WVALUEEX] TEXT(100),\n        [S_WGROUP] TEXT(100),\n        [I_WPARENTID] INTEGER,\n        [S_WREMARK] TEXT(100),\n        [S_WISACTIVE] TEXT(100));\n        \n      CREATE TABLE IF NOT EXISTS [GD_MATERIALS] (\n        [ID] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n        [I_MID] INTEGER NOT NULL,\n        [I_PARENTID] INTEGER NOT NULL,\n        [S_GROUPKEY] TEXT(100) NOT NULL,\n        [S_KEY] TEXT(100) NOT NULL,\n        [S_NAME] TEXT(100));\n        \n      CREATE TABLE IF NOT EXISTS [GD_MATERIALINFO](\n        [ID] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n        [I_USERID] INTEGER NOT NULL,\n        [S_TASKID] TEXT(50) NOT NULL,\n        [S_INFOS] TEXT(1000) NOT NULL,\n        [I_UPLOADEDFLAG] INTEGER NOT NULL DEFAULT 0);\n        \n      CREATE TABLE IF NOT EXISTS [GD_MAINTAININFO](\n        [ID] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n        [S_TASKID] TEXT(50) NOT NULL,\n        [S_TYPE] TEXT(50),\n        [S_ADDRESS] TEXT(100),\n        [S_AREA] TEXT(50),\n        [S_CONTENT] TEXT(1000),\n        [S_REMARK] TEXT(1000));\n       \n      CREATE TABLE IF NOT EXISTS [META_INFO] (\n        [S_VERSION] TEXT(50) NOT NULL, \n        [S_PRODUCTER] TEXT (100) NOT NULL, \n        [D_PRODUCTEDTIME] INTEGER NOT NULL);\n\n      CREATE TABLE IF NOT EXISTS [GD_PERSONNELS] (\n        [I_FIELDPERSONNELID] INTEGER NOT NULL, \n        [S_FIELDPERSONNELNAME] TEXT (100) NOT NULL, \n        [S_ROLES] TEXT);";
-        return this.openDb()
-            .then(function (db) {
-            return _this.sqlitePorter.importSqlToDb(db, sql);
-        });
-    };
-    /**
-     * 更新tables, to be used in future!!!
-     * @returns {Promise<boolean>}
-     */
-    DbService.prototype.updateTables = function () {
-        return Promise.resolve(true);
-    };
-    /**
-     *
-     * @param word
-     * @returns {string}
-     */
-    DbService.prototype.toWordInsertSql = function (word) {
-        return "INSERT INTO GD_WORDS VALUES (null, " + word.wid + ", '" + word.wName + "', '" + word.wValue + "', '" + word.wValueEx + "', '" + word.wGroup + "', " + word.wParentId + ", '" + word.wRemark + "', " + (word.wIsActive ? "'1'" : "'0'") + ");";
-    };
-    DbService.prototype.toMaterialInsertSql = function (material) {
-        return "INSERT INTO GD_MATERIALS VALUES (null," + material.id + ", " + material.parentId + ", '" + material.groupKey + "', '" + material.key + "', '" + material.name + "');";
-    };
-    DbService.prototype.toMaterialInfoInsertSql = function (materialInfo) {
-        return "INSERT INTO GD_MATERIALINFO VALUES (null," + this.globalService.userId + ", '" + materialInfo.taskId + "', \n    '" + JSON.stringify(materialInfo.infos) + "', " + materialInfo.uploadFlag + ");";
-    };
-    DbService.prototype.toMaintainInfoInsertSql = function (maintainInfo) {
-        return "INSERT INTO GD_MAINTAININFO VALUES (null,'" + maintainInfo.serialNumber + "','" + maintainInfo.maintenanceType + "',\n    '" + maintainInfo.maintenanceAddress + "','" + maintainInfo.area + "','" + maintainInfo.repairContent + "','" + maintainInfo.remark + "');";
-    };
-    /**
-     * 更新
-     * @param materialInfo
-     * @returns {string}
-     */
-    DbService.prototype.toMaterialInfoUpdateSql = function (materialInfo) {
-        return "UPDATE GD_MATERIALINFO SET S_INFOS = '" + JSON.stringify(materialInfo.infos) + "',\n    I_UPLOADEDFLAG=" + materialInfo.uploadFlag + " WHERE S_TASKID = '" + materialInfo.taskId + "'";
-    };
-    /**
-     *
-     * @param localWord
-     * @returns {{wid: number, wName: string, wValue: string, wValueEx: string, wIsActive: Boolean, wGroup: string, wParentId: number, wRemark: string}}
-     */
-    DbService.prototype.toWord = function (localWord) {
-        return {
-            wid: localWord.I_WID,
-            wName: localWord.S_WNAME,
-            wValue: localWord.S_WVALUE,
-            wValueEx: localWord.S_WVALUEEX,
-            wIsActive: Boolean(localWord.S_WISACTIVE),
-            wGroup: localWord.S_WGROUP,
-            wParentId: localWord.I_WPARENTID,
-            wRemark: localWord.S_WREMARK
-        };
-    };
-    DbService.prototype.toMaterial = function (localMaterial) {
-        return {
-            id: localMaterial.I_MID,
-            parentId: localMaterial.I_PARENTID,
-            groupKey: localMaterial.S_GROUPKEY,
-            key: localMaterial.S_KEY,
-            name: localMaterial.S_NAME
-        };
-    };
-    DbService.prototype.toMaintainInfo = function (localMaintainInfo) {
-        return {
-            id: localMaintainInfo.ID,
-            serialNumber: localMaintainInfo.S_TASKID,
-            maintenanceType: localMaintainInfo.S_TYPE,
-            maintenanceAddress: localMaintainInfo.S_ADDRESS,
-            area: localMaintainInfo.S_AREA,
-            repairContent: localMaintainInfo.S_CONTENT,
-            remark: localMaintainInfo.S_REMARK
-        };
-    };
-    /**
-     * task转insert sql
-     * @param task
-     * @returns {string}
-     */
-    DbService.prototype.toTaskInsertSql = function (task) {
-        return "INSERT INTO GD_TASKS VALUES (null, " + this.globalService.userId + ", '" + task.taskId + "', '" + task.taskType + "', '" + task.desc + "', '" + task.source + "', " + task.createTime + ", " + task.assignTime + ", " + task.acceptTime + ", " + task.goTime + ", " + task.arrivedTime + ", " + task.replyTime + ", " + task.compltedTime + ", " + task.state + ", " + task.location.type + ", " + task.location.lng + ", " + task.location.lat + ", null);";
-    };
-    /**
-     * task转update sql
-     * @param serverTask
-     * @param localTask
-     * @returns {string}
-     */
-    DbService.prototype.toTaskUpdateSql = function (serverTask, localTask) {
-        var sql = '';
-        if (localTask) {
-            if (serverTask.acceptTime > localTask.D_ACCEPTTIME) {
-                sql += "D_ACCEPTTIME = " + serverTask.acceptTime + ", ";
-            }
-            if (serverTask.arrivedTime > localTask.D_ARRIVEDTIME) {
-                sql += "D_ARRIVEDTIME = " + serverTask.arrivedTime + ", ";
-            }
-            if (serverTask.assignTime > localTask.D_ASSGINTIME) {
-                sql += "D_ASSGINTIME = " + serverTask.assignTime + ", ";
-            }
-            if (serverTask.compltedTime > localTask.D_COMPLETEDTIME) {
-                sql += "D_COMPLETEDTIME = " + serverTask.compltedTime + ", ";
-            }
-            if (serverTask.createTime > localTask.D_CREATETIME) {
-                sql += "D_CREATETIME = " + serverTask.createTime + ", ";
-            }
-            if (serverTask.goTime > localTask.D_GOTIME) {
-                sql += "D_GOTIME = " + serverTask.goTime + ", ";
-            }
-            if (serverTask.replyTime > localTask.D_REPLYTIME) {
-                sql += "D_REPLYTIME = " + serverTask.replyTime + ", ";
-            }
-            // TBD
-            // if (serverTask.state > localTask.I_STATE) {
-            //   sql += `SET I_STATE = ${serverTask.state}, `;
-            // }
-        }
-        else {
-            if (serverTask.acceptTime > 0) {
-                sql += "D_ACCEPTTIME = " + serverTask.acceptTime + ", ";
-            }
-            if (serverTask.arrivedTime > 0) {
-                sql += "D_ARRIVEDTIME = " + serverTask.arrivedTime + ", ";
-            }
-            if (serverTask.assignTime > 0) {
-                sql += "D_ASSGINTIME = " + serverTask.assignTime + ", ";
-            }
-            if (serverTask.compltedTime > 0) {
-                sql += "D_COMPLETEDTIME = " + serverTask.compltedTime + ", ";
-            }
-            if (serverTask.createTime > 0) {
-                sql += "D_CREATETIME = " + serverTask.createTime + ", ";
-            }
-            if (serverTask.goTime > 0) {
-                sql += "D_GOTIME = " + serverTask.goTime + ", ";
-            }
-            if (serverTask.replyTime > 0) {
-                sql += "D_REPLYTIME = " + serverTask.replyTime + ", ";
-            }
-            if (serverTask.state > 0) {
-                sql += "I_STATE = " + serverTask.state + ", ";
-            }
-        }
-        if (sql.length > 0) {
-            var seperator = ', ';
-            var index = sql.lastIndexOf(seperator);
-            if (sql.endsWith(seperator) && index > 0) {
-                sql = sql.substring(0, index);
-            }
-            if (sql && sql.length > 0) {
-                sql = "UPDATE GD_TASKS SET " + sql + " WHERE S_TASKID = '" + serverTask.taskId + "';";
-            }
-            else {
-                sql = '';
-            }
-        }
-        return sql;
-    };
-    /**
-     *
-     * @param taskDetail
-     * @returns {string}
-     */
-    DbService.prototype.toTaskDetailInsertSql = function (taskDetail) {
-        return "INSERT INTO GD_TASKDETAILS VALUES (null, '" + taskDetail.taskId + "', '" + JSON.stringify(taskDetail) + "', '" + (taskDetail.extendedInfo ? taskDetail.extendedInfo : null) + "');";
-    };
-    /**
-     *
-     * @param taskDetail
-     * @returns {string}
-     */
-    DbService.prototype.toTaskDetailUpdateSql = function (taskDetail) {
-        var sql = "UPDATE GD_TASKDETAILS SET S_DETAILINFO = '" + JSON.stringify(taskDetail) + "'";
-        if (taskDetail.extendedInfo) {
-            sql += ", S_EXTENDEDINFO = '" + taskDetail.extendedInfo + "'}";
-        }
-        sql += " WHERE S_TASKID = '" + taskDetail.taskId + "';";
-        return sql;
-    };
-    /**
-     *
-     * @param history
-     * @returns {string}
-     */
-    DbService.prototype.toHistoryInsertSql = function (history) {
-        var extendInfo = {};
-        if (history.taskDetail) {
-            extendInfo.taskDetail = history.taskDetail;
-        }
-        if (history.mediaNames && history.mediaNames.length > 0) {
-            extendInfo.mediaNames = history.mediaNames.join(',');
-        }
-        return "INSERT INTO GD_HISTORIES VALUES (null, " + history.userId + ", '" + history.task.taskId + "', " + history.task.state + ", '" + JSON.stringify(history.task) + "', '" + JSON.stringify(history.reply) + "', " + history.uploadedFlag + ", '" + JSON.stringify(extendInfo) + "');";
-    };
-    /**
-     *
-     * @param history
-     * @returns {string}
-     */
-    DbService.prototype.toHistoryUpdateSql = function (history) {
-        var extendInfo = {};
-        if (history.taskDetail) {
-            extendInfo.taskDetail = history.taskDetail;
-        }
-        if (history.mediaNames && history.mediaNames.length > 0) {
-            extendInfo.mediaNames = history.mediaNames.join(',');
-        }
-        return "UPDATE GD_HISTORIES SET S_CONTENT = '" + JSON.stringify(history.task) + "', S_REPLY = '" + JSON.stringify(history.reply) + "', I_UPLOADEDFLAG = " + history.uploadedFlag + ", S_EXTENDEDINFO = '" + JSON.stringify(extendInfo) + "' WHERE I_USERID = " + history.userId + " AND S_TASKID = '" + history.taskId + "' AND I_STATE = " + history.state + ";";
-    };
-    /**
-     * 转换task
-     * @param localTask
-     * @returns {{acceptTime: number, arrivedTime: number, assignTime: number, compltedTime: number, createTime: number, desc: string, goTime: number, location: {type: string, lng: string, lat: string}, replyTime: number, source: string, state: number, taskId: string, taskType: string}}
-     */
-    DbService.prototype.toTask = function (localTask) {
-        return {
-            acceptTime: localTask.D_ACCEPTTIME,
-            arrivedTime: localTask.D_ARRIVEDTIME,
-            assignTime: localTask.D_ASSGINTIME,
-            compltedTime: localTask.D_COMPLETEDTIME,
-            createTime: localTask.D_CREATETIME,
-            desc: localTask.S_DESC,
-            goTime: localTask.D_GOTIME,
-            location: {
-                type: localTask.S_LNGLATTYPE,
-                lng: localTask.S_LONGITUDE,
-                lat: localTask.S_LATITUDE
-            },
-            replyTime: localTask.D_REPLYTIME,
-            source: localTask.S_SOURCE,
-            state: localTask.I_STATE,
-            taskId: localTask.S_TASKID,
-            taskType: localTask.S_TASKTYPE
-        };
-    };
-    /**
-     * 转换task detail
-     * @param localTaskDetail
-     * @returns {TaskDetail}
-     */
-    DbService.prototype.toTaskDetail = function (localTaskDetail) {
-        try {
-            var taskDetail = JSON.parse(localTaskDetail.S_DETAILINFO);
-            if (localTaskDetail.S_EXTENDEDINFO) {
-                taskDetail.extendedInfo = JSON.parse(localTaskDetail.S_EXTENDEDINFO);
-            }
-            return taskDetail;
-        }
-        catch (e) {
-            console.error(e);
-        }
-    };
-    /**
-     *
-     * @param localHistory
-     * @returns {{userId: number, taskId: string, state: number, task: null, reply: any, uploadedFlag: number, taskDetail: TaskDetail, mediaIds: Array<number>}}
-     */
-    DbService.prototype.toHistory = function (localHistory) {
-        try {
-            var taskDetail = void 0;
-            var mediaNames = void 0;
-            if (localHistory.S_EXTENDEDINFO) {
-                var historyExtendedInfo = JSON.parse(localHistory.S_EXTENDEDINFO);
-                if (historyExtendedInfo.taskDetail) {
-                    taskDetail = historyExtendedInfo.taskDetail;
-                }
-                if (historyExtendedInfo.mediaNames && historyExtendedInfo.mediaNames.length > 0) {
-                    mediaNames = historyExtendedInfo.mediaNames.split(',');
-                }
-            }
-            return {
-                userId: localHistory.I_USERID,
-                taskId: localHistory.S_TASKID,
-                state: localHistory.I_STATE,
-                task: localHistory.S_CONTENT ? JSON.parse(localHistory.S_CONTENT) : null,
-                reply: JSON.parse(localHistory.S_REPLY),
-                uploadedFlag: localHistory.I_UPLOADEDFLAG,
-                taskDetail: taskDetail,
-                mediaNames: mediaNames
-            };
-        }
-        catch (e) {
-            console.error(e);
-        }
-    };
-    /**
-     *
-     * @param media
-     * @returns {string}
-     */
-    DbService.prototype.toMediaInsertSql = function (media) {
-        return "INSERT INTO GD_MULTIMEDIAS VALUES (null, " + media.userId + ", '" + media.taskId + "', " + media.fileType + ", '" + media.fileName + "', " + media.uploadedFlag + ", '" + (media.fileId ? media.fileId : null) + "', null);";
-    };
-    /**
-     *
-     * @param media
-     * @param localMedia
-     * @returns {string}
-     */
-    DbService.prototype.toMediaUpdateSql = function (media, localMedia) {
-        if (localMedia) {
-            var sql = "UPDATE GD_MULTIMEDIAS SET I_UPLOADEDFLAG = " + media.uploadedFlag;
-            if (media.fileId) {
-                sql += ", S_FILEID = '" + media.fileId + "'";
-            }
-            if (media.extendedInfo) {
-                sql += ", S_EXTENDEDINFO = '" + media.extendedInfo + "'";
-            }
-            sql += " WHERE ID = " + localMedia.ID + ";";
-            return sql;
-        }
-        else {
-            return this.toMediaInsertSql(media);
-        }
-    };
-    /**
-     *
-     * @param localMedia
-     * @returns {{userId: number, taskId: string, fileType: number, fileName: string, uploadedFlag: number, fileId: string, extendedInfo: string}}
-     */
-    DbService.prototype.toMedia = function (localMedia) {
-        return {
-            userId: localMedia.I_USERID,
-            taskId: localMedia.S_TASKID,
-            fileType: localMedia.I_FILETYPE,
-            fileName: localMedia.S_FILENAME,
-            uploadedFlag: localMedia.I_UPLOADEDFLAG,
-            fileId: localMedia.S_FILEID,
-            extendedInfo: localMedia.S_EXTENDEDINFO
-        };
-    };
-    /**
-     * 获取未上传的材料清单记录
-     * @param userId
-     * @returns {any}
-     */
-    DbService.prototype.getNotUploadMaterilalInfo = function (userId) {
-        var _this = this;
-        if (this.globalService.isChrome || !userId) {
-            return Promise.reject(this.paramError);
-        }
-        else {
-            return this.openDb()
-                .then(function (db) {
-                var sql = "SELECT * FROM GD_MATERIALINFO WHERE I_USERID = " + userId + " \n          AND I_UPLOADEDFLAG= " + _this.globalService.uploadedFlagForLocal + ";";
-                return db.executeSql(sql, {})
-                    .then(function (data) {
-                    var rows = data.rows;
-                    var results = [];
-                    if (rows && rows.length > 0) {
-                        for (var i = 0; i < rows.length; i++) {
-                            var localMaterialInfo = rows.item(i);
-                            if (!localMaterialInfo) {
-                                continue;
-                            }
-                            results.push(_this.toMaterialInfo(localMaterialInfo));
-                        }
-                    }
-                    return results.length ? Promise.resolve(results) : Promise.reject('no materialInfos');
-                });
-            });
-        }
-    };
-    DbService.prototype.toPersonnelInsertSql = function (personnel) {
-        return "INSERT INTO GD_PERSONNELS VALUES (" + personnel.fieldPersonnelId + ", '" + personnel.fieldPersonnelName + "', '" + personnel.roles.join(',') + "');";
-    };
-    DbService.prototype.toPersonnel = function (localPersonnel) {
-        return {
-            fieldPersonnelId: localPersonnel.I_FIELDPERSONNELID,
-            fieldPersonnelName: localPersonnel.S_FIELDPERSONNELNAME,
-            roles: localPersonnel.S_ROLES.split(',')
-        };
-    };
-    return DbService;
-}());
-DbService = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["B" /* Injectable */])(),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__ionic_native_sqlite__["a" /* SQLite */],
-        __WEBPACK_IMPORTED_MODULE_2__ionic_native_sqlite_porter__["a" /* SQLitePorter */],
-        __WEBPACK_IMPORTED_MODULE_3__GlobalService__["a" /* GlobalService */],
-        __WEBPACK_IMPORTED_MODULE_4__FileService__["a" /* FileService */]])
-], DbService);
-
-//# sourceMappingURL=DbService.js.map
-
-/***/ }),
-
-/***/ 63:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SearchPage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_forms__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__searchresult_searchresult__ = __webpack_require__(232);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__model_SearchTaskRequest__ = __webpack_require__(324);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_DataService__ = __webpack_require__(13);
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-/**
- * Created by zhangjing on 2017/6/23.
- */
-
-
-
-
-
-
-var SearchPage = (function () {
-    function SearchPage(navCtrl, alertCtrl, formBuilder, dataService) {
-        this.navCtrl = navCtrl;
-        this.alertCtrl = alertCtrl;
-        this.formBuilder = formBuilder;
-        this.dataService = dataService;
-        this.tag = "[SearchPage]";
-        this.title = '查询任务';
-    }
-    SearchPage.prototype.ngOnInit = function () {
-        this.searchForm = this.formBuilder.group({
-            'address': ['', __WEBPACK_IMPORTED_MODULE_2__angular_forms__["f" /* Validators */].compose([__WEBPACK_IMPORTED_MODULE_2__angular_forms__["f" /* Validators */].minLength(2)])],
-            'telephone': ['', __WEBPACK_IMPORTED_MODULE_2__angular_forms__["f" /* Validators */].compose([__WEBPACK_IMPORTED_MODULE_2__angular_forms__["f" /* Validators */].minLength(4)])],
-            'customerNum': [''],
-            'taskNum': [''],
-            'taskState': [''],
-            'reflectType': [''],
-            'reflectPerson': [''],
-            'dispatchTime': [''],
-        });
-        this.getReflectTypes();
-    };
-    /**
-     * 获得反映类别
-     */
-    SearchPage.prototype.getReflectTypes = function () {
-        var _this = this;
-        this.dataService.getReflectTypes()
-            .then(function (words) {
-            console.log(_this.tag + words);
-            if (words.length <= 0) {
-                return Promise.resolve(false);
-            }
-            else {
-                _this.reflectTypes = words;
-                return Promise.resolve(true);
-            }
-        });
-    };
-    /**
-     * 显示反映类型
-     */
-    SearchPage.prototype.showReflectType = function () {
-        var _this = this;
-        var alert = this.alertCtrl.create();
-        alert.setTitle('反映类别');
-        var arrInputs = [];
-        for (var i = 0; i < this.reflectTypes.length; i++) {
-            arrInputs.push({ type: 'radio', label: this.reflectTypes[i].wName, value: this.reflectTypes[i].wName });
-            alert.addInput(arrInputs[i]);
-        }
-        alert.addButton('取消');
-        alert.addButton({
-            text: '确定',
-            handler: function (data) {
-                _this.searchForm.patchValue({ reflectType: data });
-            }
-        });
-        alert.present();
-    };
-    /**
-     * 显示任何类型
-     */
-    SearchPage.prototype.showTaskType = function () {
-        var _this = this;
-        var alert = this.alertCtrl.create();
-        alert.setTitle('任务状态');
-        var arrInputs = [{ type: 'radio', label: '已派遣', value: '已派遣' },
-            { type: 'radio', label: '接收', value: '接收' }, { type: 'radio', label: '已派工', value: '已派工' },
-            { type: 'radio', label: '已出发', value: '已出发' }, { type: 'radio', label: '已到场', value: '已到场' },
-            { type: 'radio', label: '已处理', value: '已处理' }, { type: 'radio', label: '已退单', value: '已退单' },
-            { type: 'radio', label: '退单重派', value: '退单重派' }, { type: 'radio', label: '退单结束', value: '退单结束' },
-            { type: 'radio', label: '已销单', value: '已销单' }, { type: 'radio', label: '督办', value: '督办' }];
-        for (var i = 0; i < arrInputs.length; i++) {
-            alert.addInput(arrInputs[i]);
-        }
-        alert.addButton('取消');
-        alert.addButton({
-            text: '确定',
-            handler: function (data) {
-                _this.searchForm.patchValue({ taskState: data });
-            }
-        });
-        alert.present();
-    };
-    /**
-     * 重置
-     * @param ev
-     */
-    SearchPage.prototype.onReset = function (ev) {
-        this.searchForm.setValue({
-            address: '', telephone: '', customerNum: '', taskNum: '',
-            taskState: '', reflectType: '', reflectPerson: '', dispatchTime: ''
-        });
-    };
-    /**
-     * 查询
-     * @param searchInfo
-     */
-    SearchPage.prototype.onSearchClick = function (searchInfo) {
-        if (searchInfo['address'] == '' && searchInfo['telephone'] == '' && searchInfo['customerNum'] == ''
-            && searchInfo['taskNum'] == '' && searchInfo['taskState'] == '' && searchInfo['reflectType'] == ''
-            && searchInfo['reflectPerson'] == '' && searchInfo['dispatchTime'] == '') {
-            var alert_1 = this.alertCtrl.create({
-                title: '提示：',
-                buttons: ['确定']
-            });
-            alert_1.setSubTitle('请至少输入一个条件');
-            alert_1.present();
-            return;
-        }
-        var utcSendTime = Date.parse(this.myDate) - 28800000;
-        var taskState = this.transformTaskState(searchInfo['taskState']);
-        var reflectType = this.transformRefelctType(searchInfo['reflectType']);
-        var temp = new __WEBPACK_IMPORTED_MODULE_4__model_SearchTaskRequest__["a" /* SearchTaskRequest */]();
-        temp.happenedAddress = searchInfo['address'];
-        temp.contactPhone = searchInfo['telephone'];
-        temp.serialNo = searchInfo['customerNum'];
-        temp.taskNo = searchInfo['taskNum'];
-        temp.taskState = (searchInfo['taskState'] != '' && taskState != undefined) ? taskState : searchInfo['taskState'];
-        temp.reportType = (searchInfo['taskState'] != '' && taskState != undefined) ? reflectType : searchInfo['reflectType'];
-        temp.reportPerson = searchInfo['reflectPerson'];
-        temp.sendTime = utcSendTime;
-        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_3__searchresult_searchresult__["a" /* SearchResultPage */], { 'tasks': temp });
-    };
-    /**
-     * 转换任务状态
-     * @param strState
-     * @returns {number}
-     */
-    SearchPage.prototype.transformTaskState = function (strState) {
-        var taskState;
-        switch (strState) {
-            case '已派遣':
-                taskState = 0;
-                break;
-            case '接收':
-                taskState = 1;
-                break;
-            case '已响应':
-                taskState = 6;
-                break;
-            case '已派工':
-                taskState = 2;
-                break;
-            case '已出发':
-                taskState = 3;
-                break;
-            case '已到场':
-                taskState = 4;
-                break;
-            case '已处理':
-                taskState = 5;
-                break;
-            case '已退单':
-                taskState = -1;
-                break;
-            case '退单重派':
-                taskState = -2;
-                break;
-            case '退单结束':
-                taskState = -3;
-                break;
-            case '已销单':
-                taskState = 99;
-                break;
-            case '督办':
-                taskState = -99;
-                break;
-        }
-        return taskState;
-    };
-    SearchPage.prototype.transformRefelctType = function (strReflectType) {
-        var refelectType;
-        for (var _i = 0, _a = this.reflectTypes; _i < _a.length; _i++) {
-            var temp = _a[_i];
-            if (strReflectType == temp.wName) {
-                refelectType = temp.wid;
-                break;
-            }
-        }
-        return refelectType;
-    };
-    return SearchPage;
-}());
-SearchPage = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-search',template:/*ion-inline-start:"D:\cordova_ionic\HotlineManagerIonic\src\pages\search\search.html"*/'<ion-header>\n  <ion-navbar color="primary">\n    <ion-title>\n      {{title}}\n    </ion-title>\n\n    <ion-buttons end>\n      <button ion-button icon-only color="white" (click)="onReset($event)">\n        <ion-icon name="close"></ion-icon>\n      </button>\n    </ion-buttons>\n  </ion-navbar>\n</ion-header>\n\n<ion-content class="page-search">\n\n  <ion-list>\n    <form [formGroup]="searchForm">\n      <ion-item>\n        <ion-label color="label">发生地址</ion-label>\n        <ion-input formControlName="address" type="text" clearInput></ion-input>\n      </ion-item>\n\n      <ion-item>\n        <ion-label color="label">联系电话</ion-label>\n        <ion-input formControlName="telephone" type="number" clearInput></ion-input>\n      </ion-item>\n\n      <ion-item>\n        <ion-label color="label">客服编号</ion-label>\n        <ion-input formControlName="customerNum" type="text" clearInput></ion-input>\n      </ion-item>\n\n      <ion-item>\n        <ion-label color="label">任务编号</ion-label>\n        <ion-input formControlName="taskNum" type="text" clearInput></ion-input>\n      </ion-item>\n\n      <ion-item (click)="showTaskType()">\n        <ion-label class="label-content" color="label">任务状态</ion-label>\n        <ion-label>{{searchForm.value[\'taskState\']}}</ion-label>\n      </ion-item>\n\n      <ion-item (click)="showReflectType()">\n        <ion-label color="label">反映类别</ion-label>\n        <ion-label>{{searchForm.value[\'reflectType\']}}</ion-label>\n      </ion-item>\n\n      <ion-item>\n        <ion-label color="label">反映人员</ion-label>\n        <ion-input formControlName="reflectPerson" type="text" clearInput></ion-input>\n      </ion-item>\n\n      <ion-item>\n        <ion-label color="label">派遣时间</ion-label>\n        <ion-datetime cancelText=\'取消\' doneText=\'确定\' displayFormat="YYYY-MM-DD HH:mm"\n                      pickerFormat="YYYY-MM-DD HH:mm" formControlName="dispatchTime"\n                      [(ngModel)]="myDate"  clearInput></ion-datetime>\n      </ion-item>\n    </form>\n  </ion-list>\n\n  <ion-row>\n    <ion-col>\n      <div class="login-button">\n        <button ion-button type="submit" block (click)="onSearchClick(searchForm.value)">查询</button>\n      </div>\n    </ion-col>\n  </ion-row>\n</ion-content>\n'/*ion-inline-end:"D:\cordova_ionic\HotlineManagerIonic\src\pages\search\search.html"*/
-    }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
-        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */],
-        __WEBPACK_IMPORTED_MODULE_2__angular_forms__["a" /* FormBuilder */],
-        __WEBPACK_IMPORTED_MODULE_5__providers_DataService__["a" /* DataService */]])
-], SearchPage);
-
-//# sourceMappingURL=search.js.map
-
-/***/ }),
-
-/***/ 64:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return StationWorkPage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__workinfo_workinfo__ = __webpack_require__(234);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_DataService__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_GlobalService__ = __webpack_require__(7);
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-
-
-var StationWorkPage = (function () {
-    function StationWorkPage(navCtrl, alertCtrl, loadingCtrl, events, dataService, globalService) {
-        this.navCtrl = navCtrl;
-        this.alertCtrl = alertCtrl;
-        this.loadingCtrl = loadingCtrl;
-        this.events = events;
-        this.dataService = dataService;
-        this.globalService = globalService;
-        this.tag = "[StationWorkPage]";
-        this.contentNames = {
-            happenedAddress: '发生地址',
-            contactPhone: '联系电话',
-            reportPerson: '反映人',
-            reportType: '反映类别',
-            reportContent: '反映内容',
-            sendTime: '派遣时间',
-            resolveLimitedTime: '处理时限',
-            taskState: '任务状态'
-        };
-        //private readonly dispatched: string = '已派遣';
-        this.accepted = '已接收';
-        //private readonly disableColor: string = 'gray';
-        //private readonly enableColor: string = 'primary';
-        this.undispatchedName = '未派工';
-        this.dispatchedName = '24小时内已派工';
-        this.title = '站点任务';
-        this.subTitle = this.undispatchedName;
-        this.showToolbar = false;
-        this.showFab = false;
-        this.isUnDispatchedMode = true;
-        this.items = [];
-        this.since = 0;
-        this.count = 10;
-    }
-    /**
-     * 初始化
-     */
-    StationWorkPage.prototype.ngOnInit = function () {
-        var _this = this;
-        console.log(this.tag, "ngOnInit");
-        this.events.subscribe(this.globalService.stationWorkUpdateEvent, function () {
-            _this.since = 0;
-            while (_this.items.shift())
-                ;
-            _this.getUnDispatchedTasks(_this.since, _this.count);
-        });
-        Promise.all([this.getReflectType(), this.getReflectContent(), this.getUnDispatchedTasks(this.since, this.count)])
-            .then(function (result) { return console.log(_this.tag, result); })
-            .catch(function (error) { return console.error(error); });
-        // this.getReflectType()
-        //   .then(result => {
-        //     return this.getReflectContent();
-        //   })
-        //   .then(result => {
-        //     return this.getUnDispatchedTasks(this.since, this.count);
-        //   })
-        //   .catch(error => console.error(error));
-    };
-    /**
-     * 销毁
-     */
-    StationWorkPage.prototype.ngOnDestroy = function () {
-        this.events.unsubscribe(this.globalService.stationWorkUpdateEvent);
-    };
-    /**
-     * 下拉刷新
-     * @param refresher
-     */
-    StationWorkPage.prototype.doRefresh = function (refresher) {
-        var _this = this;
-        console.log(this.tag, refresher);
-        this.since = 0;
-        while (this.items.shift())
-            ;
-        var promise = this.isUnDispatchedMode
-            ? this.getUnDispatchedTasks(this.since, this.count)
-            : this.getDispatchedTasks(this.since, this.count);
-        promise
-            .then(function (result) { return console.log(_this.tag, result); })
-            .catch(function (error) { return console.error(error); })
-            .then(function () { return refresher.complete(); });
-    };
-    StationWorkPage.prototype.onSearch = function (ev) {
-        this.showToolbar = !this.showToolbar;
-        this.content.resize();
-    };
-    /**
-     * 过滤
-     * @param ev
-     */
-    StationWorkPage.prototype.onFilter = function (ev) {
-        var _this = this;
-        var alert = this.alertCtrl.create();
-        alert.setTitle('派工类型');
-        alert.addInput({
-            type: 'radio',
-            label: this.undispatchedName,
-            value: this.undispatchedName,
-            checked: this.subTitle === this.undispatchedName
-        });
-        alert.addInput({
-            type: 'radio',
-            label: this.dispatchedName,
-            value: this.dispatchedName,
-            checked: this.subTitle === this.dispatchedName
-        });
-        alert.addButton('取消');
-        alert.addButton({
-            text: '确定',
-            handler: function (data) {
-                if (data === _this.subTitle) {
-                    return;
-                }
-                var loader = _this.loadingCtrl.create({
-                    content: "Please wait...",
-                });
-                loader.present();
-                _this.since = 0;
-                while (_this.items.shift())
-                    ;
-                var promise;
-                if (data === _this.undispatchedName) {
-                    _this.subTitle = _this.undispatchedName;
-                    _this.isUnDispatchedMode = true;
-                    promise = _this.getUnDispatchedTasks(_this.since, _this.count);
-                }
-                else {
-                    _this.subTitle = _this.dispatchedName;
-                    _this.isUnDispatchedMode = false;
-                    promise = _this.getDispatchedTasks(_this.since, _this.count);
-                }
-                promise
-                    .then(function (result) { return console.log(_this.tag, result); })
-                    .catch(function (error) { return console.error(error); })
-                    .then(function () { return loader.dismiss(); });
-            }
-        });
-        alert.present().then(function () {
-            // this.testRadioOpen = true;
-        });
-    };
-    StationWorkPage.prototype.getItems = function (ev) {
-    };
-    /**
-     * 加载更多
-     * @param infiniteScroll
-     */
-    StationWorkPage.prototype.doInfinite = function (infiniteScroll) {
-        var _this = this;
-        console.log(this.tag, "doInfinite");
-        setTimeout(function () {
-            _this.since += _this.count;
-            _this.getUnDispatchedTasks(_this.since, _this.count)
-                .then(function (result) {
-                if (_this.items.length > _this.count) {
-                    _this.showFab = true;
-                }
-                if (result) {
-                    infiniteScroll.complete();
-                }
-                else {
-                    infiniteScroll.enable(false);
-                }
-            })
-                .catch(function (error) {
-                console.error(error);
-                infiniteScroll.complete();
-            });
-        }, 100);
-    };
-    /**
-     * 回滚到list顶部
-     * @param ev
-     */
-    StationWorkPage.prototype.doScroll2Top = function (ev) {
-        this.content.scrollToTop();
-    };
-    /**
-     * 接单
-     * @param stationTask
-     */
-    StationWorkPage.prototype.onAccept = function (stationTask) {
-        var _this = this;
-        this.dataService.acceptEx({
-            acceptOperator: this.globalService.userId,
-            acceptTime: new Date().getTime(),
-            taskId: stationTask.taskNo
-        }).then(function (result) {
-            stationTask.isAccepted = true;
-            stationTask.contents[stationTask.contents.length - 1].value = _this.accepted;
-        }).catch(function (error) {
-            console.error(error);
-            _this.globalService.showToast(error);
-        });
-    };
-    /**
-     * 派单
-     * @param stationTask
-     */
-    StationWorkPage.prototype.onDispatch = function (stationTask) {
-        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_2__workinfo_workinfo__["a" /* WorkInfoPage */], stationTask.taskNo);
-    };
-    /**
-     * 销单
-     * @param stationTask
-     */
-    StationWorkPage.prototype.onCancel = function (stationTask) {
-        this.popupRemarkAlert({
-            TaskNo: stationTask.taskNo,
-            TaskType: '1',
-            WcOperator: this.globalService.userId,
-            WcTime: new Date().getTime(),
-            XdComment: '',
-            XdOperator: this.globalService.userId
-        });
-    };
-    /**
-     * 获取反映类别
-     * @returns {Promise<TResult|TResult>}
-     */
-    StationWorkPage.prototype.getReflectType = function () {
-        var _this = this;
-        return this.dataService.getReflectTypes()
-            .then(function (words) {
-            _this.reflectTypes = words;
-            return Promise.resolve(words.length > 0);
-        })
-            .catch(function (error) {
-            console.error(error);
-            return Promise.resolve(false);
-        });
-    };
-    /**
-     * 获取反映内容
-     * @returns {Promise<TResult|TResult>}
-     */
-    StationWorkPage.prototype.getReflectContent = function () {
-        var _this = this;
-        return this.dataService.getReflectContents()
-            .then(function (words) {
-            _this.reflectContents = words;
-            return Promise.resolve(words.length > 0);
-        })
-            .catch(function (error) {
-            console.error(error);
-            return Promise.resolve(false);
-        });
-    };
-    /**
-     * 获取未派工任务列表
-     * @param since
-     * @param count
-     * @returns {Promise<boolean|boolean>}
-     */
-    StationWorkPage.prototype.getUnDispatchedTasks = function (since, count) {
-        var _this = this;
-        console.log(this.tag, "getUnDispatchedTasks");
-        return this.dataService.getUnDispatchedTasks(since, count)
-            .then(function (tasks) {
-            _this.transform2StationTasks(tasks, _this.items);
-            if (_this.items.length > 0) {
-                _this.events.publish(_this.globalService.mainUpdateEvent, { type: 'stationWorkCount', count: _this.items.length });
-            }
-            return Promise.resolve(tasks.length > 0);
-        })
-            .catch(function (error) {
-            console.error(error);
-            return Promise.resolve(false);
-        });
-    };
-    StationWorkPage.prototype.getDispatchedTasks = function (since, count) {
-        var _this = this;
-        console.log(this.tag, "getDispatchedTasks");
-        return this.dataService.getDispatchedTasks(since, count, 1440)
-            .then(function (tasks) {
-            _this.transform2StationTasks(tasks, _this.items);
-            return Promise.resolve(tasks.length > 0);
-        })
-            .catch(function (error) {
-            console.error(error);
-            return Promise.resolve(false);
-        });
-    };
-    /**
-     * 显示内容转换
-     * @param searchTasks
-     * @param stationTasks
-     */
-    StationWorkPage.prototype.transform2StationTasks = function (searchTasks, stationTasks) {
-        for (var _i = 0, searchTasks_1 = searchTasks; _i < searchTasks_1.length; _i++) {
-            var searchTask = searchTasks_1[_i];
-            var stationTask = {
-                serialNo: searchTask.serialNo,
-                taskNo: searchTask.taskNo,
-                isAccepted: searchTask.taskState === this.accepted,
-                contents: []
-            };
-            for (var key in this.contentNames) {
-                if (searchTask.hasOwnProperty(key)) {
-                    stationTask.contents.push({
-                        name: this.contentNames[key],
-                        value: this.transform2String(key, searchTask[key])
-                    });
-                }
-            }
-            stationTasks.push(stationTask);
-        }
-    };
-    /**
-     * 转换成字符串
-     * @param key
-     * @param value
-     * @returns {string}
-     */
-    StationWorkPage.prototype.transform2String = function (key, value) {
-        if (typeof value === 'number') {
-            if (key === "reportType" && this.reflectTypes) {
-                for (var _i = 0, _a = this.reflectTypes; _i < _a.length; _i++) {
-                    var word = _a[_i];
-                    if (word.wid === value) {
-                        return word.wName;
-                    }
-                }
-            }
-            else if (key === "reportContent" && this.reflectContents) {
-                for (var _b = 0, _c = this.reflectContents; _b < _c.length; _b++) {
-                    var word = _c[_b];
-                    if (word.wid === value) {
-                        return word.wName;
-                    }
-                }
-            }
-            else if (key.endsWith("Time")) {
-                return this.globalService.getFormatTime(new Date(value));
-            }
-        }
-        return value.toString();
-    };
-    /**
-     * 处理备注
-     * @param cancelExInfo
-     */
-    StationWorkPage.prototype.popupRemarkAlert = function (cancelExInfo) {
-        var _this = this;
-        var prompt = this.alertCtrl.create({
-            title: '销单备注',
-            message: "请输入销单备注",
-            inputs: [
-                {
-                    name: 'remark',
-                    placeholder: ''
-                },
-            ],
-            buttons: [
-                {
-                    text: '取消',
-                    handler: function (data) {
-                        console.log('Cancel clicked');
-                    }
-                },
-                {
-                    text: '确定',
-                    handler: function (data) {
-                        console.log('Saved clicked');
-                        if (!data.remark) {
-                            return _this.globalService.showToast("请填写备注!");
-                        }
-                        cancelExInfo.XdComment = data.remark;
-                        _this.cancel(cancelExInfo);
-                    }
-                }
-            ]
-        });
-        prompt.present();
-    };
-    /**
-     * 销单
-     * @param cancelExInfo
-     */
-    StationWorkPage.prototype.cancel = function (cancelExInfo) {
-        var _this = this;
-        this.dataService.cancelEx(cancelExInfo)
-            .then(function (result) {
-            if (result) {
-                _this.events.publish(_this.globalService.stationWorkUpdateEvent);
-            }
-            Promise.resolve(result);
-        })
-            .catch(function (error) {
-            console.error(error);
-            Promise.resolve(false);
-        })
-            .then(function (result) {
-            if (!result) {
-                _this.globalService.showToast('销单失败!');
-            }
-        });
-    };
-    return StationWorkPage;
-}());
-__decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["c" /* Content */]),
-    __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["c" /* Content */])
-], StationWorkPage.prototype, "content", void 0);
-StationWorkPage = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-stationwork',template:/*ion-inline-start:"D:\cordova_ionic\HotlineManagerIonic\src\pages\stationwork\stationwork.html"*/'<ion-header>\n  <ion-navbar color="primary">\n    <ion-title>\n      {{title}}-{{subTitle}}\n    </ion-title>\n\n    <ion-buttons end>\n      <button ion-button icon-only color="white" (click)="onSearch($event)">\n        <ion-icon name="search"></ion-icon>\n      </button>\n\n      <button ion-button icon-only color="white" (click)="onFilter($event)">\n        <ion-icon name="funnel"></ion-icon>\n      </button>\n    </ion-buttons>\n  </ion-navbar>\n\n  <ion-toolbar color="primary" *ngIf="showToolbar">\n    <ion-searchbar (input)="getItems($event)"></ion-searchbar>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content class="page-stationwork">\n\n  <ion-refresher (ionRefresh)="doRefresh($event)">\n    <ion-refresher-content\n      pullingIcon="arrow-dropdown"\n      pullingText="Pull to refresh"\n      refreshingSpinner="circles"\n      refreshingText="Refreshing...">\n    </ion-refresher-content>\n  </ion-refresher>\n\n  <ion-list>\n    <ion-card *ngFor="let item of items">\n      <ion-item>\n        <ion-avatar item-start>\n          <img src="assets/img/ic_mywork_avatar.png">\n        </ion-avatar>\n        <div><h2 class="card-header-label-hint">客服编号 </h2><h2 class="card-header-label-content">{{item.serialNo}}</h2></div>\n        <div><h2 class="card-header-label-hint">任务编号 </h2><h2 class="card-header-label-content">{{item.taskNo}}</h2></div>\n      </ion-item>\n\n      <ion-list>\n        <ion-item *ngFor="let content of item.contents">\n          <ion-label fixed class="label-name">\n            {{content.name}}\n          </ion-label>\n          <div item-content>\n            {{content.value}}\n          </div>\n        </ion-item>\n      </ion-list>\n\n      <ion-row *ngIf="isUnDispatchedMode">\n        <ion-col class="card-bottom-btn" *ngIf="!item.isAccepted">\n          <button ion-button icon-left clear small (click)="onAccept(item)">\n            <ion-icon name="done-all"></ion-icon>\n            <div>接单</div>\n          </button>\n        </ion-col>\n\n        <ion-col class="card-bottom-btn" *ngIf="item.isAccepted">\n          <button ion-button icon-left clear small (click)="onDispatch(item)">\n            <ion-icon name="person"></ion-icon>\n            <div>派工</div>\n          </button>\n        </ion-col>\n\n        <ion-col class="card-bottom-btn" *ngIf="item.isAccepted">\n          <button ion-button icon-left clear small (click)="onCancel(item)">\n            <ion-icon name="close"></ion-icon>\n            <div>销单</div>\n          </button>\n        </ion-col>\n      </ion-row>\n    </ion-card>\n  </ion-list>\n\n  <!--infinite scroll-->\n  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">\n    <ion-infinite-scroll-content></ion-infinite-scroll-content>\n  </ion-infinite-scroll>\n\n  <!--fab-->\n  <ion-fab right bottom *ngIf="showFab">\n    <button ion-fab color="primary" (click)="doScroll2Top($event)">\n      <ion-icon name="arrow-dropup"></ion-icon>\n    </button>\n  </ion-fab>\n\n</ion-content>\n'/*ion-inline-end:"D:\cordova_ionic\HotlineManagerIonic\src\pages\stationwork\stationwork.html"*/
-    }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
-        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */],
-        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* LoadingController */],
-        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* Events */],
-        __WEBPACK_IMPORTED_MODULE_3__providers_DataService__["a" /* DataService */],
-        __WEBPACK_IMPORTED_MODULE_4__providers_GlobalService__["a" /* GlobalService */]])
-], StationWorkPage);
-
-//# sourceMappingURL=stationwork.js.map
-
-/***/ }),
-
-/***/ 65:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return NewsPage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__newsdetails_newsdetails__ = __webpack_require__(235);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_DataService__ = __webpack_require__(13);
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-
-var NewsPage = (function () {
-    function NewsPage(navCtrl, alertCtrl, dataService) {
-        this.navCtrl = navCtrl;
-        this.alertCtrl = alertCtrl;
-        this.dataService = dataService;
-        this.tag = "[NewsPage]";
-        this.title = '系统公告';
-        this.items = [];
-    }
-    NewsPage.prototype.ngOnInit = function () {
-        this.getNews();
-    };
-    NewsPage.prototype.getNews = function () {
-        var _this = this;
-        this.dataService.getNews()
-            .then(function (news) {
-            console.log(_this.tag + news);
-            if (news.length <= 0) {
-                return Promise.resolve(false);
-            }
-            else {
-                _this.transFormNews(news);
-                return Promise.resolve(true);
-            }
-        })
-            .then(function (result) { return _this.isShow = result; });
-    };
-    /**
-     * 转换公告
-     * @param news
-     */
-    NewsPage.prototype.transFormNews = function (news) {
-        for (var _i = 0, news_1 = news; _i < news_1.length; _i++) {
-            var temp = news_1[_i];
-            this.items.push({
-                newsDate: this.formatDateTime(temp.pubTime),
-                newsTitle: temp.title,
-                newsContent: temp.content
-            });
-        }
-    };
-    /**
-     * 侧滑删除某些公告
-     * @param item
-     */
-    NewsPage.prototype.removeItem = function (event, item, slidingItem) {
-        var _this = this;
-        event.preventDefault();
-        event.stopPropagation();
-        var _loop_1 = function (i) {
-            if (this_1.items[i] == item) {
-                var confirm_1 = this_1.alertCtrl.create({
-                    title: '提示',
-                    message: '是否删除该公告',
-                    buttons: [
-                        {
-                            text: '取消',
-                            handler: function () {
-                                console.log(_this.tag + 'Disagree clicked');
-                                slidingItem.close();
-                            }
-                        },
-                        {
-                            text: '确定',
-                            handler: function () {
-                                _this.items.splice(i, 1);
-                                console.log(_this.tag + 'Agree clicked');
-                            }
-                        }
-                    ]
-                });
-                confirm_1.present();
-            }
-        };
-        var this_1 = this;
-        for (var i = 0; i < this.items.length; i++) {
-            _loop_1(i);
-        }
-    };
-    /**
-     * 删除所有公告
-     * @param ev
-     */
-    NewsPage.prototype.onDeleteAll = function (ev) {
-        var _this = this;
-        var confirm = this.alertCtrl.create({
-            title: '提示',
-            message: '是否删除所有公告',
-            buttons: [
-                {
-                    text: '取消',
-                    handler: function () {
-                        console.log(_this.tag + 'Disagree clicked');
-                    }
-                },
-                {
-                    text: '确定',
-                    handler: function () {
-                        _this.items.splice(0, _this.items.length);
-                        console.log(_this.tag + 'Agree clicked');
-                    }
-                }
-            ]
-        });
-        confirm.present();
-    };
-    /**
-     * 跳转公告详情
-     */
-    NewsPage.prototype.onJumpDetails = function (item) {
-        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_2__newsdetails_newsdetails__["a" /* NewsDetailsPage */], {
-            title: item.newsTitle,
-            time: item.newsDate,
-            newsContent: item.newsContent
-        });
-    };
-    /**
-     * utc时间格式化
-     * @param inputTime
-     * @returns {string}
-     */
-    NewsPage.prototype.formatDateTime = function (inputTime) {
-        var date = new Date(inputTime);
-        var y = date.getFullYear();
-        var m = date.getMonth() + 1;
-        var month = m < 10 ? ('0' + m) : m;
-        var d = date.getDate();
-        var day = d < 10 ? ('0' + d) : d;
-        var h = date.getHours();
-        var hour = h < 10 ? ('0' + h) : h;
-        var minute = date.getMinutes();
-        var second = date.getSeconds();
-        var minutestr = minute < 10 ? ('0' + minute) : minute;
-        var secondstr = second < 10 ? ('0' + second) : second;
-        return y + '-' + month + '-' + day + ' ' + hour + ':' + minutestr + ':' + secondstr;
-    };
-    ;
-    return NewsPage;
-}());
-NewsPage = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-news',template:/*ion-inline-start:"D:\cordova_ionic\HotlineManagerIonic\src\pages\news\news.html"*/'<ion-header>\n  <ion-navbar color="primary">\n    <ion-title>\n      {{title}}\n    </ion-title>\n\n    <ion-buttons end>\n      <button ion-button icon-only color="white" *ngIf="isShow" (click)="onDeleteAll($event)">\n        <ion-icon name="trash"></ion-icon>\n      </button>\n    </ion-buttons>\n  </ion-navbar>\n</ion-header>\n\n<ion-content class="page-news">\n  <ion-list>\n    <ion-card *ngFor="let item of items" (click)="onJumpDetails(item)">\n      <ion-list>\n        <ion-item-sliding #slidingItem>\n          <ion-item>\n            <div><h2 class="card-header-label-hint">温馨提示</h2>\n              <h2 class="card-header-label-content">{{item.newsDate}}</h2></div>\n            <br>\n            <div class="card-news-content">{{item.newsContent}}</div>\n          </ion-item>\n          <ion-item-options>\n            <button  ion-button color="danger" (click)="removeItem($event,item,slidingItem)">\n              <ion-icon name="trash"></ion-icon>\n              删除\n            </button>\n          </ion-item-options>\n        </ion-item-sliding>\n      </ion-list>\n    </ion-card>\n  </ion-list>\n</ion-content>\n'/*ion-inline-end:"D:\cordova_ionic\HotlineManagerIonic\src\pages\news\news.html"*/
-    }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
-        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */],
-        __WEBPACK_IMPORTED_MODULE_3__providers_DataService__["a" /* DataService */]])
-], NewsPage);
-
-//# sourceMappingURL=news.js.map
-
-/***/ }),
-
-/***/ 66:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MaterialsPage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__materialsadd_materialsadd__ = __webpack_require__(236);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_GlobalService__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__model_MaterialsInfo__ = __webpack_require__(127);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_DataService__ = __webpack_require__(13);
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-
-
-
-var MaterialsPage = (function () {
-    function MaterialsPage(navCtrl, navParams, globalService, dataService, toastCtrl, events, alertCtrl) {
-        this.navCtrl = navCtrl;
-        this.navParams = navParams;
-        this.globalService = globalService;
-        this.dataService = dataService;
-        this.toastCtrl = toastCtrl;
-        this.events = events;
-        this.alertCtrl = alertCtrl;
-        this.tag = "[MaterialsPage]";
-        this.title = '材料登记管理';
-        this.segmentName = "basicInfo";
-        this.items = [];
-        this.isShowButtons = false;
-        this.taskId = this.navParams.data.split('#')[0];
-    }
-    MaterialsPage.prototype.ngOnInit = function () {
-        var _this = this;
-        this.dataService.getMaintainInfo(this.taskId)
-            .then(function (result) {
-            if (result.serialNumber == _this.taskId) {
-                _this.details = [
-                    { name: '维修类别', value: result.maintenanceType },
-                    { name: '维修地址', value: result.maintenanceAddress },
-                    { name: '所属区域', value: result.area },
-                    { name: '报修内容', value: result.repairContent }
-                ];
-            }
-        })
-            .catch(function (error) {
-            console.log(error);
-        });
-        /**
-         * 获得该条工单的材料列表清单
-         */
-        this.dataService.getMaterialInfo(this.taskId)
-            .then(function (result) {
-            console.log(_this.tag, result);
-            _this.items = result.infos;
-            _this.isShowButtons = result.uploadFlag == _this.globalService.uploadedFlagForLocal;
-        })
-            .catch(function (error) {
-            _this.isShowButtons = true;
-            console.log(_this.tag, error);
-        });
-        //订阅事件，清单加入
-        this.events.subscribe(this.globalService.materialsUpdateEvent, function (isSave, materials) {
-            _this.segmentName = "materialsList";
-            console.log(_this.tag, isSave, materials);
-            if (isSave) {
-                _this.items.push(materials);
-                return;
-            }
-            if (!_this.needEditItem) {
-                return;
-            }
-            for (var i = 0; i < _this.items.length; i++) {
-                if (_this.items[i] == _this.needEditItem) {
-                    _this.items[i] = materials;
-                }
-            }
-        });
-    };
-    MaterialsPage.prototype.ngOnDestroy = function () {
-        this.events.unsubscribe(this.globalService.materialsUpdateEvent);
-    };
-    // private searchTask() {
-    //   console.log(this.tag + "searchTask");
-    //
-    // }
-    /**
-     * 材料登记
-     */
-    MaterialsPage.prototype.addMaterials = function () {
-        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_2__materialsadd_materialsadd__["a" /* MaterialsAddPage */]);
-    };
-    /**
-     * 删除材料
-     */
-    MaterialsPage.prototype.deleteMaterials = function (item) {
-        var _this = this;
-        var _loop_1 = function (i) {
-            if (this_1.items[i] == item) {
-                var confirm_1 = this_1.alertCtrl.create({
-                    title: '提示',
-                    message: '是否删除该材料?',
-                    buttons: [
-                        {
-                            text: '取消',
-                            handler: function () {
-                            }
-                        },
-                        {
-                            text: '确定',
-                            handler: function () {
-                                //删除
-                                _this.items.splice(i, 1);
-                            }
-                        }
-                    ]
-                });
-                confirm_1.present();
-            }
-        };
-        var this_1 = this;
-        for (var i = 0; i < this.items.length; i++) {
-            _loop_1(i);
-        }
-    };
-    /**
-     * 修改材料
-     */
-    MaterialsPage.prototype.editMaterials = function (item) {
-        this.needEditItem = item;
-        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_2__materialsadd_materialsadd__["a" /* MaterialsAddPage */], { 'edit': item });
-    };
-    /**
-     * 保存
-     */
-    MaterialsPage.prototype.saveMaterials = function () {
-        var _this = this;
-        if (this.items.length == 0) {
-            var alert_1 = this.alertCtrl.create({
-                title: '提示',
-                subTitle: '请先添加材料',
-                buttons: ['确认']
-            });
-            alert_1.present();
-            this.segmentName = 'materialsList';
-            return;
-        }
-        var uploadInfoArr = [];
-        var uploadMaterial;
-        for (var _i = 0, _a = this.items; _i < _a.length; _i++) {
-            var item = _a[_i];
-            uploadMaterial = new __WEBPACK_IMPORTED_MODULE_4__model_MaterialsInfo__["d" /* UploadMaterials */]();
-            uploadMaterial.userId = this.globalService.userId;
-            uploadMaterial.serialNumber = this.taskId;
-            uploadMaterial.materialCategory = item.category.id;
-            uploadMaterial.materialType = item.type.id;
-            uploadMaterial.materialSize = item.size.id;
-            uploadMaterial.manufacturer = item.productor.id;
-            uploadMaterial.materialUnit = item.unit.id;
-            uploadMaterial.count = item.count;
-            uploadMaterial.remark = item.remark;
-            uploadInfoArr.push(uploadMaterial);
-        }
-        if (!uploadInfoArr || uploadInfoArr.length <= 0) {
-            return;
-        }
-        var confirm = this.alertCtrl.create({
-            title: '提示',
-            message: '确认保存上传？',
-            buttons: [
-                {
-                    text: '取消',
-                    handler: function () {
-                        console.log('Disagree clicked');
-                    }
-                },
-                {
-                    text: '确定',
-                    handler: function () {
-                        var data = new __WEBPACK_IMPORTED_MODULE_4__model_MaterialsInfo__["a" /* DataMaterialInfo */]();
-                        data.taskId = _this.taskId;
-                        data.uploadFlag = _this.globalService.uploadedFlagForLocal;
-                        data.infos = uploadInfoArr;
-                        _this.dataService.saveMaterialInfo(data)
-                            .then(function (result) {
-                            console.log(_this.tag, result);
-                            var toast = _this.toastCtrl.create({
-                                duration: 2000,
-                                message: result ? '保存成功' : '上传失败',
-                                position: 'bottom',
-                            });
-                            toast.present();
-                            _this.navCtrl.pop();
-                        })
-                            .catch(function (error) {
-                            console.log(_this.tag, error);
-                            _this.navCtrl.pop();
-                        });
-                    }
-                }
-            ]
-        });
-        confirm.present();
-    };
-    return MaterialsPage;
-}());
-MaterialsPage = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-materials',template:/*ion-inline-start:"D:\cordova_ionic\HotlineManagerIonic\src\pages\materials\materials.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n    <ion-buttons end  *ngIf="isShowButtons">\n\n      <button ion-button icon-only color="white" (click)="addMaterials()">\n\n        <ion-icon name="add-circle"></ion-icon>\n\n      </button>\n\n      <button ion-button icon-only color="white" (click)="saveMaterials()">\n\n        <ion-icon name="checkmark-circle"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n\n\n  <ion-segment [(ngModel)]="segmentName">\n\n    <ion-segment-button value="basicInfo">\n\n      基本信息\n\n    </ion-segment-button>\n\n    <ion-segment-button value="materialsList">\n\n      材料清单\n\n    </ion-segment-button>\n\n  </ion-segment>\n\n</ion-header>hammer\n\n\n\n<ion-content>\n\n  <div [ngSwitch]="segmentName">\n\n    <!--基本信息-->\n\n\n\n    <ion-list *ngSwitchCase="\'basicInfo\'">\n\n      <ion-item>\n\n        <ion-label fixed class="label-name">工单编号：</ion-label>\n\n        <div item-content>{{taskId}}</div>\n\n      </ion-item>\n\n\n\n      <ion-item *ngFor="let detail of details">\n\n        <ion-label fixed class="label-name">\n\n          {{detail.name}}\n\n        </ion-label>\n\n        <div item-content>\n\n          {{detail.value}}\n\n        </div>\n\n      </ion-item>\n\n    </ion-list>\n\n\n\n    <!--材料清单-->\n\n    <ion-list *ngSwitchCase="\'materialsList\'">\n\n      <ion-card *ngFor="let item of items">\n\n\n\n        <ion-item>\n\n          <ion-label fixed class="label-name">\n\n            材料类别：\n\n          </ion-label>\n\n          <div item-content>\n\n            {{item.category.name}}\n\n          </div>\n\n        </ion-item>\n\n\n\n        <ion-item>\n\n          <ion-label fixed class="label-name">\n\n            材料型号：\n\n          </ion-label>\n\n          <div item-content>\n\n            {{item.type.name}}\n\n          </div>\n\n        </ion-item>\n\n\n\n        <ion-item>\n\n          <ion-label fixed class="label-name">\n\n            材料规格：\n\n          </ion-label>\n\n          <div item-content>\n\n            {{item.size.name}}\n\n          </div>\n\n        </ion-item>\n\n\n\n        <ion-item>\n\n          <ion-label fixed class="label-name">\n\n            生产厂家：\n\n          </ion-label>\n\n          <div item-content>\n\n            {{item.productor.name}}\n\n          </div>\n\n        </ion-item>\n\n\n\n        <ion-item>\n\n          <ion-label fixed class="label-name">\n\n            单位：\n\n          </ion-label>\n\n          <div item-content>\n\n            {{item.unit.text}}\n\n          </div>\n\n        </ion-item>\n\n\n\n        <ion-item>\n\n          <ion-label fixed class="label-name">\n\n            数量：\n\n          </ion-label>\n\n          <div item-content>\n\n            {{item.count}}\n\n          </div>\n\n        </ion-item>\n\n\n\n        <ion-item>\n\n          <ion-label fixed class="label-name">\n\n            备注：\n\n          </ion-label>\n\n          <div item-content>\n\n            {{item.remark}}\n\n          </div>\n\n        </ion-item>\n\n\n\n        <ion-item  *ngIf="isShowButtons">\n\n          <button item-right ion-button icon-left clear small color="danger" (click)="deleteMaterials(item)">\n\n            <ion-icon name="trash"></ion-icon>\n\n            <div>删除</div>\n\n          </button>\n\n          <button item-right ion-button icon-left clear small (click)="editMaterials(item)">\n\n            <ion-icon name="create"></ion-icon>\n\n            <div>修改</div>\n\n          </button>\n\n        </ion-item>\n\n      </ion-card>\n\n    </ion-list>\n\n  </div>\n\n</ion-content>\n\n'/*ion-inline-end:"D:\cordova_ionic\HotlineManagerIonic\src\pages\materials\materials.html"*/
-    }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
-        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* NavParams */],
-        __WEBPACK_IMPORTED_MODULE_3__providers_GlobalService__["a" /* GlobalService */],
-        __WEBPACK_IMPORTED_MODULE_5__providers_DataService__["a" /* DataService */],
-        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["o" /* ToastController */],
-        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* Events */],
-        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */]])
-], MaterialsPage);
-
-//# sourceMappingURL=materials.js.map
-
-/***/ }),
-
-/***/ 67:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SettingPage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_ConfigService__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_GlobalService__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_StorageService__ = __webpack_require__(237);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_FileService__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ionic_storage__ = __webpack_require__(59);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__networkset__ = __webpack_require__(238);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__providers_DataService__ = __webpack_require__(13);
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-/**
- * Created by zhangjing on 2017/6/29.
- */
-
-
-
-
-
-
-
-
-
-var SettingPage = (function () {
-    function SettingPage(navCtrl, alertCtrl, actionsheetCtrl, configService, globalService, storageService, storage, popoverCtrl, fileService, events, dataService, toastCtrl) {
-        this.navCtrl = navCtrl;
-        this.alertCtrl = alertCtrl;
-        this.actionsheetCtrl = actionsheetCtrl;
-        this.configService = configService;
-        this.globalService = globalService;
-        this.storageService = storageService;
-        this.storage = storage;
-        this.popoverCtrl = popoverCtrl;
-        this.fileService = fileService;
-        this.events = events;
-        this.dataService = dataService;
-        this.toastCtrl = toastCtrl;
-        this.tag = "[SettingPage]";
-        this.title = '系统参数';
-        this.alermStyle = '仅铃声'; //提醒方式
-        this.isShow = false;
-    }
-    SettingPage.prototype.ngOnInit = function () {
-        // if (this.globalService.isChrome) {
-        //   this.storage.get(this.configService.systemStorageName)
-        //     .then(result => {
-        //       if (result) {
-        //         let jsonObject = ConfigService.transform2SystemConfig(result);
-        //         this.isGrid = jsonObject.isGridStyle;
-        //         this.isOuterNet = jsonObject.isOuterNetwork;
-        //         this.isOuterNet ? this.netWorkUri = jsonObject.outerBaseUri : this.netWorkUri = jsonObject.innerBaseUri;
-        //         this.keepAlive = jsonObject.keepAliveInterval;
-        //       } else {
-        //         this.readDataFromFile();
-        //       }
-        //     })
-        //   return;
-        // }
-        // this.readDataFromFile();
-    };
-    SettingPage.prototype.ngOnDestroy = function () {
-        this.events.unsubscribe(this.globalService.materialsUpdateEvent);
-    };
-    /**
-     * 从文件中读取参数
-     */
-    // private readDataFromFile() {
-    //   Promise.all([this.isGridStyleFromFile(), this.isOuterNetFromFile(), this.getKeepAliveFromFile()])
-    //     .catch(error => {
-    //       console.log(this.tag + 'readDataFromFile:' + error);
-    //     })
-    // }
-    /**
-     * 切换九宫格
-     */
-    SettingPage.prototype.notifyIsGrid = function () {
-        var _this = this;
-        console.log(this.tag + "Toggled:" + this.isGrid);
-        this.configService.setGridStyle(this.isGrid)
-            .then(function (result) {
-            if (result) {
-                var gridStyle = _this.isGrid;
-                _this.events.publish(_this.globalService.mainUpdateEvent, { type: 'gridStyle', gridStyle: gridStyle });
-            }
-            else {
-                _this.isGrid = !_this.isGrid;
-            }
-        })
-            .catch(function (error) {
-            console.log(error);
-        });
-    };
-    /**
-     * 切换内外网
-     */
-    SettingPage.prototype.notifyIsOutNet = function () {
-        var _this = this;
-        console.log(this.tag + "Toggled:" + this.isOuterNet);
-        this.configService.setIsOuterNet(this.isOuterNet)
-            .then(function (result) {
-            if (!result) {
-                _this.isOuterNet = !_this.isOuterNet;
-            }
-            else {
-                _this.getNetworkUriFromFile();
-            }
-        })
-            .catch(function (error) {
-            console.log(error);
-        });
-    };
-    /**
-     * 从文件中读取是否是九宫格
-     */
-    // private isGridStyleFromFile() {
-    //   this.configService.isGridStyle()
-    //     .then(data => {
-    //       console.log(this.tag + data);
-    //       this.isGrid = data;
-    //     }).catch(err => {
-    //     console.log(this.tag + err);
-    //   })
-    // }
-    /**
-     * 从文件中读取是否是外网
-     */
-    // private isOuterNetFromFile() {
-    //   this.configService.isOuterNetwork()
-    //     .then(data => {
-    //       this.isOuterNet = data;
-    //       this.getNetworkUriFromFile();
-    //     })
-    //     .catch(err => {
-    //       console.log(this.tag + err);
-    //     })
-    // }
-    /**
-     * 从文件读取数据地址
-     */
-    SettingPage.prototype.getNetworkUriFromFile = function () {
-        var _this = this;
-        this.configService.getServerBaseUri()
-            .then(function (data) {
-            console.log(_this.tag + data);
-            _this.netWorkUri = data;
-        })
-            .catch(function (err) {
-            console.log(_this.tag + err);
-        });
-    };
-    /**
-     * 读取文件的心跳频率
-     */
-    // private getKeepAliveFromFile() {
-    //   this.configService.getKeepAliveInterval()
-    //     .then(data => {
-    //       console.log(this.tag + data);
-    //       this.keepAlive = data;
-    //     })
-    //     .catch(err => {
-    //       console.log(this.tag + err);
-    //     })
-    // }
-    /**
-     * 读取文件的超期时限
-     */
-    SettingPage.prototype.getOverdueFromFile = function () {
-        var _this = this;
-        this.configService.getOverdueTime()
-            .then(function (data) {
-            console.log(_this.tag + data);
-            _this.overdueTime = data;
-            _this.showOverdueSetting();
-        })
-            .catch(function (err) {
-            console.log(_this.tag + err);
-        });
-    };
-    /**
-     * 获取提醒方式
-     */
-    // private getAlermStyle() {
-    //   if (this.isChrome) {
-    //     (this.storageService.read('alermStyle') == null || undefined) ?
-    //       this.alermStyle = '仅铃声' : this.alermStyle = this.storageService.read<string>('alermStyle');
-    //     return;
-    //   }
-    // }
-    /**
-     * 网络设置
-     */
-    SettingPage.prototype.showNetwork = function () {
-        this.popoverCtrl.create(__WEBPACK_IMPORTED_MODULE_7__networkset__["a" /* NetworkSetPage */]).present();
-        // let prompt = this.alertCtrl.create({
-        //   title: '网络设置',
-        //   message: '数据访问地址',
-        //   inputs: [
-        //     {
-        //       name: 'netWorkUri',
-        //       value: this.netWorkUri,
-        //       placeholder: '数据访问地址',
-        //     }
-        //   ],
-        //   buttons: [
-        //     {
-        //       text: '取消',
-        //       handler: data => {
-        //         console.log(this.tag + 'showNetwork cancel');
-        //       }
-        //     },
-        //     {
-        //       text: '保存',
-        //       handler: data => {
-        //         this.configService.setSystemUrl(data.netWorkUri)
-        //           .then(result => {
-        //             if (result) {
-        //               this.netWorkUri = data.netWorkUri;
-        //             }
-        //           })
-        //           .catch(error => {
-        //             console.log(this.tag + 'showNetwork:' + error);
-        //           })
-        //       }
-        //     }
-        //   ]
-        // });
-        // prompt.present();
-    };
-    SettingPage.prototype.showDownloadWords = function () {
-        var _this = this;
-        var confirm = this.alertCtrl.create({
-            title: '更新词语',
-            message: '是否确定需要更新词语信息？',
-            buttons: [
-                {
-                    text: '取消',
-                    handler: function () {
-                        console.log(_this.tag + '取消 clicked');
-                    }
-                },
-                {
-                    text: '确定',
-                    handler: function () {
-                        var toast = _this.toastCtrl.create({
-                            duration: 2000,
-                            position: 'bottom',
-                        });
-                        Promise.all([_this.dataService.downloadWords(), _this.dataService.downloadMaterials(), _this.dataService.downloadPersonnels()])
-                            .then(function (_a) {
-                            var result1 = _a[0], result2 = _a[1], result3 = _a[2];
-                            if (result1 && result2 && result3) {
-                                toast.setMessage('更新成功');
-                            }
-                            else {
-                                toast.setMessage('更新失败');
-                            }
-                            toast.present();
-                        })
-                            .catch(function (error) {
-                            console.log(error);
-                            toast.setMessage('更新失败');
-                            toast.present();
-                        });
-                    }
-                }
-            ]
-        });
-        confirm.present();
-    };
-    /**
-     * 超期设置
-     */
-    SettingPage.prototype.showOverdueSetting = function () {
-        var _this = this;
-        var alert = this.alertCtrl.create({
-            title: '超期设置',
-            message: '时限设置(分钟):',
-            inputs: [
-                {
-                    name: 'overdueTime',
-                    value: this.overdueTime.toString(),
-                    placeholder: '请输入超期时限',
-                }
-            ],
-            buttons: [
-                {
-                    text: '取消',
-                    role: 'cancel',
-                    handler: function (data) {
-                        console.log(_this.tag + 'showOverdueSetting Cancel clicked');
-                    }
-                },
-                {
-                    text: '保存',
-                    handler: function (data) {
-                        _this.configService.setOverdue(data.overdueTime)
-                            .then(function (result) {
-                            _this.overdueTime = data.overdueTime;
-                        })
-                            .catch(function (error) {
-                            console.log(_this.tag + 'showOverdueSetting:' + error);
-                        });
-                    }
-                }
-            ]
-        });
-        alert.present();
-    };
-    /**
-     * 心跳设置
-     */
-    SettingPage.prototype.showHeartSetting = function () {
-        var _this = this;
-        var alert = this.alertCtrl.create({
-            title: '心跳设置',
-            message: '心跳频率(毫秒):',
-            inputs: [
-                {
-                    name: 'heartBeat',
-                    placeholder: '请输入心跳频率',
-                }
-            ],
-            buttons: [
-                {
-                    text: '取消',
-                    role: 'cancel',
-                    handler: function (data) {
-                        console.log(_this.tag + 'showHeartSetting Cancel clicked');
-                    }
-                },
-                {
-                    text: '保存',
-                    handler: function (data) {
-                        _this.configService.setKeepAlive(data.heartBeat)
-                            .then(function (result) {
-                            _this.keepAlive = data.heartBeat;
-                        })
-                            .catch(function (error) {
-                            console.log(_this.tag + 'showHeartSetting:' + error);
-                        });
-                    }
-                }
-            ]
-        });
-        alert.present();
-    };
-    /**
-     * 提醒方式
-     */
-    SettingPage.prototype.showAlermType = function () {
-        var _this = this;
-        var actionSheet = this.actionsheetCtrl.create({
-            title: '提醒方式',
-            // cssClass: 'action-sheets-basic-page',
-            buttons: [
-                {
-                    text: '仅铃声',
-                    role: 'destructive',
-                    icon: 'notifications',
-                    handler: function () {
-                        _this.alermStyle = '仅铃声';
-                        _this.storageService.write('alermStyle', 'onlyRing');
-                        console.log(_this.tag + 'showAlermType onlyRing clicked');
-                    }
-                },
-                {
-                    text: '仅震动',
-                    icon: 'pulse',
-                    handler: function () {
-                        _this.alermStyle = '仅震动';
-                        _this.storageService.write('alermStyle', 'onlyShake');
-                        console.log(_this.tag + 'showAlermType onlyShake clicked');
-                    }
-                },
-                {
-                    text: '铃声+震动',
-                    icon: 'arrow-dropright-circle',
-                    handler: function () {
-                        _this.alermStyle = '铃声+震动';
-                        _this.storageService.write('alermStyle', 'ringShake');
-                        console.log(_this.tag + 'showAlermType Play clicked');
-                    }
-                },
-                {
-                    text: '取消',
-                    role: '取消',
-                    icon: 'close',
-                    handler: function () {
-                        console.log(_this.tag + 'showAlermType Cancel clicked');
-                    }
-                }
-            ]
-        });
-        actionSheet.present();
-    };
-    /**
-     * 恢复出厂设置
-     */
-    SettingPage.prototype.showRevertSetting = function () {
-        var _this = this;
-        var confirm = this.alertCtrl.create({
-            title: '警告',
-            message: '数据都上传了吗？确定要恢复出厂设置吗？回复后请重新登录！',
-            buttons: [
-                {
-                    text: '取消',
-                    handler: function () {
-                        console.log(_this.tag + '取消 clicked');
-                    }
-                },
-                {
-                    text: '确定',
-                    handler: function () {
-                        _this.storage.clear(); //浏览器清除storage
-                        console.log(_this.tag + '保存 clicked');
-                    }
-                }
-            ]
-        });
-        confirm.present();
-    };
-    SettingPage.prototype.onExit = function () {
-        var _this = this;
-        var confirm = this.alertCtrl.create({
-            title: '提示',
-            message: '是否完全退出当前应用？',
-            buttons: [
-                {
-                    text: '取消',
-                    handler: function () {
-                        console.log(_this.tag + '取消 clicked');
-                    }
-                },
-                {
-                    text: '确定',
-                    handler: function () {
-                        console.log(_this.tag + '保存 clicked');
-                        _this.globalService.quit();
-                    }
-                }
-            ]
-        });
-        confirm.present();
-    };
-    return SettingPage;
-}());
-SettingPage = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-setting',template:/*ion-inline-start:"D:\cordova_ionic\HotlineManagerIonic\src\pages\setting\setting.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-setting">\n\n  <ion-list>\n\n    <ion-item *ngIf="isShow">\n\n      <ion-toggle [(ngModel)]="isGrid" (ionChange)="notifyIsGrid()"></ion-toggle>\n\n      <ion-label>是否切换九宫格</ion-label>\n\n      <ion-icon name=\'grid\' item-start color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item *ngIf="isShow">\n\n      <ion-toggle [(ngModel)]="isOuterNet" (ionChange)="notifyIsOutNet()"></ion-toggle>\n\n      <ion-label>是否使用外网</ion-label>\n\n      <ion-icon name=\'md-wifi\' item-start color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item (click)="showNetwork()">\n\n      <ion-icon name=\'git-network\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>网络设置</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item (click)="getOverdueFromFile()">\n\n      <ion-icon name=\'time\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>超期设置</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item (click)="showDownloadWords()">\n\n      <ion-icon name=\'download\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>更新词语</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item *ngIf="isShow" (click)="showHeartSetting()">\n\n      <ion-icon name=\'heart-outline\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>心跳频率</ion-label>\n\n      <ion-label class="label-right">{{keepAlive+\'毫秒\'}}</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item *ngIf="isShow" (click)="showAlermType()">\n\n      <ion-icon name=\'alarm\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>提醒方式</ion-label>\n\n      <ion-label class="label-right">{{alermStyle}}</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item *ngIf="isShow" (click)="showRevertSetting()">\n\n      <ion-icon name=\'redo\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>恢复出厂设置</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item (click)="onExit()">\n\n      <ion-icon name=\'exit\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>退出</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n  </ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"D:\cordova_ionic\HotlineManagerIonic\src\pages\setting\setting.html"*/
-    }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
-        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */],
-        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* ActionSheetController */],
-        __WEBPACK_IMPORTED_MODULE_2__providers_ConfigService__["a" /* ConfigService */],
-        __WEBPACK_IMPORTED_MODULE_3__providers_GlobalService__["a" /* GlobalService */],
-        __WEBPACK_IMPORTED_MODULE_4__providers_StorageService__["a" /* StorageService */],
-        __WEBPACK_IMPORTED_MODULE_6__ionic_storage__["b" /* Storage */],
-        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["m" /* PopoverController */],
-        __WEBPACK_IMPORTED_MODULE_5__providers_FileService__["a" /* FileService */],
-        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* Events */],
-        __WEBPACK_IMPORTED_MODULE_8__providers_DataService__["a" /* DataService */],
-        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["o" /* ToastController */]])
-], SettingPage);
-
-//# sourceMappingURL=setting.js.map
-
-/***/ }),
-
-/***/ 68:
+/***/ 49:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MyWorkPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__workdetail_workdetail__ = __webpack_require__(128);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_DataService__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__model_Task__ = __webpack_require__(36);
@@ -12393,7 +9314,7 @@ SettingPage = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__map_map__ = __webpack_require__(37);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__model_MapParam__ = __webpack_require__(48);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__materials_materials__ = __webpack_require__(66);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__materials_materials__ = __webpack_require__(67);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__providers_ConfigService__ = __webpack_require__(16);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -12418,7 +9339,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var FromWhere;
 (function (FromWhere) {
     FromWhere[FromWhere["Download"] = 0] = "Download";
-    FromWhere[FromWhere["CancelOrReject"] = 1] = "CancelOrReject";
+    //CancelOrReject,
+    FromWhere[FromWhere["ReplyOrReject"] = 1] = "ReplyOrReject";
     FromWhere[FromWhere["Search"] = 2] = "Search";
     FromWhere[FromWhere["Delete"] = 3] = "Delete";
 })(FromWhere || (FromWhere = {}));
@@ -12435,11 +9357,13 @@ var MyWorkPage = (function () {
         this.showToolbar = false;
         this.showFab = false;
         this.items = [];
+        this.overdueTime = null; //超期时限
         this.since = this.globalService.taskSinceDefault;
         this.count = this.globalService.taskCountDefault10;
         this.isOperationBusy = false;
         this.key = '';
         this.replyHistories = [];
+        this.isCheckingOverdueTime = false;
     }
     /**
      * 初始化
@@ -12449,10 +9373,12 @@ var MyWorkPage = (function () {
         console.log(this.tag, 'ngOnInit');
         this.subscribeEvent(this.events);
         this.showFab = false;
+        this.getOverdueTime();
         this.getTasks(this.since, this.count, this.key)
             .then(function (data) {
             _this.infiniteScroll.enable(data);
             _this.getTaskCount();
+            _this.intevalId = setInterval(_this.checkOverdueTimeTasks(), 60000);
         })
             .catch(function (error) { return console.error(error); });
     };
@@ -12463,6 +9389,9 @@ var MyWorkPage = (function () {
         console.log(this.tag, 'ngOnDestroy');
         this.events.unsubscribe(this.globalService.myWorkDownloadFinishEvent);
         this.events.unsubscribe(this.globalService.myWorkUpdateEvent);
+        if (this.intevalId) {
+            clearInterval(this.intevalId);
+        }
     };
     /**
      * 下拉同步
@@ -12490,10 +9419,11 @@ var MyWorkPage = (function () {
                 .then(function (data) {
                 if (!data) {
                     infiniteScroll.enable(false);
+                    _this.checkOverdueTimeTasks();
                 }
                 else {
                     infiniteScroll.complete();
-                    _this.getTaskDetails(_this.since, _this.count, _this.key);
+                    //this.getTaskDetails(this.since, this.count, this.key);
                 }
                 console.log(_this.tag, 'doInfinite end');
             })
@@ -12605,6 +9535,10 @@ var MyWorkPage = (function () {
     MyWorkPage.prototype.onMaterials = function (taskEx) {
         this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_9__materials_materials__["a" /* MaterialsPage */], taskEx.id);
     };
+    /**
+     * 删除任务
+     * @param taskEx
+     */
     MyWorkPage.prototype.onDelete = function (taskEx) {
         var _this = this;
         var alert = this.alertCtrl.create({
@@ -12662,63 +9596,126 @@ var MyWorkPage = (function () {
                         var taskEx = taskExs_2[_i];
                         _loop_1(taskEx);
                     }
-                })
-                    .then(function () { return tasks.filter(function (task) { return task.state === __WEBPACK_IMPORTED_MODULE_4__model_Task__["b" /* TaskState */].Reply; }); })
-                    .then(function (tasks) { return tasks.map(function (task) { return task.taskId; }); })
-                    .then(function (taskIds) { return _this.dataService.getReplyHistories(taskIds); })
-                    .then(function (histories) {
-                    var result = false;
-                    try {
-                        (_a = _this.replyHistories).push.apply(_a, histories);
-                        _this.replyHistories.forEach(function (history) {
-                            if (history.mediaNames && history.mediaNames.length > 0) {
-                                var taskEx = _this.items.find(function (taskEx) { return taskEx.id === history.taskId; });
-                                if (taskEx) {
-                                    var mediaNames = history.mediaNames;
-                                    taskEx.photoCount = mediaNames.filter(function (name) { return name.lastIndexOf(_this.globalService.photoSuffix) !== -1; }).length;
-                                    taskEx.audioCount = mediaNames.filter(function (name) { return name.lastIndexOf(_this.globalService.audioSuffix) !== -1; }).length;
-                                    taskEx.videoCount = mediaNames.filter(function (name) { return name.lastIndexOf(_this.globalService.videoSuffix) !== -1; }).length;
-                                }
-                            }
-                        });
-                        result = true;
-                    }
-                    catch (err) {
-                        console.error(err);
-                    }
-                    return Promise.resolve(result);
-                    var _a;
+                    return Promise.resolve(true);
                 });
+                /*.then(() => tasks.filter(task => task.state === TaskState.Reply))
+                 .then(tasks => tasks.map(task => task.taskId))
+                 .then(taskIds => this.dataService.getReplyHistories(taskIds))
+                 .then(histories => {
+                 let result: boolean = false;
+                 try {
+                 this.replyHistories.push(...histories);
+                 this.replyHistories.forEach(history => {
+                 if (history.mediaNames && history.mediaNames.length > 0) {
+                 let taskEx: TaskEx = this.items.find(taskEx => taskEx.id === history.taskId);
+                 if (taskEx) {
+                 let mediaNames = history.mediaNames;
+                 taskEx.photoCount = mediaNames.filter(name => name.lastIndexOf(this.globalService.photoSuffix) !== -1).length;
+                 taskEx.audioCount = mediaNames.filter(name => name.lastIndexOf(this.globalService.audioSuffix) !== -1).length;
+                 taskEx.videoCount = mediaNames.filter(name => name.lastIndexOf(this.globalService.videoSuffix) !== -1).length;
+                 }
+                 }
+                 });
+                 result = true;
+                 } catch (err) {
+                 console.error(err);
+                 }
+      
+                 return Promise.resolve(result);
+                 });*/
             }
         });
     };
     /**
-     * 读取文件的超期时限
+     * 获取超期时限
      */
-    MyWorkPage.prototype.getOverdueFromFile = function () {
+    MyWorkPage.prototype.getOverdueTime = function () {
         var _this = this;
         this.configService.getOverdueTime()
-            .then(function (data) {
-            console.log(_this.tag + data);
-            _this.overdueTime = data;
-            _this.getTaskDetails(_this.since, _this.count, _this.key)
-                .then(function (data) {
-                console.log(_this.tag + data);
-                _this.getTaskDetailOverdueCount()
-                    .then(function (data) {
-                    if (data > 0) {
-                        _this.showOverdueCountAlert(data);
-                    }
-                });
-            })
-                .catch(function (err) {
-                console.log(_this.tag + err);
-            });
-        })
-            .catch(function (err) {
-            console.log(_this.tag + err);
+            .then(function (overdueTime) { return _this.overdueTime = overdueTime; })
+            .catch(function (err) { return console.error(_this.tag + err); })
+            .then(function () {
+            if (!_this.overdueTime) {
+                _this.overdueTime = {
+                    arrived: 30,
+                    reply: 30,
+                    delayReply: 30
+                };
+            }
         });
     };
+    /**
+     * 检查超期工单
+     */
+    MyWorkPage.prototype.checkOverdueTimeTasks = function () {
+        var _this = this;
+        if (this.isCheckingOverdueTime) {
+            return;
+        }
+        this.isCheckingOverdueTime = true;
+        this.dataService.checkOverdueTimeTasks(this.overdueTime)
+            .then(function (tasks) {
+            if (!tasks || tasks.length <= 0) {
+                return;
+            }
+            var count = 0;
+            var _loop_2 = function (task) {
+                if (!task.extendedInfo) {
+                    return "continue";
+                }
+                var taskEx = _this.items.find(function (taskEx) { return taskEx.id === task.taskId; });
+                if (taskEx) {
+                    if (task.extendedInfo.arrivedDeadLine) {
+                        taskEx.isOverdueArrivedLine = true;
+                        count++;
+                    }
+                    else if (task.extendedInfo.replyDeadLine) {
+                        taskEx.isOverdueReplyLine = true;
+                        count++;
+                    }
+                }
+            };
+            for (var _i = 0, tasks_1 = tasks; _i < tasks_1.length; _i++) {
+                var task = tasks_1[_i];
+                _loop_2(task);
+            }
+            if (count > 0) {
+                _this.showOverdueCountAlert(count);
+            }
+        })
+            .catch(function (err) { return console.error(_this.tag + err); })
+            .then(function () { return _this.isCheckingOverdueTime = false; });
+    };
+    /**
+     * 读取文件的超期时限
+     */
+    // private getOverdueFromFile(): void {
+    //   this.configService.getOverdueTime()
+    //     .then(data => {
+    //       console.log(this.tag + data);
+    //       this.overdueTime = data;
+    //       this.getTaskDetails(this.since, this.count, this.key)
+    //         .then(data => {
+    //           console.log(this.tag + data);
+    //           this.getTaskDetailOverdueCount()
+    //             .then(data => {
+    //               if (data > 0) {
+    //                 this.showOverdueCountAlert(data);
+    //               }
+    //             });
+    //         })
+    //         .catch(err => {
+    //           console.log(this.tag + err);
+    //         });
+    //     })
+    //     .catch(err => {
+    //       console.log(this.tag + err);
+    //     })
+    // }
+    /**
+     *
+     * @param count
+     */
     MyWorkPage.prototype.showOverdueCountAlert = function (count) {
         var alert = this.alertCtrl.create({
             title: '提示!',
@@ -12731,36 +9728,36 @@ var MyWorkPage = (function () {
      * 获取超期任务数量
      * @returns {Promise<number>}
      */
-    MyWorkPage.prototype.getTaskDetailOverdueCount = function () {
-        var _this = this;
-        return this.dataService.getTaskDetailByUserId()
-            .then(function (taskDetails) {
-            console.log(_this.tag + "getTaskDetailOverdueCount");
-            if (!taskDetails || taskDetails.length <= 0) {
-                return Promise.resolve(0);
-            }
-            else {
-                var count_1 = 0;
-                var isOverdueArrived_1 = false;
-                var isOverdueReply_1 = false;
-                taskDetails.forEach(function (taskDetail) {
-                    if (taskDetail.arrivedTime == 0) {
-                        isOverdueArrived_1 = taskDetail.arrivedDeadLine < new Date().getTime() - _this.overdueTime * 60 * 1000;
-                    }
-                    if (taskDetail.replyTime == 0) {
-                        isOverdueReply_1 = taskDetail.replyDeadLine < new Date().getTime() - _this.overdueTime * 60 * 1000;
-                    }
-                    if (isOverdueArrived_1 || isOverdueReply_1) {
-                        count_1++;
-                    }
-                    isOverdueArrived_1 = false;
-                    isOverdueReply_1 = false;
-                });
-                return Promise.resolve(count_1);
-            }
-        }).catch(function (error) { return console.error(error); });
-        ;
-    };
+    // private getTaskDetailOverdueCount(): Promise<number> {
+    //   return this.dataService.getTaskDetailByUserId()
+    //     .then(taskDetails => {
+    //       console.log(this.tag + "getTaskDetailOverdueCount");
+    //       if (!taskDetails || taskDetails.length <= 0) {
+    //         return Promise.resolve(0)
+    //       } else {
+    //         let count: number = 0;
+    //         let isOverdueArrived: boolean = false;
+    //         let isOverdueReply: boolean = false;
+    //         taskDetails.forEach(taskDetail => {
+    //           if (taskDetail.arrivedTime == 0) {
+    //             isOverdueArrived = taskDetail.arrivedDeadLine < new Date().getTime() - this.overdueTime * 60 * 1000;
+    //           }
+    //
+    //           if (taskDetail.replyTime == 0) {
+    //             isOverdueReply = taskDetail.replyDeadLine < new Date().getTime() - this.overdueTime * 60 * 1000;
+    //           }
+    //           if (isOverdueArrived || isOverdueReply) {
+    //             count++;
+    //           }
+    //
+    //           isOverdueArrived = false;
+    //           isOverdueReply = false;
+    //
+    //         });
+    //         return Promise.resolve(count)
+    //       }
+    //     }) .catch(error => console.error(error));
+    // }
     /**
      * 获取任务详情
      * @param since
@@ -12768,37 +9765,36 @@ var MyWorkPage = (function () {
      * @param key
      * @returns {Promise<boolean>}
      */
-    MyWorkPage.prototype.getTaskDetails = function (since, count, key) {
-        var _this = this;
-        return this.dataService.getTasks(since, count, key)
-            .then(function (tasks) {
-            console.log(_this.tag + "getTaskDetails: " + tasks.length);
-            if (tasks.length <= 0) {
-                return Promise.resolve(false);
-            }
-            else {
-                var taskIds = tasks.map(function (tasks) { return tasks.taskId; });
-                if (taskIds && taskIds.length > 0) {
-                    for (var i = 0; i < taskIds.length; i++) {
-                        _this.dataService.getTaskDetail(taskIds[i])
-                            .then((function (detail) {
-                            var taskEx = _this.items.find(function (taskEx) { return taskEx.id === detail.taskId; });
-                            if (taskEx) {
-                                // let mediaNames = history.mediaNames;
-                                if (detail.arrivedTime == 0) {
-                                    taskEx.isOverdueArrivedLine = detail.arrivedDeadLine < new Date().getTime() - _this.overdueTime * 60 * 1000;
-                                }
-                                if (detail.replyTime == 0) {
-                                    taskEx.isOverdueReplyLine = detail.replyDeadLine < new Date().getTime() - _this.overdueTime * 60 * 1000;
-                                }
-                            }
-                            return Promise.resolve(true);
-                        }));
-                    }
-                }
-            }
-        });
-    };
+    // private getTaskDetails(since: number, count: number, key: string): Promise<boolean> {
+    //   return this.dataService.getTasks(since, count, key)
+    //     .then(tasks => {
+    //       console.log(this.tag + "getTaskDetails: " + tasks.length);
+    //       if (tasks.length <= 0) {
+    //         return Promise.resolve(false)
+    //       } else {
+    //         let taskIds: Array<string> = tasks.map(tasks => tasks.taskId);
+    //         if (taskIds && taskIds.length > 0) {
+    //           for (let i = 0; i < taskIds.length; i++) {
+    //             this.dataService.getTaskDetail(taskIds[i])
+    //               .then((detail => {
+    //                 let taskEx: TaskEx = this.items.find(taskEx => taskEx.id === detail.taskId);
+    //                 if (taskEx) {
+    //                   // let mediaNames = history.mediaNames;
+    //                   if (detail.arrivedTime == 0) {
+    //                     taskEx.isOverdueArrivedLine = detail.arrivedDeadLine < new Date().getTime() - this.overdueTime * 60 * 1000;
+    //                   }
+    //
+    //                   if (detail.replyTime == 0) {
+    //                     taskEx.isOverdueReplyLine = detail.replyDeadLine < new Date().getTime() - this.overdueTime * 60 * 1000;
+    //                   }
+    //                 }
+    //                 return Promise.resolve(true);
+    //               }));
+    //           }
+    //         }
+    //       }
+    //     });
+    // }
     /**
      *
      * @param taskExs
@@ -12917,7 +9913,9 @@ var MyWorkPage = (function () {
         this.dataService.getTaskCount()
             .then(function (count) {
             _this.events.publish(_this.globalService.mainUpdateEvent, { type: 'myWorkCount', count: count });
-            _this.getOverdueFromFile();
+            if (count > 0) {
+                _this.checkOverdueTimeTasks();
+            }
         })
             .catch(function (error) { return console.error(error); });
     };
@@ -13564,9 +10562,10 @@ var MyWorkPage = (function () {
                 else {
                     _this.replyHistories.push(myWorkUpdateEvent.history);
                 }
+                _this.resetTasks(FromWhere.ReplyOrReject);
             }
-            else if (myWorkUpdateEvent.type === 'cancel' || myWorkUpdateEvent.type === 'reject') {
-                _this.resetTasks(FromWhere.CancelOrReject);
+            else if (myWorkUpdateEvent.type === 'reject') {
+                _this.resetTasks(FromWhere.ReplyOrReject);
             }
         });
     };
@@ -13592,7 +10591,7 @@ var MyWorkPage = (function () {
                     _this.refresher.complete();
                     _this.getTaskCount();
                     break;
-                case FromWhere.CancelOrReject:
+                case FromWhere.ReplyOrReject:
                     _this.getTaskCount();
                     break;
                 case FromWhere.Search:
@@ -13624,7 +10623,7 @@ __decorate([
 ], MyWorkPage.prototype, "infiniteScroll", void 0);
 MyWorkPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-mywork',template:/*ion-inline-start:"D:\cordova_ionic\HotlineManagerIonic\src\pages\mywork\mywork.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n    <ion-buttons end>\n\n      <button ion-button icon-only color="white" (click)="toggleToolbar($event)">\n\n        <ion-icon name="search"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n\n\n  <ion-toolbar color="primary" *ngIf="showToolbar">\n\n    <ion-searchbar [(ngModel)]="key" (ionInput)="onInput($event)" (ionCancel)="onCancel($event)"></ion-searchbar>\n\n  </ion-toolbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-mywork">\n\n\n\n  <!--refresher on the top-->\n\n  <ion-refresher (ionRefresh)="doRefresh($event)">\n\n    <ion-refresher-content\n\n      pullingIcon="arrow-dropdown"\n\n      pullingText="Pull to refresh"\n\n      refreshingSpinner="circles"\n\n      refreshingText="Refreshing...">\n\n    </ion-refresher-content>\n\n  </ion-refresher>\n\n\n\n  <!--list content-->\n\n  <ion-list>\n\n    <ion-card *ngFor="let item of items">\n\n      <ion-item (click)="onDelete(item)">\n\n        <ion-avatar item-start>\n\n          <img src="assets/img/ic_mywork_avatar.png">\n\n        </ion-avatar>\n\n        <div><h2 class="card-header-label-hint">任务编号 </h2><h2 class="card-header-label-content">{{item.id.split(\'#\')[0] | valueValid}}</h2></div>\n\n        <div><h2 class="card-header-label-hint">任务类型 </h2><h2 class="card-header-label-content">{{item.type | valueValid}}</h2></div>\n\n        <ion-icon name=\'cloud-upload\' item-end *ngIf="!item.isUploaded"></ion-icon>\n\n        <ion-icon name="timer" item-end color="{{\'danger\'}}" *ngIf="item.isOverdueArrivedLine || item.isOverdueReplyLine"></ion-icon>\n\n      </ion-item>\n\n\n\n      <ion-list>\n\n        <ion-list-header>\n\n          <ion-row>\n\n            <ion-col col-auto>任务描述</ion-col>\n\n            <ion-col>{{item.describe | valueValid}}</ion-col>\n\n          </ion-row>\n\n        </ion-list-header>\n\n\n\n        <!--创建时间-->\n\n        <button ion-item [style.color]="item.processes[0].color" *ngIf="item.processes[0].show">\n\n          <ion-icon name=\'icon-vline\'item-start></ion-icon>\n\n          {{item.processes[0].name}} {{item.processes[0].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <!--<ion-icon name=\'ios-arrow-forward\' item-end></ion-icon>-->\n\n        </button>\n\n\n\n        <!--派发时间-->\n\n        <button ion-item [style.color]="item.processes[1].color" *ngIf="item.processes[1].show">\n\n          <ion-icon name=\'icon-vline\'item-start></ion-icon>\n\n          {{item.processes[1].name}} {{item.processes[1].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <!--<ion-icon name=\'ios-arrow-forward\' item-end></ion-icon>-->\n\n        </button>\n\n\n\n        <!--接单时间-->\n\n        <button ion-item [style.color]="item.processes[2].color" *ngIf="item.processes[2].show" (click)="itemSelected(item, 2)">\n\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[2].color}}"></ion-icon>\n\n          {{item.processes[2].name}} {{item.processes[2].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[2].done" color="{{item.processes[2].color}}"></ion-icon>\n\n        </button>\n\n\n\n        <!--出发时间-->\n\n        <button ion-item [style.color]="item.processes[3].color" *ngIf="item.processes[3].show" (click)="itemSelected(item, 3)">\n\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[3].color}}"></ion-icon>\n\n          {{item.processes[3].name}} {{item.processes[3].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[3].done" color="{{item.processes[3].color}}"></ion-icon>\n\n        </button>\n\n\n\n        <!--到场时间-->\n\n        <button ion-item [style.color]="item.processes[4].color" *ngIf="item.processes[4].show" (click)="itemSelected(item, 4)">\n\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[4].color}}"></ion-icon>\n\n          {{item.processes[4].name}} {{item.processes[4].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[4].done" color="{{item.processes[4].color}}"></ion-icon>\n\n        </button>\n\n\n\n        <!--回复时间-->\n\n        <button ion-item [style.color]="item.processes[5].color" *ngIf="item.processes[5].show" (click)="itemSelected(item, 5)">\n\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[5].color}}"></ion-icon>\n\n          {{item.processes[5].name}} {{item.processes[5].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[5].done" color="{{item.processes[5].color}}"></ion-icon>\n\n        </button>\n\n\n\n        <!--退单时间-->\n\n        <button ion-item [style.color]="item.processes[6].color" *ngIf="item.processes[6].show" (click)="itemSelected(item, 6)">\n\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[6].color}}"></ion-icon>\n\n          {{item.processes[6].name}} {{item.processes[6].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[6].done" color="{{item.processes[6].color}}"></ion-icon>\n\n        </button>\n\n\n\n        <!--延迟时间-->\n\n        <button ion-item [style.color]="item.processes[7].color" *ngIf="item.processes[7].show" (click)="itemSelected(item, 7)">\n\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[7].color}}"></ion-icon>\n\n          {{item.processes[7].name}} {{item.processes[7].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[7].done" color="{{item.processes[7].color}}"></ion-icon>\n\n        </button>\n\n\n\n        <!--销单时间-->\n\n        <!--<button ion-item [style.color]="item.processes[8].color" *ngIf="item.processes[8].show" (click)="itemSelected(item, 8)">-->\n\n          <!--<ion-icon name=\'icon-vline\'item-start color="{{item.processes[8].color}}"></ion-icon>-->\n\n          <!--{{item.processes[8].name}} {{item.processes[8].time | date:\'y-MM-dd HH:mm:ss\'}}-->\n\n          <!--<ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[8].done" color="{{item.processes[8].color}}"></ion-icon>-->\n\n        <!--</button>-->\n\n      </ion-list>\n\n\n\n      <ion-row>\n\n        <ion-col class="card-bottom-btn">\n\n          <button ion-button icon-left clear small color="gray">\n\n            <ion-icon name="images"></ion-icon>\n\n            <div>{{item.photoCount}}</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn">\n\n          <button ion-button icon-left clear small color="gray">\n\n            <ion-icon name="musical-notes"></ion-icon>\n\n            <div>{{item.audioCount}}</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col>\n\n          <button ion-button icon-left clear small color="gray">\n\n            <ion-icon name="videocam"></ion-icon>\n\n            <div>{{item.videoCount}}</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn" *ngIf="item.isLocationValid">\n\n          <button ion-button icon-left clear small (click)="onLocate(item)">\n\n            <ion-icon name="map"></ion-icon>\n\n            <div>地图</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn">\n\n          <button ion-button icon-left clear small (click)="onPreview(item)">\n\n            <ion-icon name="information-circle"></ion-icon>\n\n            <div>预览</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn">\n\n          <button ion-button icon-left clear small (click)="onMaterials(item)">\n\n            <ion-icon name="information-circle"></ion-icon>\n\n            <div>材料</div>\n\n          </button>\n\n        </ion-col>\n\n      </ion-row>\n\n\n\n      <!--<ion-row>-->\n\n        <!--<ion-item>-->\n\n          <!--<button item-right ion-button icon-left clear (click)="onMaterials(item)">-->\n\n            <!--<ion-icon name="clipboard"></ion-icon>-->\n\n            <!--<div>材料登记</div>-->\n\n          <!--</button>-->\n\n        <!--</ion-item>-->\n\n      <!--</ion-row>-->\n\n    </ion-card>\n\n  </ion-list>\n\n\n\n  <!--infinite scroll-->\n\n  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">\n\n    <ion-infinite-scroll-content></ion-infinite-scroll-content>\n\n  </ion-infinite-scroll>\n\n\n\n  <!--fab-->\n\n  <ion-fab right bottom *ngIf="showFab">\n\n    <button ion-fab color="primary" (click)="doScroll2Top($event)">\n\n      <ion-icon name="arrow-dropup"></ion-icon>\n\n    </button>\n\n  </ion-fab>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"D:\cordova_ionic\HotlineManagerIonic\src\pages\mywork\mywork.html"*/
+        selector: 'page-mywork',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\mywork\mywork.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n    <ion-buttons end>\n\n      <button ion-button icon-only color="white" (click)="toggleToolbar($event)">\n\n        <ion-icon name="search"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n\n\n  <ion-toolbar color="primary" *ngIf="showToolbar">\n\n    <ion-searchbar [(ngModel)]="key" (ionInput)="onInput($event)" (ionCancel)="onCancel($event)"></ion-searchbar>\n\n  </ion-toolbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-mywork">\n\n\n\n  <!--refresher on the top-->\n\n  <ion-refresher (ionRefresh)="doRefresh($event)">\n\n    <ion-refresher-content\n\n      pullingIcon="arrow-dropdown"\n\n      pullingText="Pull to refresh"\n\n      refreshingSpinner="circles"\n\n      refreshingText="Refreshing...">\n\n    </ion-refresher-content>\n\n  </ion-refresher>\n\n\n\n  <!--list content-->\n\n  <ion-list>\n\n    <ion-card *ngFor="let item of items">\n\n      <ion-item (click)="onDelete(item)">\n\n        <ion-avatar item-start>\n\n          <img src="assets/img/ic_mywork_avatar.png">\n\n        </ion-avatar>\n\n        <div><h2 class="card-header-label-hint">任务编号 </h2><h2 class="card-header-label-content">{{item.id.split(\'#\')[0] | valueValid}}</h2></div>\n\n        <div><h2 class="card-header-label-hint">任务类型 </h2><h2 class="card-header-label-content">{{item.type | valueValid}}</h2></div>\n\n        <ion-icon name=\'cloud-upload\' item-end *ngIf="!item.isUploaded"></ion-icon>\n\n        <ion-icon name="timer" item-end color="{{\'danger\'}}" *ngIf="item.isOverdueArrivedLine || item.isOverdueReplyLine"></ion-icon>\n\n      </ion-item>\n\n\n\n      <ion-list>\n\n        <ion-list-header>\n\n          <ion-row>\n\n            <ion-col col-auto>任务描述</ion-col>\n\n            <ion-col>{{item.describe | valueValid}}</ion-col>\n\n          </ion-row>\n\n        </ion-list-header>\n\n\n\n        <!--创建时间-->\n\n        <button ion-item [style.color]="item.processes[0].color" *ngIf="item.processes[0].show">\n\n          <ion-icon name=\'icon-vline\'item-start></ion-icon>\n\n          {{item.processes[0].name}} {{item.processes[0].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <!--<ion-icon name=\'ios-arrow-forward\' item-end></ion-icon>-->\n\n        </button>\n\n\n\n        <!--派发时间-->\n\n        <button ion-item [style.color]="item.processes[1].color" *ngIf="item.processes[1].show">\n\n          <ion-icon name=\'icon-vline\'item-start></ion-icon>\n\n          {{item.processes[1].name}} {{item.processes[1].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <!--<ion-icon name=\'ios-arrow-forward\' item-end></ion-icon>-->\n\n        </button>\n\n\n\n        <!--接单时间-->\n\n        <button ion-item [style.color]="item.processes[2].color" *ngIf="item.processes[2].show" (click)="itemSelected(item, 2)">\n\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[2].color}}"></ion-icon>\n\n          {{item.processes[2].name}} {{item.processes[2].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[2].done" color="{{item.processes[2].color}}"></ion-icon>\n\n        </button>\n\n\n\n        <!--出发时间-->\n\n        <button ion-item [style.color]="item.processes[3].color" *ngIf="item.processes[3].show" (click)="itemSelected(item, 3)">\n\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[3].color}}"></ion-icon>\n\n          {{item.processes[3].name}} {{item.processes[3].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[3].done" color="{{item.processes[3].color}}"></ion-icon>\n\n        </button>\n\n\n\n        <!--到场时间-->\n\n        <button ion-item [style.color]="item.processes[4].color" *ngIf="item.processes[4].show" (click)="itemSelected(item, 4)">\n\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[4].color}}"></ion-icon>\n\n          {{item.processes[4].name}} {{item.processes[4].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[4].done" color="{{item.processes[4].color}}"></ion-icon>\n\n        </button>\n\n\n\n        <!--回复时间-->\n\n        <button ion-item [style.color]="item.processes[5].color" *ngIf="item.processes[5].show" (click)="itemSelected(item, 5)">\n\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[5].color}}"></ion-icon>\n\n          {{item.processes[5].name}} {{item.processes[5].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[5].done" color="{{item.processes[5].color}}"></ion-icon>\n\n        </button>\n\n\n\n        <!--退单时间-->\n\n        <button ion-item [style.color]="item.processes[6].color" *ngIf="item.processes[6].show" (click)="itemSelected(item, 6)">\n\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[6].color}}"></ion-icon>\n\n          {{item.processes[6].name}} {{item.processes[6].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[6].done" color="{{item.processes[6].color}}"></ion-icon>\n\n        </button>\n\n\n\n        <!--延迟时间-->\n\n        <button ion-item [style.color]="item.processes[7].color" *ngIf="item.processes[7].show" (click)="itemSelected(item, 7)">\n\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[7].color}}"></ion-icon>\n\n          {{item.processes[7].name}} {{item.processes[7].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[7].done" color="{{item.processes[7].color}}"></ion-icon>\n\n        </button>\n\n\n\n        <!--销单时间-->\n\n        <!--<button ion-item [style.color]="item.processes[8].color" *ngIf="item.processes[8].show" (click)="itemSelected(item, 8)">-->\n\n          <!--<ion-icon name=\'icon-vline\'item-start color="{{item.processes[8].color}}"></ion-icon>-->\n\n          <!--{{item.processes[8].name}} {{item.processes[8].time | date:\'y-MM-dd HH:mm:ss\'}}-->\n\n          <!--<ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[8].done" color="{{item.processes[8].color}}"></ion-icon>-->\n\n        <!--</button>-->\n\n      </ion-list>\n\n\n\n      <ion-row>\n\n        <ion-col class="card-bottom-btn">\n\n          <button ion-button icon-left clear small color="gray">\n\n            <ion-icon name="images"></ion-icon>\n\n            <div>{{item.photoCount}}</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn">\n\n          <button ion-button icon-left clear small color="gray">\n\n            <ion-icon name="musical-notes"></ion-icon>\n\n            <div>{{item.audioCount}}</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col>\n\n          <button ion-button icon-left clear small color="gray">\n\n            <ion-icon name="videocam"></ion-icon>\n\n            <div>{{item.videoCount}}</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn" *ngIf="item.isLocationValid">\n\n          <button ion-button icon-left clear small (click)="onLocate(item)">\n\n            <ion-icon name="map"></ion-icon>\n\n            <div>地图</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn">\n\n          <button ion-button icon-left clear small (click)="onPreview(item)">\n\n            <ion-icon name="information-circle"></ion-icon>\n\n            <div>预览</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn">\n\n          <button ion-button icon-left clear small (click)="onMaterials(item)">\n\n            <ion-icon name="information-circle"></ion-icon>\n\n            <div>材料</div>\n\n          </button>\n\n        </ion-col>\n\n      </ion-row>\n\n\n\n      <!--<ion-row>-->\n\n        <!--<ion-item>-->\n\n          <!--<button item-right ion-button icon-left clear (click)="onMaterials(item)">-->\n\n            <!--<ion-icon name="clipboard"></ion-icon>-->\n\n            <!--<div>材料登记</div>-->\n\n          <!--</button>-->\n\n        <!--</ion-item>-->\n\n      <!--</ion-row>-->\n\n    </ion-card>\n\n  </ion-list>\n\n\n\n  <!--infinite scroll-->\n\n  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">\n\n    <ion-infinite-scroll-content></ion-infinite-scroll-content>\n\n  </ion-infinite-scroll>\n\n\n\n  <!--fab-->\n\n  <ion-fab right bottom *ngIf="showFab">\n\n    <button ion-fab color="primary" (click)="doScroll2Top($event)">\n\n      <ion-icon name="arrow-dropup"></ion-icon>\n\n    </button>\n\n  </ion-fab>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\mywork\mywork.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_3__providers_DataService__["a" /* DataService */],
@@ -13638,6 +10637,3357 @@ MyWorkPage = __decorate([
 
 /***/ }),
 
+/***/ 62:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MyHistory; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_DataService__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__model_History__ = __webpack_require__(322);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_GlobalService__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__workdetail_workdetail__ = __webpack_require__(128);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__model_Task__ = __webpack_require__(36);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__map_map__ = __webpack_require__(37);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__model_MapParam__ = __webpack_require__(48);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+
+
+
+
+var MyHistory = (function () {
+    function MyHistory(navCtrl, dataService, alertCtrl, globalService, events) {
+        this.navCtrl = navCtrl;
+        this.dataService = dataService;
+        this.alertCtrl = alertCtrl;
+        this.globalService = globalService;
+        this.events = events;
+        this.tag = "[Myhistory]";
+        this.title = '历史记录';
+        this.showToolbar = false;
+        this.showFab = false;
+        this.items = [];
+        this.isDownloadFinished = true;
+        this.since = this.globalService.taskSinceDefault;
+        this.count = this.globalService.taskCountDefault10;
+        this.searchKey = '';
+        this.isOperationBusy = false;
+        this.replyHistories = [];
+        this.onServerFlag = this.globalService.uploadedFlagForUploaded;
+    }
+    MyHistory.prototype.ngOnInit = function () {
+        var _this = this;
+        console.log(this.tag, 'ngOnInit');
+        this.subscribeEvent(this.events);
+        this.getHistories(this.since, this.count, this.searchKey)
+            .then(function (flag) { return _this.infiniteScroll.enable(flag); })
+            .catch(function (error) { return console.error(error); });
+    };
+    MyHistory.prototype.ngOnDestroy = function () {
+        console.log(this.tag, 'ngOnDestroy');
+        this.events.unsubscribe(this.globalService.historyUploadFinishEvent);
+        //this.events.unsubscribe(this.globalService.materialInfoFinishEvent);
+    };
+    //搜索
+    MyHistory.prototype.onInput = function (ev) {
+        var _this = this;
+        if (this.isOperationBusy) {
+            return this.globalService.showToast('后台繁忙...');
+        }
+        var val = ev.target.value;
+        if (val && val.trim() != '') {
+            this.searchKey = val;
+        }
+        else {
+            this.searchKey = '';
+        }
+        this.isOperationBusy = true;
+        this.since = this.globalService.taskSinceDefault;
+        while (this.items.shift())
+            ;
+        this.showFab = false;
+        this.replyHistories = [];
+        this.getHistories(this.since, this.count, this.searchKey)
+            .then(function (data) { return _this.infiniteScroll.enable(data); })
+            .catch(function (error) {
+            console.error(error);
+        }).then(function () { return _this.isOperationBusy = false; });
+    };
+    /**
+     *
+     * @param ev
+     */
+    MyHistory.prototype.onCancel = function (ev) {
+        console.log(this.tag, 'onCancel');
+    };
+    MyHistory.prototype.doRefresh = function (refresher) {
+        console.log(this.tag, 'doRefresh');
+        this.dataService.uploadAllInfos();
+    };
+    /**
+     * 上拉加载更多
+     * @param infiniteScroll
+     */
+    MyHistory.prototype.doInfinite = function (infiniteScroll) {
+        var _this = this;
+        console.log(this.tag, 'doInfinite begin');
+        setTimeout(function () {
+            _this.isDownloadFinished = false;
+            _this.showFab = false;
+            _this.getHistories(_this.since, _this.count, _this.searchKey)
+                .then(function (data) {
+                if (!data) {
+                    infiniteScroll.enable(false);
+                }
+                else {
+                    infiniteScroll.complete();
+                }
+                console.log(_this.tag, 'doInfinite end');
+            }).catch(function (error) {
+                console.error(error);
+                infiniteScroll.complete();
+            }).then(function () {
+                _this.isDownloadFinished = true;
+                _this.showFab = _this.items.length > _this.count;
+            });
+        }, 100);
+    };
+    /**
+     *滑动到顶部
+     * @param ev
+     */
+    MyHistory.prototype.doScroll2Top = function (ev) {
+        this.showFab = false;
+        this.content.scrollToTop();
+    };
+    MyHistory.prototype.toggleToolbar = function (ev) {
+        this.showToolbar = !this.showToolbar;
+        this.content.resize();
+    };
+    MyHistory.prototype.getHistories = function (since, count, key) {
+        var _this = this;
+        return this.dataService
+            .getHistories(since, count, key)
+            .then(function (histories) {
+            console.log(_this.tag + "getHistory" + histories.length);
+            if (histories.length <= 0) {
+                return Promise.resolve(false);
+            }
+            else {
+                __WEBPACK_IMPORTED_MODULE_3__model_History__["a" /* HistoryEx */].transformToHistoryEx(_this.items, histories);
+                _this.since = _this.items.length;
+                return Promise.resolve(histories.map(function (history) { return history.taskId; }))
+                    .then(function (taskIds) { return _this.dataService.getReplyHistories(taskIds); })
+                    .then(function (histories) {
+                    var result = false;
+                    try {
+                        (_a = _this.replyHistories).push.apply(_a, histories);
+                        _this.replyHistories.forEach(function (history) {
+                            if (history.mediaNames && history.mediaNames.length > 0) {
+                                var historyEx = _this.items.find(function (historyEx) { return historyEx.taskId === history.taskId; });
+                                if (historyEx) {
+                                    var mediaNames = history.mediaNames;
+                                    historyEx.photoCount = mediaNames.filter(function (name) { return name.lastIndexOf(_this.globalService.photoSuffix) !== -1; }).length;
+                                    historyEx.audioCount = mediaNames.filter(function (name) { return name.lastIndexOf(_this.globalService.audioSuffix) !== -1; }).length;
+                                }
+                            }
+                        });
+                        result = true;
+                    }
+                    catch (err) {
+                        console.error(err);
+                    }
+                    return Promise.resolve(result);
+                    var _a;
+                });
+            }
+        });
+    };
+    MyHistory.prototype.toRejectedInfo = function (item) {
+        return item;
+    };
+    MyHistory.prototype.toReplyInfo = function (item) {
+        return item;
+    };
+    MyHistory.prototype.onDelay = function (historyEx) {
+        var _this = this;
+        this.dataService.getHistory(historyEx.taskId, __WEBPACK_IMPORTED_MODULE_6__model_Task__["b" /* TaskState */].Delay)
+            .then(function (history) {
+            if (history.reply) {
+                var delayInfo = history.reply;
+                if (delayInfo.comment) {
+                    _this.globalService.showToast("\u5EF6\u8FDF\u539F\u56E0: " + delayInfo.comment);
+                }
+            }
+        })
+            .catch(function (err) { return console.error(err); });
+    };
+    MyHistory.prototype.onReply = function (historyEx) {
+        var taskEx = new __WEBPACK_IMPORTED_MODULE_6__model_Task__["a" /* TaskEx */](historyEx.task);
+        taskEx.isPreview = true;
+        var history = this.findReplyHistory(taskEx.id);
+        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_5__workdetail_workdetail__["a" /* WorkDetailPage */], [taskEx, history]);
+    };
+    MyHistory.prototype.onReject = function (historyEx) {
+        var rejectInfo = this.toRejectedInfo(historyEx.reply);
+        if (rejectInfo && rejectInfo.rejectReason) {
+            this.globalService.showToast("\u9000\u5355\u539F\u56E0: " + rejectInfo.rejectReason);
+        }
+    };
+    MyHistory.prototype.onLocate = function (historyEx) {
+        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_7__map_map__["a" /* MapPage */], new __WEBPACK_IMPORTED_MODULE_8__model_MapParam__["a" /* MapParam */](__WEBPACK_IMPORTED_MODULE_8__model_MapParam__["b" /* MapType */].Locate, historyEx.task.location, historyEx.task.taskId));
+    };
+    MyHistory.prototype.onDelete = function (historyEx) {
+        var _this = this;
+        var alert = this.alertCtrl.create({
+            title: '删除任务',
+            message: '是否删除该任务及其所有操作?',
+            buttons: [
+                {
+                    text: '取消',
+                    role: 'cancel',
+                    handler: function () {
+                        console.log('Cancel clicked');
+                    }
+                },
+                {
+                    text: '确定',
+                    handler: function () {
+                        console.log('Ok clicked');
+                        _this.dataService.deleteOneTaskWithAllInfos(historyEx.taskId)
+                            .then(function (result) { return _this.resetList(); })
+                            .catch(function (err) { return console.error(err); });
+                    }
+                }
+            ]
+        });
+        alert.present();
+    };
+    /**
+     * 订阅事件
+     * @param events
+     */
+    MyHistory.prototype.subscribeEvent = function (events) {
+        var _this = this;
+        events.subscribe(this.globalService.historyUploadFinishEvent, function () {
+            //this.dataService.uploadNotUploadMaterialInfos();
+            _this.refresher.complete();
+            _this.resetList();
+        });
+        // events.subscribe(this.globalService.materialInfoFinishEvent, () => {
+        //   console.log(this.tag, "materialInfoFinishEvent");
+        //   this.refresher.complete();
+        // })
+    };
+    MyHistory.prototype.findReplyHistory = function (taskId) {
+        return this.replyHistories.find(function (history) { return history.taskId === taskId; });
+    };
+    MyHistory.prototype.resetList = function () {
+        var _this = this;
+        this.isOperationBusy = false;
+        this.searchKey = '';
+        this.since = this.globalService.taskSinceDefault;
+        while (this.items.shift())
+            ;
+        this.showFab = false;
+        this.replyHistories = [];
+        this.getHistories(this.since, this.count, this.searchKey)
+            .then(function (data) { return _this.infiniteScroll.enable(data); })
+            .catch(function (error) { return console.error(error); });
+    };
+    return MyHistory;
+}());
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["n" /* Refresher */]),
+    __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["n" /* Refresher */])
+], MyHistory.prototype, "refresher", void 0);
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["c" /* Content */]),
+    __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["c" /* Content */])
+], MyHistory.prototype, "content", void 0);
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* InfiniteScroll */]),
+    __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* InfiniteScroll */])
+], MyHistory.prototype, "infiniteScroll", void 0);
+MyHistory = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+        selector: 'page-myhistory',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\history\myhistory.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n    <ion-buttons end>\n\n      <button ion-button icon-only color="white" (click)="toggleToolbar($event)" *ngIf="showToolbar">\n\n        <ion-icon name="search"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n  <ion-toolbar color="primary" *ngIf="showToolbar">\n\n    <ion-searchbar (input)="onInput($event)" (ionCancel)="onCancel($event)"></ion-searchbar>\n\n  </ion-toolbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-myhistory">\n\n\n\n  <ion-refresher (ionRefresh)="doRefresh($event)">\n\n    <ion-refresher-content\n\n      pullingIcon="arrow_dropdown"\n\n      pullingText="Pull to refresh"\n\n      refreshingSpinner="circles"\n\n      refreshingText="Refreshing...">\n\n    </ion-refresher-content>\n\n  </ion-refresher>\n\n\n\n  <ion-list>\n\n    <ion-card *ngFor="let item of items">\n\n      <ion-item (click)="onDelete(item)">\n\n        <ion-avatar item-start>\n\n          <img src="assets/img/ic_mywork_avatar.png">\n\n        </ion-avatar>\n\n        <div><h2 class="card-header-label-hint">任务编号 </h2>\n\n          <h2 class="card-header-label-content">{{item.taskId.split(\'#\')[0] | valueValid}}</h2></div>\n\n        <div><h2 class="card-header-label-hint">任务类型 </h2>\n\n          <h2 class="card-header-label-content">{{item.task.taskType | valueValid}}</h2></div>\n\n        <ion-icon name=\'cloud-upload\' item-end *ngIf="item.uploadedFlag !== onServerFlag"></ion-icon>\n\n      </ion-item>\n\n\n\n      <ion-list>\n\n        <ion-list-header>\n\n          <ion-row>\n\n            <ion-col col-auto>任务描述</ion-col>\n\n            <ion-col>{{item.task.desc| valueValid}}</ion-col>\n\n          </ion-row>\n\n        </ion-list-header>\n\n\n\n        <!--创建时间-->\n\n        <button ion-item class="gray-text">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          创建时间 {{item.task.createTime| date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--派发时间-->\n\n        <button ion-item class="gray-text">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          派发时间 {{item.task.assignTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--接单时间 -->\n\n        <button ion-item class="gray-text">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          接单时间 {{item.task.acceptTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--延迟时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.delayBeyond === \'accept\'" (click)="onDelay(item)">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          延迟时间 {{item.delayTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--出发时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.task.goTime">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          出发时间 {{item.task.goTime| date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--延迟时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.delayBeyond === \'go\'" (click)="onDelay(item)">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          延迟时间 {{item.delayTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--到场时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.task.arrivedTime">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          到场时间 {{item.task.arrivedTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--延迟时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.delayBeyond === \'arrived\'" (click)="onDelay(item)">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          延迟时间 {{item.delayTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--回复时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.task.replyTime" (click)="onReply(item)">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          回复时间 {{item.task.replyTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--退单时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.isRejected" (click)="onReject(item)">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          退单时间 {{ toRejectedInfo(item.reply).rejectTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--销单时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.isCanceled">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          销单时间 {{toReplyInfo(item.reply).destroyTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n      </ion-list>\n\n      <ion-row>\n\n        <ion-col class="card-bottom-btn">\n\n          <button ion-button icon-left clear small color="gray">\n\n            <ion-icon name="images"></ion-icon>\n\n            <div>{{item.photoCount}}</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn">\n\n          <button ion-button icon-left clear small color="gray">\n\n            <ion-icon name="musical-notes"></ion-icon>\n\n            <div>{{item.audioCount}}</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <!-- <ion-col>\n\n           <button ion-button icon-left clear small color="gray">\n\n             <ion-icon name="videocam"></ion-icon>\n\n             <div>{{item.videoCount}}</div>\n\n           </button>\n\n         </ion-col>-->\n\n\n\n        <ion-col class="card-bottom-btn" *ngIf="item.isLocationValid">\n\n          <button ion-button icon-left clear small (click)="onLocate(item)">\n\n            <ion-icon name="map"></ion-icon>\n\n            <div>地图</div>\n\n          </button>\n\n        </ion-col>\n\n      </ion-row>\n\n    </ion-card>\n\n  </ion-list>\n\n\n\n  <!--infinite scroll-->\n\n  <ion-infinite-scroll (ionInfinite)="doInfinite($event)" immediate-check="false" distance=1%>\n\n    <ion-infinite-scroll-content></ion-infinite-scroll-content>\n\n  </ion-infinite-scroll>\n\n\n\n  <!--fab-->\n\n  <ion-fab right bottom *ngIf="showFab">\n\n    <button ion-fab color="primary" (click)="doScroll2Top($event)">\n\n      <ion-icon name="arrow-dropup"></ion-icon>\n\n    </button>\n\n  </ion-fab>\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\history\myhistory.html"*/
+    }),
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
+        __WEBPACK_IMPORTED_MODULE_2__providers_DataService__["a" /* DataService */],
+        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */],
+        __WEBPACK_IMPORTED_MODULE_4__providers_GlobalService__["a" /* GlobalService */],
+        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* Events */]])
+], MyHistory);
+
+//# sourceMappingURL=myhistory.js.map
+
+/***/ }),
+
+/***/ 63:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DbService; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ionic_native_sqlite__ = __webpack_require__(225);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_sqlite_porter__ = __webpack_require__(226);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__GlobalService__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__FileService__ = __webpack_require__(25);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+var DbService = (function () {
+    function DbService(sqlite, sqlitePorter, globalService, fileService) {
+        this.sqlite = sqlite;
+        this.sqlitePorter = sqlitePorter;
+        this.globalService = globalService;
+        this.fileService = fileService;
+        this.dbName = 'main.db';
+        //private readonly dbVersion: string = '1.0';
+        this.paramError = 'param is error';
+    }
+    /**
+     * 初始化
+     * @returns {Promise<boolean>}
+     */
+    DbService.prototype.init = function () {
+        var _this = this;
+        if (this.globalService.isChrome) {
+            this.dbPath = this.dbName;
+            return Promise.resolve(true);
+        }
+        else {
+            this.dbPath = this.fileService.getDbDir() + "/" + this.dbName;
+            return this.createTables()
+                .then(function (result) { return _this.updateTables(); });
+        }
+    };
+    /**
+     * 销毁
+     */
+    DbService.prototype.destroy = function () {
+        if (this.globalService.isChrome) {
+        }
+        else {
+        }
+    };
+    /**
+     * 保存词语信息
+     * @param words
+     * @returns {any}
+     */
+    DbService.prototype.saveWords = function (words) {
+        var _this = this;
+        if (this.globalService.isChrome || !words || words.length <= 0) {
+            return Promise.resolve(false);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var sql = "DELETE FROM GD_WORDS;";
+                for (var _i = 0, words_1 = words; _i < words_1.length; _i++) {
+                    var word = words_1[_i];
+                    sql += _this.toWordInsertSql(word);
+                }
+                return _this.sqlitePorter.importSqlToDb(db, sql);
+            });
+        }
+    };
+    /**
+     * 保存材料信息
+     * @param materials
+     * @returns {any}
+     */
+    DbService.prototype.saveMaterials = function (materials) {
+        var _this = this;
+        if (this.globalService.isChrome || !materials || materials.length <= 0) {
+            return Promise.resolve(false);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var sql = "DELETE FROM GD_MATERIALS;";
+                for (var _i = 0, materials_1 = materials; _i < materials_1.length; _i++) {
+                    var material = materials_1[_i];
+                    sql += _this.toMaterialInsertSql(material);
+                }
+                return _this.sqlitePorter.importSqlToDb(db, sql);
+            });
+        }
+    };
+    /**
+     * 保存维修信息
+     * @param maintainInfo
+     * @returns {any}
+     */
+    DbService.prototype.saveMaintainInfo = function (maintainInfo) {
+        var _this = this;
+        if (this.globalService.isChrome || !maintainInfo) {
+            return Promise.resolve(false);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var sql;
+                sql = _this.toMaintainInfoInsertSql(maintainInfo);
+                return _this.sqlitePorter.importSqlToDb(db, sql);
+            });
+        }
+    };
+    /**
+     * 查询维修信息
+     * @param taskId
+     * @returns {any}
+     */
+    DbService.prototype.queryMaintainInfo = function (taskId) {
+        var _this = this;
+        if (this.globalService.isChrome || !taskId) {
+            return Promise.reject(this.paramError);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var selectSql = "SELECT * FROM GD_MAINTAININFO WHERE S_TASKID = '" + taskId + "';";
+                return db.executeSql(selectSql, {})
+                    .then(function (data) {
+                    var rows = data.rows;
+                    var maintainInfo;
+                    if (rows && rows.length == 1) {
+                        var localMaintainInfo = rows.item(0);
+                        maintainInfo = _this.toMaintainInfo(localMaintainInfo);
+                    }
+                    return maintainInfo ? Promise.resolve(maintainInfo) : Promise.reject('no maintainInfo');
+                });
+            });
+        }
+    };
+    /**
+     * 材料清单保存至本地
+     * @param materialInfo
+     * @returns {any}
+     */
+    DbService.prototype.saveMaterialInfo = function (materialInfo) {
+        var _this = this;
+        if (!materialInfo || !materialInfo.taskId || materialInfo.infos.length <= 0) {
+            return Promise.resolve(false);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var selectSql = "SELECT * FROM GD_MATERIALINFO WHERE S_TASKID = '" + materialInfo.taskId + "';";
+                var sql;
+                return db.executeSql(selectSql, {})
+                    .then(function (data) {
+                    var rows = data.rows;
+                    if (rows && rows.length > 0) {
+                        sql = _this.toMaterialInfoUpdateSql(materialInfo);
+                    }
+                    else {
+                        sql = _this.toMaterialInfoInsertSql(materialInfo);
+                    }
+                    return _this.sqlitePorter.importSqlToDb(db, sql);
+                })
+                    .catch(function (error) {
+                    console.log(error);
+                });
+            });
+        }
+    };
+    /**
+     * 材料清单更新上传标志
+     * @param materialInfo
+     * @returns {any}
+     */
+    DbService.prototype.updateFlagMaterials = function (materialInfo) {
+        var _this = this;
+        if (!materialInfo || !materialInfo.taskId || materialInfo.infos.length <= 0) {
+            return Promise.resolve(false);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                materialInfo.uploadFlag = _this.globalService.uploadedFlagForUploaded;
+                var sql = _this.toMaterialInfoUpdateSql(materialInfo);
+                return _this.sqlitePorter.importSqlToDb(db, sql);
+            });
+        }
+    };
+    /**
+     * 获取材料
+     * @param group
+     */
+    DbService.prototype.getMaterials = function (groupKey) {
+        var _this = this;
+        if (this.globalService.isChrome || !groupKey) {
+            return Promise.reject(this.paramError);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var sql = "SELECT * FROM GD_MATERIALS WHERE S_GROUPKEY = '" + groupKey + "';";
+                return db.executeSql(sql, {})
+                    .then(function (data) {
+                    var rows = data.rows;
+                    var materials = [];
+                    if (rows && rows.length > 0) {
+                        for (var i = 0; i < rows.length; i++) {
+                            var localMaterial = rows.item(i);
+                            if (!localMaterial) {
+                                continue;
+                            }
+                            materials.push(_this.toMaterial(localMaterial));
+                        }
+                    }
+                    return materials.length ? Promise.resolve(materials) : Promise.reject('no materials');
+                });
+            });
+        }
+    };
+    DbService.prototype.getMaterialsCount = function () {
+        if (this.globalService.isChrome) {
+            return Promise.resolve(0);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var sql = "SELECT COUNT(*) FROM GD_MATERIALS;";
+                return db.executeSql(sql, {})
+                    .then(function (data) { return data.rows && data.rows.length > 0 ? data.rows.item(0)["COUNT(*)"] : 0; });
+            });
+        }
+    };
+    /**
+     * 根据id查询材料信息
+     * @param mid
+     * @returns {any}
+     */
+    DbService.prototype.getMaterial = function (mid) {
+        var _this = this;
+        if (this.globalService.isChrome || !mid) {
+            return Promise.reject(this.paramError);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var sql = "SELECT * FROM GD_MATERIALS WHERE I_MID =" + mid + ";";
+                return db.executeSql(sql, {})
+                    .then(function (data) {
+                    var rows = data.rows;
+                    var result;
+                    if (rows && rows.length == 1) {
+                        result = _this.toMaterial(rows.item(0));
+                    }
+                    return result ? Promise.resolve(result) : Promise.reject('no material');
+                });
+            });
+        }
+    };
+    /**
+     * 查询材料清单
+     * @param taskId
+     * @returns {any}
+     */
+    DbService.prototype.getMaterialInfo = function (taskId) {
+        var _this = this;
+        if (this.globalService.isChrome || !taskId) {
+            return Promise.reject(this.paramError);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var sql = "SELECT * FROM GD_MATERIALINFO WHERE S_TASKID = '" + taskId + "';";
+                return db.executeSql(sql, {})
+                    .then(function (data) {
+                    var rows = data.rows;
+                    var result;
+                    if (rows && rows.length == 1) {
+                        var localMaterialInfo = rows.item(0);
+                        if (localMaterialInfo) {
+                            result = _this.toMaterialInfo(localMaterialInfo);
+                        }
+                    }
+                    return result ? Promise.resolve(result) : Promise.reject('no materialInfo');
+                });
+            });
+        }
+    };
+    DbService.prototype.toMaterialInfo = function (localMaterialInfo) {
+        return {
+            taskId: localMaterialInfo.S_TASKID,
+            infos: JSON.parse(localMaterialInfo.S_INFOS),
+            uploadFlag: localMaterialInfo.I_UPLOADEDFLAG
+        };
+    };
+    /**
+     * 获取词语
+     * @param group
+     * @returns {any}
+     */
+    DbService.prototype.getWords = function (group) {
+        var _this = this;
+        if (this.globalService.isChrome || !group) {
+            return Promise.reject(this.paramError);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var sql = "SELECT * FROM GD_WORDS WHERE S_WGROUP = '" + group + "';";
+                return db.executeSql(sql, {})
+                    .then(function (data) {
+                    var rows = data.rows;
+                    var words = [];
+                    if (rows && rows.length > 0) {
+                        for (var i = 0; i < rows.length; i++) {
+                            var localWord = rows.item(i);
+                            if (!localWord) {
+                                continue;
+                            }
+                            words.push(_this.toWord(localWord));
+                        }
+                    }
+                    return words.length ? Promise.resolve(words) : Promise.reject('no words');
+                });
+            });
+        }
+    };
+    /**
+     * 获取词语数目
+     * @returns {any}
+     */
+    DbService.prototype.getWordsCount = function () {
+        if (this.globalService.isChrome) {
+            return Promise.resolve(0);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var sql = "SELECT COUNT(*) FROM GD_WORDS;";
+                return db.executeSql(sql, {})
+                    .then(function (data) { return data.rows && data.rows.length > 0 ? data.rows.item(0)["COUNT(*)"] : 0; });
+            });
+        }
+    };
+    /**
+     * 保存任务列表
+     * @param userId
+     * @param serverTasks
+     * @returns {any}
+     */
+    DbService.prototype.saveTasks = function (userId, serverTasks) {
+        var _this = this;
+        if (this.globalService.isChrome || !serverTasks || serverTasks.length <= 0) {
+            return Promise.reject(this.paramError);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var sql = "SELECT * FROM GD_TASKS WHERE I_USERID = " + userId + ";";
+                return db.executeSql(sql, {})
+                    .then(function (data) {
+                    var rows = data.rows;
+                    var sql = '';
+                    if (rows && rows.length > 0) {
+                        for (var _i = 0, serverTasks_1 = serverTasks; _i < serverTasks_1.length; _i++) {
+                            var serverTask = serverTasks_1[_i];
+                            var foundLocalTask = void 0;
+                            for (var i = 0; i < rows.length; i++) {
+                                var localTask = rows.item(i);
+                                if (!localTask || !localTask.S_TASKID) {
+                                    continue;
+                                }
+                                if (localTask.S_TASKID === serverTask.taskId) {
+                                    foundLocalTask = localTask;
+                                    break;
+                                }
+                            }
+                            if (foundLocalTask) {
+                                sql += _this.toTaskUpdateSql(serverTask, foundLocalTask);
+                            }
+                            else {
+                                sql += _this.toTaskInsertSql(serverTask);
+                            }
+                        }
+                    }
+                    else {
+                        for (var _a = 0, serverTasks_2 = serverTasks; _a < serverTasks_2.length; _a++) {
+                            var task = serverTasks_2[_a];
+                            sql += _this.toTaskInsertSql(task);
+                        }
+                    }
+                    return sql && sql.length > 0 ? _this.sqlitePorter.importSqlToDb(db, sql) : Promise.reject('failure to saveTasks');
+                });
+            });
+        }
+    };
+    /**
+     * 保存任务
+     * @param task
+     * @returns {any}
+     */
+    DbService.prototype.saveTask = function (task) {
+        var _this = this;
+        if (this.globalService.isChrome || !task) {
+            return Promise.reject(this.paramError);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var sql = _this.toTaskUpdateSql(task);
+                return sql && sql.length > 0 ? db.executeSql(sql, {}) : Promise.reject('failure to saveTask');
+            });
+        }
+    };
+    /**
+     * 获取任务
+     * @param userId
+     * @param since
+     * @param count
+     * @param states
+     * @param key
+     * @returns {any}
+     */
+    DbService.prototype.getTasks = function (userId, since, count, states, key) {
+        var _this = this;
+        if (this.globalService.isChrome) {
+            return Promise.reject(this.paramError);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var sql = "SELECT * FROM GD_TASKS WHERE I_USERID = " + userId;
+                if (states && states.length > 0) {
+                    sql += " AND I_STATE IN (" + states.join(',') + ")";
+                }
+                if (key) {
+                    sql += " AND S_TASKID LIKE '%" + key + "%'";
+                }
+                sql += " ORDER BY ID LIMIT " + count + " OFFSET " + since + ";";
+                return db.executeSql(sql, {})
+                    .then(function (data) {
+                    var rows = data.rows;
+                    var tasks = [];
+                    if (rows && rows.length > 0) {
+                        for (var i = 0; i < rows.length; i++) {
+                            var localTask = rows.item(i);
+                            if (!localTask || !localTask.S_TASKID) {
+                                continue;
+                            }
+                            tasks.push(_this.toTask(localTask));
+                        }
+                    }
+                    return Promise.resolve(tasks);
+                });
+            });
+        }
+    };
+    /**
+     * 获取任务数
+     * @param userId
+     * @returns {any}
+     */
+    DbService.prototype.getTaskCount = function (userId) {
+        if (this.globalService.isChrome) {
+            return Promise.reject(this.paramError);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var sql = "SELECT COUNT(*) FROM GD_TASKS WHERE I_USERID = " + userId + ";";
+                return db.executeSql(sql, {})
+                    .then(function (data) {
+                    return Promise.resolve(data);
+                });
+            });
+        }
+    };
+    /**
+     * 获取当前登录人TaskIds
+     * @param userId
+     * @returns {Array<string>}
+     */
+    DbService.prototype.getTaskIds = function (userId) {
+        if (this.globalService.isChrome) {
+            return Promise.reject(this.paramError);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var sql = "SELECT S_TASKID FROM GD_TASKS WHERE I_USERID = " + userId + ";";
+                return db.executeSql(sql, {})
+                    .then(function (data) {
+                    var rows = data.rows;
+                    var taskIds = [];
+                    if (rows && rows.length > 0) {
+                        for (var i = 0; i < rows.length; i++) {
+                            var item = rows.item(i);
+                            if (item.hasOwnProperty('S_TASKID') && item['S_TASKID']) {
+                                taskIds.push(item['S_TASKID']);
+                            }
+                        }
+                    }
+                    return Promise.resolve(taskIds);
+                });
+            });
+        }
+    };
+    /**
+     * 保存任务详情
+     * @param taskDetail
+     * @returns {any}
+     */
+    DbService.prototype.saveTaskDetail = function (taskDetail) {
+        var _this = this;
+        if (this.globalService.isChrome || !taskDetail) {
+            return Promise.reject(this.paramError);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var sql = "SELECT * FROM GD_TASKDETAILS WHERE S_TASKID = '" + taskDetail.taskId + "';";
+                return db.executeSql(sql, {})
+                    .then(function (data) {
+                    var rows = data.rows;
+                    var sql;
+                    if (rows && rows.length > 0) {
+                        sql = _this.toTaskDetailUpdateSql(taskDetail);
+                    }
+                    else {
+                        sql = _this.toTaskDetailInsertSql(taskDetail);
+                    }
+                    return db.executeSql(sql, {});
+                });
+            });
+        }
+    };
+    /**
+     * 更新task extend info字段
+     * @param taskDetail
+     * @returns {any}
+     */
+    DbService.prototype.updateTaskExtendInfo = function (taskDetail) {
+        var _this = this;
+        if (this.globalService.isChrome || !taskDetail) {
+            return Promise.reject(this.paramError);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var sql = "SELECT * FROM GD_TASKS WHERE S_TASKID = '" + taskDetail.taskId + "';";
+                return db.executeSql(sql, {})
+                    .then(function (data) {
+                    var rows = data.rows;
+                    var sql;
+                    var extendedInfo;
+                    if (rows && rows.length > 0) {
+                        var item = rows.item(0);
+                        if (item.hasOwnProperty('S_EXTENDEDINFO')) {
+                            extendedInfo = item['S_EXTENDEDINFO'];
+                        }
+                    }
+                    else {
+                        return Promise.resolve(false);
+                    }
+                    sql = _this.toTaskUpdateExtendedInfoSql(taskDetail, extendedInfo);
+                    return db.executeSql(sql, {});
+                });
+            });
+        }
+    };
+    /**
+     * 检查超期工单
+     * @param userId
+     * @param overdueTime
+     * @param currentTime
+     * @returns {any}
+     */
+    DbService.prototype.checkOverdueTimeTasks = function (userId, overdueTime, currentTime) {
+        var _this = this;
+        if (this.globalService.isChrome || !overdueTime) {
+            return Promise.reject(this.paramError);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var arrivedTime = overdueTime.arrived + currentTime;
+                var replyTime = overdueTime.reply + currentTime;
+                var sql = "SELECT * FROM GD_TASKS WHERE I_USERID = " + userId + " ORDER BY ID;";
+                return db.executeSql(sql, {})
+                    .then(function (data) {
+                    var rows = data.rows;
+                    var tasks = [];
+                    if (rows && rows.length > 0) {
+                        for (var i = 0; i < rows.length; i++) {
+                            var localTask = rows.item(i);
+                            if (!localTask || !localTask.S_TASKID) {
+                                continue;
+                            }
+                            var task = _this.toTask(localTask);
+                            if (task.extendedInfo) {
+                                if (task.extendedInfo.arrivedDeadLine && task.extendedInfo.arrivedDeadLine < currentTime) {
+                                    task.extendedInfo.replyDeadLine = undefined;
+                                    task.extendedInfo.delayReplyDeadLine = undefined;
+                                }
+                                else if (task.extendedInfo.replyDeadLine && task.extendedInfo.replyDeadLine < currentTime) {
+                                    task.extendedInfo.arrivedDeadLine = undefined;
+                                    task.extendedInfo.delayReplyDeadLine = undefined;
+                                }
+                                tasks.push(task);
+                            }
+                        }
+                    }
+                    return Promise.resolve(tasks);
+                });
+            });
+        }
+    };
+    /**
+     * 获取任务详情
+     * @param taskId
+     * @returns {any}
+     */
+    DbService.prototype.getTaskDetail = function (taskId) {
+        var _this = this;
+        if (this.globalService.isChrome || !taskId) {
+            return Promise.reject(this.paramError);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var sql = "SELECT * FROM GD_TASKDETAILS WHERE S_TASKID = '" + taskId + "';";
+                return db.executeSql(sql, {})
+                    .then(function (data) {
+                    var rows = data.rows;
+                    var taskDetail;
+                    if (rows && rows.length > 0) {
+                        for (var i = 0; i < rows.length; i++) {
+                            var localTaskDetail = rows.item(i);
+                            if (!localTaskDetail || !localTaskDetail.S_TASKID) {
+                                continue;
+                            }
+                            taskDetail = _this.toTaskDetail(localTaskDetail);
+                        }
+                    }
+                    return Promise.resolve(taskDetail);
+                });
+            });
+        }
+    };
+    /**
+     * 获取任务详情
+     * @param taskIds
+     * @returns {Array<TaskDetail>}
+     */
+    DbService.prototype.getTaskDetails = function (taskIds) {
+        var _this = this;
+        if (this.globalService.isChrome || !taskIds || taskIds.length <= 0) {
+            return Promise.reject(this.paramError);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var sql = "SELECT * FROM GD_TASKDETAILS WHERE";
+                var ids = taskIds.map(function (id) { return "'" + id + "'"; });
+                sql += " S_TASKID IN (" + ids.join(',') + ")";
+                return db.executeSql(sql, {})
+                    .then(function (data) {
+                    var rows = data.rows;
+                    var taskDetails = [];
+                    if (rows && rows.length > 0) {
+                        for (var i = 0; i < rows.length; i++) {
+                            var localTaskDetail = rows.item(i);
+                            if (!localTaskDetail) {
+                                continue;
+                            }
+                            taskDetails.push(_this.toTaskDetail(localTaskDetail));
+                        }
+                    }
+                    return Promise.resolve(taskDetails);
+                });
+            });
+        }
+    };
+    /**
+     * 获取无详细信息的taskId列表
+     * @param userId
+     * @returns {any}
+     */
+    DbService.prototype.getNoDetailTaskIds = function (userId) {
+        if (this.globalService.isChrome) {
+            return Promise.reject(this.paramError);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var sql = "SELECT S_TASKID FROM GD_TASKS WHERE I_USERID = " + userId + " AND S_TASKID NOT IN (SELECT S_TASKID FROM GD_TASKDETAILS);";
+                return db.executeSql(sql, {})
+                    .then(function (data) {
+                    var rows = data.rows;
+                    var taskIds = [];
+                    if (rows && rows.length > 0) {
+                        for (var i = 0; i < rows.length; i++) {
+                            var item = rows.item(i);
+                            if (item.hasOwnProperty('S_TASKID') && item['S_TASKID']) {
+                                taskIds.push(item['S_TASKID']);
+                            }
+                        }
+                    }
+                    return Promise.resolve(taskIds);
+                });
+            });
+        }
+    };
+    /**
+     * 保存每次操作到历史表
+     * @param history
+     * @returns {any}
+     */
+    DbService.prototype.saveHistory = function (history) {
+        var _this = this;
+        if (this.globalService.isChrome || !history) {
+            return Promise.reject(this.paramError);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var sql = "SELECT * FROM GD_HISTORIES WHERE I_USERID = " + history.userId + " AND S_TASKID = '" + history.taskId + "' AND I_STATE = " + history.state + " ORDER BY ID;";
+                return db.executeSql(sql, {})
+                    .then(function (data) {
+                    var rows = data.rows;
+                    var sql;
+                    if (rows && rows.length > 0) {
+                        //let localHistory: LocalHistory = rows.item(0) as LocalHistory;
+                        sql = _this.toHistoryUpdateSql(history);
+                    }
+                    else {
+                        sql = _this.toHistoryInsertSql(history);
+                    }
+                    return db.executeSql(sql, {});
+                });
+            });
+        }
+    };
+    /**
+     * 获取历史记录
+     * @param userId
+     * @param taskId
+     * @param states
+     * @param uploadedFlags
+     * @param key
+     * @param since
+     * @param count
+     * @returns {any}
+     */
+    DbService.prototype.getHistories = function (userId, taskId, states, uploadedFlags, key, since, count) {
+        var _this = this;
+        if (this.globalService.isChrome) {
+            return Promise.reject(this.paramError);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var sql = "SELECT * FROM GD_HISTORIES WHERE I_USERID = " + userId;
+                if (taskId != undefined && taskId != null) {
+                    sql += " AND S_TASKID = '" + taskId + "'";
+                }
+                if (states && states.length > 0) {
+                    sql += " AND I_STATE IN (" + states.join(',') + ")";
+                }
+                if (uploadedFlags && uploadedFlags.length > 0) {
+                    sql += " AND I_UPLOADEDFLAG IN (" + uploadedFlags.join(',') + ")";
+                }
+                if (key) {
+                    sql += " AND S_TASKID LIKE '%" + key + "%'";
+                }
+                if (since !== undefined && since !== null && count !== undefined && count !== null) {
+                    sql += " ORDER BY ID LIMIT " + count + " OFFSET " + since + ";";
+                }
+                else {
+                    sql += ' ORDER BY ID;';
+                }
+                return db.executeSql(sql, {});
+            })
+                .then(function (data) {
+                var rows = data.rows;
+                var histories = [];
+                if (rows && rows.length > 0) {
+                    for (var i = 0; i < rows.length; i++) {
+                        var localHistory = rows.item(i);
+                        if (!localHistory) {
+                            continue;
+                        }
+                        histories.push(_this.toHistory(localHistory));
+                    }
+                }
+                return Promise.resolve(histories);
+            });
+        }
+    };
+    /**
+     *
+     * @param userId
+     * @param taskIds
+     * @param state
+     * @param uploadedFlags
+     * @returns {any}
+     */
+    DbService.prototype.getSpecialHistories = function (userId, taskIds, state, uploadedFlags) {
+        var _this = this;
+        if (this.globalService.isChrome || !taskIds || taskIds.length <= 0) {
+            return Promise.resolve([]);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var ids = taskIds.map(function (id) { return "'" + id + "'"; });
+                var sql = "SELECT * FROM GD_HISTORIES WHERE I_USERID = " + userId + " AND S_TASKID IN (" + ids.join(',') + ")";
+                if (state !== undefined && state !== null) {
+                    sql += " AND I_STATE = " + state;
+                }
+                if (uploadedFlags && uploadedFlags.length > 0) {
+                    sql += " AND I_UPLOADEDFLAG IN (" + uploadedFlags.join(',') + ")";
+                }
+                sql += " ORDER BY ID;";
+                return db.executeSql(sql, {});
+            })
+                .then(function (data) {
+                var rows = data.rows;
+                var histories = [];
+                if (rows && rows.length > 0) {
+                    for (var i = 0; i < rows.length; i++) {
+                        var localHistory = rows.item(i);
+                        if (!localHistory) {
+                            continue;
+                        }
+                        histories.push(_this.toHistory(localHistory));
+                    }
+                }
+                return Promise.resolve(histories);
+            });
+        }
+    };
+    /**
+     * 销单删除任务及详情
+     * @param userId
+     * @param taskId
+     * @returns {any}
+     */
+    // public deleteTaskAndDetail(userId: number, taskId: string) {
+    //   if (this.globalService.isChrome) {
+    //     return Promise.reject('chrome');
+    //   } else {
+    //     return this.openDb()
+    //       .then(db => {
+    //         let sql = `DELETE FROM GD_TASKS WHERE I_USERID = ${userId} AND S_TASKID = '${taskId}';`
+    //           + `DELETE FROM GD_TASKDETAILS WHERE S_TASKID = '${taskId}';`;
+    //         return this.sqlitePorter.importSqlToDb(db, sql);
+    //       });
+    //   }
+    // }
+    /**
+     * 保存多媒体信息
+     * @param media
+     * @returns {any}
+     */
+    DbService.prototype.saveMedia = function (media) {
+        var _this = this;
+        if (this.globalService.isChrome || !media) {
+            return Promise.reject(this.paramError);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var sql = "SELECT * FROM GD_MULTIMEDIAS WHERE I_USERID = " + media.userId + " AND S_TASKID = '" + media.taskId + "' AND I_FILETYPE = " + media.fileType + " AND S_FILENAME = '" + media.fileName + "';";
+                return db.executeSql(sql, {})
+                    .then(function (data) {
+                    var rows = data.rows;
+                    if (rows && rows.length > 0) {
+                        var localMedia = rows.item(0);
+                        sql = _this.toMediaUpdateSql(media, localMedia);
+                    }
+                    else {
+                        sql = _this.toMediaInsertSql(media);
+                    }
+                    return db.executeSql(sql, {});
+                });
+            });
+        }
+    };
+    /**
+     * 获取多媒体列表
+     * @param userId
+     * @param taskId
+     * @param fileNames
+     * @param uploadedFlags
+     * @returns {any}
+     */
+    DbService.prototype.getMediaList = function (userId, taskId, fileNames, uploadedFlags) {
+        var _this = this;
+        if (this.globalService.isChrome || !taskId) {
+            return Promise.reject(this.paramError);
+        }
+        else if (fileNames.length <= 0) {
+            return Promise.reject([]);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var names = fileNames.map(function (name) { return "'" + name + "'"; });
+                var sql = "SELECT * FROM GD_MULTIMEDIAS WHERE I_USERID = " + userId + " AND S_TASKID = '" + taskId + "'\n           AND S_FILENAME IN (" + names.join(',') + ")";
+                if (uploadedFlags && uploadedFlags.length > 0) {
+                    sql += " AND I_UPLOADEDFLAG IN (" + uploadedFlags.join(',') + ")";
+                }
+                sql += ' ORDER BY ID;';
+                return db.executeSql(sql, {});
+            })
+                .then(function (data) {
+                var rows = data.rows;
+                var mediaList = [];
+                if (rows && rows.length > 0) {
+                    for (var i = 0; i < rows.length; i++) {
+                        var localMedia = rows.item(i);
+                        if (!localMedia) {
+                            continue;
+                        }
+                        mediaList.push(_this.toMedia(localMedia));
+                    }
+                }
+                return Promise.resolve(mediaList);
+            });
+        }
+    };
+    /**
+     *
+     * @param userId
+     * @param taskId
+     * @returns {any}
+     */
+    DbService.prototype.deleteOneTaskWithAllInfos = function (userId, taskId) {
+        var _this = this;
+        if (this.globalService.isChrome) {
+            return Promise.reject('chrome');
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var sql = "DELETE FROM GD_TASKS WHERE I_USERID = " + userId + " AND S_TASKID = '" + taskId + "';"
+                    + ("DELETE FROM GD_TASKDETAILS WHERE S_TASKID = '" + taskId + "';")
+                    + ("DELETE FROM GD_HISTORIES WHERE I_USERID = " + userId + " AND S_TASKID = '" + taskId + "';")
+                    + ("DELETE FROM GD_MULTIMEDIAS WHERE I_USERID = " + userId + " AND S_TASKID = '" + taskId + "';");
+                return _this.sqlitePorter.importSqlToDb(db, sql);
+            });
+        }
+    };
+    /**
+     *
+     * @param userId
+     * @param fileNames
+     * @returns {any}
+     */
+    DbService.prototype.deleteOneMedia = function (userId, fileNames) {
+        var _this = this;
+        if (this.globalService.isChrome) {
+            return Promise.reject('chrome');
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var sql = "DELETE FROM GD_MULTIMEDIAS WHERE S_FILENAME = '" + fileNames + "' AND I_USERID = " + userId + ";";
+                return _this.sqlitePorter.importSqlToDb(db, sql);
+            });
+        }
+    };
+    /**
+     *
+     * @param personnels
+     * @returns {any}
+     */
+    DbService.prototype.savePersonnels = function (personnels) {
+        var _this = this;
+        if (this.globalService.isChrome || !personnels || personnels.length <= 0) {
+            return Promise.resolve(false);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var sql = "DELETE FROM GD_PERSONNELS;";
+                for (var _i = 0, personnels_1 = personnels; _i < personnels_1.length; _i++) {
+                    var personnel = personnels_1[_i];
+                    sql += _this.toPersonnelInsertSql(personnel);
+                }
+                return _this.sqlitePorter.importSqlToDb(db, sql);
+            });
+        }
+    };
+    /**
+     *
+     * @returns {any}
+     */
+    DbService.prototype.getPersonnels = function () {
+        var _this = this;
+        if (this.globalService.isChrome) {
+            return Promise.reject(this.paramError);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var sql = "SELECT * FROM GD_PERSONNELS;";
+                return db.executeSql(sql, {})
+                    .then(function (data) {
+                    var rows = data.rows;
+                    var personnels = [];
+                    if (rows && rows.length > 0) {
+                        for (var i = 0; i < rows.length; i++) {
+                            var localPersonnel = rows.item(i);
+                            if (!localPersonnel) {
+                                continue;
+                            }
+                            personnels.push(_this.toPersonnel(localPersonnel));
+                        }
+                    }
+                    return personnels.length ? Promise.resolve(personnels) : Promise.reject('no personnels');
+                });
+            });
+        }
+    };
+    DbService.prototype.getPersonnelsCount = function () {
+        if (this.globalService.isChrome) {
+            return Promise.resolve(0);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var sql = "SELECT COUNT(*) FROM GD_PERSONNELS;";
+                return db.executeSql(sql, {})
+                    .then(function (data) { return data.rows && data.rows.length > 0 ? data.rows.item(0)["COUNT(*)"] : 0; });
+            });
+        }
+    };
+    /**
+     * 打开数据库
+     * @returns {any}
+     */
+    DbService.prototype.openDb = function () {
+        return this.sqlite.create({
+            name: this.dbPath,
+            location: 'default'
+        });
+    };
+    /**
+     * 创建tables
+     */
+    DbService.prototype.createTables = function () {
+        var _this = this;
+        var sql = "CREATE TABLE IF NOT EXISTS [GD_HISTORIES] (\n        [ID] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n        [I_USERID] INTEGER NOT NULL, \n        [S_TASKID] TEXT(50) NOT NULL,\n        [I_STATE] INTEGER NOT NULL,\n        [S_CONTENT] TEXT NOT NULL,\n        [S_REPLY] TEXT,\n        [I_UPLOADEDFLAG] INTEGER NOT NULL DEFAULT 0,\n        [S_EXTENDEDINFO] TEXT);\n           \n      CREATE TABLE IF NOT EXISTS [GD_MULTIMEDIAS] (\n        [ID] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n        [I_USERID] INTEGER NOT NULL,\n        [S_TASKID] TEXT(50) NOT NULL,\n        [I_FILETYPE] INTEGER NOT NULL,\n        [S_FILENAME] TEXT(100) NOT NULL,\n        [I_UPLOADEDFLAG] INTEGER NOT NULL DEFAULT 0,\n        [S_FILEID] TEXT,\n        [S_EXTENDEDINFO] TEXT);\n      \n      CREATE TABLE IF NOT EXISTS [GD_NEWS] (\n        [ID] INTEGER NOT NULL, \n        [S_TITLE] TEXT(100) NOT NULL,\n        [D_PUBTIME] INTEGER NOT NULL,\n        [S_CONTENT] TEXT NOT NULL,\n        [I_READFLAG] INTEGER NOT NULL DEFAULT 0,\n        [S_EXTENDEDINFO] TEXT);\n      \n      CREATE TABLE IF NOT EXISTS [GD_TASKDETAILS] (\n        [ID] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n        [S_TASKID] TEXT(50) NOT NULL,\n        [S_DETAILINFO] TEXT NOT NULL,\n        [S_EXTENDEDINFO] TEXT);\n      \n      CREATE TABLE IF NOT EXISTS [GD_TASKS] (\n        [ID] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n        [I_USERID] INTEGER NOT NULL, \n        [S_TASKID] TEXT(50) NOT NULL,\n        [S_TASKTYPE] TEXT(50) NOT NULL,\n        [S_DESC] TEXT(50),\n        [S_SOURCE] TEXT(50),\n        [D_CREATETIME] INTEGER,\n        [D_ASSGINTIME] INTEGER,\n        [D_ACCEPTTIME] INTEGER,\n        [D_GOTIME] INTEGER,\n        [D_ARRIVEDTIME] INTEGER,\n        [D_REPLYTIME] INTEGER,\n        [D_COMPLETEDTIME] INTEGER,\n        [I_STATE] INTEGER NOT NULL,\n        [S_LNGLATTYPE] TEXT(50),\n        [S_LONGITUDE] TEXT(50),\n        [S_LATITUDE] TEXT(50),\n        [S_EXTENDEDINFO] TEXT);\n      \n      CREATE TABLE IF NOT EXISTS [GD_WORDS] (\n        [ID] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n        [I_WID] INTEGER NOT NULL,\n        [S_WNAME] TEXT(100) NOT NULL,\n        [S_WVALUE] TEXT(100) NOT NULL,\n        [S_WVALUEEX] TEXT(100),\n        [S_WGROUP] TEXT(100),\n        [I_WPARENTID] INTEGER,\n        [S_WREMARK] TEXT(100),\n        [S_WISACTIVE] TEXT(100));\n        \n      CREATE TABLE IF NOT EXISTS [GD_MATERIALS] (\n        [ID] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n        [I_MID] INTEGER NOT NULL,\n        [I_PARENTID] INTEGER NOT NULL,\n        [S_GROUPKEY] TEXT(100) NOT NULL,\n        [S_KEY] TEXT(100) NOT NULL,\n        [S_NAME] TEXT(100));\n        \n      CREATE TABLE IF NOT EXISTS [GD_MATERIALINFO](\n        [ID] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n        [I_USERID] INTEGER NOT NULL,\n        [S_TASKID] TEXT(50) NOT NULL,\n        [S_INFOS] TEXT(1000) NOT NULL,\n        [I_UPLOADEDFLAG] INTEGER NOT NULL DEFAULT 0);\n        \n      CREATE TABLE IF NOT EXISTS [GD_MAINTAININFO](\n        [ID] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n        [S_TASKID] TEXT(50) NOT NULL,\n        [S_TYPE] TEXT(50),\n        [S_ADDRESS] TEXT(100),\n        [S_AREA] TEXT(50),\n        [S_CONTENT] TEXT(1000),\n        [S_REMARK] TEXT(1000));\n       \n      CREATE TABLE IF NOT EXISTS [META_INFO] (\n        [S_VERSION] TEXT(50) NOT NULL, \n        [S_PRODUCTER] TEXT (100) NOT NULL, \n        [D_PRODUCTEDTIME] INTEGER NOT NULL);\n\n      CREATE TABLE IF NOT EXISTS [GD_PERSONNELS] (\n        [I_FIELDPERSONNELID] INTEGER NOT NULL, \n        [S_FIELDPERSONNELNAME] TEXT (100) NOT NULL, \n        [S_ROLES] TEXT);";
+        return this.openDb()
+            .then(function (db) {
+            return _this.sqlitePorter.importSqlToDb(db, sql);
+        });
+    };
+    /**
+     * 更新tables, to be used in future!!!
+     * @returns {Promise<boolean>}
+     */
+    DbService.prototype.updateTables = function () {
+        // return this.openDb()
+        //   .then(db => {
+        //     let sql = `ALTER TABLE GD_TASKS ALTER COLUMN [D_ARRIVEDDEADLINE] INTEGER DEFAULT 0, [D_REPLYDEADLINE] INTEGER DEFAULT 0, [D_DELAYREPLYDEADLINE] INTEGER DEFAULT 0;`;
+        //     return this.sqlitePorter.importSqlToDb(db, sql);
+        //   });
+        return Promise.resolve(true);
+    };
+    /**
+     *
+     * @param word
+     * @returns {string}
+     */
+    DbService.prototype.toWordInsertSql = function (word) {
+        return "INSERT INTO GD_WORDS VALUES (null, " + word.wid + ", '" + word.wName + "', '" + word.wValue + "', '" + word.wValueEx + "', '" + word.wGroup + "', " + word.wParentId + ", '" + word.wRemark + "', " + (word.wIsActive ? "'1'" : "'0'") + ");";
+    };
+    DbService.prototype.toMaterialInsertSql = function (material) {
+        return "INSERT INTO GD_MATERIALS VALUES (null," + material.id + ", " + material.parentId + ", '" + material.groupKey + "', '" + material.key + "', '" + material.name + "');";
+    };
+    DbService.prototype.toMaterialInfoInsertSql = function (materialInfo) {
+        return "INSERT INTO GD_MATERIALINFO VALUES (null," + this.globalService.userId + ", '" + materialInfo.taskId + "', \n    '" + JSON.stringify(materialInfo.infos) + "', " + materialInfo.uploadFlag + ");";
+    };
+    DbService.prototype.toMaintainInfoInsertSql = function (maintainInfo) {
+        return "INSERT INTO GD_MAINTAININFO VALUES (null,'" + maintainInfo.serialNumber + "','" + maintainInfo.maintenanceType + "',\n    '" + maintainInfo.maintenanceAddress + "','" + maintainInfo.area + "','" + maintainInfo.repairContent + "','" + maintainInfo.remark + "');";
+    };
+    /**
+     * 更新
+     * @param materialInfo
+     * @returns {string}
+     */
+    DbService.prototype.toMaterialInfoUpdateSql = function (materialInfo) {
+        return "UPDATE GD_MATERIALINFO SET S_INFOS = '" + JSON.stringify(materialInfo.infos) + "',\n    I_UPLOADEDFLAG=" + materialInfo.uploadFlag + " WHERE S_TASKID = '" + materialInfo.taskId + "'";
+    };
+    /**
+     *
+     * @param localWord
+     * @returns {{wid: number, wName: string, wValue: string, wValueEx: string, wIsActive: Boolean, wGroup: string, wParentId: number, wRemark: string}}
+     */
+    DbService.prototype.toWord = function (localWord) {
+        return {
+            wid: localWord.I_WID,
+            wName: localWord.S_WNAME,
+            wValue: localWord.S_WVALUE,
+            wValueEx: localWord.S_WVALUEEX,
+            wIsActive: Boolean(localWord.S_WISACTIVE),
+            wGroup: localWord.S_WGROUP,
+            wParentId: localWord.I_WPARENTID,
+            wRemark: localWord.S_WREMARK
+        };
+    };
+    DbService.prototype.toMaterial = function (localMaterial) {
+        return {
+            id: localMaterial.I_MID,
+            parentId: localMaterial.I_PARENTID,
+            groupKey: localMaterial.S_GROUPKEY,
+            key: localMaterial.S_KEY,
+            name: localMaterial.S_NAME
+        };
+    };
+    DbService.prototype.toMaintainInfo = function (localMaintainInfo) {
+        return {
+            id: localMaintainInfo.ID,
+            serialNumber: localMaintainInfo.S_TASKID,
+            maintenanceType: localMaintainInfo.S_TYPE,
+            maintenanceAddress: localMaintainInfo.S_ADDRESS,
+            area: localMaintainInfo.S_AREA,
+            repairContent: localMaintainInfo.S_CONTENT,
+            remark: localMaintainInfo.S_REMARK
+        };
+    };
+    /**
+     * task转insert sql
+     * @param task
+     * @returns {string}
+     */
+    DbService.prototype.toTaskInsertSql = function (task) {
+        return "INSERT INTO GD_TASKS VALUES (null, " + this.globalService.userId + ", '" + task.taskId + "', '" + task.taskType + "', '" + task.desc + "', '" + task.source + "', " + task.createTime + ", " + task.assignTime + ", " + task.acceptTime + ", " + task.goTime + ", " + task.arrivedTime + ", " + task.replyTime + ", " + task.compltedTime + ", " + task.state + ", " + task.location.type + ", " + task.location.lng + ", " + task.location.lat + ", null);";
+    };
+    /**
+     * task转update sql
+     * @param serverTask
+     * @param localTask
+     * @returns {string}
+     */
+    DbService.prototype.toTaskUpdateSql = function (serverTask, localTask) {
+        var sql = '';
+        if (localTask) {
+            if (serverTask.acceptTime > localTask.D_ACCEPTTIME) {
+                sql += "D_ACCEPTTIME = " + serverTask.acceptTime + ", ";
+            }
+            if (serverTask.arrivedTime > localTask.D_ARRIVEDTIME) {
+                sql += "D_ARRIVEDTIME = " + serverTask.arrivedTime + ", ";
+            }
+            if (serverTask.assignTime > localTask.D_ASSGINTIME) {
+                sql += "D_ASSGINTIME = " + serverTask.assignTime + ", ";
+            }
+            if (serverTask.compltedTime > localTask.D_COMPLETEDTIME) {
+                sql += "D_COMPLETEDTIME = " + serverTask.compltedTime + ", ";
+            }
+            if (serverTask.createTime > localTask.D_CREATETIME) {
+                sql += "D_CREATETIME = " + serverTask.createTime + ", ";
+            }
+            if (serverTask.goTime > localTask.D_GOTIME) {
+                sql += "D_GOTIME = " + serverTask.goTime + ", ";
+            }
+            if (serverTask.replyTime > localTask.D_REPLYTIME) {
+                sql += "D_REPLYTIME = " + serverTask.replyTime + ", ";
+            }
+            // TBD
+            // if (serverTask.state > localTask.I_STATE) {
+            //   sql += `SET I_STATE = ${serverTask.state}, `;
+            // }
+        }
+        else {
+            if (serverTask.acceptTime > 0) {
+                sql += "D_ACCEPTTIME = " + serverTask.acceptTime + ", ";
+            }
+            if (serverTask.arrivedTime > 0) {
+                sql += "D_ARRIVEDTIME = " + serverTask.arrivedTime + ", ";
+            }
+            if (serverTask.assignTime > 0) {
+                sql += "D_ASSGINTIME = " + serverTask.assignTime + ", ";
+            }
+            if (serverTask.compltedTime > 0) {
+                sql += "D_COMPLETEDTIME = " + serverTask.compltedTime + ", ";
+            }
+            if (serverTask.createTime > 0) {
+                sql += "D_CREATETIME = " + serverTask.createTime + ", ";
+            }
+            if (serverTask.goTime > 0) {
+                sql += "D_GOTIME = " + serverTask.goTime + ", ";
+            }
+            if (serverTask.replyTime > 0) {
+                sql += "D_REPLYTIME = " + serverTask.replyTime + ", ";
+            }
+            if (serverTask.state > 0) {
+                sql += "I_STATE = " + serverTask.state + ", ";
+            }
+        }
+        if (sql.length > 0) {
+            var seperator = ', ';
+            var index = sql.lastIndexOf(seperator);
+            if (sql.endsWith(seperator) && index > 0) {
+                sql = sql.substring(0, index);
+            }
+            if (sql && sql.length > 0) {
+                sql = "UPDATE GD_TASKS SET " + sql + " WHERE S_TASKID = '" + serverTask.taskId + "';";
+            }
+            else {
+                sql = '';
+            }
+        }
+        return sql;
+    };
+    /**
+     *
+     * @param taskDetail
+     * @param extendedInfo
+     * @returns {string}
+     */
+    DbService.prototype.toTaskUpdateExtendedInfoSql = function (taskDetail, extendedInfo) {
+        var localTaskExtendedInfo = {};
+        try {
+            if (extendedInfo) {
+                localTaskExtendedInfo = JSON.parse(extendedInfo);
+            }
+        }
+        catch (e) {
+            console.error(e);
+        }
+        localTaskExtendedInfo.arrivedDeadLine = taskDetail.arrivedDeadLine;
+        localTaskExtendedInfo.replyDeadLine = taskDetail.replyDeadLine;
+        localTaskExtendedInfo.delayReplyDeadLine = taskDetail.delayReplyDeadLine;
+        var sql = "UPDATE GD_TASKS SET S_DETAILINFO = '" + JSON.stringify(taskDetail) + "'";
+        if (taskDetail.extendedInfo) {
+            sql += ", S_EXTENDEDINFO = '" + taskDetail.extendedInfo + "'}";
+        }
+        sql += " WHERE S_TASKID = '" + taskDetail.taskId + "';";
+        return sql;
+    };
+    /**
+     *
+     * @param taskDetail
+     * @returns {string}
+     */
+    DbService.prototype.toTaskDetailInsertSql = function (taskDetail) {
+        return "INSERT INTO GD_TASKDETAILS VALUES (null, '" + taskDetail.taskId + "', '" + JSON.stringify(taskDetail) + "', '" + (taskDetail.extendedInfo ? taskDetail.extendedInfo : null) + "');";
+    };
+    /**
+     *
+     * @param taskDetail
+     * @returns {string}
+     */
+    DbService.prototype.toTaskDetailUpdateSql = function (taskDetail) {
+        var sql = "UPDATE GD_TASKDETAILS SET S_DETAILINFO = '" + JSON.stringify(taskDetail) + "'";
+        if (taskDetail.extendedInfo) {
+            sql += ", S_EXTENDEDINFO = '" + taskDetail.extendedInfo + "'}";
+        }
+        sql += " WHERE S_TASKID = '" + taskDetail.taskId + "';";
+        return sql;
+    };
+    /**
+     *
+     * @param history
+     * @returns {string}
+     */
+    DbService.prototype.toHistoryInsertSql = function (history) {
+        var extendInfo = {};
+        if (history.taskDetail) {
+            extendInfo.taskDetail = history.taskDetail;
+        }
+        if (history.mediaNames && history.mediaNames.length > 0) {
+            extendInfo.mediaNames = history.mediaNames.join(',');
+        }
+        return "INSERT INTO GD_HISTORIES VALUES (null, " + history.userId + ", '" + history.task.taskId + "', " + history.task.state + ", '" + JSON.stringify(history.task) + "', '" + JSON.stringify(history.reply) + "', " + history.uploadedFlag + ", '" + JSON.stringify(extendInfo) + "');";
+    };
+    /**
+     *
+     * @param history
+     * @returns {string}
+     */
+    DbService.prototype.toHistoryUpdateSql = function (history) {
+        var extendInfo = {};
+        if (history.taskDetail) {
+            extendInfo.taskDetail = history.taskDetail;
+        }
+        if (history.mediaNames && history.mediaNames.length > 0) {
+            extendInfo.mediaNames = history.mediaNames.join(',');
+        }
+        return "UPDATE GD_HISTORIES SET S_CONTENT = '" + JSON.stringify(history.task) + "', S_REPLY = '" + JSON.stringify(history.reply) + "', I_UPLOADEDFLAG = " + history.uploadedFlag + ", S_EXTENDEDINFO = '" + JSON.stringify(extendInfo) + "' WHERE I_USERID = " + history.userId + " AND S_TASKID = '" + history.taskId + "' AND I_STATE = " + history.state + ";";
+    };
+    /**
+     * 转换task
+     * @param localTask
+     * @returns {{acceptTime: number, arrivedTime: number, assignTime: number, compltedTime: number, createTime: number, desc: string, goTime: number, location: {type: string, lng: string, lat: string}, replyTime: number, source: string, state: number, taskId: string, taskType: string}}
+     */
+    DbService.prototype.toTask = function (localTask) {
+        var extendedInfo;
+        try {
+            extendedInfo = JSON.parse(localTask.S_EXTENDEDINFO);
+        }
+        catch (e) {
+            console.error(e);
+        }
+        return {
+            acceptTime: localTask.D_ACCEPTTIME,
+            arrivedTime: localTask.D_ARRIVEDTIME,
+            assignTime: localTask.D_ASSGINTIME,
+            compltedTime: localTask.D_COMPLETEDTIME,
+            createTime: localTask.D_CREATETIME,
+            desc: localTask.S_DESC,
+            goTime: localTask.D_GOTIME,
+            location: {
+                type: localTask.S_LNGLATTYPE,
+                lng: localTask.S_LONGITUDE,
+                lat: localTask.S_LATITUDE
+            },
+            replyTime: localTask.D_REPLYTIME,
+            source: localTask.S_SOURCE,
+            state: localTask.I_STATE,
+            taskId: localTask.S_TASKID,
+            taskType: localTask.S_TASKTYPE,
+            extendedInfo: extendedInfo
+        };
+    };
+    /**
+     * 转换task detail
+     * @param localTaskDetail
+     * @returns {TaskDetail}
+     */
+    DbService.prototype.toTaskDetail = function (localTaskDetail) {
+        try {
+            var taskDetail = JSON.parse(localTaskDetail.S_DETAILINFO);
+            if (localTaskDetail.S_EXTENDEDINFO) {
+                taskDetail.extendedInfo = JSON.parse(localTaskDetail.S_EXTENDEDINFO);
+            }
+            return taskDetail;
+        }
+        catch (e) {
+            console.error(e);
+        }
+    };
+    /**
+     *
+     * @param localHistory
+     * @returns {{userId: number, taskId: string, state: number, task: null, reply: any, uploadedFlag: number, taskDetail: TaskDetail, mediaIds: Array<number>}}
+     */
+    DbService.prototype.toHistory = function (localHistory) {
+        try {
+            var taskDetail = void 0;
+            var mediaNames = void 0;
+            if (localHistory.S_EXTENDEDINFO) {
+                var historyExtendedInfo = JSON.parse(localHistory.S_EXTENDEDINFO);
+                if (historyExtendedInfo.taskDetail) {
+                    taskDetail = historyExtendedInfo.taskDetail;
+                }
+                if (historyExtendedInfo.mediaNames && historyExtendedInfo.mediaNames.length > 0) {
+                    mediaNames = historyExtendedInfo.mediaNames.split(',');
+                }
+            }
+            return {
+                userId: localHistory.I_USERID,
+                taskId: localHistory.S_TASKID,
+                state: localHistory.I_STATE,
+                task: localHistory.S_CONTENT ? JSON.parse(localHistory.S_CONTENT) : null,
+                reply: JSON.parse(localHistory.S_REPLY),
+                uploadedFlag: localHistory.I_UPLOADEDFLAG,
+                taskDetail: taskDetail,
+                mediaNames: mediaNames
+            };
+        }
+        catch (e) {
+            console.error(e);
+        }
+    };
+    /**
+     *
+     * @param media
+     * @returns {string}
+     */
+    DbService.prototype.toMediaInsertSql = function (media) {
+        return "INSERT INTO GD_MULTIMEDIAS VALUES (null, " + media.userId + ", '" + media.taskId + "', " + media.fileType + ", '" + media.fileName + "', " + media.uploadedFlag + ", '" + (media.fileId ? media.fileId : null) + "', null);";
+    };
+    /**
+     *
+     * @param media
+     * @param localMedia
+     * @returns {string}
+     */
+    DbService.prototype.toMediaUpdateSql = function (media, localMedia) {
+        if (localMedia) {
+            var sql = "UPDATE GD_MULTIMEDIAS SET I_UPLOADEDFLAG = " + media.uploadedFlag;
+            if (media.fileId) {
+                sql += ", S_FILEID = '" + media.fileId + "'";
+            }
+            if (media.extendedInfo) {
+                sql += ", S_EXTENDEDINFO = '" + media.extendedInfo + "'";
+            }
+            sql += " WHERE ID = " + localMedia.ID + ";";
+            return sql;
+        }
+        else {
+            return this.toMediaInsertSql(media);
+        }
+    };
+    /**
+     *
+     * @param localMedia
+     * @returns {{userId: number, taskId: string, fileType: number, fileName: string, uploadedFlag: number, fileId: string, extendedInfo: string}}
+     */
+    DbService.prototype.toMedia = function (localMedia) {
+        return {
+            userId: localMedia.I_USERID,
+            taskId: localMedia.S_TASKID,
+            fileType: localMedia.I_FILETYPE,
+            fileName: localMedia.S_FILENAME,
+            uploadedFlag: localMedia.I_UPLOADEDFLAG,
+            fileId: localMedia.S_FILEID,
+            extendedInfo: localMedia.S_EXTENDEDINFO
+        };
+    };
+    /**
+     * 获取未上传的材料清单记录
+     * @param userId
+     * @returns {any}
+     */
+    DbService.prototype.getNotUploadMaterilalInfo = function (userId) {
+        var _this = this;
+        if (this.globalService.isChrome || !userId) {
+            return Promise.reject(this.paramError);
+        }
+        else {
+            return this.openDb()
+                .then(function (db) {
+                var sql = "SELECT * FROM GD_MATERIALINFO WHERE I_USERID = " + userId + " \n          AND I_UPLOADEDFLAG= " + _this.globalService.uploadedFlagForLocal + ";";
+                return db.executeSql(sql, {})
+                    .then(function (data) {
+                    var rows = data.rows;
+                    var results = [];
+                    if (rows && rows.length > 0) {
+                        for (var i = 0; i < rows.length; i++) {
+                            var localMaterialInfo = rows.item(i);
+                            if (!localMaterialInfo) {
+                                continue;
+                            }
+                            results.push(_this.toMaterialInfo(localMaterialInfo));
+                        }
+                    }
+                    return results.length ? Promise.resolve(results) : Promise.reject('no materialInfos');
+                });
+            });
+        }
+    };
+    DbService.prototype.toPersonnelInsertSql = function (personnel) {
+        return "INSERT INTO GD_PERSONNELS VALUES (" + personnel.fieldPersonnelId + ", '" + personnel.fieldPersonnelName + "', '" + personnel.roles.join(',') + "');";
+    };
+    DbService.prototype.toPersonnel = function (localPersonnel) {
+        return {
+            fieldPersonnelId: localPersonnel.I_FIELDPERSONNELID,
+            fieldPersonnelName: localPersonnel.S_FIELDPERSONNELNAME,
+            roles: localPersonnel.S_ROLES.split(',')
+        };
+    };
+    return DbService;
+}());
+DbService = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["B" /* Injectable */])(),
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__ionic_native_sqlite__["a" /* SQLite */],
+        __WEBPACK_IMPORTED_MODULE_2__ionic_native_sqlite_porter__["a" /* SQLitePorter */],
+        __WEBPACK_IMPORTED_MODULE_3__GlobalService__["a" /* GlobalService */],
+        __WEBPACK_IMPORTED_MODULE_4__FileService__["a" /* FileService */]])
+], DbService);
+
+//# sourceMappingURL=DbService.js.map
+
+/***/ }),
+
+/***/ 64:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SearchPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_forms__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__searchresult_searchresult__ = __webpack_require__(232);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__model_SearchTaskRequest__ = __webpack_require__(323);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_DataService__ = __webpack_require__(13);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+/**
+ * Created by zhangjing on 2017/6/23.
+ */
+
+
+
+
+
+
+var SearchPage = (function () {
+    function SearchPage(navCtrl, alertCtrl, formBuilder, dataService) {
+        this.navCtrl = navCtrl;
+        this.alertCtrl = alertCtrl;
+        this.formBuilder = formBuilder;
+        this.dataService = dataService;
+        this.tag = "[SearchPage]";
+        this.title = '查询任务';
+    }
+    SearchPage.prototype.ngOnInit = function () {
+        this.searchForm = this.formBuilder.group({
+            'address': ['', __WEBPACK_IMPORTED_MODULE_2__angular_forms__["f" /* Validators */].compose([__WEBPACK_IMPORTED_MODULE_2__angular_forms__["f" /* Validators */].minLength(2)])],
+            'telephone': ['', __WEBPACK_IMPORTED_MODULE_2__angular_forms__["f" /* Validators */].compose([__WEBPACK_IMPORTED_MODULE_2__angular_forms__["f" /* Validators */].minLength(4)])],
+            'customerNum': [''],
+            'taskNum': [''],
+            'taskState': [''],
+            'reflectType': [''],
+            'reflectPerson': [''],
+            'dispatchTime': [''],
+        });
+        this.getReflectTypes();
+    };
+    /**
+     * 获得反映类别
+     */
+    SearchPage.prototype.getReflectTypes = function () {
+        var _this = this;
+        this.dataService.getReflectTypes()
+            .then(function (words) {
+            console.log(_this.tag + words);
+            if (words.length <= 0) {
+                return Promise.resolve(false);
+            }
+            else {
+                _this.reflectTypes = words;
+                return Promise.resolve(true);
+            }
+        });
+    };
+    /**
+     * 显示反映类型
+     */
+    SearchPage.prototype.showReflectType = function () {
+        var _this = this;
+        var alert = this.alertCtrl.create();
+        alert.setTitle('反映类别');
+        var arrInputs = [];
+        for (var i = 0; i < this.reflectTypes.length; i++) {
+            arrInputs.push({ type: 'radio', label: this.reflectTypes[i].wName, value: this.reflectTypes[i].wName });
+            alert.addInput(arrInputs[i]);
+        }
+        alert.addButton('取消');
+        alert.addButton({
+            text: '确定',
+            handler: function (data) {
+                _this.searchForm.patchValue({ reflectType: data });
+            }
+        });
+        alert.present();
+    };
+    /**
+     * 显示任何类型
+     */
+    SearchPage.prototype.showTaskType = function () {
+        var _this = this;
+        var alert = this.alertCtrl.create();
+        alert.setTitle('任务状态');
+        var arrInputs = [{ type: 'radio', label: '已派遣', value: '已派遣' },
+            { type: 'radio', label: '接收', value: '接收' }, { type: 'radio', label: '已派工', value: '已派工' },
+            { type: 'radio', label: '已出发', value: '已出发' }, { type: 'radio', label: '已到场', value: '已到场' },
+            { type: 'radio', label: '已处理', value: '已处理' }, { type: 'radio', label: '已退单', value: '已退单' },
+            { type: 'radio', label: '退单重派', value: '退单重派' }, { type: 'radio', label: '退单结束', value: '退单结束' },
+            { type: 'radio', label: '已销单', value: '已销单' }, { type: 'radio', label: '督办', value: '督办' }];
+        for (var i = 0; i < arrInputs.length; i++) {
+            alert.addInput(arrInputs[i]);
+        }
+        alert.addButton('取消');
+        alert.addButton({
+            text: '确定',
+            handler: function (data) {
+                _this.searchForm.patchValue({ taskState: data });
+            }
+        });
+        alert.present();
+    };
+    /**
+     * 重置
+     * @param ev
+     */
+    SearchPage.prototype.onReset = function (ev) {
+        this.searchForm.setValue({
+            address: '', telephone: '', customerNum: '', taskNum: '',
+            taskState: '', reflectType: '', reflectPerson: '', dispatchTime: ''
+        });
+    };
+    /**
+     * 查询
+     * @param searchInfo
+     */
+    SearchPage.prototype.onSearchClick = function (searchInfo) {
+        if (searchInfo['address'] == '' && searchInfo['telephone'] == '' && searchInfo['customerNum'] == ''
+            && searchInfo['taskNum'] == '' && searchInfo['taskState'] == '' && searchInfo['reflectType'] == ''
+            && searchInfo['reflectPerson'] == '' && searchInfo['dispatchTime'] == '') {
+            var alert_1 = this.alertCtrl.create({
+                title: '提示：',
+                buttons: ['确定']
+            });
+            alert_1.setSubTitle('请至少输入一个条件');
+            alert_1.present();
+            return;
+        }
+        var utcSendTime = Date.parse(this.myDate) - 28800000;
+        var taskState = this.transformTaskState(searchInfo['taskState']);
+        var reflectType = this.transformRefelctType(searchInfo['reflectType']);
+        var temp = new __WEBPACK_IMPORTED_MODULE_4__model_SearchTaskRequest__["a" /* SearchTaskRequest */]();
+        temp.happenedAddress = searchInfo['address'];
+        temp.contactPhone = searchInfo['telephone'];
+        temp.serialNo = searchInfo['customerNum'];
+        temp.taskNo = searchInfo['taskNum'];
+        temp.taskState = (searchInfo['taskState'] != '' && taskState != undefined) ? taskState : searchInfo['taskState'];
+        temp.reportType = (searchInfo['taskState'] != '' && taskState != undefined) ? reflectType : searchInfo['reflectType'];
+        temp.reportPerson = searchInfo['reflectPerson'];
+        temp.sendTime = utcSendTime;
+        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_3__searchresult_searchresult__["a" /* SearchResultPage */], { 'tasks': temp });
+    };
+    /**
+     * 转换任务状态
+     * @param strState
+     * @returns {number}
+     */
+    SearchPage.prototype.transformTaskState = function (strState) {
+        var taskState;
+        switch (strState) {
+            case '已派遣':
+                taskState = 0;
+                break;
+            case '接收':
+                taskState = 1;
+                break;
+            case '已响应':
+                taskState = 6;
+                break;
+            case '已派工':
+                taskState = 2;
+                break;
+            case '已出发':
+                taskState = 3;
+                break;
+            case '已到场':
+                taskState = 4;
+                break;
+            case '已处理':
+                taskState = 5;
+                break;
+            case '已退单':
+                taskState = -1;
+                break;
+            case '退单重派':
+                taskState = -2;
+                break;
+            case '退单结束':
+                taskState = -3;
+                break;
+            case '已销单':
+                taskState = 99;
+                break;
+            case '督办':
+                taskState = -99;
+                break;
+        }
+        return taskState;
+    };
+    SearchPage.prototype.transformRefelctType = function (strReflectType) {
+        var refelectType;
+        for (var _i = 0, _a = this.reflectTypes; _i < _a.length; _i++) {
+            var temp = _a[_i];
+            if (strReflectType == temp.wName) {
+                refelectType = temp.wid;
+                break;
+            }
+        }
+        return refelectType;
+    };
+    return SearchPage;
+}());
+SearchPage = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+        selector: 'page-search',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\search\search.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n\n\n    <ion-buttons end>\n\n      <button ion-button icon-only color="white" (click)="onReset($event)">\n\n        <ion-icon name="close"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-search">\n\n\n\n  <ion-list>\n\n    <form [formGroup]="searchForm">\n\n      <ion-item>\n\n        <ion-label color="label">发生地址</ion-label>\n\n        <ion-input formControlName="address" type="text" clearInput></ion-input>\n\n      </ion-item>\n\n\n\n      <ion-item>\n\n        <ion-label color="label">联系电话</ion-label>\n\n        <ion-input formControlName="telephone" type="number" clearInput></ion-input>\n\n      </ion-item>\n\n\n\n      <ion-item>\n\n        <ion-label color="label">客服编号</ion-label>\n\n        <ion-input formControlName="customerNum" type="text" clearInput></ion-input>\n\n      </ion-item>\n\n\n\n      <ion-item>\n\n        <ion-label color="label">任务编号</ion-label>\n\n        <ion-input formControlName="taskNum" type="text" clearInput></ion-input>\n\n      </ion-item>\n\n\n\n      <ion-item (click)="showTaskType()">\n\n        <ion-label class="label-content" color="label">任务状态</ion-label>\n\n        <ion-label>{{searchForm.value[\'taskState\']}}</ion-label>\n\n      </ion-item>\n\n\n\n      <ion-item (click)="showReflectType()">\n\n        <ion-label color="label">反映类别</ion-label>\n\n        <ion-label>{{searchForm.value[\'reflectType\']}}</ion-label>\n\n      </ion-item>\n\n\n\n      <ion-item>\n\n        <ion-label color="label">反映人员</ion-label>\n\n        <ion-input formControlName="reflectPerson" type="text" clearInput></ion-input>\n\n      </ion-item>\n\n\n\n      <ion-item>\n\n        <ion-label color="label">派遣时间</ion-label>\n\n        <ion-datetime cancelText=\'取消\' doneText=\'确定\' displayFormat="YYYY-MM-DD HH:mm"\n\n                      pickerFormat="YYYY-MM-DD HH:mm" formControlName="dispatchTime"\n\n                      [(ngModel)]="myDate"  clearInput></ion-datetime>\n\n      </ion-item>\n\n    </form>\n\n  </ion-list>\n\n\n\n  <ion-row>\n\n    <ion-col>\n\n      <div class="login-button">\n\n        <button ion-button type="submit" block (click)="onSearchClick(searchForm.value)">查询</button>\n\n      </div>\n\n    </ion-col>\n\n  </ion-row>\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\search\search.html"*/
+    }),
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
+        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */],
+        __WEBPACK_IMPORTED_MODULE_2__angular_forms__["a" /* FormBuilder */],
+        __WEBPACK_IMPORTED_MODULE_5__providers_DataService__["a" /* DataService */]])
+], SearchPage);
+
+//# sourceMappingURL=search.js.map
+
+/***/ }),
+
+/***/ 65:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return StationWorkPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__workinfo_workinfo__ = __webpack_require__(234);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_DataService__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_GlobalService__ = __webpack_require__(7);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+var StationWorkPage = (function () {
+    function StationWorkPage(navCtrl, alertCtrl, loadingCtrl, events, dataService, globalService) {
+        this.navCtrl = navCtrl;
+        this.alertCtrl = alertCtrl;
+        this.loadingCtrl = loadingCtrl;
+        this.events = events;
+        this.dataService = dataService;
+        this.globalService = globalService;
+        this.tag = "[StationWorkPage]";
+        this.contentNames = {
+            happenedAddress: '发生地址',
+            contactPhone: '联系电话',
+            reportPerson: '反映人',
+            reportType: '反映类别',
+            reportContent: '反映内容',
+            sendTime: '派遣时间',
+            resolveLimitedTime: '处理时限',
+            taskState: '任务状态'
+        };
+        //private readonly dispatched: string = '已派遣';
+        this.accepted = '已接收';
+        //private readonly disableColor: string = 'gray';
+        //private readonly enableColor: string = 'primary';
+        this.undispatchedName = '未派工';
+        this.dispatchedName = '24小时内已派工';
+        this.title = '站点任务';
+        this.subTitle = this.undispatchedName;
+        this.showToolbar = false;
+        this.showFab = false;
+        this.isUnDispatchedMode = true;
+        this.items = [];
+        this.since = 0;
+        this.count = 10;
+    }
+    /**
+     * 初始化
+     */
+    StationWorkPage.prototype.ngOnInit = function () {
+        var _this = this;
+        console.log(this.tag, "ngOnInit");
+        this.events.subscribe(this.globalService.stationWorkUpdateEvent, function () {
+            _this.since = 0;
+            while (_this.items.shift())
+                ;
+            _this.getUnDispatchedTasks(_this.since, _this.count);
+        });
+        Promise.all([this.getReflectType(), this.getReflectContent(), this.getUnDispatchedTasks(this.since, this.count)])
+            .then(function (result) { return console.log(_this.tag, result); })
+            .catch(function (error) { return console.error(error); });
+        // this.getReflectType()
+        //   .then(result => {
+        //     return this.getReflectContent();
+        //   })
+        //   .then(result => {
+        //     return this.getUnDispatchedTasks(this.since, this.count);
+        //   })
+        //   .catch(error => console.error(error));
+    };
+    /**
+     * 销毁
+     */
+    StationWorkPage.prototype.ngOnDestroy = function () {
+        this.events.unsubscribe(this.globalService.stationWorkUpdateEvent);
+    };
+    /**
+     * 下拉刷新
+     * @param refresher
+     */
+    StationWorkPage.prototype.doRefresh = function (refresher) {
+        var _this = this;
+        console.log(this.tag, refresher);
+        this.since = 0;
+        while (this.items.shift())
+            ;
+        var promise = this.isUnDispatchedMode
+            ? this.getUnDispatchedTasks(this.since, this.count)
+            : this.getDispatchedTasks(this.since, this.count);
+        promise
+            .then(function (result) { return console.log(_this.tag, result); })
+            .catch(function (error) { return console.error(error); })
+            .then(function () { return refresher.complete(); });
+    };
+    StationWorkPage.prototype.onSearch = function (ev) {
+        this.showToolbar = !this.showToolbar;
+        this.content.resize();
+    };
+    /**
+     * 过滤
+     * @param ev
+     */
+    StationWorkPage.prototype.onFilter = function (ev) {
+        var _this = this;
+        var alert = this.alertCtrl.create();
+        alert.setTitle('派工类型');
+        alert.addInput({
+            type: 'radio',
+            label: this.undispatchedName,
+            value: this.undispatchedName,
+            checked: this.subTitle === this.undispatchedName
+        });
+        alert.addInput({
+            type: 'radio',
+            label: this.dispatchedName,
+            value: this.dispatchedName,
+            checked: this.subTitle === this.dispatchedName
+        });
+        alert.addButton('取消');
+        alert.addButton({
+            text: '确定',
+            handler: function (data) {
+                if (data === _this.subTitle) {
+                    return;
+                }
+                var loader = _this.loadingCtrl.create({
+                    content: "Please wait...",
+                });
+                loader.present();
+                _this.since = 0;
+                while (_this.items.shift())
+                    ;
+                var promise;
+                if (data === _this.undispatchedName) {
+                    _this.subTitle = _this.undispatchedName;
+                    _this.isUnDispatchedMode = true;
+                    promise = _this.getUnDispatchedTasks(_this.since, _this.count);
+                }
+                else {
+                    _this.subTitle = _this.dispatchedName;
+                    _this.isUnDispatchedMode = false;
+                    promise = _this.getDispatchedTasks(_this.since, _this.count);
+                }
+                promise
+                    .then(function (result) { return console.log(_this.tag, result); })
+                    .catch(function (error) { return console.error(error); })
+                    .then(function () { return loader.dismiss(); });
+            }
+        });
+        alert.present().then(function () {
+            // this.testRadioOpen = true;
+        });
+    };
+    StationWorkPage.prototype.getItems = function (ev) {
+    };
+    /**
+     * 加载更多
+     * @param infiniteScroll
+     */
+    StationWorkPage.prototype.doInfinite = function (infiniteScroll) {
+        var _this = this;
+        console.log(this.tag, "doInfinite");
+        setTimeout(function () {
+            _this.since += _this.count;
+            _this.getUnDispatchedTasks(_this.since, _this.count)
+                .then(function (result) {
+                if (_this.items.length > _this.count) {
+                    _this.showFab = true;
+                }
+                if (result) {
+                    infiniteScroll.complete();
+                }
+                else {
+                    infiniteScroll.enable(false);
+                }
+            })
+                .catch(function (error) {
+                console.error(error);
+                infiniteScroll.complete();
+            });
+        }, 100);
+    };
+    /**
+     * 回滚到list顶部
+     * @param ev
+     */
+    StationWorkPage.prototype.doScroll2Top = function (ev) {
+        this.content.scrollToTop();
+    };
+    /**
+     * 接单
+     * @param stationTask
+     */
+    StationWorkPage.prototype.onAccept = function (stationTask) {
+        var _this = this;
+        this.dataService.acceptEx({
+            acceptOperator: this.globalService.userId,
+            acceptTime: new Date().getTime(),
+            taskId: stationTask.taskNo
+        }).then(function (result) {
+            stationTask.isAccepted = true;
+            stationTask.contents[stationTask.contents.length - 1].value = _this.accepted;
+        }).catch(function (error) {
+            console.error(error);
+            _this.globalService.showToast(error);
+        });
+    };
+    /**
+     * 派单
+     * @param stationTask
+     */
+    StationWorkPage.prototype.onDispatch = function (stationTask) {
+        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_2__workinfo_workinfo__["a" /* WorkInfoPage */], stationTask.taskNo);
+    };
+    /**
+     * 销单
+     * @param stationTask
+     */
+    StationWorkPage.prototype.onCancel = function (stationTask) {
+        this.popupRemarkAlert({
+            TaskNo: stationTask.taskNo,
+            TaskType: '1',
+            WcOperator: this.globalService.userId,
+            WcTime: new Date().getTime(),
+            XdComment: '',
+            XdOperator: this.globalService.userId
+        });
+    };
+    /**
+     * 获取反映类别
+     * @returns {Promise<TResult|TResult>}
+     */
+    StationWorkPage.prototype.getReflectType = function () {
+        var _this = this;
+        return this.dataService.getReflectTypes()
+            .then(function (words) {
+            _this.reflectTypes = words;
+            return Promise.resolve(words.length > 0);
+        })
+            .catch(function (error) {
+            console.error(error);
+            return Promise.resolve(false);
+        });
+    };
+    /**
+     * 获取反映内容
+     * @returns {Promise<TResult|TResult>}
+     */
+    StationWorkPage.prototype.getReflectContent = function () {
+        var _this = this;
+        return this.dataService.getReflectContents()
+            .then(function (words) {
+            _this.reflectContents = words;
+            return Promise.resolve(words.length > 0);
+        })
+            .catch(function (error) {
+            console.error(error);
+            return Promise.resolve(false);
+        });
+    };
+    /**
+     * 获取未派工任务列表
+     * @param since
+     * @param count
+     * @returns {Promise<boolean|boolean>}
+     */
+    StationWorkPage.prototype.getUnDispatchedTasks = function (since, count) {
+        var _this = this;
+        console.log(this.tag, "getUnDispatchedTasks");
+        return this.dataService.getUnDispatchedTasks(since, count)
+            .then(function (tasks) {
+            _this.transform2StationTasks(tasks, _this.items);
+            if (_this.items.length > 0) {
+                _this.events.publish(_this.globalService.mainUpdateEvent, { type: 'stationWorkCount', count: _this.items.length });
+            }
+            return Promise.resolve(tasks.length > 0);
+        })
+            .catch(function (error) {
+            console.error(error);
+            return Promise.resolve(false);
+        });
+    };
+    StationWorkPage.prototype.getDispatchedTasks = function (since, count) {
+        var _this = this;
+        console.log(this.tag, "getDispatchedTasks");
+        return this.dataService.getDispatchedTasks(since, count, 1440)
+            .then(function (tasks) {
+            _this.transform2StationTasks(tasks, _this.items);
+            return Promise.resolve(tasks.length > 0);
+        })
+            .catch(function (error) {
+            console.error(error);
+            return Promise.resolve(false);
+        });
+    };
+    /**
+     * 显示内容转换
+     * @param searchTasks
+     * @param stationTasks
+     */
+    StationWorkPage.prototype.transform2StationTasks = function (searchTasks, stationTasks) {
+        for (var _i = 0, searchTasks_1 = searchTasks; _i < searchTasks_1.length; _i++) {
+            var searchTask = searchTasks_1[_i];
+            var stationTask = {
+                serialNo: searchTask.serialNo,
+                taskNo: searchTask.taskNo,
+                isAccepted: searchTask.taskState === this.accepted,
+                contents: []
+            };
+            for (var key in this.contentNames) {
+                if (searchTask.hasOwnProperty(key)) {
+                    stationTask.contents.push({
+                        name: this.contentNames[key],
+                        value: this.transform2String(key, searchTask[key])
+                    });
+                }
+            }
+            stationTasks.push(stationTask);
+        }
+    };
+    /**
+     * 转换成字符串
+     * @param key
+     * @param value
+     * @returns {string}
+     */
+    StationWorkPage.prototype.transform2String = function (key, value) {
+        if (typeof value === 'number') {
+            if (key === "reportType" && this.reflectTypes) {
+                for (var _i = 0, _a = this.reflectTypes; _i < _a.length; _i++) {
+                    var word = _a[_i];
+                    if (word.wid === value) {
+                        return word.wName;
+                    }
+                }
+            }
+            else if (key === "reportContent" && this.reflectContents) {
+                for (var _b = 0, _c = this.reflectContents; _b < _c.length; _b++) {
+                    var word = _c[_b];
+                    if (word.wid === value) {
+                        return word.wName;
+                    }
+                }
+            }
+            else if (key.endsWith("Time")) {
+                return this.globalService.getFormatTime(new Date(value));
+            }
+        }
+        return value.toString();
+    };
+    /**
+     * 处理备注
+     * @param cancelExInfo
+     */
+    StationWorkPage.prototype.popupRemarkAlert = function (cancelExInfo) {
+        var _this = this;
+        var prompt = this.alertCtrl.create({
+            title: '销单备注',
+            message: "请输入销单备注",
+            inputs: [
+                {
+                    name: 'remark',
+                    placeholder: ''
+                },
+            ],
+            buttons: [
+                {
+                    text: '取消',
+                    handler: function (data) {
+                        console.log('Cancel clicked');
+                    }
+                },
+                {
+                    text: '确定',
+                    handler: function (data) {
+                        console.log('Saved clicked');
+                        if (!data.remark) {
+                            return _this.globalService.showToast("请填写备注!");
+                        }
+                        cancelExInfo.XdComment = data.remark;
+                        _this.cancel(cancelExInfo);
+                    }
+                }
+            ]
+        });
+        prompt.present();
+    };
+    /**
+     * 销单
+     * @param cancelExInfo
+     */
+    StationWorkPage.prototype.cancel = function (cancelExInfo) {
+        var _this = this;
+        this.dataService.cancelEx(cancelExInfo)
+            .then(function (result) {
+            if (result) {
+                _this.events.publish(_this.globalService.stationWorkUpdateEvent);
+            }
+            Promise.resolve(result);
+        })
+            .catch(function (error) {
+            console.error(error);
+            Promise.resolve(false);
+        })
+            .then(function (result) {
+            if (!result) {
+                _this.globalService.showToast('销单失败!');
+            }
+        });
+    };
+    return StationWorkPage;
+}());
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["c" /* Content */]),
+    __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["c" /* Content */])
+], StationWorkPage.prototype, "content", void 0);
+StationWorkPage = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+        selector: 'page-stationwork',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\stationwork\stationwork.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}-{{subTitle}}\n\n    </ion-title>\n\n\n\n    <ion-buttons end>\n\n      <button ion-button icon-only color="white" (click)="onSearch($event)">\n\n        <ion-icon name="search"></ion-icon>\n\n      </button>\n\n\n\n      <button ion-button icon-only color="white" (click)="onFilter($event)">\n\n        <ion-icon name="funnel"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n\n\n  <ion-toolbar color="primary" *ngIf="showToolbar">\n\n    <ion-searchbar (input)="getItems($event)"></ion-searchbar>\n\n  </ion-toolbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-stationwork">\n\n\n\n  <ion-refresher (ionRefresh)="doRefresh($event)">\n\n    <ion-refresher-content\n\n      pullingIcon="arrow-dropdown"\n\n      pullingText="Pull to refresh"\n\n      refreshingSpinner="circles"\n\n      refreshingText="Refreshing...">\n\n    </ion-refresher-content>\n\n  </ion-refresher>\n\n\n\n  <ion-list>\n\n    <ion-card *ngFor="let item of items">\n\n      <ion-item>\n\n        <ion-avatar item-start>\n\n          <img src="assets/img/ic_mywork_avatar.png">\n\n        </ion-avatar>\n\n        <div><h2 class="card-header-label-hint">客服编号 </h2><h2 class="card-header-label-content">{{item.serialNo}}</h2></div>\n\n        <div><h2 class="card-header-label-hint">任务编号 </h2><h2 class="card-header-label-content">{{item.taskNo}}</h2></div>\n\n      </ion-item>\n\n\n\n      <ion-list>\n\n        <ion-item *ngFor="let content of item.contents">\n\n          <ion-label fixed class="label-name">\n\n            {{content.name}}\n\n          </ion-label>\n\n          <div item-content>\n\n            {{content.value}}\n\n          </div>\n\n        </ion-item>\n\n      </ion-list>\n\n\n\n      <ion-row *ngIf="isUnDispatchedMode">\n\n        <ion-col class="card-bottom-btn" *ngIf="!item.isAccepted">\n\n          <button ion-button icon-left clear small (click)="onAccept(item)">\n\n            <ion-icon name="done-all"></ion-icon>\n\n            <div>接单</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn" *ngIf="item.isAccepted">\n\n          <button ion-button icon-left clear small (click)="onDispatch(item)">\n\n            <ion-icon name="person"></ion-icon>\n\n            <div>派工</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn" *ngIf="item.isAccepted">\n\n          <button ion-button icon-left clear small (click)="onCancel(item)">\n\n            <ion-icon name="close"></ion-icon>\n\n            <div>销单</div>\n\n          </button>\n\n        </ion-col>\n\n      </ion-row>\n\n    </ion-card>\n\n  </ion-list>\n\n\n\n  <!--infinite scroll-->\n\n  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">\n\n    <ion-infinite-scroll-content></ion-infinite-scroll-content>\n\n  </ion-infinite-scroll>\n\n\n\n  <!--fab-->\n\n  <ion-fab right bottom *ngIf="showFab">\n\n    <button ion-fab color="primary" (click)="doScroll2Top($event)">\n\n      <ion-icon name="arrow-dropup"></ion-icon>\n\n    </button>\n\n  </ion-fab>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\stationwork\stationwork.html"*/
+    }),
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
+        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */],
+        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* LoadingController */],
+        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* Events */],
+        __WEBPACK_IMPORTED_MODULE_3__providers_DataService__["a" /* DataService */],
+        __WEBPACK_IMPORTED_MODULE_4__providers_GlobalService__["a" /* GlobalService */]])
+], StationWorkPage);
+
+//# sourceMappingURL=stationwork.js.map
+
+/***/ }),
+
+/***/ 66:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return NewsPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__newsdetails_newsdetails__ = __webpack_require__(235);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_DataService__ = __webpack_require__(13);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+var NewsPage = (function () {
+    function NewsPage(navCtrl, alertCtrl, dataService) {
+        this.navCtrl = navCtrl;
+        this.alertCtrl = alertCtrl;
+        this.dataService = dataService;
+        this.tag = "[NewsPage]";
+        this.title = '系统公告';
+        this.items = [];
+    }
+    NewsPage.prototype.ngOnInit = function () {
+        this.getNews();
+    };
+    NewsPage.prototype.getNews = function () {
+        var _this = this;
+        this.dataService.getNews()
+            .then(function (news) {
+            console.log(_this.tag + news);
+            if (news.length <= 0) {
+                return Promise.resolve(false);
+            }
+            else {
+                _this.transFormNews(news);
+                return Promise.resolve(true);
+            }
+        })
+            .then(function (result) { return _this.isShow = result; });
+    };
+    /**
+     * 转换公告
+     * @param news
+     */
+    NewsPage.prototype.transFormNews = function (news) {
+        for (var _i = 0, news_1 = news; _i < news_1.length; _i++) {
+            var temp = news_1[_i];
+            this.items.push({
+                newsDate: this.formatDateTime(temp.pubTime),
+                newsTitle: temp.title,
+                newsContent: temp.content
+            });
+        }
+    };
+    /**
+     * 侧滑删除某些公告
+     * @param item
+     */
+    NewsPage.prototype.removeItem = function (event, item, slidingItem) {
+        var _this = this;
+        event.preventDefault();
+        event.stopPropagation();
+        var _loop_1 = function (i) {
+            if (this_1.items[i] == item) {
+                var confirm_1 = this_1.alertCtrl.create({
+                    title: '提示',
+                    message: '是否删除该公告',
+                    buttons: [
+                        {
+                            text: '取消',
+                            handler: function () {
+                                console.log(_this.tag + 'Disagree clicked');
+                                slidingItem.close();
+                            }
+                        },
+                        {
+                            text: '确定',
+                            handler: function () {
+                                _this.items.splice(i, 1);
+                                console.log(_this.tag + 'Agree clicked');
+                            }
+                        }
+                    ]
+                });
+                confirm_1.present();
+            }
+        };
+        var this_1 = this;
+        for (var i = 0; i < this.items.length; i++) {
+            _loop_1(i);
+        }
+    };
+    /**
+     * 删除所有公告
+     * @param ev
+     */
+    NewsPage.prototype.onDeleteAll = function (ev) {
+        var _this = this;
+        var confirm = this.alertCtrl.create({
+            title: '提示',
+            message: '是否删除所有公告',
+            buttons: [
+                {
+                    text: '取消',
+                    handler: function () {
+                        console.log(_this.tag + 'Disagree clicked');
+                    }
+                },
+                {
+                    text: '确定',
+                    handler: function () {
+                        _this.items.splice(0, _this.items.length);
+                        console.log(_this.tag + 'Agree clicked');
+                    }
+                }
+            ]
+        });
+        confirm.present();
+    };
+    /**
+     * 跳转公告详情
+     */
+    NewsPage.prototype.onJumpDetails = function (item) {
+        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_2__newsdetails_newsdetails__["a" /* NewsDetailsPage */], {
+            title: item.newsTitle,
+            time: item.newsDate,
+            newsContent: item.newsContent
+        });
+    };
+    /**
+     * utc时间格式化
+     * @param inputTime
+     * @returns {string}
+     */
+    NewsPage.prototype.formatDateTime = function (inputTime) {
+        var date = new Date(inputTime);
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        var month = m < 10 ? ('0' + m) : m;
+        var d = date.getDate();
+        var day = d < 10 ? ('0' + d) : d;
+        var h = date.getHours();
+        var hour = h < 10 ? ('0' + h) : h;
+        var minute = date.getMinutes();
+        var second = date.getSeconds();
+        var minutestr = minute < 10 ? ('0' + minute) : minute;
+        var secondstr = second < 10 ? ('0' + second) : second;
+        return y + '-' + month + '-' + day + ' ' + hour + ':' + minutestr + ':' + secondstr;
+    };
+    ;
+    return NewsPage;
+}());
+NewsPage = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+        selector: 'page-news',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\news\news.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n\n\n    <ion-buttons end>\n\n      <button ion-button icon-only color="white" *ngIf="isShow" (click)="onDeleteAll($event)">\n\n        <ion-icon name="trash"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-news">\n\n  <ion-list>\n\n    <ion-card *ngFor="let item of items" (click)="onJumpDetails(item)">\n\n      <ion-list>\n\n        <ion-item-sliding #slidingItem>\n\n          <ion-item>\n\n            <div><h2 class="card-header-label-hint">温馨提示</h2>\n\n              <h2 class="card-header-label-content">{{item.newsDate}}</h2></div>\n\n            <br>\n\n            <div class="card-news-content">{{item.newsContent}}</div>\n\n          </ion-item>\n\n          <ion-item-options>\n\n            <button  ion-button color="danger" (click)="removeItem($event,item,slidingItem)">\n\n              <ion-icon name="trash"></ion-icon>\n\n              删除\n\n            </button>\n\n          </ion-item-options>\n\n        </ion-item-sliding>\n\n      </ion-list>\n\n    </ion-card>\n\n  </ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\news\news.html"*/
+    }),
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
+        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */],
+        __WEBPACK_IMPORTED_MODULE_3__providers_DataService__["a" /* DataService */]])
+], NewsPage);
+
+//# sourceMappingURL=news.js.map
+
+/***/ }),
+
+/***/ 67:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MaterialsPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__materialsadd_materialsadd__ = __webpack_require__(236);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_GlobalService__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__model_MaterialsInfo__ = __webpack_require__(127);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_DataService__ = __webpack_require__(13);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+
+var MaterialsPage = (function () {
+    function MaterialsPage(navCtrl, navParams, globalService, dataService, toastCtrl, events, alertCtrl) {
+        this.navCtrl = navCtrl;
+        this.navParams = navParams;
+        this.globalService = globalService;
+        this.dataService = dataService;
+        this.toastCtrl = toastCtrl;
+        this.events = events;
+        this.alertCtrl = alertCtrl;
+        this.tag = "[MaterialsPage]";
+        this.title = '材料登记管理';
+        this.segmentName = "basicInfo";
+        this.items = [];
+        this.isShowButtons = false;
+        this.taskId = this.navParams.data.split('#')[0];
+    }
+    MaterialsPage.prototype.ngOnInit = function () {
+        var _this = this;
+        this.dataService.getMaintainInfo(this.taskId)
+            .then(function (result) {
+            if (result.serialNumber == _this.taskId) {
+                _this.details = [
+                    { name: '维修类别', value: result.maintenanceType },
+                    { name: '维修地址', value: result.maintenanceAddress },
+                    { name: '所属区域', value: result.area },
+                    { name: '报修内容', value: result.repairContent }
+                ];
+            }
+        })
+            .catch(function (error) {
+            console.log(error);
+        });
+        /**
+         * 获得该条工单的材料列表清单
+         */
+        this.dataService.getMaterialInfo(this.taskId)
+            .then(function (result) {
+            console.log(_this.tag, result);
+            _this.items = result.infos;
+            _this.isShowButtons = result.uploadFlag == _this.globalService.uploadedFlagForLocal;
+        })
+            .catch(function (error) {
+            _this.isShowButtons = true;
+            console.log(_this.tag, error);
+        });
+        //订阅事件，清单加入
+        this.events.subscribe(this.globalService.materialsUpdateEvent, function (isSave, materials) {
+            _this.segmentName = "materialsList";
+            console.log(_this.tag, isSave, materials);
+            if (isSave) {
+                _this.items.push(materials);
+                return;
+            }
+            if (!_this.needEditItem) {
+                return;
+            }
+            for (var i = 0; i < _this.items.length; i++) {
+                if (_this.items[i] == _this.needEditItem) {
+                    _this.items[i] = materials;
+                }
+            }
+        });
+    };
+    MaterialsPage.prototype.ngOnDestroy = function () {
+        this.events.unsubscribe(this.globalService.materialsUpdateEvent);
+    };
+    // private searchTask() {
+    //   console.log(this.tag + "searchTask");
+    //
+    // }
+    /**
+     * 材料登记
+     */
+    MaterialsPage.prototype.addMaterials = function () {
+        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_2__materialsadd_materialsadd__["a" /* MaterialsAddPage */]);
+    };
+    /**
+     * 删除材料
+     */
+    MaterialsPage.prototype.deleteMaterials = function (item) {
+        var _this = this;
+        var _loop_1 = function (i) {
+            if (this_1.items[i] == item) {
+                var confirm_1 = this_1.alertCtrl.create({
+                    title: '提示',
+                    message: '是否删除该材料?',
+                    buttons: [
+                        {
+                            text: '取消',
+                            handler: function () {
+                            }
+                        },
+                        {
+                            text: '确定',
+                            handler: function () {
+                                //删除
+                                _this.items.splice(i, 1);
+                            }
+                        }
+                    ]
+                });
+                confirm_1.present();
+            }
+        };
+        var this_1 = this;
+        for (var i = 0; i < this.items.length; i++) {
+            _loop_1(i);
+        }
+    };
+    /**
+     * 修改材料
+     */
+    MaterialsPage.prototype.editMaterials = function (item) {
+        this.needEditItem = item;
+        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_2__materialsadd_materialsadd__["a" /* MaterialsAddPage */], { 'edit': item });
+    };
+    /**
+     * 保存
+     */
+    MaterialsPage.prototype.saveMaterials = function () {
+        var _this = this;
+        if (this.items.length == 0) {
+            var alert_1 = this.alertCtrl.create({
+                title: '提示',
+                subTitle: '请先添加材料',
+                buttons: ['确认']
+            });
+            alert_1.present();
+            this.segmentName = 'materialsList';
+            return;
+        }
+        var uploadInfoArr = [];
+        var uploadMaterial;
+        for (var _i = 0, _a = this.items; _i < _a.length; _i++) {
+            var item = _a[_i];
+            uploadMaterial = new __WEBPACK_IMPORTED_MODULE_4__model_MaterialsInfo__["d" /* UploadMaterials */]();
+            uploadMaterial.userId = this.globalService.userId;
+            uploadMaterial.serialNumber = this.taskId;
+            uploadMaterial.materialCategory = item.category.id;
+            uploadMaterial.materialType = item.type.id;
+            uploadMaterial.materialSize = item.size.id;
+            uploadMaterial.manufacturer = item.productor.id;
+            uploadMaterial.materialUnit = item.unit.id;
+            uploadMaterial.count = item.count;
+            uploadMaterial.remark = item.remark;
+            uploadInfoArr.push(uploadMaterial);
+        }
+        if (!uploadInfoArr || uploadInfoArr.length <= 0) {
+            return;
+        }
+        var confirm = this.alertCtrl.create({
+            title: '提示',
+            message: '确认保存上传？',
+            buttons: [
+                {
+                    text: '取消',
+                    handler: function () {
+                        console.log('Disagree clicked');
+                    }
+                },
+                {
+                    text: '确定',
+                    handler: function () {
+                        var data = new __WEBPACK_IMPORTED_MODULE_4__model_MaterialsInfo__["a" /* DataMaterialInfo */]();
+                        data.taskId = _this.taskId;
+                        data.uploadFlag = _this.globalService.uploadedFlagForLocal;
+                        data.infos = uploadInfoArr;
+                        _this.dataService.saveMaterialInfo(data)
+                            .then(function (result) {
+                            console.log(_this.tag, result);
+                            var toast = _this.toastCtrl.create({
+                                duration: 2000,
+                                message: result ? '保存成功' : '上传失败',
+                                position: 'bottom',
+                            });
+                            toast.present();
+                            _this.navCtrl.pop();
+                        })
+                            .catch(function (error) {
+                            console.log(_this.tag, error);
+                            _this.navCtrl.pop();
+                        });
+                    }
+                }
+            ]
+        });
+        confirm.present();
+    };
+    return MaterialsPage;
+}());
+MaterialsPage = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+        selector: 'page-materials',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\materials\materials.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n    <ion-buttons end  *ngIf="isShowButtons">\n\n      <button ion-button icon-only color="white" (click)="addMaterials()">\n\n        <ion-icon name="add-circle"></ion-icon>\n\n      </button>\n\n      <button ion-button icon-only color="white" (click)="saveMaterials()">\n\n        <ion-icon name="checkmark-circle"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n\n\n  <ion-segment [(ngModel)]="segmentName">\n\n    <ion-segment-button value="basicInfo">\n\n      基本信息\n\n    </ion-segment-button>\n\n    <ion-segment-button value="materialsList">\n\n      材料清单\n\n    </ion-segment-button>\n\n  </ion-segment>\n\n</ion-header>hammer\n\n\n\n<ion-content>\n\n  <div [ngSwitch]="segmentName">\n\n    <!--基本信息-->\n\n\n\n    <ion-list *ngSwitchCase="\'basicInfo\'">\n\n      <ion-item>\n\n        <ion-label fixed class="label-name">工单编号：</ion-label>\n\n        <div item-content>{{taskId}}</div>\n\n      </ion-item>\n\n\n\n      <ion-item *ngFor="let detail of details">\n\n        <ion-label fixed class="label-name">\n\n          {{detail.name}}\n\n        </ion-label>\n\n        <div item-content>\n\n          {{detail.value}}\n\n        </div>\n\n      </ion-item>\n\n    </ion-list>\n\n\n\n    <!--材料清单-->\n\n    <ion-list *ngSwitchCase="\'materialsList\'">\n\n      <ion-card *ngFor="let item of items">\n\n\n\n        <ion-item>\n\n          <ion-label fixed class="label-name">\n\n            材料类别：\n\n          </ion-label>\n\n          <div item-content>\n\n            {{item.category.name}}\n\n          </div>\n\n        </ion-item>\n\n\n\n        <ion-item>\n\n          <ion-label fixed class="label-name">\n\n            材料型号：\n\n          </ion-label>\n\n          <div item-content>\n\n            {{item.type.name}}\n\n          </div>\n\n        </ion-item>\n\n\n\n        <ion-item>\n\n          <ion-label fixed class="label-name">\n\n            材料规格：\n\n          </ion-label>\n\n          <div item-content>\n\n            {{item.size.name}}\n\n          </div>\n\n        </ion-item>\n\n\n\n        <ion-item>\n\n          <ion-label fixed class="label-name">\n\n            生产厂家：\n\n          </ion-label>\n\n          <div item-content>\n\n            {{item.productor.name}}\n\n          </div>\n\n        </ion-item>\n\n\n\n        <ion-item>\n\n          <ion-label fixed class="label-name">\n\n            单位：\n\n          </ion-label>\n\n          <div item-content>\n\n            {{item.unit.text}}\n\n          </div>\n\n        </ion-item>\n\n\n\n        <ion-item>\n\n          <ion-label fixed class="label-name">\n\n            数量：\n\n          </ion-label>\n\n          <div item-content>\n\n            {{item.count}}\n\n          </div>\n\n        </ion-item>\n\n\n\n        <ion-item>\n\n          <ion-label fixed class="label-name">\n\n            备注：\n\n          </ion-label>\n\n          <div item-content>\n\n            {{item.remark}}\n\n          </div>\n\n        </ion-item>\n\n\n\n        <ion-item  *ngIf="isShowButtons">\n\n          <button item-right ion-button icon-left clear small color="danger" (click)="deleteMaterials(item)">\n\n            <ion-icon name="trash"></ion-icon>\n\n            <div>删除</div>\n\n          </button>\n\n          <button item-right ion-button icon-left clear small (click)="editMaterials(item)">\n\n            <ion-icon name="create"></ion-icon>\n\n            <div>修改</div>\n\n          </button>\n\n        </ion-item>\n\n      </ion-card>\n\n    </ion-list>\n\n  </div>\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\materials\materials.html"*/
+    }),
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
+        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* NavParams */],
+        __WEBPACK_IMPORTED_MODULE_3__providers_GlobalService__["a" /* GlobalService */],
+        __WEBPACK_IMPORTED_MODULE_5__providers_DataService__["a" /* DataService */],
+        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["o" /* ToastController */],
+        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* Events */],
+        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */]])
+], MaterialsPage);
+
+//# sourceMappingURL=materials.js.map
+
+/***/ }),
+
+/***/ 68:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SettingPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_ConfigService__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_GlobalService__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_StorageService__ = __webpack_require__(237);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_FileService__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ionic_storage__ = __webpack_require__(60);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__networkset__ = __webpack_require__(238);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__providers_DataService__ = __webpack_require__(13);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+/**
+ * Created by zhangjing on 2017/6/29.
+ */
+
+
+
+
+
+
+
+
+
+var SettingPage = (function () {
+    function SettingPage(navCtrl, alertCtrl, actionsheetCtrl, configService, globalService, storageService, storage, popoverCtrl, fileService, events, dataService, toastCtrl) {
+        this.navCtrl = navCtrl;
+        this.alertCtrl = alertCtrl;
+        this.actionsheetCtrl = actionsheetCtrl;
+        this.configService = configService;
+        this.globalService = globalService;
+        this.storageService = storageService;
+        this.storage = storage;
+        this.popoverCtrl = popoverCtrl;
+        this.fileService = fileService;
+        this.events = events;
+        this.dataService = dataService;
+        this.toastCtrl = toastCtrl;
+        this.tag = "[SettingPage]";
+        this.title = '系统参数';
+        this.alermStyle = '仅铃声'; //提醒方式
+        this.isShow = false;
+    }
+    SettingPage.prototype.ngOnInit = function () {
+        // if (this.globalService.isChrome) {
+        //   this.storage.get(this.configService.systemStorageName)
+        //     .then(result => {
+        //       if (result) {
+        //         let jsonObject = ConfigService.transform2SystemConfig(result);
+        //         this.isGrid = jsonObject.isGridStyle;
+        //         this.isOuterNet = jsonObject.isOuterNetwork;
+        //         this.isOuterNet ? this.netWorkUri = jsonObject.outerBaseUri : this.netWorkUri = jsonObject.innerBaseUri;
+        //         this.keepAlive = jsonObject.keepAliveInterval;
+        //       } else {
+        //         this.readDataFromFile();
+        //       }
+        //     })
+        //   return;
+        // }
+        // this.readDataFromFile();
+    };
+    SettingPage.prototype.ngOnDestroy = function () {
+        this.events.unsubscribe(this.globalService.materialsUpdateEvent);
+    };
+    /**
+     * 从文件中读取参数
+     */
+    // private readDataFromFile() {
+    //   Promise.all([this.isGridStyleFromFile(), this.isOuterNetFromFile(), this.getKeepAliveFromFile()])
+    //     .catch(error => {
+    //       console.log(this.tag + 'readDataFromFile:' + error);
+    //     })
+    // }
+    /**
+     * 切换九宫格
+     */
+    SettingPage.prototype.notifyIsGrid = function () {
+        var _this = this;
+        console.log(this.tag + "Toggled:" + this.isGrid);
+        this.configService.setGridStyle(this.isGrid)
+            .then(function (result) {
+            if (result) {
+                var gridStyle = _this.isGrid;
+                _this.events.publish(_this.globalService.mainUpdateEvent, { type: 'gridStyle', gridStyle: gridStyle });
+            }
+            else {
+                _this.isGrid = !_this.isGrid;
+            }
+        })
+            .catch(function (error) {
+            console.log(error);
+        });
+    };
+    /**
+     * 切换内外网
+     */
+    SettingPage.prototype.notifyIsOutNet = function () {
+        var _this = this;
+        console.log(this.tag + "Toggled:" + this.isOuterNet);
+        this.configService.setIsOuterNet(this.isOuterNet)
+            .then(function (result) {
+            if (!result) {
+                _this.isOuterNet = !_this.isOuterNet;
+            }
+            else {
+                _this.getNetworkUriFromFile();
+            }
+        })
+            .catch(function (error) {
+            console.log(error);
+        });
+    };
+    /**
+     * 从文件中读取是否是九宫格
+     */
+    // private isGridStyleFromFile() {
+    //   this.configService.isGridStyle()
+    //     .then(data => {
+    //       console.log(this.tag + data);
+    //       this.isGrid = data;
+    //     }).catch(err => {
+    //     console.log(this.tag + err);
+    //   })
+    // }
+    /**
+     * 从文件中读取是否是外网
+     */
+    // private isOuterNetFromFile() {
+    //   this.configService.isOuterNetwork()
+    //     .then(data => {
+    //       this.isOuterNet = data;
+    //       this.getNetworkUriFromFile();
+    //     })
+    //     .catch(err => {
+    //       console.log(this.tag + err);
+    //     })
+    // }
+    /**
+     * 从文件读取数据地址
+     */
+    SettingPage.prototype.getNetworkUriFromFile = function () {
+        var _this = this;
+        this.configService.getServerBaseUri()
+            .then(function (data) {
+            console.log(_this.tag + data);
+            _this.netWorkUri = data;
+        })
+            .catch(function (err) {
+            console.log(_this.tag + err);
+        });
+    };
+    /**
+     * 读取文件的心跳频率
+     */
+    // private getKeepAliveFromFile() {
+    //   this.configService.getKeepAliveInterval()
+    //     .then(data => {
+    //       console.log(this.tag + data);
+    //       this.keepAlive = data;
+    //     })
+    //     .catch(err => {
+    //       console.log(this.tag + err);
+    //     })
+    // }
+    /**
+     * 读取文件的超期时限
+     */
+    SettingPage.prototype.getOverdueFromFile = function () {
+        var _this = this;
+        this.configService.getOverdueTime()
+            .then(function (overdueTime) {
+            console.log(_this.tag + overdueTime);
+            _this.overdueTime = overdueTime;
+            //this.showOverdueSetting();
+        })
+            .catch(function (err) {
+            console.log(_this.tag + err);
+        });
+    };
+    /**
+     * 获取提醒方式
+     */
+    // private getAlermStyle() {
+    //   if (this.isChrome) {
+    //     (this.storageService.read('alermStyle') == null || undefined) ?
+    //       this.alermStyle = '仅铃声' : this.alermStyle = this.storageService.read<string>('alermStyle');
+    //     return;
+    //   }
+    // }
+    /**
+     * 网络设置
+     */
+    SettingPage.prototype.showNetwork = function () {
+        this.popoverCtrl.create(__WEBPACK_IMPORTED_MODULE_7__networkset__["a" /* NetworkSetPage */]).present();
+        // let prompt = this.alertCtrl.create({
+        //   title: '网络设置',
+        //   message: '数据访问地址',
+        //   inputs: [
+        //     {
+        //       name: 'netWorkUri',
+        //       value: this.netWorkUri,
+        //       placeholder: '数据访问地址',
+        //     }
+        //   ],
+        //   buttons: [
+        //     {
+        //       text: '取消',
+        //       handler: data => {
+        //         console.log(this.tag + 'showNetwork cancel');
+        //       }
+        //     },
+        //     {
+        //       text: '保存',
+        //       handler: data => {
+        //         this.configService.setSystemUrl(data.netWorkUri)
+        //           .then(result => {
+        //             if (result) {
+        //               this.netWorkUri = data.netWorkUri;
+        //             }
+        //           })
+        //           .catch(error => {
+        //             console.log(this.tag + 'showNetwork:' + error);
+        //           })
+        //       }
+        //     }
+        //   ]
+        // });
+        // prompt.present();
+    };
+    SettingPage.prototype.showDownloadWords = function () {
+        var _this = this;
+        var confirm = this.alertCtrl.create({
+            title: '更新词语',
+            message: '是否确定需要更新词语信息？',
+            buttons: [
+                {
+                    text: '取消',
+                    handler: function () {
+                        console.log(_this.tag + '取消 clicked');
+                    }
+                },
+                {
+                    text: '确定',
+                    handler: function () {
+                        var toast = _this.toastCtrl.create({
+                            duration: 2000,
+                            position: 'bottom',
+                        });
+                        Promise.all([_this.dataService.downloadWords(), _this.dataService.downloadMaterials(), _this.dataService.downloadPersonnels()])
+                            .then(function (_a) {
+                            var result1 = _a[0], result2 = _a[1], result3 = _a[2];
+                            if (result1 && result2 && result3) {
+                                toast.setMessage('更新成功');
+                            }
+                            else {
+                                toast.setMessage('更新失败');
+                            }
+                            toast.present();
+                        })
+                            .catch(function (error) {
+                            console.log(error);
+                            toast.setMessage('更新失败');
+                            toast.present();
+                        });
+                    }
+                }
+            ]
+        });
+        confirm.present();
+    };
+    /**
+     * 超期设置
+     */
+    // showOverdueSetting() {
+    //   let alert = this.alertCtrl.create({
+    //     title: '超期设置',
+    //     message: '时限设置(分钟):',
+    //     inputs: [
+    //       {
+    //         name: 'overdueTime',
+    //         value: this.overdueTime.toString(),
+    //         placeholder: '请输入超期时限',
+    //       }
+    //     ],
+    //     buttons: [
+    //       {
+    //         text: '取消',
+    //         role: 'cancel',
+    //         handler: data => {
+    //           console.log(this.tag + 'showOverdueSetting Cancel clicked');
+    //         }
+    //       },
+    //       {
+    //         text: '保存',
+    //         handler: data => {
+    //           this.configService.setOverdue(data.overdueTime)
+    //             .then(result => {
+    //               this.overdueTime = data.overdueTime;
+    //             })
+    //             .catch(error => {
+    //               console.log(this.tag + 'showOverdueSetting:' + error);
+    //             })
+    //         }
+    //       }
+    //     ]
+    //   });
+    //   alert.present();
+    // }
+    /**
+     * 心跳设置
+     */
+    SettingPage.prototype.showHeartSetting = function () {
+        var _this = this;
+        var alert = this.alertCtrl.create({
+            title: '心跳设置',
+            message: '心跳频率(毫秒):',
+            inputs: [
+                {
+                    name: 'heartBeat',
+                    placeholder: '请输入心跳频率',
+                }
+            ],
+            buttons: [
+                {
+                    text: '取消',
+                    role: 'cancel',
+                    handler: function (data) {
+                        console.log(_this.tag + 'showHeartSetting Cancel clicked');
+                    }
+                },
+                {
+                    text: '保存',
+                    handler: function (data) {
+                        _this.configService.setKeepAlive(data.heartBeat)
+                            .then(function (result) {
+                            _this.keepAlive = data.heartBeat;
+                        })
+                            .catch(function (error) {
+                            console.log(_this.tag + 'showHeartSetting:' + error);
+                        });
+                    }
+                }
+            ]
+        });
+        alert.present();
+    };
+    /**
+     * 提醒方式
+     */
+    SettingPage.prototype.showAlermType = function () {
+        var _this = this;
+        var actionSheet = this.actionsheetCtrl.create({
+            title: '提醒方式',
+            // cssClass: 'action-sheets-basic-page',
+            buttons: [
+                {
+                    text: '仅铃声',
+                    role: 'destructive',
+                    icon: 'notifications',
+                    handler: function () {
+                        _this.alermStyle = '仅铃声';
+                        _this.storageService.write('alermStyle', 'onlyRing');
+                        console.log(_this.tag + 'showAlermType onlyRing clicked');
+                    }
+                },
+                {
+                    text: '仅震动',
+                    icon: 'pulse',
+                    handler: function () {
+                        _this.alermStyle = '仅震动';
+                        _this.storageService.write('alermStyle', 'onlyShake');
+                        console.log(_this.tag + 'showAlermType onlyShake clicked');
+                    }
+                },
+                {
+                    text: '铃声+震动',
+                    icon: 'arrow-dropright-circle',
+                    handler: function () {
+                        _this.alermStyle = '铃声+震动';
+                        _this.storageService.write('alermStyle', 'ringShake');
+                        console.log(_this.tag + 'showAlermType Play clicked');
+                    }
+                },
+                {
+                    text: '取消',
+                    role: '取消',
+                    icon: 'close',
+                    handler: function () {
+                        console.log(_this.tag + 'showAlermType Cancel clicked');
+                    }
+                }
+            ]
+        });
+        actionSheet.present();
+    };
+    /**
+     * 恢复出厂设置
+     */
+    SettingPage.prototype.showRevertSetting = function () {
+        var _this = this;
+        var confirm = this.alertCtrl.create({
+            title: '警告',
+            message: '数据都上传了吗？确定要恢复出厂设置吗？回复后请重新登录！',
+            buttons: [
+                {
+                    text: '取消',
+                    handler: function () {
+                        console.log(_this.tag + '取消 clicked');
+                    }
+                },
+                {
+                    text: '确定',
+                    handler: function () {
+                        _this.storage.clear(); //浏览器清除storage
+                        console.log(_this.tag + '保存 clicked');
+                    }
+                }
+            ]
+        });
+        confirm.present();
+    };
+    SettingPage.prototype.onExit = function () {
+        var _this = this;
+        var confirm = this.alertCtrl.create({
+            title: '提示',
+            message: '是否完全退出当前应用？',
+            buttons: [
+                {
+                    text: '取消',
+                    handler: function () {
+                        console.log(_this.tag + '取消 clicked');
+                    }
+                },
+                {
+                    text: '确定',
+                    handler: function () {
+                        console.log(_this.tag + '保存 clicked');
+                        _this.globalService.quit();
+                    }
+                }
+            ]
+        });
+        confirm.present();
+    };
+    return SettingPage;
+}());
+SettingPage = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+        selector: 'page-setting',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\setting\setting.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-setting">\n\n  <ion-list>\n\n    <ion-item *ngIf="isShow">\n\n      <ion-toggle [(ngModel)]="isGrid" (ionChange)="notifyIsGrid()"></ion-toggle>\n\n      <ion-label>是否切换九宫格</ion-label>\n\n      <ion-icon name=\'grid\' item-start color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item *ngIf="isShow">\n\n      <ion-toggle [(ngModel)]="isOuterNet" (ionChange)="notifyIsOutNet()"></ion-toggle>\n\n      <ion-label>是否使用外网</ion-label>\n\n      <ion-icon name=\'md-wifi\' item-start color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item (click)="showNetwork()">\n\n      <ion-icon name=\'git-network\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>网络设置</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item (click)="getOverdueFromFile()">\n\n      <ion-icon name=\'time\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>超期设置</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item (click)="showDownloadWords()">\n\n      <ion-icon name=\'download\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>更新词语</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item *ngIf="isShow" (click)="showHeartSetting()">\n\n      <ion-icon name=\'heart-outline\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>心跳频率</ion-label>\n\n      <ion-label class="label-right">{{keepAlive+\'毫秒\'}}</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item *ngIf="isShow" (click)="showAlermType()">\n\n      <ion-icon name=\'alarm\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>提醒方式</ion-label>\n\n      <ion-label class="label-right">{{alermStyle}}</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item *ngIf="isShow" (click)="showRevertSetting()">\n\n      <ion-icon name=\'redo\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>恢复出厂设置</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item (click)="onExit()">\n\n      <ion-icon name=\'exit\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>退出</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n  </ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\setting\setting.html"*/
+    }),
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
+        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */],
+        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* ActionSheetController */],
+        __WEBPACK_IMPORTED_MODULE_2__providers_ConfigService__["a" /* ConfigService */],
+        __WEBPACK_IMPORTED_MODULE_3__providers_GlobalService__["a" /* GlobalService */],
+        __WEBPACK_IMPORTED_MODULE_4__providers_StorageService__["a" /* StorageService */],
+        __WEBPACK_IMPORTED_MODULE_6__ionic_storage__["b" /* Storage */],
+        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["m" /* PopoverController */],
+        __WEBPACK_IMPORTED_MODULE_5__providers_FileService__["a" /* FileService */],
+        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* Events */],
+        __WEBPACK_IMPORTED_MODULE_8__providers_DataService__["a" /* DataService */],
+        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["o" /* ToastController */]])
+], SettingPage);
+
+//# sourceMappingURL=setting.js.map
+
+/***/ }),
+
 /***/ 7:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -13645,8 +13995,8 @@ MyWorkPage = __decorate([
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return MyPluginMock; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return GlobalService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_storage__ = __webpack_require__(59);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_storage__ = __webpack_require__(60);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_my_plugin__ = __webpack_require__(120);
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -13706,7 +14056,7 @@ var GlobalService = (function () {
         this.loadingCtrl = loadingCtrl;
         this.storage = storage;
         this.myPlugin = myPlugin;
-        this.isChrome = false;
+        this.isChrome = true;
         this.httpCode = 0;
         this.httpSuccessStatusCode = 200;
         this.taskSinceDefault = 0;
@@ -13732,6 +14082,7 @@ var GlobalService = (function () {
         this.userDetailInfoStorageName = 'userDetailInfo';
         this.locationType = 'bd09ll';
         this.worker = 'worker';
+        this.manager = 'manager';
         this.photoSuffix = '.jpg';
         this.audioSuffix = '.mp3';
         this.videoSuffix = '.mp4';
@@ -13903,5 +14254,5 @@ GlobalService = __decorate([
 
 /***/ })
 
-},[248]);
+},[247]);
 //# sourceMappingURL=main.js.map
