@@ -45,6 +45,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
   title: string = '任务列表';
   showToolbar: boolean = false;
   showFab: boolean = false;
+  showMaterial: boolean = false;
 
   items: TaskEx[] = [];
   private overdueTime: OverdueTime = null;//超期时限
@@ -73,6 +74,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
     this.subscribeEvent(this.events);
     this.showFab = false;
     this.getOverdueTime()
+      .then(() => this.showOrHideMaterial())
       .then(() => this.getTasks(this.since, this.count, this.key))
       .then(data => {
         this.infiniteScroll.enable(data);
@@ -381,6 +383,21 @@ export class MyWorkPage implements OnInit, OnDestroy {
           }
         }
       });
+  }
+
+  /**
+   *
+   * @returns {Promise<boolean>}
+   */
+  private showOrHideMaterial(): Promise<any> {
+    return this.configService.getSysRegion()
+      .then(region => {
+        if (region && region === ConfigService.fushunRegion) {
+          this.showMaterial = true;
+        }
+      })
+      .catch(error => console.error(error))
+      .then(() => this.showMaterial = false);
   }
 
   /**
