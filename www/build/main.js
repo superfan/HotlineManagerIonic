@@ -11432,9 +11432,7 @@ var DbService = (function () {
                 .then(function (db) {
                 var sql = "SELECT COUNT(*) FROM GD_TASKS WHERE I_USERID = " + userId + ";";
                 return db.executeSql(sql, {})
-                    .then(function (data) {
-                    return Promise.resolve(data);
-                });
+                    .then(function (data) { return data.rows && data.rows.length > 0 ? data.rows.item(0)["COUNT(*)"] : 0; });
             });
         }
     };
