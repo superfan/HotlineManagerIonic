@@ -14,6 +14,7 @@ import {Storage} from "@ionic/storage";
 import {NetworkSetPage} from "./networkset";
 import {DataService} from "../../providers/DataService";
 import {OverdueTime} from "../../model/OverdueTime";
+import {OverdueTimePage} from "./overdueTimePage";
 
 @Component({
   selector: 'page-setting',
@@ -26,7 +27,7 @@ export class SettingPage implements OnInit, OnDestroy {
   title: string = '系统参数';
   public isGrid: boolean;//是否是九宫格样式
   isOuterNet: boolean;//是否是外网
-  netWorkUri: string;//数据地址
+  //netWorkUri: string;//数据地址
   keepAlive: number;//心跳频率
   overdueTime: OverdueTime;//超期时限
   alermStyle: string = '仅铃声';//提醒方式
@@ -103,18 +104,18 @@ export class SettingPage implements OnInit, OnDestroy {
    * 切换内外网
    */
   notifyIsOutNet(): void {
-    console.log(this.tag + "Toggled:" + this.isOuterNet);
-    this.configService.setIsOuterNet(this.isOuterNet)
-      .then(result => {
-        if (!result) {
-          this.isOuterNet = !this.isOuterNet;
-        } else {
-          this.getNetworkUriFromFile();
-        }
-      })
-      .catch(error => {
-        console.log(error);
-      })
+    // console.log(this.tag + "Toggled:" + this.isOuterNet);
+    // this.configService.setIsOuterNet(this.isOuterNet)
+    //   .then(result => {
+    //     if (!result) {
+    //       this.isOuterNet = !this.isOuterNet;
+    //     } else {
+    //       this.getNetworkUriFromFile();
+    //     }
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //   })
   }
 
   /**
@@ -147,16 +148,16 @@ export class SettingPage implements OnInit, OnDestroy {
   /**
    * 从文件读取数据地址
    */
-  private getNetworkUriFromFile() {
-    this.configService.getServerBaseUri()
-      .then(data => {
-        console.log(this.tag + data);
-        this.netWorkUri = data;
-      })
-      .catch(err => {
-        console.log(this.tag + err);
-      })
-  }
+  // private getNetworkUriFromFile() {
+  //   this.configService.getServerBaseUris()
+  //     .then(([]) => {
+  //       console.log(this.tag + data);
+  //       this.netWorkUri = data;
+  //     })
+  //     .catch(err => {
+  //       console.log(this.tag + err);
+  //     })
+  // }
 
   /**
    * 读取文件的心跳频率
@@ -172,6 +173,10 @@ export class SettingPage implements OnInit, OnDestroy {
   //     })
   // }
 
+
+  showOverdueTime(): void {
+    this.popoverCtrl.create(OverdueTimePage).present();
+  }
 
   /**
    * 读取文件的超期时限

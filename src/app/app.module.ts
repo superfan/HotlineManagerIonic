@@ -62,6 +62,7 @@ import {MorePage} from "../pages/more/more";
 import {NetworkSetPage} from "../pages/setting/networkset";
 import {AboutPage} from "../pages/about/about";
 import {ContactPage} from "../pages/contact/contact";
+import {OverdueTimePage} from "../pages/setting/overdueTimePage";
 
 
 @NgModule({
@@ -93,13 +94,14 @@ import {ContactPage} from "../pages/contact/contact";
     MorePage,
     NetworkSetPage,
     AboutPage,
-    ContactPage
+    ContactPage,
+    OverdueTimePage
   ],
   imports: [
     BrowserModule,
     HttpModule,
     IonicModule.forRoot(MyApp, {
-      tabsHideOnSubPages: 'true'         //隐藏全部子页面tabs
+      tabsHideOnSubPages: 'true'         //闅愯棌鍏ㄩ儴瀛愰〉闈abs
     }),
     IonicStorageModule.forRoot()
   ],
@@ -129,7 +131,8 @@ import {ContactPage} from "../pages/contact/contact";
     MorePage,
     NetworkSetPage,
     AboutPage,
-    ContactPage
+    ContactPage,
+    OverdueTimePage
   ],
   providers: [
     StatusBar,

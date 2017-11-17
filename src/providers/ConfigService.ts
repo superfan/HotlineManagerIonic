@@ -92,6 +92,25 @@ export class ConfigService {
       });
   }
 
+  public getServerBaseUris(): Promise<Array<string>> {
+    return ConfigService.isValid<SystemConfig>(this.systemConfig, 'serverBaseUri')
+      ? Promise.resolve([this.systemConfig.outerBaseUri, this.systemConfig.innerBaseUri])
+      : new Promise((resolve, reject) => {
+        this.readSystemConfig()
+          .then(data => {
+            this.systemConfig = data as SystemConfig;
+            if (ConfigService.isValid<SystemConfig>(this.systemConfig, 'outerBaseUri')
+              && ConfigService.isValid<SystemConfig>(this.systemConfig, 'innerBaseUri')
+              && ConfigService.isValid<SystemConfig>(this.systemConfig, 'isOuterNetwork')) {
+              resolve([this.systemConfig.outerBaseUri, this.systemConfig.innerBaseUri]);
+            } else {
+              reject("failure to getServerBaseUri");
+            }
+          })
+          .catch(error => reject(error));
+      });
+  }
+
   /**
    * 获得材料接口地址
    * @returns {Promise<string>|Promise<T>}
@@ -109,6 +128,25 @@ export class ConfigService {
               this.systemConfig.materialsBaseUri = this.systemConfig.isOuterNetwork ? this.systemConfig.materialsOuterBaseUri
                 : this.systemConfig.materialsInnerBaseUri;
               resolve(this.systemConfig.materialsBaseUri);
+            } else {
+              reject("failure to getMaterialsBaseUri");
+            }
+          })
+          .catch(error => reject(error));
+      })
+  }
+
+  public getMaterialsBaseUris(): Promise<Array<string>> {
+    return ConfigService.isValid<SystemConfig>(this.systemConfig, 'materialsBaseUri')
+      ? Promise.resolve([this.systemConfig.materialsOuterBaseUri, this.systemConfig.materialsInnerBaseUri])
+      : new Promise((resolve, reject) => {
+        this.readSystemConfig()
+          .then(data => {
+            this.systemConfig = data as SystemConfig;
+            if (ConfigService.isValid<SystemConfig>(this.systemConfig, 'isOuterNetwork')
+              && ConfigService.isValid<SystemConfig>(this.systemConfig, 'materialsOuterBaseUri')
+              && ConfigService.isValid<SystemConfig>(this.systemConfig, 'materialsInnerBaseUri')) {
+              resolve([this.systemConfig.materialsOuterBaseUri, this.systemConfig.materialsInnerBaseUri]);
             } else {
               reject("failure to getMaterialsBaseUri");
             }
@@ -389,22 +427,29 @@ export class ConfigService {
 
   /**
    * 设置热线地址
-   * @param isOuterNet
-   * @param systemUrl
+   * @param outerBaseUri
+   * @param innerBaseUri
+   * @param isOuterNetwork
    * @returns {any}
    */
-  public setSystemUrl(systemUrl: string): Promise<boolean> {
-    if (ConfigService.isValid<SystemConfig>(this.systemConfig, 'isOuterNetwork')
-      && ConfigService.isValid<SystemConfig>(this.systemConfig, 'serverBaseUri')) {
+  public setServerBaseUris(outerBaseUri: string, innerBaseUri: string, isOuterNetwork: boolean): Promise<boolean> {
+    if (ConfigService.isValid<SystemConfig>(this.systemConfig, 'outerBaseUri')
+      && ConfigService.isValid<SystemConfig>(this.systemConfig, 'innerBaseUri')
+      && ConfigService.isValid<SystemConfig>(this.systemConfig, 'serverBaseUri')
+      && ConfigService.isValid<SystemConfig>(this.systemConfig, 'isOuterNetwork')) {
       return new Promise((resolve, reject) => {
         let systemConfig: SystemConfig = Object.create(this.systemConfig);
-        systemConfig.serverBaseUri = systemUrl;
-        this.systemConfig.isOuterNetwork ? systemConfig.outerBaseUri = systemUrl : systemConfig.innerBaseUri = systemUrl;
+        systemConfig.outerBaseUri = outerBaseUri;
+        systemConfig.innerBaseUri = innerBaseUri;
+        systemConfig.serverBaseUri = isOuterNetwork ? outerBaseUri : innerBaseUri;
+        systemConfig.isOuterNetwork = isOuterNetwork;
         this.writeSystemConfig(systemConfig)
           .then(result => {
             if (result) {
-              this.systemConfig.serverBaseUri = systemUrl;
-              this.systemConfig.isOuterNetwork ? this.systemConfig.outerBaseUri = systemUrl : this.systemConfig.innerBaseUri = systemUrl;
+              this.systemConfig.outerBaseUri = outerBaseUri;
+              this.systemConfig.innerBaseUri = innerBaseUri;
+              this.systemConfig.serverBaseUri = isOuterNetwork ? outerBaseUri : innerBaseUri;
+              this.systemConfig.isOuterNetwork = isOuterNetwork;
             }
             resolve(!!result);
           })
@@ -417,22 +462,29 @@ export class ConfigService {
 
   /**
    * 设置材料地址
-   * @param materialUrl
+   * @param outerBaseUri
+   * @param innerBaseUri
+   * @param isOuterNetwork
    * @returns {any}
    */
-  public setMaterialUrl(materialUrl: string): Promise<boolean> {
-    if (ConfigService.isValid<SystemConfig>(this.systemConfig, 'isOuterNetwork')
-      && ConfigService.isValid<SystemConfig>(this.systemConfig, 'materialsBaseUri')) {
+  public setMaterialBaseUris(outerBaseUri: string, innerBaseUri: string, isOuterNetwork: boolean): Promise<boolean> {
+    if (ConfigService.isValid<SystemConfig>(this.systemConfig, 'materialsOuterBaseUri')
+      && ConfigService.isValid<SystemConfig>(this.systemConfig, 'materialsInnerBaseUri')
+      && ConfigService.isValid<SystemConfig>(this.systemConfig, 'materialsBaseUri')
+      && ConfigService.isValid<SystemConfig>(this.systemConfig, 'isOuterNetwork')) {
       return new Promise((resolve, reject) => {
         let systemConfig: SystemConfig = Object.create(this.systemConfig);
-        systemConfig.materialsBaseUri = materialUrl;
-        this.systemConfig.isOuterNetwork ? systemConfig.materialsOuterBaseUri = materialUrl : systemConfig.materialsInnerBaseUri = materialUrl;
+        systemConfig.materialsOuterBaseUri = outerBaseUri;
+        systemConfig.materialsInnerBaseUri = innerBaseUri;
+        systemConfig.materialsBaseUri = isOuterNetwork ? outerBaseUri : innerBaseUri;
+        systemConfig.isOuterNetwork = isOuterNetwork;
         this.writeSystemConfig(systemConfig)
           .then(result => {
             if (result) {
-              this.systemConfig.materialsBaseUri = materialUrl;
-              this.systemConfig.isOuterNetwork ? this.systemConfig.materialsOuterBaseUri = materialUrl :
-                this.systemConfig.materialsInnerBaseUri = materialUrl;
+              this.systemConfig.materialsOuterBaseUri = outerBaseUri;
+              this.systemConfig.materialsInnerBaseUri = innerBaseUri;
+              this.systemConfig.materialsBaseUri = isOuterNetwork ? outerBaseUri : innerBaseUri;
+              this.systemConfig.isOuterNetwork = isOuterNetwork;
             }
             resolve(!!result);
           })

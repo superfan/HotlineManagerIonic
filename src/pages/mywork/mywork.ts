@@ -252,7 +252,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
   onPreview(taskEx: TaskEx): void {
     taskEx.isPreview = true;
     let history: History = this.findReplyHistory(taskEx.id);
-    this.navCtrl.push(WorkDetailPage, [taskEx, history]);
+    this.navCtrl.push(WorkDetailPage, [taskEx, history, this.overdueTime]);
   }
 
   /**
@@ -434,6 +434,9 @@ export class MyWorkPage implements OnInit, OnDestroy {
         }
 
         if (count > 0) {
+          if (!this.globalService.isChrome) {
+            this.dataService.playAlarm();
+          }
           this.showOverdueCountAlert(count);
         }
       })
@@ -740,7 +743,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
     if (!processEx.reply.done || !processEx.reply.isUploaded) {
       taskEx.isPreview = false;
       let history: History = this.findReplyHistory(taskEx.id);
-      this.navCtrl.push(WorkDetailPage, [taskEx, history]);
+      this.navCtrl.push(WorkDetailPage, [taskEx, history, this.overdueTime]);
     }
   }
 

@@ -16,7 +16,7 @@
   </ion-navbar>
 
   <ion-toolbar no-border-top>
-    <ion-segment [(ngModel)]="segmentName" (ionChange)="segmentChanged($event)">
+    <ion-segment [(ngModel)]="segmentName" (ionChange)="segmentChanged($event)" color="{{segmentColor}}">
       <ion-segment-button value="detailInfo">
         基本信息
       </ion-segment-button>
@@ -41,7 +41,6 @@
         </ion-label>
         <div item-content *ngIf="item.isTime">
           {{item.value | date:'y-MM-dd HH:mm:ss'}}
-          <ion-icon *ngIf="item.isShowOverdue" name="timer" color="{{'danger'}}"></ion-icon>
         </div>
         <div item-content *ngIf="!item.isTime">
           {{item.value}}

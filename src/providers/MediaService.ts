@@ -6,13 +6,15 @@ import {FileService} from "./FileService";
 import {Camera, CameraOptions} from "@ionic-native/camera";
 import {Media, MediaObject} from "@ionic-native/media";
 import {MediaCapture, MediaFile, CaptureError, CaptureVideoOptions} from '@ionic-native/media-capture';
-import { VideoPlayer } from '@ionic-native/video-player';
+import {VideoPlayer} from '@ionic-native/video-player';
 
 import {MediaType} from "../model/Media";
 import {Http} from "@angular/http";
 
 @Injectable()
 export class MediaService extends BaseService {
+  private isPlayingAlarm: boolean;
+
   constructor(http: Http,
               private globalService: GlobalService,
               private dbService: DbService,
@@ -22,6 +24,7 @@ export class MediaService extends BaseService {
               private fileService: FileService,
               private videoPlayer: VideoPlayer) {
     super(http);
+    this.isPlayingAlarm = false;
   }
 
   /**
@@ -73,7 +76,7 @@ export class MediaService extends BaseService {
    * @returns {Promise<TResult>}
    */
   public takeVideo(taskId: string): Promise<any> {
-    let options: CaptureVideoOptions = { limit: 1 };
+    let options: CaptureVideoOptions = {limit: 1};
     return this.mediaCapture.captureVideo(options)
       .then(
         (data: MediaFile[]) => {
@@ -82,8 +85,7 @@ export class MediaService extends BaseService {
           let path: string = data[0].fullPath.toString();
           return Promise.resolve(path);
         },
-        (err: CaptureError) =>
-        {
+        (err: CaptureError) => {
           console.error(err);
           return Promise.reject(err);
         }
@@ -191,6 +193,45 @@ export class MediaService extends BaseService {
         return reject(err);
       }
     });
+  }
+
+  public playAlarm(name: string): void {
+    if (this.isPlayingAlarm) {
+      return;
+    }
+
+    this.isPlayingAlarm = true;
+    const error: string = 'failure to play audio';
+    let file: MediaObject;
+    try {
+      // Create a Media instance.  Expects path to file or url as argument
+      // We can optionally pass a second argument to track the status of the media
+      file = this.media.create(`file:///android_asset/www/assets/sound/${name}`);
+      if (!file) {
+        this.isPlayingAlarm = false;
+        return;
+      }
+
+      file.play();
+
+      setTimeout(() => {
+        try {
+          file.stop();
+          file.release();
+        } catch (err) {
+          console.error(err);
+        } finally {
+          this.isPlayingAlarm = false;
+        }
+      }, 5000);
+    }
+    catch (err) {
+      this.isPlayingAlarm = false;
+      console.error(err);
+      if (file) {
+        file.release();
+      }
+    }
   }
 
   public stopAudio(file: any): Promise<boolean> {

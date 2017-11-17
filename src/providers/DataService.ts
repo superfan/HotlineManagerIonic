@@ -800,6 +800,10 @@ export class DataService extends SyncService {
     return this.mediaService.stopAudio(file);
   }
 
+  public playAlarm(): void {
+    this.mediaService.playAlarm("alertDeadline.mp3");
+  }
+
   /**
    * 保存录音到数据库
    * @param taskId

@@ -1509,6 +1509,7 @@ var MediaService = (function (_super) {
         _this.mediaCapture = mediaCapture;
         _this.fileService = fileService;
         _this.videoPlayer = videoPlayer;
+        _this.isPlayingAlarm = false;
         return _this;
     }
     /**
@@ -1672,6 +1673,44 @@ var MediaService = (function (_super) {
                 return reject(err);
             }
         });
+    };
+    MediaService.prototype.playAlarm = function (name) {
+        var _this = this;
+        if (this.isPlayingAlarm) {
+            return;
+        }
+        this.isPlayingAlarm = true;
+        var error = 'failure to play audio';
+        var file;
+        try {
+            // Create a Media instance.  Expects path to file or url as argument
+            // We can optionally pass a second argument to track the status of the media
+            file = this.media.create("file:///android_asset/www/assets/sound/" + name);
+            if (!file) {
+                this.isPlayingAlarm = false;
+                return;
+            }
+            file.play();
+            setTimeout(function () {
+                try {
+                    file.stop();
+                    file.release();
+                }
+                catch (err) {
+                    console.error(err);
+                }
+                finally {
+                    _this.isPlayingAlarm = false;
+                }
+            }, 5000);
+        }
+        catch (err) {
+            this.isPlayingAlarm = false;
+            console.error(err);
+            if (file) {
+                file.release();
+            }
+        }
     };
     MediaService.prototype.stopAudio = function (file) {
         if (file instanceof __WEBPACK_IMPORTED_MODULE_6__ionic_native_media__["b" /* MediaObject */]) {
@@ -3478,6 +3517,9 @@ var DataService = (function (_super) {
     };
     DataService.prototype.stopAudio = function (file) {
         return this.mediaService.stopAudio(file);
+    };
+    DataService.prototype.playAlarm = function (name) {
+        this.mediaService.playAlarm(name);
     };
     /**
      * 保存录音到数据库
@@ -9786,6 +9828,9 @@ var MyWorkPage = (function () {
                 _loop_2(task);
             }
             if (count > 0) {
+                if (!_this.globalService.isChrome) {
+                    _this.dataService.playAlarm("alertDeadline.mp3");
+                }
                 _this.showOverdueCountAlert(count);
             }
         })

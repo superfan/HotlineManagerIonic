@@ -21,7 +21,6 @@ interface Detail {
   value: string | number | Date;
   key: string;
   isTime: boolean;
-  isShowOverdue: boolean;
 }
 
 interface Reply {
@@ -65,25 +64,26 @@ export class WorkDetailPage implements OnInit, OnDestroy {
 
   title: string = '工单处理';
   segmentName: string = "detailInfo";
+  segmentColor: string = "primary";
 
   overdueTime: OverdueTime;//超期时限
 
   detail: Detail[] = [
-    {name: '联系人名', value: '', key: 'contactName', isTime: false, isShowOverdue: false},
-    {name: '联系电话', value: '', key: 'contactPhone', isTime: false, isShowOverdue: false},
-    {name: '反映类别', value: '', key: 'issueType', isTime: false, isShowOverdue: false},
-    {name: '反映内容', value: '', key: 'issueContent', isTime: false, isShowOverdue: false},
-    {name: '发生地址', value: '', key: 'issueAddress', isTime: false, isShowOverdue: false},
-    {name: '发生时间', value: '', key: 'issueTime', isTime: true, isShowOverdue: false},
-    {name: '受理备注', value: '', key: 'receiveComment', isTime: false, isShowOverdue: false},
-    {name: '开始时间', value: '', key: 'bookingStartTime', isTime: true, isShowOverdue: false},
-    {name: '结束时间', value: '', key: 'bookingEndTime', isTime: true, isShowOverdue: false},
-    {name: '到场时限', value: '', key: 'arrivedDeadLine', isTime: true, isShowOverdue: false},
-    {name: '处理时限', value: '', key: 'replyDeadLine', isTime: true, isShowOverdue: false},
-    {name: '延时时限', value: '', key: 'delayReplyDeadLine', isTime: true, isShowOverdue: false},
-    {name: '派遣站点', value: '', key: 'assignStation', isTime: false, isShowOverdue: false},
-    {name: '派遣人', value: '', key: 'assignPerson', isTime: false, isShowOverdue: false},
-    {name: '派遣备注', value: '', key: 'assignComment', isTime: false, isShowOverdue: false}
+    {name: '联系人名', value: '', key: 'contactName', isTime: false},
+    {name: '联系电话', value: '', key: 'contactPhone', isTime: false},
+    {name: '反映类别', value: '', key: 'issueType', isTime: false},
+    {name: '反映内容', value: '', key: 'issueContent', isTime: false},
+    {name: '发生地址', value: '', key: 'issueAddress', isTime: false},
+    {name: '发生时间', value: '', key: 'issueTime', isTime: true},
+    {name: '受理备注', value: '', key: 'receiveComment', isTime: false},
+    {name: '开始时间', value: '', key: 'bookingStartTime', isTime: true},
+    {name: '结束时间', value: '', key: 'bookingEndTime', isTime: true},
+    {name: '到场时限', value: '', key: 'arrivedDeadLine', isTime: true},
+    {name: '处理时限', value: '', key: 'replyDeadLine', isTime: true},
+    {name: '延时时限', value: '', key: 'delayReplyDeadLine', isTime: true},
+    {name: '派遣站点', value: '', key: 'assignStation', isTime: false},
+    {name: '派遣人', value: '', key: 'assignPerson', isTime: false},
+    {name: '派遣备注', value: '', key: 'assignComment', isTime: false}
   ];
 
   reply: Reply[] = [
@@ -144,7 +144,7 @@ export class WorkDetailPage implements OnInit, OnDestroy {
               private popoverCtrl: PopoverController,
               private fileService: FileService,
               public configService: ConfigService,) {
-    [this.taskEx, this.history] = navParams.data;
+    [this.taskEx, this.history, this.overdueTime] = this.navParams.data;
     this.isPreview = this.taskEx.isPreview;
     this.isLocationValid = this.taskEx.isLocationValid;
   }
@@ -563,16 +563,6 @@ export class WorkDetailPage implements OnInit, OnDestroy {
    * @param taskDetail
    */
   private convertTaskDetail(taskDetail: TaskDetail): void {
-    // if (taskDetail.arrivedTime == 0) {
-    //   this.detail[9].isShowOverdue = taskDetail.arrivedDeadLine < new Date().getTime() - this.overdueTime * 60 * 1000;
-    // }
-    // if (taskDetail.replyTime == 0) {
-    //   this.detail[10].isShowOverdue = taskDetail.replyDeadLine < new Date().getTime() - this.overdueTime * 60 * 1000;
-    // }
-    // if (taskDetail.completedTime == 0) {
-    // this.detail[11].isShowOverdue = taskDetail.delayReplyDeadLine < new Date().getTime() - this.overdueTime*60*1000;
-    // }
-
     for (let item of this.detail) {
       item.value = taskDetail[item.key];
       if (item.key === 'issueTime'
@@ -585,22 +575,20 @@ export class WorkDetailPage implements OnInit, OnDestroy {
         item.value = item.value > 0 ? new Date(item.value as number) : '';
       }
     }
-  }
 
-  /**
-   * 读取文件的超期时限
-   */
-  // getOverdueFromFile() {
-  //   this.configService.getOverdueTime()
-  //     .then(data => {
-  //       console.log(this.tag + data);
-  //       this.overdueTime = data;
-  //       //this.convertTaskDetail(this.taskDetail);
-  //     })
-  //     .catch(err => {
-  //       console.log(this.tag + err);
-  //     })
-  // }
+    if (this.overdueTime && this.overdueTime.arrived && this.overdueTime.reply) {
+      let currentTime: number = new Date().getTime();
+      let arrivedDeadLine: number = currentTime + this.overdueTime.arrived;
+      let replyDeadLine: number = currentTime + this.overdueTime.reply;
+      if (taskDetail.arrivedDeadLine < arrivedDeadLine
+        || taskDetail.replyDeadLine < replyDeadLine) {
+        this.segmentColor = "danger";
+        if (!this.globalService.isChrome) {
+          this.dataService.playAlarm();
+        }
+      }
+    }
+  }
 
   /**
    * 设置回复信息

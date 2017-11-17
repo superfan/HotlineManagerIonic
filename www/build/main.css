@@ -21697,7 +21697,7 @@ ion-popover {
   border-radius: 2px;
   -webkit-transform-origin: left top;
   transform-origin: left top;
-  width: 250px;
+  width: 300px;
   min-width: 0;
   min-height: 0;
   max-height: 90%;
