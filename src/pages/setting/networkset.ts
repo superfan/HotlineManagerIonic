@@ -56,7 +56,7 @@ import {ConfigService} from "../../providers/ConfigService";
 
 export class NetworkSetPage {
 
-  private readonly tag: string = "[NetworkSetPage]";
+  //private readonly tag: string = "[NetworkSetPage]";
   isOuterNet: boolean;//是否是外网
   // public serverBaseUri: string;//热线地址
   // public materialsBaseUri: string;//材料地址

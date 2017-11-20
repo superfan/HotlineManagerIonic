@@ -3,14 +3,14 @@ import {Content, NavController, InfiniteScroll, AlertController, Events, Refresh
 import {WorkDetailPage} from "../workdetail/workdetail";
 import {DataService} from "../../providers/DataService";
 import {Task, TaskEx, TaskState, transform2ProcessEx, transform2Task} from "../../model/Task";
-import {ProcessEx, DelayExtend, RejectExtend, CancelExtend, DisableColor} from "../../model/Process";
+import {ProcessEx, DelayExtend, RejectExtend, DisableColor} from "../../model/Process";
 import {GlobalService, MyWorkUpdateEvent} from "../../providers/GlobalService";
 import {AcceptInfo} from "../../model/AcceptInfo";
 import {GoInfo} from "../../model/GoInfo";
 import {ArriveInfo} from "../../model/ArriveInfo";
 import {RejectInfo} from "../../model/RejectInfo";
 import {DelayInfo} from "../../model/DelayInfo";
-import {CancelInfo} from "../../model/CancelInfo";
+//import {CancelInfo} from "../../model/CancelInfo";
 import {MapPage} from "../map/map";
 import {MapParam, MapType} from "../../model/MapParam";
 import {Location} from "../../model/Location";
@@ -875,51 +875,51 @@ export class MyWorkPage implements OnInit, OnDestroy {
    * @param taskEx
    * @param location
    */
-  private cancel(taskEx: TaskEx, location: Location): void {
-    let processEx: ProcessEx = new ProcessEx();
-    if (!transform2ProcessEx(taskEx, processEx)) {
-      return;
-    }
-
-    if (!processEx.cancel.done) {
-      let time = new Date();
-      let cancelExtend: CancelExtend = processEx.cancel.extend as CancelExtend;
-      let cancelInfo: CancelInfo = {
-        destroyTime: time.getTime(),
-        destroyRemark: cancelExtend.remark,
-        location,
-        taskId: taskEx.id,
-        userId: this.globalService.userId
-      };
-      let task: Task = transform2Task(cancelInfo, taskEx, processEx);
-      let output: any = {
-        uploadedFlag: this.globalService.uploadedFlagForLocal
-      };
-      this.dataService.cancel(cancelInfo, task, output)
-        .then(data => {
-          let uploadedFlag: boolean = output.uploadedFlag === this.globalService.uploadedFlagForUploaded;
-          processEx.cancel.time = time;
-          processEx.cancel.color = DisableColor;
-          processEx.cancel.done = true;
-          processEx.cancel.isUploaded = uploadedFlag;
-
-          processEx.go.show = processEx.go.done;
-          processEx.arrive.show = processEx.arrive.done;
-          processEx.reply.show = processEx.reply.done;
-          processEx.reject.show = processEx.reject.done;
-          processEx.delay.show = processEx.delay.done;
-          taskEx.lastProcess = 'cancel';
-          taskEx.state = TaskState.Cancel;
-          taskEx.isUploaded = taskEx.isUploaded && uploadedFlag;
-
-          this.events.publish(this.globalService.myWorkUpdateEvent, {type: 'cancel'});
-        })
-        .catch(error => {
-          console.error(this.tag + error);
-          this.globalService.showToast(error);
-        });
-    }
-  }
+  // private cancel(taskEx: TaskEx, location: Location): void {
+  //   let processEx: ProcessEx = new ProcessEx();
+  //   if (!transform2ProcessEx(taskEx, processEx)) {
+  //     return;
+  //   }
+  //
+  //   if (!processEx.cancel.done) {
+  //     let time = new Date();
+  //     let cancelExtend: CancelExtend = processEx.cancel.extend as CancelExtend;
+  //     let cancelInfo: CancelInfo = {
+  //       destroyTime: time.getTime(),
+  //       destroyRemark: cancelExtend.remark,
+  //       location,
+  //       taskId: taskEx.id,
+  //       userId: this.globalService.userId
+  //     };
+  //     let task: Task = transform2Task(cancelInfo, taskEx, processEx);
+  //     let output: any = {
+  //       uploadedFlag: this.globalService.uploadedFlagForLocal
+  //     };
+  //     this.dataService.cancel(cancelInfo, task, output)
+  //       .then(data => {
+  //         let uploadedFlag: boolean = output.uploadedFlag === this.globalService.uploadedFlagForUploaded;
+  //         processEx.cancel.time = time;
+  //         processEx.cancel.color = DisableColor;
+  //         processEx.cancel.done = true;
+  //         processEx.cancel.isUploaded = uploadedFlag;
+  //
+  //         processEx.go.show = processEx.go.done;
+  //         processEx.arrive.show = processEx.arrive.done;
+  //         processEx.reply.show = processEx.reply.done;
+  //         processEx.reject.show = processEx.reject.done;
+  //         processEx.delay.show = processEx.delay.done;
+  //         taskEx.lastProcess = 'cancel';
+  //         taskEx.state = TaskState.Cancel;
+  //         taskEx.isUploaded = taskEx.isUploaded && uploadedFlag;
+  //
+  //         this.events.publish(this.globalService.myWorkUpdateEvent, {type: 'cancel'});
+  //       })
+  //       .catch(error => {
+  //         console.error(this.tag + error);
+  //         this.globalService.showToast(error);
+  //       });
+  //   }
+  // }
 
   /**
    * 处理步骤数组转对象
@@ -1176,46 +1176,46 @@ export class MyWorkPage implements OnInit, OnDestroy {
    * @param taskEx
    * @param location
    */
-  private cancelPrompt(taskEx: TaskEx, location: Location): void {
-    let processEx: ProcessEx = new ProcessEx();
-    if (!transform2ProcessEx(taskEx, processEx) || processEx.cancel.done) {
-      return;
-    }
-
-    let prompt = this.alertCtrl.create({
-      title: '销单申请',
-      message: "请填写销单信息!",
-      inputs: [
-        {
-          name: 'remark',
-          placeholder: '备注'
-        }
-      ],
-      buttons: [
-        {
-          text: '取消',
-          handler: data => {
-          }
-        },
-        {
-          text: '确定',
-          handler: data => {
-            console.log(this.tag, data);
-            if (!data.remark) {
-              return this.globalService.showToast("请填写备注!");
-            }
-
-            processEx.cancel.extend = {
-              remark: data.remark
-            };
-
-            this.cancel(taskEx, location);
-          }
-        }
-      ]
-    });
-    prompt.present();
-  }
+  // private cancelPrompt(taskEx: TaskEx, location: Location): void {
+  //   let processEx: ProcessEx = new ProcessEx();
+  //   if (!transform2ProcessEx(taskEx, processEx) || processEx.cancel.done) {
+  //     return;
+  //   }
+  //
+  //   let prompt = this.alertCtrl.create({
+  //     title: '销单申请',
+  //     message: "请填写销单信息!",
+  //     inputs: [
+  //       {
+  //         name: 'remark',
+  //         placeholder: '备注'
+  //       }
+  //     ],
+  //     buttons: [
+  //       {
+  //         text: '取消',
+  //         handler: data => {
+  //         }
+  //       },
+  //       {
+  //         text: '确定',
+  //         handler: data => {
+  //           console.log(this.tag, data);
+  //           if (!data.remark) {
+  //             return this.globalService.showToast("请填写备注!");
+  //           }
+  //
+  //           processEx.cancel.extend = {
+  //             remark: data.remark
+  //           };
+  //
+  //           this.cancel(taskEx, location);
+  //         }
+  //       }
+  //     ]
+  //   });
+  //   prompt.present();
+  // }
 
   /**
    * 订阅事件

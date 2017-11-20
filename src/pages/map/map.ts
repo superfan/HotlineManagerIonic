@@ -33,7 +33,7 @@ export class MapPage implements OnInit, OnDestroy {
   isMark: boolean;
 
   constructor(public navCtrl: NavController,
-              private navParams: NavParams,
+              navParams: NavParams,
               private globalService: GlobalService) {
     if (navParams.data instanceof MapParam) {
       this.mapParam = navParams.data as MapParam;

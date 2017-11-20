@@ -1,6 +1,6 @@
 webpackJsonp([0],{
 
-/***/ 120:
+/***/ 119:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -951,9 +951,8 @@ BaseService = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__BaseService__ = __webpack_require__(123);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_file_transfer__ = __webpack_require__(124);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ionic_native_file__ = __webpack_require__(61);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__model_Media__ = __webpack_require__(126);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__FileService__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__model_Media__ = __webpack_require__(126);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__FileService__ = __webpack_require__(23);
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -981,15 +980,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
 var UploadService = (function (_super) {
     __extends(UploadService, _super);
-    function UploadService(http, configService, globalService, transfer, file, fileService) {
+    function UploadService(http, configService, globalService, transfer, fileService) {
         var _this = _super.call(this, http) || this;
         _this.configService = configService;
         _this.globalService = globalService;
         _this.transfer = transfer;
-        _this.file = file;
         _this.fileService = fileService;
         return _this;
     }
@@ -1339,15 +1336,15 @@ var UploadService = (function (_super) {
                 var fileUrl;
                 var fileType;
                 switch (media.fileType) {
-                    case __WEBPACK_IMPORTED_MODULE_7__model_Media__["a" /* MediaType */].Picture:
+                    case __WEBPACK_IMPORTED_MODULE_6__model_Media__["a" /* MediaType */].Picture:
                         fileUrl = _this.fileService.getImagesDir();
                         fileType = 'IMAGE';
                         break;
-                    case __WEBPACK_IMPORTED_MODULE_7__model_Media__["a" /* MediaType */].Audio:
+                    case __WEBPACK_IMPORTED_MODULE_6__model_Media__["a" /* MediaType */].Audio:
                         fileUrl = _this.fileService.getSoundsDir();
                         fileType = 'SOUND';
                         break;
-                    case __WEBPACK_IMPORTED_MODULE_7__model_Media__["a" /* MediaType */].Vedio:
+                    case __WEBPACK_IMPORTED_MODULE_6__model_Media__["a" /* MediaType */].Vedio:
                     default:
                         return reject('type is error');
                 }
@@ -1455,8 +1452,7 @@ UploadService = __decorate([
         __WEBPACK_IMPORTED_MODULE_2__ConfigService__["a" /* ConfigService */],
         __WEBPACK_IMPORTED_MODULE_3__GlobalService__["a" /* GlobalService */],
         __WEBPACK_IMPORTED_MODULE_5__ionic_native_file_transfer__["a" /* FileTransfer */],
-        __WEBPACK_IMPORTED_MODULE_6__ionic_native_file__["a" /* File */],
-        __WEBPACK_IMPORTED_MODULE_8__FileService__["a" /* FileService */]])
+        __WEBPACK_IMPORTED_MODULE_7__FileService__["a" /* FileService */]])
 ], UploadService);
 
 //# sourceMappingURL=UploadService.js.map
@@ -1486,7 +1482,7 @@ var MediaType;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__BaseService__ = __webpack_require__(123);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__GlobalService__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__DbService__ = __webpack_require__(63);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__DbService__ = __webpack_require__(62);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__FileService__ = __webpack_require__(23);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_camera__ = __webpack_require__(227);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ionic_native_media__ = __webpack_require__(228);
@@ -1706,7 +1702,6 @@ var MediaService = (function (_super) {
             return;
         }
         this.isPlayingAlarm = true;
-        var error = 'failure to play audio';
         var file;
         try {
             // Create a Media instance.  Expects path to file or url as argument
@@ -2775,7 +2770,7 @@ WorkDetailPage = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__model_Task__ = __webpack_require__(36);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__UploadService__ = __webpack_require__(125);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__DbService__ = __webpack_require__(63);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__DbService__ = __webpack_require__(62);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__MediaService__ = __webpack_require__(127);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__model_Media__ = __webpack_require__(126);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__SyncService__ = __webpack_require__(323);
@@ -3808,7 +3803,7 @@ webpackEmptyAsyncContext.id = 138;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(35);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_storage__ = __webpack_require__(60);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__GlobalService__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_file__ = __webpack_require__(61);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_file__ = __webpack_require__(120);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_toPromise__ = __webpack_require__(321);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_toPromise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_toPromise__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__FileService__ = __webpack_require__(23);
@@ -4515,7 +4510,7 @@ webpackEmptyAsyncContext.id = 179;
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return FileService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ionic_native_file__ = __webpack_require__(61);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ionic_native_file__ = __webpack_require__(120);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_transfer__ = __webpack_require__(222);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_zip__ = __webpack_require__(223);
@@ -6090,7 +6085,6 @@ var NetworkSetPage = (function () {
         this.configService = configService;
         this.toastCtrl = toastCtrl;
         this.viewCtrl = viewCtrl;
-        this.tag = "[NetworkSetPage]";
     }
     NetworkSetPage.prototype.ngOnInit = function () {
         var _this = this;
@@ -6598,17 +6592,17 @@ LoginPage = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mywork_mywork__ = __webpack_require__(49);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__news_news__ = __webpack_require__(66);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__stationwork_stationwork__ = __webpack_require__(65);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__search_search__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__news_news__ = __webpack_require__(65);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__stationwork_stationwork__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__search_search__ = __webpack_require__(63);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__providers_DataService__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__setting_setting__ = __webpack_require__(68);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__history_myhistory__ = __webpack_require__(62);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__setting_setting__ = __webpack_require__(67);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__history_myhistory__ = __webpack_require__(61);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__providers_ConfigService__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__map_map__ = __webpack_require__(37);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__model_MapParam__ = __webpack_require__(48);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__materials_materials__ = __webpack_require__(67);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__materials_materials__ = __webpack_require__(66);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -6919,8 +6913,8 @@ HttpInterceptor = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_GlobalService__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__setting_setting__ = __webpack_require__(68);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__news_news__ = __webpack_require__(66);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__setting_setting__ = __webpack_require__(67);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__news_news__ = __webpack_require__(65);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7036,12 +7030,12 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_login_login__ = __webpack_require__(241);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_main_main__ = __webpack_require__(242);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__pages_mywork_mywork__ = __webpack_require__(49);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pages_news_news__ = __webpack_require__(66);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pages_news_news__ = __webpack_require__(65);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__pages_workdetail_workdetail__ = __webpack_require__(129);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__pages_stationwork_stationwork__ = __webpack_require__(65);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__pages_stationwork_stationwork__ = __webpack_require__(64);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__pages_workinfo_workinfo__ = __webpack_require__(235);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__pages_history_myhistory__ = __webpack_require__(62);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__ionic_native_file__ = __webpack_require__(61);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__pages_history_myhistory__ = __webpack_require__(61);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__ionic_native_file__ = __webpack_require__(120);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__providers_FileService__ = __webpack_require__(23);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__ionic_native_transfer__ = __webpack_require__(222);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__providers_StorageService__ = __webpack_require__(238);
@@ -7055,32 +7049,32 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_27__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_28__providers_UploadService__ = __webpack_require__(125);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_29__ionic_native_network__ = __webpack_require__(244);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_30__pages_search_search__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_30__pages_search_search__ = __webpack_require__(63);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_31__ionic_native_app_preferences__ = __webpack_require__(243);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_32__pages_searchresult_searchresult__ = __webpack_require__(233);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_33__pages_searchdetail_searchdetails__ = __webpack_require__(234);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_34__pages_newsdetails_newsdetails__ = __webpack_require__(236);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_35__pages_setting_setting__ = __webpack_require__(68);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_35__pages_setting_setting__ = __webpack_require__(67);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_36__providers_HttpInterceptorBackend__ = __webpack_require__(330);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_37__providers_HttpInterceptor__ = __webpack_require__(247);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_38__ionic_native_sqlite__ = __webpack_require__(225);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_39__ionic_native_sqlite_porter__ = __webpack_require__(226);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_40__providers_DbService__ = __webpack_require__(63);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_40__providers_DbService__ = __webpack_require__(62);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_41__ionic_storage__ = __webpack_require__(60);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_42__ionic_native_device__ = __webpack_require__(245);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_43__pipes_ValueValidPipe__ = __webpack_require__(331);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_44__ionic_native_camera__ = __webpack_require__(227);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_45__ionic_native_media_capture__ = __webpack_require__(229);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_46__ionic_native_video_player__ = __webpack_require__(230);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_47__ionic_native_android_permissions__ = __webpack_require__(119);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_47__ionic_native_android_permissions__ = __webpack_require__(118);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_48__ionic_native_media__ = __webpack_require__(228);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_49__providers_MediaService__ = __webpack_require__(127);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_50__pages_record_PopoverRecordPage__ = __webpack_require__(231);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_51__ionic_native_file_transfer__ = __webpack_require__(124);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_52__pages_map_map__ = __webpack_require__(37);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_53__pages_materials_materials__ = __webpack_require__(67);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_53__pages_materials_materials__ = __webpack_require__(66);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_54__pages_materialsadd_materialsadd__ = __webpack_require__(237);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_55__ionic_native_my_plugin__ = __webpack_require__(120);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_55__ionic_native_my_plugin__ = __webpack_require__(119);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_56__pages_tabs_tabs__ = __webpack_require__(332);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_57__pages_more_more__ = __webpack_require__(248);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_58__pages_setting_networkset__ = __webpack_require__(239);
@@ -7355,17 +7349,17 @@ MyApp = __decorate([
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppComponentService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ionic_native_android_permissions__ = __webpack_require__(119);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ionic_native_android_permissions__ = __webpack_require__(118);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_FileService__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_my_plugin__ = __webpack_require__(120);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_history_myhistory__ = __webpack_require__(62);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_my_plugin__ = __webpack_require__(119);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_history_myhistory__ = __webpack_require__(61);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_map_map__ = __webpack_require__(37);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_search_search__ = __webpack_require__(64);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_stationwork_stationwork__ = __webpack_require__(65);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_news_news__ = __webpack_require__(66);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__pages_materials_materials__ = __webpack_require__(67);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pages_setting_setting__ = __webpack_require__(68);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_search_search__ = __webpack_require__(63);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_stationwork_stationwork__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_news_news__ = __webpack_require__(65);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__pages_materials_materials__ = __webpack_require__(66);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pages_setting_setting__ = __webpack_require__(67);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__pages_mywork_mywork__ = __webpack_require__(49);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__providers_DataService__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__providers_ConfigService__ = __webpack_require__(16);
@@ -7620,7 +7614,7 @@ AppComponentService = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__model_Task__ = __webpack_require__(36);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__DbService__ = __webpack_require__(63);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__DbService__ = __webpack_require__(62);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__MediaService__ = __webpack_require__(127);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__ConfigService__ = __webpack_require__(16);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -8587,7 +8581,7 @@ HomePage = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_app_version__ = __webpack_require__(246);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__providers_DataService__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__ionic_native_android_permissions__ = __webpack_require__(119);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__ionic_native_android_permissions__ = __webpack_require__(118);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8876,10 +8870,10 @@ ValueValidPipe = __decorate([
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TabsPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mywork_mywork__ = __webpack_require__(49);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__history_myhistory__ = __webpack_require__(62);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__history_myhistory__ = __webpack_require__(61);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__map_map__ = __webpack_require__(37);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__search_search__ = __webpack_require__(64);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__stationwork_stationwork__ = __webpack_require__(65);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__search_search__ = __webpack_require__(63);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__stationwork_stationwork__ = __webpack_require__(64);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__more_more__ = __webpack_require__(248);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__providers_ConfigService__ = __webpack_require__(16);
@@ -9499,7 +9493,6 @@ var MapStatus;
 var MapPage = (function () {
     function MapPage(navCtrl, navParams, globalService) {
         this.navCtrl = navCtrl;
-        this.navParams = navParams;
         this.globalService = globalService;
         this.ZoomMaxLevel = 16;
         if (navParams.data instanceof __WEBPACK_IMPORTED_MODULE_3__model_MapParam__["a" /* MapParam */]) {
@@ -9734,7 +9727,7 @@ var MapParam = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__map_map__ = __webpack_require__(37);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__model_MapParam__ = __webpack_require__(48);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__materials_materials__ = __webpack_require__(67);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__materials_materials__ = __webpack_require__(66);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__providers_ConfigService__ = __webpack_require__(16);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -9752,6 +9745,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+//import {CancelInfo} from "../../model/CancelInfo";
 
 
 
@@ -10560,49 +10554,51 @@ var MyWorkPage = (function () {
      * @param taskEx
      * @param location
      */
-    MyWorkPage.prototype.cancel = function (taskEx, location) {
-        var _this = this;
-        var processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]();
-        if (!Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(taskEx, processEx)) {
-            return;
-        }
-        if (!processEx.cancel.done) {
-            var time_5 = new Date();
-            var cancelExtend = processEx.cancel.extend;
-            var cancelInfo = {
-                destroyTime: time_5.getTime(),
-                destroyRemark: cancelExtend.remark,
-                location: location,
-                taskId: taskEx.id,
-                userId: this.globalService.userId
-            };
-            var task = Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["d" /* transform2Task */])(cancelInfo, taskEx, processEx);
-            var output_6 = {
-                uploadedFlag: this.globalService.uploadedFlagForLocal
-            };
-            this.dataService.cancel(cancelInfo, task, output_6)
-                .then(function (data) {
-                var uploadedFlag = output_6.uploadedFlag === _this.globalService.uploadedFlagForUploaded;
-                processEx.cancel.time = time_5;
-                processEx.cancel.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
-                processEx.cancel.done = true;
-                processEx.cancel.isUploaded = uploadedFlag;
-                processEx.go.show = processEx.go.done;
-                processEx.arrive.show = processEx.arrive.done;
-                processEx.reply.show = processEx.reply.done;
-                processEx.reject.show = processEx.reject.done;
-                processEx.delay.show = processEx.delay.done;
-                taskEx.lastProcess = 'cancel';
-                taskEx.state = __WEBPACK_IMPORTED_MODULE_4__model_Task__["b" /* TaskState */].Cancel;
-                taskEx.isUploaded = taskEx.isUploaded && uploadedFlag;
-                _this.events.publish(_this.globalService.myWorkUpdateEvent, { type: 'cancel' });
-            })
-                .catch(function (error) {
-                console.error(_this.tag + error);
-                _this.globalService.showToast(error);
-            });
-        }
-    };
+    // private cancel(taskEx: TaskEx, location: Location): void {
+    //   let processEx: ProcessEx = new ProcessEx();
+    //   if (!transform2ProcessEx(taskEx, processEx)) {
+    //     return;
+    //   }
+    //
+    //   if (!processEx.cancel.done) {
+    //     let time = new Date();
+    //     let cancelExtend: CancelExtend = processEx.cancel.extend as CancelExtend;
+    //     let cancelInfo: CancelInfo = {
+    //       destroyTime: time.getTime(),
+    //       destroyRemark: cancelExtend.remark,
+    //       location,
+    //       taskId: taskEx.id,
+    //       userId: this.globalService.userId
+    //     };
+    //     let task: Task = transform2Task(cancelInfo, taskEx, processEx);
+    //     let output: any = {
+    //       uploadedFlag: this.globalService.uploadedFlagForLocal
+    //     };
+    //     this.dataService.cancel(cancelInfo, task, output)
+    //       .then(data => {
+    //         let uploadedFlag: boolean = output.uploadedFlag === this.globalService.uploadedFlagForUploaded;
+    //         processEx.cancel.time = time;
+    //         processEx.cancel.color = DisableColor;
+    //         processEx.cancel.done = true;
+    //         processEx.cancel.isUploaded = uploadedFlag;
+    //
+    //         processEx.go.show = processEx.go.done;
+    //         processEx.arrive.show = processEx.arrive.done;
+    //         processEx.reply.show = processEx.reply.done;
+    //         processEx.reject.show = processEx.reject.done;
+    //         processEx.delay.show = processEx.delay.done;
+    //         taskEx.lastProcess = 'cancel';
+    //         taskEx.state = TaskState.Cancel;
+    //         taskEx.isUploaded = taskEx.isUploaded && uploadedFlag;
+    //
+    //         this.events.publish(this.globalService.myWorkUpdateEvent, {type: 'cancel'});
+    //       })
+    //       .catch(error => {
+    //         console.error(this.tag + error);
+    //         this.globalService.showToast(error);
+    //       });
+    //   }
+    // }
     /**
      * 处理步骤数组转对象
      * @param taskEx
@@ -10848,44 +10844,46 @@ var MyWorkPage = (function () {
      * @param taskEx
      * @param location
      */
-    MyWorkPage.prototype.cancelPrompt = function (taskEx, location) {
-        var _this = this;
-        var processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]();
-        if (!Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(taskEx, processEx) || processEx.cancel.done) {
-            return;
-        }
-        var prompt = this.alertCtrl.create({
-            title: '销单申请',
-            message: "请填写销单信息!",
-            inputs: [
-                {
-                    name: 'remark',
-                    placeholder: '备注'
-                }
-            ],
-            buttons: [
-                {
-                    text: '取消',
-                    handler: function (data) {
-                    }
-                },
-                {
-                    text: '确定',
-                    handler: function (data) {
-                        console.log(_this.tag, data);
-                        if (!data.remark) {
-                            return _this.globalService.showToast("请填写备注!");
-                        }
-                        processEx.cancel.extend = {
-                            remark: data.remark
-                        };
-                        _this.cancel(taskEx, location);
-                    }
-                }
-            ]
-        });
-        prompt.present();
-    };
+    // private cancelPrompt(taskEx: TaskEx, location: Location): void {
+    //   let processEx: ProcessEx = new ProcessEx();
+    //   if (!transform2ProcessEx(taskEx, processEx) || processEx.cancel.done) {
+    //     return;
+    //   }
+    //
+    //   let prompt = this.alertCtrl.create({
+    //     title: '销单申请',
+    //     message: "请填写销单信息!",
+    //     inputs: [
+    //       {
+    //         name: 'remark',
+    //         placeholder: '备注'
+    //       }
+    //     ],
+    //     buttons: [
+    //       {
+    //         text: '取消',
+    //         handler: data => {
+    //         }
+    //       },
+    //       {
+    //         text: '确定',
+    //         handler: data => {
+    //           console.log(this.tag, data);
+    //           if (!data.remark) {
+    //             return this.globalService.showToast("请填写备注!");
+    //           }
+    //
+    //           processEx.cancel.extend = {
+    //             remark: data.remark
+    //           };
+    //
+    //           this.cancel(taskEx, location);
+    //         }
+    //       }
+    //     ]
+    //   });
+    //   prompt.present();
+    // }
     /**
      * 订阅事件
      * @param events
@@ -11010,7 +11008,7 @@ MyWorkPage = __decorate([
 
 /***/ }),
 
-/***/ 62:
+/***/ 61:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11311,7 +11309,7 @@ MyHistory = __decorate([
 
 /***/ }),
 
-/***/ 63:
+/***/ 62:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12797,7 +12795,7 @@ DbService = __decorate([
 
 /***/ }),
 
-/***/ 64:
+/***/ 63:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -13025,7 +13023,7 @@ SearchPage = __decorate([
 
 /***/ }),
 
-/***/ 65:
+/***/ 64:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -13469,7 +13467,7 @@ StationWorkPage = __decorate([
 
 /***/ }),
 
-/***/ 66:
+/***/ 65:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -13643,7 +13641,7 @@ NewsPage = __decorate([
 
 /***/ }),
 
-/***/ 67:
+/***/ 66:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -13876,7 +13874,7 @@ MaterialsPage = __decorate([
 
 /***/ }),
 
-/***/ 68:
+/***/ 67:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -14366,7 +14364,7 @@ SettingPage = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_storage__ = __webpack_require__(60);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_my_plugin__ = __webpack_require__(120);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_my_plugin__ = __webpack_require__(119);
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||

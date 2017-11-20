@@ -201,7 +201,6 @@ export class MediaService extends BaseService {
     }
 
     this.isPlayingAlarm = true;
-    const error: string = 'failure to play audio';
     let file: MediaObject;
     try {
       // Create a Media instance.  Expects path to file or url as argument

@@ -12,7 +12,6 @@ import {ReplyInfo} from "../model/ReplyInfo";
 import {CancelInfo, CancelExInfo} from "../model/CancelInfo";
 import {DispatchInfo} from "../model/DispatchInfo";
 import {FileTransfer, FileUploadOptions, FileTransferObject} from '@ionic-native/file-transfer';
-import {File} from '@ionic-native/file';
 import {Media, MediaType} from "../model/Media";
 import {FileService} from "./FileService";
 import {UploadMaterials} from "../model/MaterialsInfo";
@@ -24,7 +23,6 @@ export class UploadService extends BaseService {
               private configService: ConfigService,
               private globalService: GlobalService,
               private transfer: FileTransfer,
-              private file: File,
               private fileService: FileService) {
     super(http);
   }
