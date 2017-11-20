@@ -1,0 +1,40 @@
+page-attachment {
+  .picture {
+    width: 80px;
+    height: 80px;
+  }
+
+  .video {
+    width: 80px;
+    height: 80px;
+  }
+
+  .audio {
+    margin: 5px;
+  }
+
+  .audio-info {
+    width: 150px;
+    height: 30px;
+    background: #34D48E;
+    border:1px solid #34D48E;
+    border-radius:10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .audio-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .col-img, .col-video {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    //border: 1px solid #e6e9ee;
+  }
+}

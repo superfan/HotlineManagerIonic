@@ -19,12 +19,14 @@ import {UserManageInfo} from "../model/UserManageInfo";
 import {VersionInfo} from "../model/VersionInfo";
 import {Material} from "../model/Material";
 import {MaintainInfo} from "../model/MaintainInfo";
+import {FileTransfer, FileTransferObject} from "@ionic-native/file-transfer";
 
 @Injectable()
 export class DownloadService extends BaseService {
   constructor(http: Http,
               private configService: ConfigService,
-              private globalService: GlobalService) {
+              private globalService: GlobalService,
+              private transfer: FileTransfer) {
     super(http);
   }
 
@@ -543,6 +545,28 @@ export class DownloadService extends BaseService {
             .catch(this.handleError);
         })
         .catch(error => reject(error));
+    });
+  }
+
+  /**
+   * 下载文件
+   * @param url
+   * @param path
+   * @returns {Promise<T>}
+   */
+  public downloadFile(url: string, path: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const fileTransfer: FileTransferObject = this.transfer.create();
+      fileTransfer.download(url, path)
+        .then((entry) => {
+          // success
+          console.log('download complete: ' + entry.toURL());
+          resolve(entry.toURL());
+        }, (err) => {
+          // error
+          console.error(err);
+          reject(err);
+        });
     });
   }
 }

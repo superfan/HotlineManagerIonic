@@ -12,7 +12,7 @@ export class FileService {
   private dirPath: string = null;
   private readonly dirRoot: string = 'sh3h';
   private readonly dir: string = 'hotlinemanager';
-  private readonly arrDirs: string[] = ['config', 'data', 'images','videos', 'log', 'sounds', 'update', 'user'];
+  private readonly arrDirs: string[] = ['config', 'data', 'images','videos', 'log', 'sounds', 'update', 'user', 'cache'];
   private readonly apkName: string = "/TaskManager.apk";
 
   constructor(private file: File,
@@ -60,6 +60,28 @@ export class FileService {
    */
   public getSoundsDir(): string {
     return `${this.dirPath}${this.dirRoot}/${this.dir}/sounds`;
+  }
+
+  /**
+   * 获取cache路径
+   * @returns {string}
+   */
+  public getCacheDir(): string {
+    return `${this.dirPath}/${this.dirRoot}/${this.dir}/cache`;
+  }
+
+  /**
+   * 检查文件是否存在
+   * @param dir
+   * @param file
+   * @returns {Promise<boolean>}
+   */
+  public checkFile(dir: string, file: string): Promise<boolean> {
+    return  this.file.checkFile(dir, file)
+      .catch(error => {
+        console.error(error);
+        return false;
+      });
   }
 
   /**

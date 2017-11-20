@@ -15,12 +15,14 @@ import {FileService} from "../../providers/FileService";
 import {Personnel} from "../../model/Personnel";
 import {ConfigService} from "../../providers/ConfigService";
 import {OverdueTime} from "../../model/OverdueTime";
+import {AttachmentPage} from "../attachment/attachment";
 
 interface Detail {
   name: string;
   value: string | number | Date;
   key: string;
   isTime: boolean;
+  isActive: boolean;
 }
 
 interface Reply {
@@ -69,21 +71,22 @@ export class WorkDetailPage implements OnInit, OnDestroy {
   overdueTime: OverdueTime;//超期时限
 
   detail: Detail[] = [
-    {name: '联系人名', value: '', key: 'contactName', isTime: false},
-    {name: '联系电话', value: '', key: 'contactPhone', isTime: false},
-    {name: '反映类别', value: '', key: 'issueType', isTime: false},
-    {name: '反映内容', value: '', key: 'issueContent', isTime: false},
-    {name: '发生地址', value: '', key: 'issueAddress', isTime: false},
-    {name: '发生时间', value: '', key: 'issueTime', isTime: true},
-    {name: '受理备注', value: '', key: 'receiveComment', isTime: false},
-    {name: '开始时间', value: '', key: 'bookingStartTime', isTime: true},
-    {name: '结束时间', value: '', key: 'bookingEndTime', isTime: true},
-    {name: '到场时限', value: '', key: 'arrivedDeadLine', isTime: true},
-    {name: '处理时限', value: '', key: 'replyDeadLine', isTime: true},
-    {name: '延时时限', value: '', key: 'delayReplyDeadLine', isTime: true},
-    {name: '派遣站点', value: '', key: 'assignStation', isTime: false},
-    {name: '派遣人', value: '', key: 'assignPerson', isTime: false},
-    {name: '派遣备注', value: '', key: 'assignComment', isTime: false}
+    {name: '联系人名', value: '', key: 'contactName', isTime: false, isActive: false},
+    {name: '联系电话', value: '', key: 'contactPhone', isTime: false, isActive: false},
+    {name: '反映类别', value: '', key: 'issueType', isTime: false, isActive: false},
+    {name: '反映内容', value: '', key: 'issueContent', isTime: false, isActive: false},
+    {name: '发生地址', value: '', key: 'issueAddress', isTime: false, isActive: false},
+    {name: '发生时间', value: '', key: 'issueTime', isTime: true, isActive: false},
+    {name: '受理备注', value: '', key: 'receiveComment', isTime: false, isActive: false},
+    {name: '开始时间', value: '', key: 'bookingStartTime', isTime: true, isActive: false},
+    {name: '结束时间', value: '', key: 'bookingEndTime', isTime: true, isActive: false},
+    {name: '到场时限', value: '', key: 'arrivedDeadLine', isTime: true, isActive: false},
+    {name: '处理时限', value: '', key: 'replyDeadLine', isTime: true, isActive: false},
+    {name: '延时时限', value: '', key: 'delayReplyDeadLine', isTime: true, isActive: false},
+    {name: '派遣站点', value: '', key: 'assignStation', isTime: false, isActive: false},
+    {name: '派遣人', value: '', key: 'assignPerson', isTime: false, isActive: false},
+    {name: '派遣备注', value: '', key: 'assignComment', isTime: false, isActive: false},
+    {name: '附件', value: '', key: 'attachments', isTime: false, isActive: true}
   ];
 
   reply: Reply[] = [
@@ -298,7 +301,7 @@ export class WorkDetailPage implements OnInit, OnDestroy {
 
     switch (item.name) {
       case this.optPerson:
-        this.popupOptPersonAlert()
+        this.popupOptPersonAlert();
         break;
       case this.optTypeName:
         this.popupOptTypeAlert();
@@ -318,6 +321,13 @@ export class WorkDetailPage implements OnInit, OnDestroy {
       case this.optRemarkName:
         this.popupRemarkAlert();
         break;
+    }
+  }
+
+  detailItemSelected(item: Detail): void {
+    if (item.key && item.key === "attachments") {
+      console.log("attachments");
+      this.navCtrl.push(AttachmentPage);
     }
   }
 
@@ -377,6 +387,7 @@ export class WorkDetailPage implements OnInit, OnDestroy {
     if (!path) {
       return;
     }
+
     this.dataService.playVideo(path)
       .then(data => {
         console.log(data);

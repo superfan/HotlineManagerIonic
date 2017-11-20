@@ -63,6 +63,7 @@ import {NetworkSetPage} from "../pages/setting/networkset";
 import {AboutPage} from "../pages/about/about";
 import {ContactPage} from "../pages/contact/contact";
 import {OverdueTimePage} from "../pages/setting/overdueTimePage";
+import {AttachmentPage} from "../pages/attachment/attachment";
 
 
 @NgModule({
@@ -95,7 +96,8 @@ import {OverdueTimePage} from "../pages/setting/overdueTimePage";
     NetworkSetPage,
     AboutPage,
     ContactPage,
-    OverdueTimePage
+    OverdueTimePage,
+    AttachmentPage
   ],
   imports: [
     BrowserModule,
@@ -132,7 +134,8 @@ import {OverdueTimePage} from "../pages/setting/overdueTimePage";
     NetworkSetPage,
     AboutPage,
     ContactPage,
-    OverdueTimePage
+    OverdueTimePage,
+    AttachmentPage
   ],
   providers: [
     StatusBar,

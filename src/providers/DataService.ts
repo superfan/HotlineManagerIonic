@@ -27,6 +27,7 @@ import {MaintainInfo} from "../model/MaintainInfo";
 import {DataMaterialInfo, MaterialInfoEx, MaterialsInfo, UploadMaterials} from "../model/MaterialsInfo";
 import {ConfigService} from "./ConfigService";
 import {OverdueTime} from "../model/OverdueTime";
+import {FileService} from "./FileService";
 
 @Injectable()
 export class DataService extends SyncService {
@@ -50,7 +51,8 @@ export class DataService extends SyncService {
               dbService: DbService,
               configService: ConfigService,
               mediaService: MediaService,
-              events: Events) {
+              events: Events,
+              private fileService: FileService) {
     super(downloadService, uploadService, globalService, dbService, mediaService, events, configService);
     this.isInitialized = false;
   }
@@ -1003,5 +1005,19 @@ export class DataService extends SyncService {
    */
   public uploadNotUploadMaterialInfos(): void {
     super.sendMsg({msgType: MsgType.UploadMaterialInfos});
+  }
+
+  public playCachedVideo(url: string, name: string): Promise<any> {
+    return this.fileService.checkFile(`${this.fileService.getCacheDir()}/`, name)
+      .then(result => {
+        let path: string = `${this.fileService.getCacheDir()}/${name}`;
+        if (result) {
+          return Promise.resolve(path);
+        } else {
+          return this.downloadService.downloadFile(url, path);
+        }
+      })
+      .then(path => path && this.playVideo(path));
+
   }
 }

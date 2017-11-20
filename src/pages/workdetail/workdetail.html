@@ -20,10 +20,10 @@
       <ion-segment-button value="detailInfo">
         基本信息
       </ion-segment-button>
-      <ion-segment-button value="replyInfo">
+      <ion-segment-button value="replyInfo" *ngIf="!isPreview">
         回填信息
       </ion-segment-button>
-      <ion-segment-button value="mediaInfo">
+      <ion-segment-button value="mediaInfo" *ngIf="!isPreview">
         多媒体
       </ion-segment-button>
     </ion-segment>
@@ -35,7 +35,7 @@
   <div [ngSwitch]="segmentName">
     <!--基本信息-->
     <ion-list *ngSwitchCase="'detailInfo'">
-      <ion-item *ngFor="let item of detail">
+      <ion-item *ngFor="let item of detail" (click)="detailItemSelected(item)">
         <ion-label fixed class="label-name">
           {{item.name}}
         </ion-label>
@@ -45,6 +45,7 @@
         <div item-content *ngIf="!item.isTime">
           {{item.value}}
         </div>
+        <ion-icon name="ios-arrow-forward" item-end *ngIf="item.isActive"></ion-icon>
       </ion-item>
     </ion-list>
 
@@ -148,17 +149,17 @@
 
       <ion-grid style="width: 100%; height: 100px;">
         <ion-row>
-          <ion-col col-4 class="col-img" *ngIf="videos[0]">
+          <ion-col col-4 class="col-video" *ngIf="videos[0]">
             <video class="video" (click)="onPlayVideo(videos[0])"></video>
             <ion-icon name="close" (click)="onDeleteVideo(videos[0])"></ion-icon>
           </ion-col>
 
-          <ion-col col-4 class="col-img" *ngIf="videos[1]">
+          <ion-col col-4 class="col-video" *ngIf="videos[1]">
             <video class="video" (click)="onPlayVideo(videos[1])"></video>
             <ion-icon name="close" (click)="onDeleteVideo(videos[1])"></ion-icon>
           </ion-col>
 
-          <ion-col col-4 class="col-img" *ngIf="pictures[2]">
+          <ion-col col-4 class="col-video" *ngIf="pictures[2]">
             <video class="video" (click)="onPlayVideo(videos[2])"></video>
             <ion-icon name="close" (click)="onDeleteVideo(videos[2])"></ion-icon>
           </ion-col>

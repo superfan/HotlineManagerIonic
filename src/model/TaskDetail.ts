@@ -1,4 +1,5 @@
 
+import {Attachment} from "./Attachment";
 export interface TaskDetail {
   taskId: string;
   Type: string;
@@ -32,4 +33,5 @@ export interface TaskDetail {
   assignPerson: string;
   assignComment: string;
   extendedInfo?: string;
+  attachments?: Attachment[];
 }

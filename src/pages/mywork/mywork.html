@@ -113,21 +113,21 @@
       </ion-list>
 
       <ion-row>
-        <ion-col class="card-bottom-btn">
+        <ion-col class="card-bottom-btn" *ngIf="false">
           <button ion-button icon-left clear small color="gray">
             <ion-icon name="images"></ion-icon>
             <div>{{item.photoCount}}</div>
           </button>
         </ion-col>
 
-        <ion-col class="card-bottom-btn">
+        <ion-col class="card-bottom-btn" *ngIf="false">
           <button ion-button icon-left clear small color="gray">
             <ion-icon name="musical-notes"></ion-icon>
             <div>{{item.audioCount}}</div>
           </button>
         </ion-col>
 
-        <ion-col class="card-bottom-btn">
+        <ion-col class="card-bottom-btn" *ngIf="false">
           <button ion-button icon-left clear small color="gray">
             <ion-icon name="videocam"></ion-icon>
             <div>{{item.videoCount}}</div>
@@ -144,7 +144,7 @@
         <ion-col class="card-bottom-btn">
           <button ion-button icon-left clear small (click)="onPreview(item)">
             <ion-icon name="information-circle"></ion-icon>
-            <div>预览</div>
+            <div>详细</div>
           </button>
         </ion-col>
 

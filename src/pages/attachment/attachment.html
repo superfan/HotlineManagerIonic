@@ -1,0 +1,104 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>
+      {{title}}
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="page-attachment">
+  <button ion-item icon-left>
+    <ion-icon name="camera"></ion-icon>
+    照片
+  </button>
+
+  <ion-grid style="width: 100%; height: 100px;">
+    <ion-row>
+      <ion-col col-4 class="col-img" *ngIf="pictures[0]">
+        <img class="picture" src="{{pictures[0]}}"/>
+      </ion-col>
+
+      <ion-col col-4 class="col-img" *ngIf="pictures[1]">
+        <img class="picture" src="{{pictures[1]}}"/>
+      </ion-col>
+
+      <ion-col col-4 class="col-img" *ngIf="pictures[2]">
+        <img class="picture" src="{{pictures[2]}}"/>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid style="width: 100%; height: 100px;">
+    <ion-row>
+      <ion-col col-4 class="col-img" *ngIf="pictures[0]">
+        <img class="picture" src="{{pictures[3]}}"/>
+      </ion-col>
+
+      <ion-col col-4 class="col-img" *ngIf="pictures[1]">
+        <img class="picture" src="{{pictures[4]}}"/>
+      </ion-col>
+
+      <ion-col col-4 class="col-img" *ngIf="pictures[2]">
+        <img class="picture" src="{{pictures[5]}}"/>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <br>
+  <br>
+
+  <button ion-item icon-left>
+    <ion-icon name="microphone"></ion-icon>
+    语音
+  </button>
+
+  <ion-grid style="width: 100%; height: 150px;">
+    <ion-row *ngIf="audios[0].time > 0" class="audio">
+      <ion-col col-6 class="audio-info">{{audios[0].time}}s</ion-col>
+      <ion-col col-2>
+        <ion-icon name="play" class="audio-btn" (click)="onPlay(audios[0])"></ion-icon>
+      </ion-col>
+      <ion-col></ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="audios[1].time > 0" class="audio">
+      <ion-col col-6 class="audio-info">{{audios[1].time}}s</ion-col>
+      <ion-col col-2>
+        <ion-icon name="play" class="audio-btn" (click)="onPlay(audios[1])"></ion-icon>
+      </ion-col>
+      <ion-col></ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="audios[2].time > 0" class="audio">
+      <ion-col col-6 class="audio-info">{{audios[2].time}}s</ion-col>
+      <ion-col col-2>
+        <ion-icon name="play" class="audio-btn" (click)="onPlay(audios[2])"></ion-icon>
+      </ion-col>
+      <ion-col></ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <br>
+  <br>
+  <button ion-item icon-left>
+    <ion-icon name="videocam"></ion-icon>
+    视频
+  </button>
+
+  <ion-grid style="width: 100%; height: 100px;">
+    <ion-row>
+      <ion-col col-4 class="col-video" *ngIf="videos[0]">
+        <video class="video" (click)="onPlayVideo(videos[0])" src="{{videos[0]}}"></video>
+      </ion-col>
+
+      <ion-col col-4 class="col-video" *ngIf="videos[1]">
+        <video class="video" (click)="onPlayVideo(videos[1])" src="{{videos[1]}}"></video>
+      </ion-col>
+
+      <ion-col col-4 class="col-video" *ngIf="pictures[2]">
+        <video class="video" (click)="onPlayVideo(videos[2])" src="{{videos[2]}}"></video>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <br>
+  <br>
+</ion-content>
