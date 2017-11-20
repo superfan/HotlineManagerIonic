@@ -25,7 +25,7 @@ export class MyPluginMock extends MyPlugin {
     password: '0000',
     userId: 797789,
     userName: 'ss1',
-    departmentAndId: '上水#1',
+    departmentAndId: '客服热线部#1',
     roles: 'worker',
     params: 'MyWorkPage',
     accessToken: '',
@@ -60,7 +60,7 @@ export class GlobalService {
   account: string = "admin";
   userName: string = "admin";
   userId: number = 0;
-  department: string = "上海三高";
+  department: string = "客服热线部";
   departmentId: number = 1;
   isWorker: boolean = false;//是否是外勤人员
   readonly mainUpdateEvent: string = "main:update";

@@ -1,14 +1,14 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {NavController, Events} from 'ionic-angular';
+import {NavController} from 'ionic-angular';
 import {MyWorkPage} from "../mywork/mywork";
 import {NewsPage} from "../news/news";
 import {StationWorkPage} from "../stationwork/stationwork";
 import {SearchPage} from "../search/search";
-import {DataService} from "../../providers/DataService";
+//import {DataService} from "../../providers/DataService";
 import {SettingPage} from "../setting/setting";
 import {MyHistory} from '../history/myhistory';
-import {GlobalService, MainUpdateEvent} from "../../providers/GlobalService";
-import {ConfigService} from "../../providers/ConfigService";
+import {GlobalService} from "../../providers/GlobalService";
+//import {ConfigService} from "../../providers/ConfigService";
 import {MapPage} from "../map/map";
 import {MapParam, MapType} from "../../model/MapParam";
 import {MaterialsPage} from "../materials/materials";
@@ -48,10 +48,9 @@ export class MainPage implements OnInit, OnDestroy {
   listItems: Item[] = [];
 
   constructor(public navCtrl: NavController,
-              private events: Events,
-              private dataService: DataService,
-              private globalService: GlobalService,
-              private configService: ConfigService) {
+              //private events: Events,
+              //private dataService: DataService,
+              private globalService: GlobalService) {
   }
 
   /**
@@ -61,9 +60,9 @@ export class MainPage implements OnInit, OnDestroy {
     console.log(this.tag, "ngOnInit");
     this.initListItem();
     this.initGirdItems();
-    this.subscribeEvent(this.events);
-    this.initGridStyle();
-    this.initData();
+    // this.subscribeEvent(this.events);
+    // this.initGridStyle();
+    // this.initData();
   }
 
   /**
@@ -71,8 +70,8 @@ export class MainPage implements OnInit, OnDestroy {
    */
   ngOnDestroy(): void {
     console.log(this.tag, "ngOnDestroy");
-    this.events.unsubscribe(this.globalService.mainUpdateEvent);
-    this.dataService.destroy();
+    //this.events.unsubscribe(this.globalService.mainUpdateEvent);
+    //this.dataService.destroy();
   }
 
   /**
@@ -202,67 +201,67 @@ export class MainPage implements OnInit, OnDestroy {
    * 订阅消息
    * @param events
    */
-  private subscribeEvent(events: Events): void {
-    events.subscribe(this.globalService.mainUpdateEvent, (mainUpdateEvent: MainUpdateEvent) => {
-      switch (mainUpdateEvent.type) {
-        case 'myWorkCount':
-          this.listItems[ItemId.MyWork].count = mainUpdateEvent.count;
-          break;
-        case 'newsCount':
-          this.listItems[ItemId.News].count = mainUpdateEvent.count;
-          break;
-        case 'stationWorkCount':
-          this.listItems[ItemId.StationWork].count = mainUpdateEvent.count;
-          break;
-        case 'gridStyle':
-          this.gridStyle = mainUpdateEvent.gridStyle;
-          break;
-        default:
-          break;
-      }
-    });
-  }
+  // private subscribeEvent(events: Events): void {
+  //   events.subscribe(this.globalService.mainUpdateEvent, (mainUpdateEvent: MainUpdateEvent) => {
+  //     switch (mainUpdateEvent.type) {
+  //       case 'myWorkCount':
+  //         this.listItems[ItemId.MyWork].count = mainUpdateEvent.count;
+  //         break;
+  //       case 'newsCount':
+  //         this.listItems[ItemId.News].count = mainUpdateEvent.count;
+  //         break;
+  //       case 'stationWorkCount':
+  //         this.listItems[ItemId.StationWork].count = mainUpdateEvent.count;
+  //         break;
+  //       case 'gridStyle':
+  //         this.gridStyle = mainUpdateEvent.gridStyle;
+  //         break;
+  //       default:
+  //         break;
+  //     }
+  //   });
+  // }
 
   /**
    * 设置九宫格或列表
    */
-  private initGridStyle(): void {
-    this.configService.isGridStyle()
-      .then(result => this.gridStyle = result)
-      .catch(error => {
-        console.error(error);
-        this.gridStyle = true;
-      });
-  }
+  // private initGridStyle(): void {
+  //   this.configService.isGridStyle()
+  //     .then(result => this.gridStyle = result)
+  //     .catch(error => {
+  //       console.error(error);
+  //       this.gridStyle = true;
+  //     });
+  // }
 
   /**
    * 初始化数据
    */
-  private initData(): void {
-    this.globalService.showLoading('初始化数据...');
-    this.dataService.init()
-      .then(result => {
-        console.log(result);
-      })
-      .catch(error => console.error(error))
-      .then(() => {
-        this.globalService.hideLoading();
-        this.syncData();
-      });
-  }
+  // private initData(): void {
+  //   this.globalService.showLoading('初始化数据...');
+  //   this.dataService.init()
+  //     .then(result => {
+  //       console.log(result);
+  //     })
+  //     .catch(error => console.error(error))
+  //     .then(() => {
+  //       this.globalService.hideLoading();
+  //       this.syncData();
+  //     });
+  // }
 
   /**
    * 同步数据
    */
-  private syncData(): void {
-    this.globalService.showLoading('同步数据...');
-    this.dataService.downloadWords()
-      .then(result => {
-        console.log(this.tag, "syncData: " + result);
-      })
-      .catch(error => {
-        console.log(this.tag, error);
-      })
-      .then(() => this.globalService.hideLoading());
-  }
+  // private syncData(): void {
+  //   this.globalService.showLoading('同步数据...');
+  //   this.dataService.downloadWords()
+  //     .then(result => {
+  //       console.log(this.tag, "syncData: " + result);
+  //     })
+  //     .catch(error => {
+  //       console.log(this.tag, error);
+  //     })
+  //     .then(() => this.globalService.hideLoading());
+  // }
 }

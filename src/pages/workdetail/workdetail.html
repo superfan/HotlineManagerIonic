@@ -4,7 +4,7 @@
       {{title}}
     </ion-title>
 
-    <ion-buttons end *ngIf="!isPreview">
+    <ion-buttons end *ngIf="!isPreview && !isLocked">
       <button ion-button icon-only color="white" *ngIf="isLocationValid" (click)="onLocate($event)">
         <ion-icon name="map"></ion-icon>
       </button>

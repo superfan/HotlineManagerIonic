@@ -5,6 +5,7 @@ import {SplashScreen} from '@ionic-native/splash-screen';
 import {AppComponentService} from "./app.component.service";
 import {GlobalService} from "../providers/GlobalService";
 import {MyWorkPage} from "../pages/mywork/mywork";
+import {MainPage} from "../pages/main/main";
 //import {TabsPage} from "../pages/tabs/tabs";
 
 @Component({
@@ -29,7 +30,7 @@ export class MyApp {
         splashScreen.hide();
         return this.appComponentService.init();
       })
-      .then(page => this.rootPage = page)
+      .then(page => this.rootPage = MainPage)
       .catch(error => {
         console.error(error);
         this.globalService.showToast(error);
