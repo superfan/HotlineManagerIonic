@@ -127,7 +127,8 @@ export class DataService extends SyncService {
    */
   public getTasks(since: number, count: number, key?: string): Promise<Array<Task>> {
     if (this.globalService.isChrome) {
-      return this.downloadService.getTasks(this.globalService.userId, since, count);
+      return this.downloadService.getTasks(this.globalService.userId, since, count)
+        .then(tasks => tasks.filter(task => task.state !== TaskState.Reply && task.state !== TaskState.Reject));
     } else {
       return this.dbService.getTasks(this.globalService.userId, since, count,
         [TaskState.Dispatch, TaskState.Accept, TaskState.Go, TaskState.Arrived, TaskState.Delay, TaskState.Continue],
@@ -252,7 +253,7 @@ export class DataService extends SyncService {
       return Promise.reject('chrome');
     } else {
       return this.dbService.getHistories(this.globalService.userId, undefined,
-        [TaskState.Reject, TaskState.Cancel], [], key, since, count);
+        [TaskState.Reject, TaskState.Reply], [], key, since, count);
     }
   }
 
@@ -374,15 +375,22 @@ export class DataService extends SyncService {
    * @returns {Promise<boolean|boolean>}
    */
   public checkIfDownloadMaterials(): Promise<boolean> {
-    return this.dbService.getMaterialsCount()
-      .then(count => count > 0
-        ? Promise.resolve(true)
-        : this.downloadService.getAllMaterials('all')
-          .then(materials => this.dbService.saveMaterials(materials)))
-      .catch(error => {
-        console.error(error);
-        this.globalService.showToast(error);
-        return Promise.resolve(false);
+    return this.configService.getSysRegion()
+      .then(region => {
+        if (region && region === ConfigService.fushunRegion) {
+          return this.dbService.getMaterialsCount()
+            .then(count => count > 0
+              ? Promise.resolve(true)
+              : this.downloadService.getAllMaterials('all')
+                .then(materials => this.dbService.saveMaterials(materials)))
+            .catch(error => {
+              console.error(error);
+              this.globalService.showToast(error);
+              return Promise.resolve(false);
+            });
+        } else {
+          return Promise.resolve(true);
+        }
       });
   }
 

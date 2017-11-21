@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import {NavController} from "ionic-angular";
+import {NavController, AlertController} from "ionic-angular";
 import {DataService} from "../../providers/DataService";
 import {GlobalService} from "../../providers/GlobalService";
 
@@ -33,15 +33,50 @@ export class AttachmentPage {
 
   constructor(public navCtrl: NavController,
               private dataService: DataService,
-              private globalService: GlobalService) {
+              private globalService: GlobalService,
+              private alertCtrl: AlertController) {
 
   }
 
+  onPlay(audio: {name: string, time: number}): void {
+    /*if (!audio.name) {
+      return;
+    }
+
+    let names: string[] = audio.name.split('#');
+    if (!names || names.length !== 2) {
+      return;
+    }
+
+    this.dataService.playAudio(names[0])
+      .then(file => {
+        if (file) {
+          let prompt = this.alertCtrl.create({
+            title: '提示',
+            message: "结束播放语音",
+            enableBackdropDismiss: false,
+            buttons: [
+              {
+                text: '确定',
+                handler: data => {
+                  console.log('Saved clicked');
+                  this.dataService.stopAudio(file)
+                    .catch(err => console.error(err));
+                }
+              }
+            ]
+          });
+          prompt.present();
+        }
+      })
+      .catch(err => console.error(err));*/
+  }
+
   onPlayVideo(path: string): void {
-    if (!this.globalService.isChrome && path) {
+    /*if (!this.globalService.isChrome && path) {
       this.dataService.playCachedVideo(path, "SVID_20171113_131106.mp4")
         .then(data => console.log(data))
         .catch(error => console.error(error));
-    }
+    }*/
   }
 }

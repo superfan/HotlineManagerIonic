@@ -12,6 +12,9 @@ interface SystemConfig {
   outerBaseUri: string;
   innerBaseUri: string;
   serverBaseUri: string;
+  fileOuterBaseUri: string;
+  fileInnerBaseUri: string;
+  fileServerBaseUri: string;
   materialsOuterBaseUri: string;
   materialsInnerBaseUri: string;
   materialsBaseUri: string;
@@ -21,6 +24,7 @@ interface SystemConfig {
   keepAliveInterval: number;
   overdueTime: OverdueTime;
   sysRegion: string;
+  newFileService: boolean;
   materialUnit: Array<MaterialUnit>;
 }
 
@@ -92,6 +96,10 @@ export class ConfigService {
       });
   }
 
+  /**
+   * 获取数据服务地址
+   * @returns {Promise<[string,string]>|Promise<T>}
+   */
   public getServerBaseUris(): Promise<Array<string>> {
     return ConfigService.isValid<SystemConfig>(this.systemConfig, 'serverBaseUri')
       ? Promise.resolve([this.systemConfig.outerBaseUri, this.systemConfig.innerBaseUri])
@@ -104,7 +112,55 @@ export class ConfigService {
               && ConfigService.isValid<SystemConfig>(this.systemConfig, 'isOuterNetwork')) {
               resolve([this.systemConfig.outerBaseUri, this.systemConfig.innerBaseUri]);
             } else {
-              reject("failure to getServerBaseUri");
+              reject("failure to getServerBaseUris");
+            }
+          })
+          .catch(error => reject(error));
+      });
+  }
+
+  /**
+   *
+   * @returns {Promise<string>|Promise<T>}
+   */
+  public getFileBaseUri(): Promise<string> {
+    return ConfigService.isValid<SystemConfig>(this.systemConfig, 'fileServerBaseUri')
+      ? Promise.resolve(this.systemConfig.fileServerBaseUri)
+      : new Promise((resolve, reject) => {
+        this.readSystemConfig()
+          .then(data => {
+            this.systemConfig = data as SystemConfig;
+            if (ConfigService.isValid<SystemConfig>(this.systemConfig, 'fileOuterBaseUri')
+              && ConfigService.isValid<SystemConfig>(this.systemConfig, 'fileInnerBaseUri')
+              && ConfigService.isValid<SystemConfig>(this.systemConfig, 'isOuterNetwork')) {
+              this.systemConfig.fileServerBaseUri =
+                this.systemConfig.isOuterNetwork ? this.systemConfig.fileOuterBaseUri : this.systemConfig.fileInnerBaseUri;
+              resolve(this.systemConfig.fileServerBaseUri);
+            } else {
+              reject("failure to getFileBaseUri");
+            }
+          })
+          .catch(error => reject(error));
+      });
+  }
+
+  /**
+   *
+   * @returns {Promise<[string,string]>|Promise<T>}
+   */
+  public getFileBaseUris(): Promise<Array<string>> {
+    return ConfigService.isValid<SystemConfig>(this.systemConfig, 'fileServerBaseUri')
+      ? Promise.resolve([this.systemConfig.fileOuterBaseUri, this.systemConfig.fileInnerBaseUri])
+      : new Promise((resolve, reject) => {
+        this.readSystemConfig()
+          .then(data => {
+            this.systemConfig = data as SystemConfig;
+            if (ConfigService.isValid<SystemConfig>(this.systemConfig, 'fileOuterBaseUri')
+              && ConfigService.isValid<SystemConfig>(this.systemConfig, 'fileInnerBaseUri')
+              && ConfigService.isValid<SystemConfig>(this.systemConfig, 'isOuterNetwork')) {
+              resolve([this.systemConfig.fileOuterBaseUri, this.systemConfig.fileInnerBaseUri]);
+            } else {
+              reject("failure to getFileBaseUris");
             }
           })
           .catch(error => reject(error));
@@ -136,6 +192,10 @@ export class ConfigService {
       })
   }
 
+  /**
+   * 获取材料服务地址
+   * @returns {Promise<[string,string]>|Promise<T>}
+   */
   public getMaterialsBaseUris(): Promise<Array<string>> {
     return ConfigService.isValid<SystemConfig>(this.systemConfig, 'materialsBaseUri')
       ? Promise.resolve([this.systemConfig.materialsOuterBaseUri, this.systemConfig.materialsInnerBaseUri])
@@ -344,6 +404,28 @@ export class ConfigService {
   }
 
   /**
+   * 是否使用新文件服务
+   * @returns {Promise<boolean>|Promise<T>}
+   */
+  public isNewFilService(): Promise<boolean> {
+    return ConfigService.isValid<SystemConfig>(this.systemConfig, 'newFileService')
+      ? Promise.resolve(this.systemConfig.newFileService)
+      : new Promise((resolve, reject) => {
+        this.readSystemConfig()
+          .then(data => {
+            this.systemConfig = data as SystemConfig;
+            if (ConfigService.isValid<SystemConfig>(this.systemConfig, 'newFileService')) {
+              resolve(this.systemConfig.newFileService);
+            }
+            else {
+              reject("failure to check isNewFilService");
+            }
+          })
+          .catch(error => reject(error));
+      })
+  }
+
+  /**
    * 获取地图url
    * @returns {Promise<T>}
    */
@@ -426,7 +508,7 @@ export class ConfigService {
   }
 
   /**
-   * 设置热线地址
+   * 设置数据地址
    * @param outerBaseUri
    * @param innerBaseUri
    * @param isOuterNetwork
@@ -449,6 +531,41 @@ export class ConfigService {
               this.systemConfig.outerBaseUri = outerBaseUri;
               this.systemConfig.innerBaseUri = innerBaseUri;
               this.systemConfig.serverBaseUri = isOuterNetwork ? outerBaseUri : innerBaseUri;
+              this.systemConfig.isOuterNetwork = isOuterNetwork;
+            }
+            resolve(!!result);
+          })
+          .catch(error => reject(error));
+      })
+    } else {
+      return Promise.reject('systemConfig has no data');
+    }
+  }
+
+  /**
+   * 设置文件服务地址
+   * @param outerBaseUri
+   * @param innerBaseUri
+   * @param isOuterNetwork
+   * @returns {any}
+   */
+  public setFileBaseUris(outerBaseUri: string, innerBaseUri: string, isOuterNetwork: boolean): Promise<boolean> {
+    if (ConfigService.isValid<SystemConfig>(this.systemConfig, 'fileOuterBaseUri')
+      && ConfigService.isValid<SystemConfig>(this.systemConfig, 'fileInnerBaseUri')
+      && ConfigService.isValid<SystemConfig>(this.systemConfig, 'fileServerBaseUri')
+      && ConfigService.isValid<SystemConfig>(this.systemConfig, 'isOuterNetwork')) {
+      return new Promise((resolve, reject) => {
+        let systemConfig: SystemConfig = Object.create(this.systemConfig);
+        systemConfig.fileOuterBaseUri = outerBaseUri;
+        systemConfig.fileInnerBaseUri = innerBaseUri;
+        systemConfig.fileServerBaseUri = isOuterNetwork ? outerBaseUri : innerBaseUri;
+        systemConfig.isOuterNetwork = isOuterNetwork;
+        this.writeSystemConfig(systemConfig)
+          .then(result => {
+            if (result) {
+              this.systemConfig.fileOuterBaseUri = outerBaseUri;
+              this.systemConfig.fileInnerBaseUri = innerBaseUri;
+              this.systemConfig.fileServerBaseUri = isOuterNetwork ? outerBaseUri : innerBaseUri;
               this.systemConfig.isOuterNetwork = isOuterNetwork;
             }
             resolve(!!result);
@@ -625,6 +742,9 @@ export class ConfigService {
       outerBaseUri: obj["server.outer.baseuri"],
       innerBaseUri: obj["server.inner.baseuri"],
       serverBaseUri: obj["sys.connect.outer.network"] ? obj["server.outer.baseuri"] : obj["server.inner.baseuri"],
+      fileOuterBaseUri: obj["server.file.outer.baseuri"],
+      fileInnerBaseUri: obj["server.file.inner.baseuri"],
+      fileServerBaseUri: obj["sys.connect.outer.network"] ? obj["server.file.outer.baseuri"] : obj["server.file.inner.baseuri"],
       materialsOuterBaseUri: obj["server.materials.outer.baseuri"],
       materialsInnerBaseUri: obj["server.materials.inner.baseuri"],
       materialsBaseUri: obj["sys.connect.outer.network"] ? obj["server.materials.outer.baseuri"] : obj["server.materials.inner.baseuri"],
@@ -634,6 +754,7 @@ export class ConfigService {
       keepAliveInterval: obj["sys.keep.alive.interval"],
       overdueTime: obj["sys.overdue.time"],
       sysRegion: obj["sys.region"],
+      newFileService: obj["sys.new.file.service"],
       materialUnit: obj["sys.material.unit"]
     };
   }
@@ -659,6 +780,8 @@ export class ConfigService {
     return JSON.stringify({
       "server.outer.baseuri": systemConfig.outerBaseUri,
       "server.inner.baseuri": systemConfig.innerBaseUri,
+      "server.file.outer.baseuri": systemConfig.fileOuterBaseUri,
+      "server.file.inner.baseuri": systemConfig.fileInnerBaseUri,
       "server.materials.outer.baseuri": systemConfig.materialsOuterBaseUri,
       "server.materials.inner.baseuri": systemConfig.materialsInnerBaseUri,
       "sys.connect.outer.network": systemConfig.isOuterNetwork,
@@ -667,6 +790,7 @@ export class ConfigService {
       "sys.keep.alive.interval": systemConfig.keepAliveInterval,
       "sys.overdue.time": systemConfig.overdueTime,
       "sys.region": systemConfig.sysRegion,
+      "sys.new.file.service": systemConfig.newFileService,
       "sys.material.unit": systemConfig.materialUnit
     });
   }

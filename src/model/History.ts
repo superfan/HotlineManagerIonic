@@ -51,7 +51,7 @@ export class HistoryEx {
     this.photoCount = 0;
     this.audioCount = 0;  //todo 录音的数量
     this.isLocationValid = TaskEx.checkLocation(this.task.location);
-    if (this.task.extendedInfo.delayTime > 0) {
+    if (this.task.extendedInfo && this.task.extendedInfo.delayTime > 0) {
       this.delayTime = this.task.extendedInfo.delayTime;
       if (this.delayTime > this.task.arrivedTime) {
         this.delayBeyond = "arrived";

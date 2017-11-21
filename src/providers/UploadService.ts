@@ -356,9 +356,9 @@ export class UploadService extends BaseService {
    */
   public uploadMediaV2(media: Media): Promise<string> {
     return new Promise((resolve, reject) => {
-      this.configService.getServerBaseUri()
+      this.configService.getFileBaseUri()
         .then(data => {
-          let url: string = `http://128.1.3.66:8083/api/wap/v2/fs/upload`;
+          let url: string = data + `wap/v2/fs/upload`;
           let fileUrl: string;
           let fileType: string;
           switch (media.fileType) {
@@ -483,9 +483,7 @@ export class UploadService extends BaseService {
     return new Promise((resolve, reject) => {
       this.configService.getServerBaseUri()
         .then(data => {
-          // let url = `${data}wap/v1/mobile/task/${taskId}/files/upload`;
-          // let url: string = `http://128.1.3.66:8083/api/wap/v2/fs/upload`;
-          let url = "http://128.1.3.66:8174/api/wap/v1/mobile/task/" + taskId + "/files/wap/upload";
+          let url = data + "wap/v1/mobile/task/" + taskId + "/files/wap/upload";
           let content = {
             taskId,
             userId,

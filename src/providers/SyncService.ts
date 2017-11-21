@@ -25,7 +25,7 @@ export enum MsgType {
   UploadMediasOfHistory,
   UploadHistoriesAndMedias, //
   UploadMaterialInfos,
-  //UploadMedias
+    //UploadMedias
   UploadAllInfos // history & media & material
 }
 
@@ -123,7 +123,7 @@ export abstract class SyncService {
             }).then(result => this.dbService.saveTask(task));
           } else { // send to the server and save to local db
             return this.uploadService.accept(acceptInfo)
-              //.catch(error => console.error(error))
+            //.catch(error => console.error(error))
               .then(result => this.dbService.saveHistory({
                 userId: acceptInfo.userId,
                 taskId: acceptInfo.taskId,
@@ -173,7 +173,7 @@ export abstract class SyncService {
             }).then(result => this.dbService.saveTask(task));
           } else { // send to the server and save to local db
             return this.uploadService.go(goInfo)
-              //.catch(error => console.error(error))
+            //.catch(error => console.error(error))
               .then((result) => this.dbService.saveHistory({
                 userId: goInfo.userId,
                 taskId: goInfo.taskId,
@@ -223,7 +223,7 @@ export abstract class SyncService {
             }).then(result => this.dbService.saveTask(task));
           } else { // send to the server and save to local db
             return this.uploadService.arrive(arriveInfo)
-              //.catch(error => console.error(error))
+            //.catch(error => console.error(error))
               .then((result) => this.dbService.saveHistory({
                 userId: arriveInfo.userId,
                 taskId: arriveInfo.taskId,
@@ -329,7 +329,7 @@ export abstract class SyncService {
             }).then(result => this.dbService.saveTask(task));
           } else { // send to the server and save to local db
             return this.uploadService.reject(rejectInfo)
-              //.catch(error => console.error(error))
+            //.catch(error => console.error(error))
               .then((result) => this.dbService.saveHistory({
                 userId: rejectInfo.userId,
                 taskId: rejectInfo.taskId,
@@ -379,7 +379,7 @@ export abstract class SyncService {
             }).then(result => this.dbService.saveTask(task));
           } else { // send to the server and save to local db
             return this.uploadService.delay(delayInfo)
-              //.catch(error => console.error(error))
+            //.catch(error => console.error(error))
               .then((result) => this.dbService.saveHistory({
                 userId: delayInfo.userId,
                 taskId: delayInfo.taskId,
@@ -429,7 +429,7 @@ export abstract class SyncService {
             }).then(result => this.dbService.saveTask(task));
           } else { // send to the server and save to local db
             return this.uploadService.cancel(cancelInfo)
-              //.catch(error => console.error(error))
+            //.catch(error => console.error(error))
               .then((result) => this.dbService.saveHistory({
                 userId: cancelInfo.userId,
                 taskId: cancelInfo.taskId,
@@ -489,21 +489,21 @@ export abstract class SyncService {
       this.downloadService.getTasks(this.globalService.userId, since, count)
         .then(tasks => {
           let retTasks: Array<Task> = [];
-          for(let task of tasks) {
+          for (let task of tasks) {
             task.taskId += `#${task.assignTime}`; // modify for the rejected task
             let item: Task = retTasks.find((item) =>
-              item.taskId === task.taskId
-              && item.acceptTime === task.acceptTime
-              && item.arrivedTime === task.arrivedTime
-              && item.assignTime === task.assignTime
-              && item.compltedTime === task.compltedTime
-              && item.createTime === task.createTime
-              && item.desc === task.desc
-              && item.goTime === task.goTime
-              && item.replyTime === task.replyTime
-              && item.source === task.source
-              && item.state === task.state
-              && item.taskType === task.taskType);
+            item.taskId === task.taskId
+            && item.acceptTime === task.acceptTime
+            && item.arrivedTime === task.arrivedTime
+            && item.assignTime === task.assignTime
+            && item.compltedTime === task.compltedTime
+            && item.createTime === task.createTime
+            && item.desc === task.desc
+            && item.goTime === task.goTime
+            && item.replyTime === task.replyTime
+            && item.source === task.source
+            && item.state === task.state
+            && item.taskType === task.taskType);
             if (!item) {
               retTasks.push(task);
             }
@@ -616,7 +616,7 @@ export abstract class SyncService {
 
           this.dbService.getMediaList(this.globalService.userId, history.taskId, mediaNames,
             [this.globalService.uploadedFlagForLocal, this.globalService.uploadedFlagForUploading])
-            .then(mediaList => this.uploadMediaListV2(mediaList))
+            .then(mediaList => this.configService.isNewFilService() ? this.uploadMediaListV2(mediaList) : this.uploadMediaList(mediaList))
             .catch(error => console.error(error))
             .then(() => this.events.publish(this.uploadMediaEvent, msgType, histories));
         } else {
@@ -693,6 +693,7 @@ export abstract class SyncService {
         .then(histories => this.events.publish(this.uploadMediaEvent, msgType, histories));
     }
   }
+
   /**
    * 上传每个任务下的多媒体信息V2
    * @param mediaList

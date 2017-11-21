@@ -12,7 +12,7 @@ import {MapPage} from "../map/map";
 import {MapParam, MapType} from "../../model/MapParam";
 import {History} from "../../model/History";
 import {FileService} from "../../providers/FileService";
-import {Personnel} from "../../model/Personnel";
+//import {Personnel} from "../../model/Personnel";
 import {ConfigService} from "../../providers/ConfigService";
 import {OverdueTime} from "../../model/OverdueTime";
 import {AttachmentPage} from "../attachment/attachment";
@@ -92,7 +92,7 @@ export class WorkDetailPage implements OnInit, OnDestroy {
   reply: Reply[] = [
     {name: '处理时间', value: '', isActive: false, color: this.disableColor},
     {name: '处理部门', value: '', isActive: false, color: this.disableColor},
-    {name: this.optPerson, value: '', isActive: true, color: this.enableColor},
+    {name: this.optPerson, value: '', isActive: false, color: this.disableColor},
     {name: this.optTypeName, value: this.optTypeDefaultValue, isActive: true, color: this.enableColor},
     {name: this.optContentName, value: this.optContentDefaultValue, isActive: true, color: this.enableColor},
     {name: this.optReasonName, value: this.optReasonDefaultValue, isActive: true, color: this.enableColor},
@@ -127,8 +127,9 @@ export class WorkDetailPage implements OnInit, OnDestroy {
   private history: History;
   private taskDetail: TaskDetail;
   private replyInfo: ReplyInfo;
+  private isLocked: boolean;
 
-  private optPersons: Array<Personnel>;
+  //private optPersons: Array<Personnel>;
   private optTypes: Array<Word>;
   private optContents: Array<Word>;
   private optReasons: Array<Word>;
@@ -147,7 +148,7 @@ export class WorkDetailPage implements OnInit, OnDestroy {
               private popoverCtrl: PopoverController,
               private fileService: FileService,
               public configService: ConfigService,) {
-    [this.taskEx, this.history, this.overdueTime] = this.navParams.data;
+    [this.taskEx, this.history, this.overdueTime, this.isLocked] = this.navParams.data;
     this.isPreview = this.taskEx.isPreview;
     this.isLocationValid = this.taskEx.isLocationValid;
   }
@@ -295,13 +296,13 @@ export class WorkDetailPage implements OnInit, OnDestroy {
    * @param item
    */
   itemSelected(item: Reply): void {
-    if (this.isPreview) {
+    if (this.isPreview || this.isLocked) {
       return;
     }
 
     switch (item.name) {
       case this.optPerson:
-        this.popupOptPersonAlert();
+        //this.popupOptPersonAlert();
         break;
       case this.optTypeName:
         this.popupOptTypeAlert();
@@ -336,7 +337,7 @@ export class WorkDetailPage implements OnInit, OnDestroy {
    * @param ev
    */
   onTakePicture(ev: any): void {
-    if (this.globalService.isChrome || this.isPreview) {
+    if (this.globalService.isChrome || this.isPreview || this.isLocked) {
       return;
     }
 
@@ -362,7 +363,7 @@ export class WorkDetailPage implements OnInit, OnDestroy {
    * @param ev
    */
   onTakeVideo(ev: any): void {
-    if (this.globalService.isChrome || this.isPreview) {
+    if (this.globalService.isChrome || this.isPreview || this.isLocked) {
       return;
     }
 
@@ -394,8 +395,12 @@ export class WorkDetailPage implements OnInit, OnDestroy {
       });
   }
 
+  onPreviewPicture(name: string): void {
+    console.log(name);
+  }
+
   onDeletePicture(name: string): void {
-    if (this.globalService.isChrome || this.isPreview || !name) {
+    if (this.globalService.isChrome || this.isPreview || !name || this.isLocked) {
       return;
     }
 
@@ -435,7 +440,7 @@ export class WorkDetailPage implements OnInit, OnDestroy {
   }
 
   onDeleteVideo(name: string): void {
-    if (this.globalService.isChrome || this.isPreview || !name) {
+    if (this.globalService.isChrome || this.isPreview || !name || this.isLocked) {
       return;
     }
 
@@ -481,7 +486,7 @@ export class WorkDetailPage implements OnInit, OnDestroy {
   onRecordAudio(ev: any): void {
     console.log(this.tag, 'onRecordAudio');
 
-    if (this.globalService.isChrome || this.isPreview) {
+    if (this.globalService.isChrome || this.isPreview || this.isLocked) {
       return;
     }
 
@@ -532,7 +537,7 @@ export class WorkDetailPage implements OnInit, OnDestroy {
   }
 
   onDeleteAudio(audio: {name: string, time: number}): void {
-    if (this.globalService.isChrome || this.isPreview || !audio.name) {
+    if (this.globalService.isChrome || this.isPreview || !audio.name || this.isLocked) {
       return;
     }
 
@@ -622,7 +627,7 @@ export class WorkDetailPage implements OnInit, OnDestroy {
     // operation result
     this.getOptResults(this.replyInfo.result);
     // remark
-    this.reply[8].isActive = !this.isPreview;
+    this.reply[8].isActive = !this.isPreview && !this.isLocked;
     this.reply[8].value = this.replyInfo.replayComment;
   }
 
@@ -648,7 +653,7 @@ export class WorkDetailPage implements OnInit, OnDestroy {
           }
 
           this.reply[3].value = word.wName;
-          this.reply[3].isActive = !this.isPreview;
+          this.reply[3].isActive = !this.isPreview && !this.isLocked;
           this.reply[3].remark = word.wRemark;
           this.replyInfo.opLeiBie = word.wid;
           this.getOptContents(Number.parseInt(word.wRemark), contentId);
@@ -687,7 +692,7 @@ export class WorkDetailPage implements OnInit, OnDestroy {
           this.reply[4].color = this.disableColor;
           this.replyInfo.opContent = 0;
         }
-        this.reply[4].isActive = !this.isPreview;
+        this.reply[4].isActive = !this.isPreview && !this.isLocked;
       })
       .catch(error => console.error(error));
   }
@@ -711,7 +716,7 @@ export class WorkDetailPage implements OnInit, OnDestroy {
           }
 
           this.reply[5].value = word.wName;
-          this.reply[5].isActive = !this.isPreview;
+          this.reply[5].isActive = !this.isPreview && !this.isLocked;
           this.reply[5].remark = word.wRemark;
           this.replyInfo.reason = word.wid;
         }
@@ -738,7 +743,7 @@ export class WorkDetailPage implements OnInit, OnDestroy {
           }
 
           this.reply[6].value = word.wName;
-          this.reply[6].isActive = !this.isPreview;
+          this.reply[6].isActive = !this.isPreview && !this.isLocked;
           this.reply[6].remark = word.wRemark;
           this.replyInfo.solution = word.wid;
         }
@@ -765,7 +770,7 @@ export class WorkDetailPage implements OnInit, OnDestroy {
           }
 
           this.reply[7].value = word.wName;
-          this.reply[7].isActive = !this.isPreview;
+          this.reply[7].isActive = !this.isPreview && !this.isLocked;
           this.reply[7].remark = word.wRemark;
           this.replyInfo.result = word.wid;
         }
@@ -948,74 +953,78 @@ export class WorkDetailPage implements OnInit, OnDestroy {
   }
 
   private getOptPersons(opPerson: string): void {
-    this.dataService.getPersonnels(this.globalService.userId)
-      .then(personnels => {
-        console.log(this.tag, "getOptPersons");
-        this.optPersons = personnels;
-        if (this.optPersons.length > 0) {
-          let names: string[] = [];
-          if (opPerson) {
-            let persons: string[] = opPerson.split(',');
-            for (let personnel of personnels) {
-              if (persons.find(person => person === personnel.fieldPersonnelId.toString())) {
-                names.push(personnel.fieldPersonnelName);
-              }
-            }
-          }
+    this.reply[2].value = this.globalService.userName;
+    this.reply[2].isActive = false;
+    this.replyInfo.opPerson = this.globalService.userName;
 
-          if (names.length <= 0 || !opPerson) {
-            names.push(this.optPersons[0].fieldPersonnelName);
-            opPerson = this.optPersons[0].fieldPersonnelId.toString();
-          }
-
-          this.reply[2].value = names.join(',');
-          this.reply[2].isActive = !this.isPreview;
-          this.replyInfo.opPerson = opPerson;
-        }
-      })
-      .catch(error => console.error(error));
+    // this.dataService.getPersonnels(this.globalService.userId)
+    //   .then(personnels => {
+    //     console.log(this.tag, "getOptPersons");
+    //     this.optPersons = personnels;
+    //     if (this.optPersons.length > 0) {
+    //       let names: string[] = [];
+    //       if (opPerson) {
+    //         let persons: string[] = opPerson.split(',');
+    //         for (let personnel of personnels) {
+    //           if (persons.find(person => person === personnel.fieldPersonnelId.toString())) {
+    //             names.push(personnel.fieldPersonnelName);
+    //           }
+    //         }
+    //       }
+    //
+    //       if (names.length <= 0 || !opPerson) {
+    //         names.push(this.optPersons[0].fieldPersonnelName);
+    //         opPerson = this.optPersons[0].fieldPersonnelId.toString();
+    //       }
+    //
+    //       this.reply[2].value = names.join(',');
+    //       this.reply[2].isActive = !this.isPreview;
+    //       this.replyInfo.opPerson = opPerson;
+    //     }
+    //   })
+    //   .catch(error => console.error(error));
   }
 
-  private popupOptPersonAlert(): void {
-    if (!this.optPersons || this.optPersons.length <= 0) {
-      return this.globalService.showToast("处理人为空!")
-    }
-
-    let alert = this.alertCtrl.create();
-    alert.setTitle(this.optPerson);
-
-    for (let personnel of this.optPersons) {
-      alert.addInput({
-        type: 'checkbox',
-        label: personnel.fieldPersonnelName,
-        value: `${personnel.fieldPersonnelName}#${personnel.fieldPersonnelId}`,
-        checked: this.reply[2].value.toString().includes(personnel.fieldPersonnelName)
-      });
-    }
-
-    alert.addButton('取消');
-    alert.addButton({
-      text: '确定',
-      handler: data => {
-        console.log('Radio data:', data);
-        let names: string[] = [];
-        let values: string[] = [];
-        for (let item of data) {
-          let nameAndValue: string[] = item.split("#");
-          if (nameAndValue.length === 2) {
-            names.push(nameAndValue[0]);
-            values.push(nameAndValue[1]);
-          }
-        }
-
-        this.reply[2].value = names.join(',');
-        this.replyInfo.opPerson = values.join(",");
-      }
-    });
-
-    alert.present().then(() => {
-      //this.testRadioOpen = true;
-    });
-  }
+  // private popupOptPersonAlert(): void {
+  //   if (!this.optPersons || this.optPersons.length <= 0) {
+  //     return this.globalService.showToast("处理人为空!")
+  //   }
+  //
+  //   let alert = this.alertCtrl.create();
+  //   alert.setTitle(this.optPerson);
+  //
+  //   for (let personnel of this.optPersons) {
+  //     alert.addInput({
+  //       type: 'checkbox',
+  //       label: personnel.fieldPersonnelName,
+  //       value: `${personnel.fieldPersonnelName}#${personnel.fieldPersonnelId}`,
+  //       checked: this.reply[2].value.toString().includes(personnel.fieldPersonnelName)
+  //     });
+  //   }
+  //
+  //   alert.addButton('取消');
+  //   alert.addButton({
+  //     text: '确定',
+  //     handler: data => {
+  //       console.log('Radio data:', data);
+  //       let names: string[] = [];
+  //       let values: string[] = [];
+  //       for (let item of data) {
+  //         let nameAndValue: string[] = item.split("#");
+  //         if (nameAndValue.length === 2) {
+  //           names.push(nameAndValue[0]);
+  //           values.push(nameAndValue[1]);
+  //         }
+  //       }
+  //
+  //       this.reply[2].value = names.join(',');
+  //       this.replyInfo.opPerson = values.join(",");
+  //     }
+  //   });
+  //
+  //   alert.present().then(() => {
+  //     //this.testRadioOpen = true;
+  //   });
+  // }
 }
 

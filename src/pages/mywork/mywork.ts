@@ -252,7 +252,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
   onPreview(taskEx: TaskEx): void {
     taskEx.isPreview = true;
     let history: History = this.findReplyHistory(taskEx.id);
-    this.navCtrl.push(WorkDetailPage, [taskEx, history, this.overdueTime]);
+    this.navCtrl.push(WorkDetailPage, [taskEx, history, this.overdueTime, true]);
   }
 
   /**
@@ -743,7 +743,7 @@ export class MyWorkPage implements OnInit, OnDestroy {
     if (!processEx.reply.done || !processEx.reply.isUploaded) {
       taskEx.isPreview = false;
       let history: History = this.findReplyHistory(taskEx.id);
-      this.navCtrl.push(WorkDetailPage, [taskEx, history, this.overdueTime]);
+      this.navCtrl.push(WorkDetailPage, [taskEx, history, this.overdueTime, false]);
     }
   }
 

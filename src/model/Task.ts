@@ -450,7 +450,8 @@ export function transform2Task(info: any, taskEx: TaskEx, processEx: ProcessEx):
       source: taskEx.source,
       state: TaskState.Reply,
       taskId: taskEx.id,
-      taskType: taskEx.type
+      taskType: taskEx.type,
+      extendedInfo: taskEx.extendedInfo
     };
   } else if (info.hasOwnProperty('destroyTime')) {
     let cancelInfo: CancelInfo = info as CancelInfo;

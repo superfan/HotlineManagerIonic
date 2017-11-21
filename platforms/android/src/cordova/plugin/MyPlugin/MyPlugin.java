@@ -95,12 +95,12 @@ public class MyPlugin extends CordovaPlugin {
       } else {
         account = "wqry";
         password = "0000";
-        userId = 797789;
-        userName = "ss1";
-        department = "上水";
+        userId = 10;
+        userName = "wqry";
+        department = "客服热线部";
         departmentId = 1;
         roles = "worker";
-        params = "MyWorkPage";
+        params = "MyHistory";
         accessToken = getUUID(mainApplication);
         extendedInfo = "";
       }

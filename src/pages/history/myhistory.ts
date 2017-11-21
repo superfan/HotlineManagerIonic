@@ -197,9 +197,9 @@ export class MyHistory implements OnInit, OnDestroy {
 
   onReply(historyEx: HistoryEx): void {
     let taskEx: TaskEx = new TaskEx(historyEx.task);
-    taskEx.isPreview = true;
+    taskEx.isPreview = false;
     let history: History = this.findReplyHistory(taskEx.id);
-    this.navCtrl.push(WorkDetailPage, [taskEx, history]);
+    this.navCtrl.push(WorkDetailPage, [taskEx, history, undefined, true]);
   }
 
   onReject(historyEx: HistoryEx): void {
