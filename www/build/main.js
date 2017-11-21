@@ -4068,6 +4068,10 @@ var ConfigService = ConfigService_1 = (function () {
                     .catch(function (error) { return reject(error); });
             });
     };
+    /**
+     * 获取数据服务地址
+     * @returns {Promise<[string,string]>|Promise<T>}
+     */
     ConfigService.prototype.getServerBaseUris = function () {
         var _this = this;
         return ConfigService_1.isValid(this.systemConfig, 'serverBaseUri')
@@ -4082,7 +4086,57 @@ var ConfigService = ConfigService_1 = (function () {
                         resolve([_this.systemConfig.outerBaseUri, _this.systemConfig.innerBaseUri]);
                     }
                     else {
-                        reject("failure to getServerBaseUri");
+                        reject("failure to getServerBaseUris");
+                    }
+                })
+                    .catch(function (error) { return reject(error); });
+            });
+    };
+    /**
+     *
+     * @returns {Promise<string>|Promise<T>}
+     */
+    ConfigService.prototype.getFileBaseUri = function () {
+        var _this = this;
+        return ConfigService_1.isValid(this.systemConfig, 'fileServerBaseUri')
+            ? Promise.resolve(this.systemConfig.fileServerBaseUri)
+            : new Promise(function (resolve, reject) {
+                _this.readSystemConfig()
+                    .then(function (data) {
+                    _this.systemConfig = data;
+                    if (ConfigService_1.isValid(_this.systemConfig, 'fileOuterBaseUri')
+                        && ConfigService_1.isValid(_this.systemConfig, 'fileInnerBaseUri')
+                        && ConfigService_1.isValid(_this.systemConfig, 'isOuterNetwork')) {
+                        _this.systemConfig.fileServerBaseUri =
+                            _this.systemConfig.isOuterNetwork ? _this.systemConfig.fileOuterBaseUri : _this.systemConfig.fileInnerBaseUri;
+                        resolve(_this.systemConfig.fileServerBaseUri);
+                    }
+                    else {
+                        reject("failure to getFileBaseUri");
+                    }
+                })
+                    .catch(function (error) { return reject(error); });
+            });
+    };
+    /**
+     *
+     * @returns {Promise<[string,string]>|Promise<T>}
+     */
+    ConfigService.prototype.getFileBaseUris = function () {
+        var _this = this;
+        return ConfigService_1.isValid(this.systemConfig, 'fileServerBaseUri')
+            ? Promise.resolve([this.systemConfig.fileOuterBaseUri, this.systemConfig.fileInnerBaseUri])
+            : new Promise(function (resolve, reject) {
+                _this.readSystemConfig()
+                    .then(function (data) {
+                    _this.systemConfig = data;
+                    if (ConfigService_1.isValid(_this.systemConfig, 'fileOuterBaseUri')
+                        && ConfigService_1.isValid(_this.systemConfig, 'fileInnerBaseUri')
+                        && ConfigService_1.isValid(_this.systemConfig, 'isOuterNetwork')) {
+                        resolve([_this.systemConfig.fileOuterBaseUri, _this.systemConfig.fileInnerBaseUri]);
+                    }
+                    else {
+                        reject("failure to getFileBaseUris");
                     }
                 })
                     .catch(function (error) { return reject(error); });
@@ -4114,6 +4168,10 @@ var ConfigService = ConfigService_1 = (function () {
                     .catch(function (error) { return reject(error); });
             });
     };
+    /**
+     * 获取材料服务地址
+     * @returns {Promise<[string,string]>|Promise<T>}
+     */
     ConfigService.prototype.getMaterialsBaseUris = function () {
         var _this = this;
         return ConfigService_1.isValid(this.systemConfig, 'materialsBaseUri')
@@ -4324,6 +4382,28 @@ var ConfigService = ConfigService_1 = (function () {
             });
     };
     /**
+     * 是否使用新文件服务
+     * @returns {Promise<boolean>|Promise<T>}
+     */
+    ConfigService.prototype.isNewFilService = function () {
+        var _this = this;
+        return ConfigService_1.isValid(this.systemConfig, 'newFileService')
+            ? Promise.resolve(this.systemConfig.newFileService)
+            : new Promise(function (resolve, reject) {
+                _this.readSystemConfig()
+                    .then(function (data) {
+                    _this.systemConfig = data;
+                    if (ConfigService_1.isValid(_this.systemConfig, 'newFileService')) {
+                        resolve(_this.systemConfig.newFileService);
+                    }
+                    else {
+                        reject("failure to check isNewFilService");
+                    }
+                })
+                    .catch(function (error) { return reject(error); });
+            });
+    };
+    /**
      * 获取地图url
      * @returns {Promise<T>}
      */
@@ -4409,7 +4489,7 @@ var ConfigService = ConfigService_1 = (function () {
         });
     };
     /**
-     * 设置热线地址
+     * 设置数据地址
      * @param outerBaseUri
      * @param innerBaseUri
      * @param isOuterNetwork
@@ -4433,6 +4513,42 @@ var ConfigService = ConfigService_1 = (function () {
                         _this.systemConfig.outerBaseUri = outerBaseUri;
                         _this.systemConfig.innerBaseUri = innerBaseUri;
                         _this.systemConfig.serverBaseUri = isOuterNetwork ? outerBaseUri : innerBaseUri;
+                        _this.systemConfig.isOuterNetwork = isOuterNetwork;
+                    }
+                    resolve(!!result);
+                })
+                    .catch(function (error) { return reject(error); });
+            });
+        }
+        else {
+            return Promise.reject('systemConfig has no data');
+        }
+    };
+    /**
+     * 设置文件服务地址
+     * @param outerBaseUri
+     * @param innerBaseUri
+     * @param isOuterNetwork
+     * @returns {any}
+     */
+    ConfigService.prototype.setFileBaseUris = function (outerBaseUri, innerBaseUri, isOuterNetwork) {
+        var _this = this;
+        if (ConfigService_1.isValid(this.systemConfig, 'fileOuterBaseUri')
+            && ConfigService_1.isValid(this.systemConfig, 'fileInnerBaseUri')
+            && ConfigService_1.isValid(this.systemConfig, 'fileServerBaseUri')
+            && ConfigService_1.isValid(this.systemConfig, 'isOuterNetwork')) {
+            return new Promise(function (resolve, reject) {
+                var systemConfig = Object.create(_this.systemConfig);
+                systemConfig.fileOuterBaseUri = outerBaseUri;
+                systemConfig.fileInnerBaseUri = innerBaseUri;
+                systemConfig.fileServerBaseUri = isOuterNetwork ? outerBaseUri : innerBaseUri;
+                systemConfig.isOuterNetwork = isOuterNetwork;
+                _this.writeSystemConfig(systemConfig)
+                    .then(function (result) {
+                    if (result) {
+                        _this.systemConfig.fileOuterBaseUri = outerBaseUri;
+                        _this.systemConfig.fileInnerBaseUri = innerBaseUri;
+                        _this.systemConfig.fileServerBaseUri = isOuterNetwork ? outerBaseUri : innerBaseUri;
                         _this.systemConfig.isOuterNetwork = isOuterNetwork;
                     }
                     resolve(!!result);
@@ -4613,6 +4729,9 @@ var ConfigService = ConfigService_1 = (function () {
             outerBaseUri: obj["server.outer.baseuri"],
             innerBaseUri: obj["server.inner.baseuri"],
             serverBaseUri: obj["sys.connect.outer.network"] ? obj["server.outer.baseuri"] : obj["server.inner.baseuri"],
+            fileOuterBaseUri: obj["server.file.outer.baseuri"],
+            fileInnerBaseUri: obj["server.file.inner.baseuri"],
+            fileServerBaseUri: obj["sys.connect.outer.network"] ? obj["server.file.outer.baseuri"] : obj["server.file.inner.baseuri"],
             materialsOuterBaseUri: obj["server.materials.outer.baseuri"],
             materialsInnerBaseUri: obj["server.materials.inner.baseuri"],
             materialsBaseUri: obj["sys.connect.outer.network"] ? obj["server.materials.outer.baseuri"] : obj["server.materials.inner.baseuri"],
@@ -4622,6 +4741,7 @@ var ConfigService = ConfigService_1 = (function () {
             keepAliveInterval: obj["sys.keep.alive.interval"],
             overdueTime: obj["sys.overdue.time"],
             sysRegion: obj["sys.region"],
+            newFileService: obj["sys.new.file.service"],
             materialUnit: obj["sys.material.unit"]
         };
     };
@@ -4645,6 +4765,8 @@ var ConfigService = ConfigService_1 = (function () {
         return JSON.stringify({
             "server.outer.baseuri": systemConfig.outerBaseUri,
             "server.inner.baseuri": systemConfig.innerBaseUri,
+            "server.file.outer.baseuri": systemConfig.fileOuterBaseUri,
+            "server.file.inner.baseuri": systemConfig.fileInnerBaseUri,
             "server.materials.outer.baseuri": systemConfig.materialsOuterBaseUri,
             "server.materials.inner.baseuri": systemConfig.materialsInnerBaseUri,
             "sys.connect.outer.network": systemConfig.isOuterNetwork,
@@ -4653,6 +4775,7 @@ var ConfigService = ConfigService_1 = (function () {
             "sys.keep.alive.interval": systemConfig.keepAliveInterval,
             "sys.overdue.time": systemConfig.overdueTime,
             "sys.region": systemConfig.sysRegion,
+            "sys.new.file.service": systemConfig.newFileService,
             "sys.material.unit": systemConfig.materialUnit
         });
     };
@@ -6309,11 +6432,13 @@ var NetworkSetPage = (function () {
     }
     NetworkSetPage.prototype.ngOnInit = function () {
         var _this = this;
-        Promise.all([this.configService.getServerBaseUris(), this.configService.getMaterialsBaseUris()])
+        Promise.all([this.configService.getServerBaseUris(), this.configService.getFileBaseUris(), this.configService.getMaterialsBaseUris()])
             .then(function (_a) {
-            var _b = _a[0], hotLineOuterBaseUri = _b[0], hotLineInnerBaseUri = _b[1], _c = _a[1], materialsOuterBaseUri = _c[0], materialsInnerBaseUri = _c[1];
+            var _b = _a[0], hotLineOuterBaseUri = _b[0], hotLineInnerBaseUri = _b[1], _c = _a[1], fileOuterBaseUri = _c[0], fileInnerBaseUri = _c[1], _d = _a[2], materialsOuterBaseUri = _d[0], materialsInnerBaseUri = _d[1];
             _this.hotLineOuterBaseUri = hotLineOuterBaseUri;
             _this.hotLineInnerBaseUri = hotLineInnerBaseUri;
+            _this.fileOuterBaseUri = fileOuterBaseUri;
+            _this.fileInnerBaseUri = fileInnerBaseUri;
             _this.materialsOuterBaseUri = materialsOuterBaseUri;
             _this.materialsInnerBaseUri = materialsInnerBaseUri;
         })
@@ -6405,12 +6530,15 @@ var NetworkSetPage = (function () {
         });
         if (!this.hotLineOuterBaseUri
             || !this.hotLineInnerBaseUri
+            || !this.fileOuterBaseUri
+            || !this.fileInnerBaseUri
             || !this.materialsOuterBaseUri
             || !this.materialsInnerBaseUri) {
             toast.setMessage('请输入有效地址').present();
             return;
         }
         Promise.all([this.configService.setServerBaseUris(this.hotLineOuterBaseUri, this.hotLineInnerBaseUri, this.isOuterNet),
+            this.configService.setFileBaseUris(this.fileOuterBaseUri, this.fileInnerBaseUri, this.isOuterNet),
             this.configService.setMaterialBaseUris(this.materialsOuterBaseUri, this.materialsInnerBaseUri, this.isOuterNet)])
             .then(function (result) {
             toast.setMessage('保存成功').present();
@@ -6428,7 +6556,7 @@ var NetworkSetPage = (function () {
 }());
 NetworkSetPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        template: "\n    <ion-list>\n      <ion-list-header color=\"primary\">\u7F51\u7EDC\u8BBE\u7F6E</ion-list-header>\n      \n      <ion-item>\n        <ion-label color=\"label\">\u6570\u636E\u670D\u52A1\u5916\u7F51\u5730\u5740:</ion-label>\n      </ion-item>\n      <ion-item>\n        <ion-input type=\"text\" [(ngModel)]=\"hotLineOuterBaseUri\" clearInput></ion-input>\n      </ion-item>\n      \n      <ion-item>\n        <ion-label color=\"label\">\u6570\u636E\u670D\u52A1\u5185\u7F51\u5730\u5740:</ion-label>\n      </ion-item>\n      <ion-item>\n        <ion-input type=\"text\" [(ngModel)]=\"hotLineInnerBaseUri\" clearInput></ion-input>\n      </ion-item>\n      \n      <ion-item *ngIf=\"showMaterial\">\n        <ion-label color=\"label\">\u6750\u6599\u670D\u52A1\u5916\u7F51\u5730\u5740:</ion-label>\n      </ion-item>\n      <ion-item *ngIf=\"showMaterial\">\n        <ion-input type=\"text\" [(ngModel)]=\"materialsOuterBaseUri\" clearInput></ion-input>\n      </ion-item>\n      \n      <ion-item *ngIf=\"showMaterial\">\n        <ion-label color=\"label\">\u6750\u6599\u670D\u52A1\u5185\u7F51\u5730\u5740:</ion-label>\n      </ion-item>\n      <ion-item *ngIf=\"showMaterial\">\n        <ion-input type=\"text\" [(ngModel)]=\"materialsInnerBaseUri\" clearInput></ion-input>\n      </ion-item>\n      \n      <ion-item>\n        <ion-checkbox [(ngModel)]=\"isOuterNet\"></ion-checkbox>\n        <ion-label>\u4F7F\u7528\u5916\u7F51</ion-label>\n      </ion-item>\n\n      <button ion-item style=\"text-align:center; color:#488aff;\" (click)=\"onOk($event)\">\u786E\u5B9A</button>\n      <button ion-item style=\"text-align:center; color:#488aff;\" (click)=\"onCancel($event)\">\u53D6\u6D88</button>\n    </ion-list>\n  ",
+        template: "\n    <ion-list>\n      <ion-list-header color=\"primary\">\u7F51\u7EDC\u8BBE\u7F6E</ion-list-header>\n      \n      <ion-item>\n        <ion-label color=\"label\">\u6570\u636E\u670D\u52A1\u5916\u7F51\u5730\u5740:</ion-label>\n      </ion-item>\n      <ion-item>\n        <ion-input type=\"text\" [(ngModel)]=\"hotLineOuterBaseUri\" clearInput></ion-input>\n      </ion-item>\n      \n      <ion-item>\n        <ion-label color=\"label\">\u6570\u636E\u670D\u52A1\u5185\u7F51\u5730\u5740:</ion-label>\n      </ion-item>\n      <ion-item>\n        <ion-input type=\"text\" [(ngModel)]=\"hotLineInnerBaseUri\" clearInput></ion-input>\n      </ion-item>\n      \n      <ion-item>\n        <ion-label color=\"label\">\u6587\u4EF6\u670D\u52A1\u5916\u7F51\u5730\u5740:</ion-label>\n      </ion-item>\n      <ion-item>\n        <ion-input type=\"text\" [(ngModel)]=\"fileOuterBaseUri\" clearInput></ion-input>\n      </ion-item>\n      \n      <ion-item>\n        <ion-label color=\"label\">\u6587\u4EF6\u670D\u52A1\u5185\u7F51\u5730\u5740:</ion-label>\n      </ion-item>\n      <ion-item>\n        <ion-input type=\"text\" [(ngModel)]=\"fileInnerBaseUri\" clearInput></ion-input>\n      </ion-item>\n      \n      <ion-item *ngIf=\"showMaterial\">\n        <ion-label color=\"label\">\u6750\u6599\u670D\u52A1\u5916\u7F51\u5730\u5740:</ion-label>\n      </ion-item>\n      <ion-item *ngIf=\"showMaterial\">\n        <ion-input type=\"text\" [(ngModel)]=\"materialsOuterBaseUri\" clearInput></ion-input>\n      </ion-item>\n      \n      <ion-item *ngIf=\"showMaterial\">\n        <ion-label color=\"label\">\u6750\u6599\u670D\u52A1\u5185\u7F51\u5730\u5740:</ion-label>\n      </ion-item>\n      <ion-item *ngIf=\"showMaterial\">\n        <ion-input type=\"text\" [(ngModel)]=\"materialsInnerBaseUri\" clearInput></ion-input>\n      </ion-item>\n      \n      <ion-item>\n        <ion-checkbox [(ngModel)]=\"isOuterNet\"></ion-checkbox>\n        <ion-label>\u4F7F\u7528\u5916\u7F51</ion-label>\n      </ion-item>\n\n      <button ion-item style=\"text-align:center; color:#488aff;\" (click)=\"onOk($event)\">\u786E\u5B9A</button>\n      <button ion-item style=\"text-align:center; color:#488aff;\" (click)=\"onCancel($event)\">\u53D6\u6D88</button>\n    </ion-list>\n  ",
         styles: [
             ".selected {\n      font-weight: bold;\n    }"
         ]

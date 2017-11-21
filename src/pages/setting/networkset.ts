@@ -24,6 +24,20 @@ import {ConfigService} from "../../providers/ConfigService";
         <ion-input type="text" [(ngModel)]="hotLineInnerBaseUri" clearInput></ion-input>
       </ion-item>
       
+      <ion-item>
+        <ion-label color="label">文件服务外网地址:</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-input type="text" [(ngModel)]="fileOuterBaseUri" clearInput></ion-input>
+      </ion-item>
+      
+      <ion-item>
+        <ion-label color="label">文件服务内网地址:</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-input type="text" [(ngModel)]="fileInnerBaseUri" clearInput></ion-input>
+      </ion-item>
+      
       <ion-item *ngIf="showMaterial">
         <ion-label color="label">材料服务外网地址:</ion-label>
       </ion-item>
@@ -63,6 +77,8 @@ export class NetworkSetPage {
 
   hotLineOuterBaseUri: string;
   hotLineInnerBaseUri: string;
+  fileOuterBaseUri: string;
+  fileInnerBaseUri: string;
   materialsOuterBaseUri: string;
   materialsInnerBaseUri: string;
   showMaterial: boolean;
@@ -73,10 +89,12 @@ export class NetworkSetPage {
   }
 
   ngOnInit() {
-    Promise.all([this.configService.getServerBaseUris(), this.configService.getMaterialsBaseUris()])
-      .then(([[hotLineOuterBaseUri, hotLineInnerBaseUri], [materialsOuterBaseUri, materialsInnerBaseUri]]) => {
+    Promise.all([this.configService.getServerBaseUris(), this.configService.getFileBaseUris(), this.configService.getMaterialsBaseUris()])
+      .then(([[hotLineOuterBaseUri, hotLineInnerBaseUri], [fileOuterBaseUri, fileInnerBaseUri], [materialsOuterBaseUri, materialsInnerBaseUri]]) => {
         this.hotLineOuterBaseUri = hotLineOuterBaseUri;
         this.hotLineInnerBaseUri = hotLineInnerBaseUri;
+        this.fileOuterBaseUri = fileOuterBaseUri;
+        this.fileInnerBaseUri = fileInnerBaseUri;
         this.materialsOuterBaseUri = materialsOuterBaseUri;
         this.materialsInnerBaseUri = materialsInnerBaseUri;
       })
@@ -171,6 +189,8 @@ export class NetworkSetPage {
 
     if (!this.hotLineOuterBaseUri
       || !this.hotLineInnerBaseUri
+      || !this.fileOuterBaseUri
+      || !this.fileInnerBaseUri
       || !this.materialsOuterBaseUri
       || !this.materialsInnerBaseUri) {
       toast.setMessage('请输入有效地址').present();
@@ -178,6 +198,7 @@ export class NetworkSetPage {
     }
 
     Promise.all([this.configService.setServerBaseUris(this.hotLineOuterBaseUri, this.hotLineInnerBaseUri, this.isOuterNet),
+      this.configService.setFileBaseUris(this.fileOuterBaseUri, this.fileInnerBaseUri, this.isOuterNet),
       this.configService.setMaterialBaseUris(this.materialsOuterBaseUri, this.materialsInnerBaseUri, this.isOuterNet)])
       .then(result => {
         toast.setMessage('保存成功').present();
