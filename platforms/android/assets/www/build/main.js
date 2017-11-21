@@ -1,6 +1,6 @@
 webpackJsonp([0],{
 
-/***/ 120:
+/***/ 119:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -951,9 +951,8 @@ BaseService = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__BaseService__ = __webpack_require__(123);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_file_transfer__ = __webpack_require__(124);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ionic_native_file__ = __webpack_require__(61);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__model_Media__ = __webpack_require__(126);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__FileService__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__model_Media__ = __webpack_require__(126);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__FileService__ = __webpack_require__(23);
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -981,15 +980,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
 var UploadService = (function (_super) {
     __extends(UploadService, _super);
-    function UploadService(http, configService, globalService, transfer, file, fileService) {
+    function UploadService(http, configService, globalService, transfer, fileService) {
         var _this = _super.call(this, http) || this;
         _this.configService = configService;
         _this.globalService = globalService;
         _this.transfer = transfer;
-        _this.file = file;
         _this.fileService = fileService;
         return _this;
     }
@@ -1326,6 +1323,68 @@ var UploadService = (function (_super) {
         });
     };
     /**
+     * 上传多媒体文件2.0
+     * @param media
+     * @returns {Promise<T>}
+     */
+    UploadService.prototype.uploadMediaV2 = function (media) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.configService.getServerBaseUri()
+                .then(function (data) {
+                var url = "http://128.1.3.66:8083/api/wap/v2/fs/upload";
+                var fileUrl;
+                var fileType;
+                switch (media.fileType) {
+                    case __WEBPACK_IMPORTED_MODULE_6__model_Media__["a" /* MediaType */].Picture:
+                        fileUrl = _this.fileService.getImagesDir();
+                        fileType = 'IMAGE';
+                        break;
+                    case __WEBPACK_IMPORTED_MODULE_6__model_Media__["a" /* MediaType */].Audio:
+                        fileUrl = _this.fileService.getSoundsDir();
+                        fileType = 'SOUND';
+                        break;
+                    case __WEBPACK_IMPORTED_MODULE_6__model_Media__["a" /* MediaType */].Vedio:
+                        fileUrl = _this.fileService.getVideosDir();
+                        fileType = 'video/mp4';
+                        break;
+                    default:
+                        return reject('type is error');
+                }
+                fileUrl = fileUrl + "/" + media.fileName;
+                var fileTransfer = _this.transfer.create();
+                var options = {
+                    fileKey: 'file',
+                    fileName: "" + media.fileName,
+                    params: {
+                        userId: media.userId,
+                        fileType: fileType,
+                        fileName: media.fileName
+                    }
+                };
+                fileTransfer.upload(fileUrl, url, options)
+                    .then(function (data) {
+                    // success
+                    console.log(data);
+                    var body = JSON.parse(data.response);
+                    if (body.fileId && body.url && body.downloadUrl && body.fileType
+                        && body.fileHash && body.originFileName) {
+                        media.extendedInfo = body;
+                        resolve(body.fileId);
+                    }
+                    else {
+                        reject(body.Message ? body.Message : "failure to uploadMedia");
+                    }
+                }, function (err) {
+                    // error
+                    console.error(err);
+                    reject(err);
+                });
+            })
+                .catch(function (error) { return reject(error); });
+        });
+    };
+    /**
      * 上传多媒体文件
      * @param media
      * @returns {Promise<T>}
@@ -1339,15 +1398,15 @@ var UploadService = (function (_super) {
                 var fileUrl;
                 var fileType;
                 switch (media.fileType) {
-                    case __WEBPACK_IMPORTED_MODULE_7__model_Media__["a" /* MediaType */].Picture:
+                    case __WEBPACK_IMPORTED_MODULE_6__model_Media__["a" /* MediaType */].Picture:
                         fileUrl = _this.fileService.getImagesDir();
                         fileType = 'IMAGE';
                         break;
-                    case __WEBPACK_IMPORTED_MODULE_7__model_Media__["a" /* MediaType */].Audio:
+                    case __WEBPACK_IMPORTED_MODULE_6__model_Media__["a" /* MediaType */].Audio:
                         fileUrl = _this.fileService.getSoundsDir();
                         fileType = 'SOUND';
                         break;
-                    case __WEBPACK_IMPORTED_MODULE_7__model_Media__["a" /* MediaType */].Vedio:
+                    case __WEBPACK_IMPORTED_MODULE_6__model_Media__["a" /* MediaType */].Vedio:
                     default:
                         return reject('type is error');
                 }
@@ -1381,6 +1440,43 @@ var UploadService = (function (_super) {
                     console.error(err);
                     reject(err);
                 });
+            })
+                .catch(function (error) { return reject(error); });
+        });
+    };
+    /**
+     * 上传文件关联 V2.0
+     * @param taskId
+     * @param files
+     * @returns {Promise<T>}
+     */
+    UploadService.prototype.uploadMediaIdsV2 = function (taskId, userId, files) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.configService.getServerBaseUri()
+                .then(function (data) {
+                // let url = `${data}wap/v1/mobile/task/${taskId}/files/upload`;
+                // let url: string = `http://128.1.3.66:8083/api/wap/v2/fs/upload`;
+                var url = "http://128.1.3.66:8174/api/wap/v1/mobile/task/" + taskId + "/files/wap/upload";
+                var content = {
+                    taskId: taskId,
+                    userId: userId,
+                    files: files
+                };
+                return _this.put(url, JSON.stringify(content), _this.getOptions())
+                    .toPromise()
+                    .then(function (data) {
+                    var body = data.json();
+                    if (body.Code === _this.globalService.httpCode
+                        && body.StatusCode === _this.globalService.httpSuccessStatusCode
+                        && body.Data) {
+                        resolve(body.Data);
+                    }
+                    else {
+                        reject(body.Message ? body.Message : "failure to uploadMediaIds");
+                    }
+                })
+                    .catch(_this.handleError);
             })
                 .catch(function (error) { return reject(error); });
         });
@@ -1455,8 +1551,7 @@ UploadService = __decorate([
         __WEBPACK_IMPORTED_MODULE_2__ConfigService__["a" /* ConfigService */],
         __WEBPACK_IMPORTED_MODULE_3__GlobalService__["a" /* GlobalService */],
         __WEBPACK_IMPORTED_MODULE_5__ionic_native_file_transfer__["a" /* FileTransfer */],
-        __WEBPACK_IMPORTED_MODULE_6__ionic_native_file__["a" /* File */],
-        __WEBPACK_IMPORTED_MODULE_8__FileService__["a" /* FileService */]])
+        __WEBPACK_IMPORTED_MODULE_7__FileService__["a" /* FileService */]])
 ], UploadService);
 
 //# sourceMappingURL=UploadService.js.map
@@ -1486,7 +1581,7 @@ var MediaType;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__BaseService__ = __webpack_require__(123);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__GlobalService__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__DbService__ = __webpack_require__(63);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__DbService__ = __webpack_require__(62);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__FileService__ = __webpack_require__(23);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_camera__ = __webpack_require__(227);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ionic_native_media__ = __webpack_require__(228);
@@ -1706,7 +1801,6 @@ var MediaService = (function (_super) {
             return;
         }
         this.isPlayingAlarm = true;
-        var error = 'failure to play audio';
         var file;
         try {
             // Create a Media instance.  Expects path to file or url as argument
@@ -2005,8 +2099,8 @@ var WorkDetailPage = (function () {
             || !this.replyInfo.opContent
             || !this.replyInfo.reason
             || !this.replyInfo.solution
-            || !this.replyInfo.result
-            || !this.replyInfo.opPerson) {
+            || !this.replyInfo.result) {
+            // || !this.replyInfo.opPerson) {
             return this.globalService.showToast("数据填写不完整!");
         }
         var processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]();
@@ -2748,7 +2842,7 @@ var WorkDetailPage = (function () {
 }());
 WorkDetailPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-workdetail',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\workdetail\workdetail.html"*/'<ion-header>\n  <ion-navbar color="primary">\n    <ion-title>\n      {{title}}\n    </ion-title>\n\n    <ion-buttons end *ngIf="!isPreview">\n      <button ion-button icon-only color="white" *ngIf="isLocationValid" (click)="onLocate($event)">\n        <ion-icon name="map"></ion-icon>\n      </button>\n\n      <button ion-button icon-only color="white" (click)="onReply($event)">\n        <ion-icon name="checkmark-circle"></ion-icon>\n      </button>\n    </ion-buttons>\n  </ion-navbar>\n\n  <ion-toolbar no-border-top>\n    <ion-segment [(ngModel)]="segmentName" (ionChange)="segmentChanged($event)" color="{{segmentColor}}">\n      <ion-segment-button value="detailInfo">\n        基本信息\n      </ion-segment-button>\n      <ion-segment-button value="replyInfo" *ngIf="!isPreview">\n        回填信息\n      </ion-segment-button>\n      <ion-segment-button value="mediaInfo" *ngIf="!isPreview">\n        多媒体\n      </ion-segment-button>\n    </ion-segment>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content class="page-workdetail">\n\n  <div [ngSwitch]="segmentName">\n    <!--基本信息-->\n    <ion-list *ngSwitchCase="\'detailInfo\'">\n      <ion-item *ngFor="let item of detail" (click)="detailItemSelected(item)">\n        <ion-label fixed class="label-name">\n          {{item.name}}\n        </ion-label>\n        <div item-content *ngIf="item.isTime">\n          {{item.value | date:\'y-MM-dd HH:mm:ss\'}}\n        </div>\n        <div item-content *ngIf="!item.isTime">\n          {{item.value}}\n        </div>\n        <ion-icon name="ios-arrow-forward" item-end *ngIf="item.isActive"></ion-icon>\n      </ion-item>\n    </ion-list>\n\n    <!--回填信息-->\n    <ion-list *ngSwitchCase="\'replyInfo\'">\n      <ion-item *ngFor="let item of reply" class="reply-item" (click)="itemSelected(item)">\n        <ion-label fixed class="label-name">\n          {{item.name}}\n        </ion-label>\n        <div item-content>\n          {{item.value}}\n        </div>\n        <ion-icon name="ios-arrow-forward" item-end *ngIf="item.isActive"></ion-icon>\n      </ion-item>\n\n      <!--<ion-row>-->\n      <!--<ion-col class="col-button">-->\n      <!--<button ion-button icon-left>-->\n      <!--<ion-icon name="camera"></ion-icon>-->\n      <!--拍照-->\n      <!--</button>-->\n      <!--</ion-col>-->\n      <!--<ion-col class="col-button">-->\n      <!--<button ion-button icon-left>-->\n      <!--<ion-icon name="microphone"></ion-icon>-->\n      <!--录音-->\n      <!--</button>-->\n      <!--</ion-col>-->\n      <!--<ion-col class="col-button">-->\n      <!--<button ion-button icon-left>-->\n      <!--<ion-icon name="videocam"></ion-icon>-->\n      <!--视频-->\n      <!--</button>-->\n      <!--</ion-col>-->\n      <!--</ion-row>-->\n    </ion-list>\n\n    <!--多媒体-->\n    <div *ngSwitchCase="\'mediaInfo\'">\n      <button ion-item icon-left (click)="onTakePicture($event)">\n        <ion-icon name="camera"></ion-icon>\n        拍照\n      </button>\n\n      <ion-grid style="width: 100%; height: 100px;">\n        <ion-row>\n          <ion-col col-4 class="col-img" *ngIf="pictures[0]">\n            <img class="picture" src="{{pictures[0]}}"/>\n            <ion-icon name="close" (click)="onDeletePicture(pictures[0])"></ion-icon>\n          </ion-col>\n\n          <ion-col col-4 class="col-img" *ngIf="pictures[1]">\n            <img class="picture" src="{{pictures[1]}}"/>\n            <ion-icon name="close" (click)="onDeletePicture(pictures[1])"></ion-icon>\n          </ion-col>\n\n          <ion-col col-4 class="col-img" *ngIf="pictures[2]">\n            <img class="picture" src="{{pictures[2]}}"/>\n            <ion-icon name="close" (click)="onDeletePicture(pictures[2])"></ion-icon>\n          </ion-col>\n        </ion-row>\n      </ion-grid>\n\n      <br>\n      <br>\n\n      <button ion-item icon-left (click)="onRecordAudio($event)">\n        <ion-icon name="microphone"></ion-icon>\n        录音\n      </button>\n\n      <ion-grid style="width: 100%; height: 100px;">\n        <ion-row *ngIf="audios[0].time > 0" class="audio">\n          <ion-col col-6 class="audio-info">{{audios[0].time}}s</ion-col>\n          <ion-col col-2><ion-icon name="play" class="audio-btn" (click)="onPlay(audios[0])"></ion-icon></ion-col>\n          <ion-col col-1><ion-icon name="close" class="audio-btn" (click)="onDeleteAudio(audios[0])"></ion-icon></ion-col>\n          <ion-col></ion-col>\n        </ion-row>\n\n        <ion-row *ngIf="audios[1].time > 0" class="audio">\n          <ion-col col-6 class="audio-info">{{audios[1].time}}s</ion-col>\n          <ion-col col-2><ion-icon name="play" class="audio-btn" (click)="onPlay(audios[1])"></ion-icon></ion-col>\n          <ion-col col-1><ion-icon name="close" class="audio-btn" (click)="onDeleteAudio(audios[1])"></ion-icon></ion-col>\n          <ion-col></ion-col>\n        </ion-row>\n\n        <ion-row *ngIf="audios[2].time > 0" class="audio">\n          <ion-col col-6 class="audio-info">{{audios[2].time}}s</ion-col>\n          <ion-col col-2><ion-icon name="play" class="audio-btn" (click)="onPlay(audios[2])"></ion-icon></ion-col>\n          <ion-col col-1><ion-icon name="close" class="audio-btn" (click)="onDeleteAudio(audios[2])"></ion-icon></ion-col>\n          <ion-col></ion-col>\n        </ion-row>\n      </ion-grid>\n\n      <br>\n      <br>\n      <button ion-item icon-left (click)="onTakeVideo($event)">\n      <ion-icon name="videocam"></ion-icon>\n      视频\n      </button>\n\n      <ion-grid style="width: 100%; height: 100px;">\n        <ion-row>\n          <ion-col col-4 class="col-video" *ngIf="videos[0]">\n            <video class="video" (click)="onPlayVideo(videos[0])"></video>\n            <ion-icon name="close" (click)="onDeleteVideo(videos[0])"></ion-icon>\n          </ion-col>\n\n          <ion-col col-4 class="col-video" *ngIf="videos[1]">\n            <video class="video" (click)="onPlayVideo(videos[1])"></video>\n            <ion-icon name="close" (click)="onDeleteVideo(videos[1])"></ion-icon>\n          </ion-col>\n\n          <ion-col col-4 class="col-video" *ngIf="pictures[2]">\n            <video class="video" (click)="onPlayVideo(videos[2])"></video>\n            <ion-icon name="close" (click)="onDeleteVideo(videos[2])"></ion-icon>\n          </ion-col>\n        </ion-row>\n      </ion-grid>\n      <br>\n      <br>\n      <!--<ion-row>-->\n      <!--<ion-col class="col-img">-->\n      <!--<img width="80" height="80" src="assets/img/ic_video_default.png"/>-->\n      <!--</ion-col>-->\n\n      <!--<ion-col class="col-img">-->\n      <!--<img width="80" height="80" src="assets/img/ic_video_default.png"/>-->\n      <!--</ion-col>-->\n\n      <!--<ion-col class="col-img">-->\n      <!--<img width="80" height="80" src="assets/img/ic_video_default.png"/>-->\n      <!--</ion-col>-->\n      <!--</ion-row>-->\n    </div>\n  </div>\n\n</ion-content>\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\workdetail\workdetail.html"*/
+        selector: 'page-workdetail',template:/*ion-inline-start:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\workdetail\workdetail.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n\n\n    <ion-buttons end *ngIf="!isPreview">\n\n      <button ion-button icon-only color="white" *ngIf="isLocationValid" (click)="onLocate($event)">\n\n        <ion-icon name="map"></ion-icon>\n\n      </button>\n\n\n\n      <button ion-button icon-only color="white" (click)="onReply($event)">\n\n        <ion-icon name="checkmark-circle"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n\n\n  <ion-toolbar no-border-top>\n\n    <ion-segment [(ngModel)]="segmentName" (ionChange)="segmentChanged($event)" color="{{segmentColor}}">\n\n      <ion-segment-button value="detailInfo">\n\n        基本信息\n\n      </ion-segment-button>\n\n      <ion-segment-button value="replyInfo" *ngIf="!isPreview">\n\n        回填信息\n\n      </ion-segment-button>\n\n      <ion-segment-button value="mediaInfo" *ngIf="!isPreview">\n\n        多媒体\n\n      </ion-segment-button>\n\n    </ion-segment>\n\n  </ion-toolbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-workdetail">\n\n\n\n  <div [ngSwitch]="segmentName">\n\n    <!--基本信息-->\n\n    <ion-list *ngSwitchCase="\'detailInfo\'">\n\n      <ion-item *ngFor="let item of detail" (click)="detailItemSelected(item)">\n\n        <ion-label fixed class="label-name">\n\n          {{item.name}}\n\n        </ion-label>\n\n        <div item-content *ngIf="item.isTime">\n\n          {{item.value | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </div>\n\n        <div item-content *ngIf="!item.isTime">\n\n          {{item.value}}\n\n        </div>\n\n        <ion-icon name="ios-arrow-forward" item-end *ngIf="item.isActive"></ion-icon>\n\n      </ion-item>\n\n    </ion-list>\n\n\n\n    <!--回填信息-->\n\n    <ion-list *ngSwitchCase="\'replyInfo\'">\n\n      <ion-item *ngFor="let item of reply" class="reply-item" (click)="itemSelected(item)">\n\n        <ion-label fixed class="label-name">\n\n          {{item.name}}\n\n        </ion-label>\n\n        <div item-content>\n\n          {{item.value}}\n\n        </div>\n\n        <ion-icon name="ios-arrow-forward" item-end *ngIf="item.isActive"></ion-icon>\n\n      </ion-item>\n\n\n\n      <!--<ion-row>-->\n\n      <!--<ion-col class="col-button">-->\n\n      <!--<button ion-button icon-left>-->\n\n      <!--<ion-icon name="camera"></ion-icon>-->\n\n      <!--拍照-->\n\n      <!--</button>-->\n\n      <!--</ion-col>-->\n\n      <!--<ion-col class="col-button">-->\n\n      <!--<button ion-button icon-left>-->\n\n      <!--<ion-icon name="microphone"></ion-icon>-->\n\n      <!--录音-->\n\n      <!--</button>-->\n\n      <!--</ion-col>-->\n\n      <!--<ion-col class="col-button">-->\n\n      <!--<button ion-button icon-left>-->\n\n      <!--<ion-icon name="videocam"></ion-icon>-->\n\n      <!--视频-->\n\n      <!--</button>-->\n\n      <!--</ion-col>-->\n\n      <!--</ion-row>-->\n\n    </ion-list>\n\n\n\n    <!--多媒体-->\n\n    <div *ngSwitchCase="\'mediaInfo\'">\n\n      <button ion-item icon-left (click)="onTakePicture($event)">\n\n        <ion-icon name="camera"></ion-icon>\n\n        拍照\n\n      </button>\n\n\n\n      <ion-grid style="width: 100%; height: 100px;">\n\n        <ion-row>\n\n          <ion-col col-4 class="col-img" *ngIf="pictures[0]">\n\n            <img class="picture" src="{{pictures[0]}}"/>\n\n            <ion-icon name="close" (click)="onDeletePicture(pictures[0])"></ion-icon>\n\n          </ion-col>\n\n\n\n          <ion-col col-4 class="col-img" *ngIf="pictures[1]">\n\n            <img class="picture" src="{{pictures[1]}}"/>\n\n            <ion-icon name="close" (click)="onDeletePicture(pictures[1])"></ion-icon>\n\n          </ion-col>\n\n\n\n          <ion-col col-4 class="col-img" *ngIf="pictures[2]">\n\n            <img class="picture" src="{{pictures[2]}}"/>\n\n            <ion-icon name="close" (click)="onDeletePicture(pictures[2])"></ion-icon>\n\n          </ion-col>\n\n        </ion-row>\n\n      </ion-grid>\n\n\n\n      <br>\n\n      <br>\n\n\n\n      <button ion-item icon-left (click)="onRecordAudio($event)">\n\n        <ion-icon name="microphone"></ion-icon>\n\n        录音\n\n      </button>\n\n\n\n      <ion-grid style="width: 100%; height: 100px;">\n\n        <ion-row *ngIf="audios[0].time > 0" class="audio">\n\n          <ion-col col-6 class="audio-info">{{audios[0].time}}s</ion-col>\n\n          <ion-col col-2><ion-icon name="play" class="audio-btn" (click)="onPlay(audios[0])"></ion-icon></ion-col>\n\n          <ion-col col-1><ion-icon name="close" class="audio-btn" (click)="onDeleteAudio(audios[0])"></ion-icon></ion-col>\n\n          <ion-col></ion-col>\n\n        </ion-row>\n\n\n\n        <ion-row *ngIf="audios[1].time > 0" class="audio">\n\n          <ion-col col-6 class="audio-info">{{audios[1].time}}s</ion-col>\n\n          <ion-col col-2><ion-icon name="play" class="audio-btn" (click)="onPlay(audios[1])"></ion-icon></ion-col>\n\n          <ion-col col-1><ion-icon name="close" class="audio-btn" (click)="onDeleteAudio(audios[1])"></ion-icon></ion-col>\n\n          <ion-col></ion-col>\n\n        </ion-row>\n\n\n\n        <ion-row *ngIf="audios[2].time > 0" class="audio">\n\n          <ion-col col-6 class="audio-info">{{audios[2].time}}s</ion-col>\n\n          <ion-col col-2><ion-icon name="play" class="audio-btn" (click)="onPlay(audios[2])"></ion-icon></ion-col>\n\n          <ion-col col-1><ion-icon name="close" class="audio-btn" (click)="onDeleteAudio(audios[2])"></ion-icon></ion-col>\n\n          <ion-col></ion-col>\n\n        </ion-row>\n\n      </ion-grid>\n\n\n\n      <br>\n\n      <br>\n\n      <button ion-item icon-left (click)="onTakeVideo($event)">\n\n      <ion-icon name="videocam"></ion-icon>\n\n      视频\n\n      </button>\n\n\n\n      <ion-grid style="width: 100%; height: 100px;">\n\n        <ion-row>\n\n          <ion-col col-4 class="col-video" *ngIf="videos[0]">\n\n            <video class="video" (click)="onPlayVideo(videos[0])"></video>\n\n            <ion-icon name="close" (click)="onDeleteVideo(videos[0])"></ion-icon>\n\n          </ion-col>\n\n\n\n          <ion-col col-4 class="col-video" *ngIf="videos[1]">\n\n            <video class="video" (click)="onPlayVideo(videos[1])"></video>\n\n            <ion-icon name="close" (click)="onDeleteVideo(videos[1])"></ion-icon>\n\n          </ion-col>\n\n\n\n          <ion-col col-4 class="col-video" *ngIf="pictures[2]">\n\n            <video class="video" (click)="onPlayVideo(videos[2])"></video>\n\n            <ion-icon name="close" (click)="onDeleteVideo(videos[2])"></ion-icon>\n\n          </ion-col>\n\n        </ion-row>\n\n      </ion-grid>\n\n      <br>\n\n      <br>\n\n      <!--<ion-row>-->\n\n      <!--<ion-col class="col-img">-->\n\n      <!--<img width="80" height="80" src="assets/img/ic_video_default.png"/>-->\n\n      <!--</ion-col>-->\n\n\n\n      <!--<ion-col class="col-img">-->\n\n      <!--<img width="80" height="80" src="assets/img/ic_video_default.png"/>-->\n\n      <!--</ion-col>-->\n\n\n\n      <!--<ion-col class="col-img">-->\n\n      <!--<img width="80" height="80" src="assets/img/ic_video_default.png"/>-->\n\n      <!--</ion-col>-->\n\n      <!--</ion-row>-->\n\n    </div>\n\n  </div>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\workdetail\workdetail.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* NavParams */],
@@ -2775,7 +2869,7 @@ WorkDetailPage = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__model_Task__ = __webpack_require__(36);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__UploadService__ = __webpack_require__(125);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__DbService__ = __webpack_require__(63);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__DbService__ = __webpack_require__(62);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__MediaService__ = __webpack_require__(127);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__model_Media__ = __webpack_require__(126);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__SyncService__ = __webpack_require__(323);
@@ -3808,7 +3902,7 @@ webpackEmptyAsyncContext.id = 138;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(35);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_storage__ = __webpack_require__(60);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__GlobalService__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_file__ = __webpack_require__(61);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_file__ = __webpack_require__(120);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_toPromise__ = __webpack_require__(321);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_toPromise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_toPromise__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__FileService__ = __webpack_require__(23);
@@ -4515,7 +4609,7 @@ webpackEmptyAsyncContext.id = 179;
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return FileService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ionic_native_file__ = __webpack_require__(61);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ionic_native_file__ = __webpack_require__(120);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_transfer__ = __webpack_require__(222);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_zip__ = __webpack_require__(223);
@@ -5010,7 +5104,7 @@ var AttachmentPage = (function () {
 }());
 AttachmentPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-attachment',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\attachment\attachment.html"*/'<ion-header>\n  <ion-navbar color="primary">\n    <ion-title>\n      {{title}}\n    </ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content class="page-attachment">\n  <button ion-item icon-left>\n    <ion-icon name="camera"></ion-icon>\n    照片\n  </button>\n\n  <ion-grid style="width: 100%; height: 100px;">\n    <ion-row>\n      <ion-col col-4 class="col-img" *ngIf="pictures[0]">\n        <img class="picture" src="{{pictures[0]}}"/>\n      </ion-col>\n\n      <ion-col col-4 class="col-img" *ngIf="pictures[1]">\n        <img class="picture" src="{{pictures[1]}}"/>\n      </ion-col>\n\n      <ion-col col-4 class="col-img" *ngIf="pictures[2]">\n        <img class="picture" src="{{pictures[2]}}"/>\n      </ion-col>\n    </ion-row>\n  </ion-grid>\n\n  <ion-grid style="width: 100%; height: 100px;">\n    <ion-row>\n      <ion-col col-4 class="col-img" *ngIf="pictures[0]">\n        <img class="picture" src="{{pictures[3]}}"/>\n      </ion-col>\n\n      <ion-col col-4 class="col-img" *ngIf="pictures[1]">\n        <img class="picture" src="{{pictures[4]}}"/>\n      </ion-col>\n\n      <ion-col col-4 class="col-img" *ngIf="pictures[2]">\n        <img class="picture" src="{{pictures[5]}}"/>\n      </ion-col>\n    </ion-row>\n  </ion-grid>\n  <br>\n  <br>\n\n  <button ion-item icon-left>\n    <ion-icon name="microphone"></ion-icon>\n    语音\n  </button>\n\n  <ion-grid style="width: 100%; height: 150px;">\n    <ion-row *ngIf="audios[0].time > 0" class="audio">\n      <ion-col col-6 class="audio-info">{{audios[0].time}}s</ion-col>\n      <ion-col col-2>\n        <ion-icon name="play" class="audio-btn" (click)="onPlay(audios[0])"></ion-icon>\n      </ion-col>\n      <ion-col></ion-col>\n    </ion-row>\n\n    <ion-row *ngIf="audios[1].time > 0" class="audio">\n      <ion-col col-6 class="audio-info">{{audios[1].time}}s</ion-col>\n      <ion-col col-2>\n        <ion-icon name="play" class="audio-btn" (click)="onPlay(audios[1])"></ion-icon>\n      </ion-col>\n      <ion-col></ion-col>\n    </ion-row>\n\n    <ion-row *ngIf="audios[2].time > 0" class="audio">\n      <ion-col col-6 class="audio-info">{{audios[2].time}}s</ion-col>\n      <ion-col col-2>\n        <ion-icon name="play" class="audio-btn" (click)="onPlay(audios[2])"></ion-icon>\n      </ion-col>\n      <ion-col></ion-col>\n    </ion-row>\n  </ion-grid>\n\n  <br>\n  <br>\n  <button ion-item icon-left>\n    <ion-icon name="videocam"></ion-icon>\n    视频\n  </button>\n\n  <ion-grid style="width: 100%; height: 100px;">\n    <ion-row>\n      <ion-col col-4 class="col-video" *ngIf="videos[0]">\n        <video class="video" (click)="onPlayVideo(videos[0])" src="{{videos[0]}}"></video>\n      </ion-col>\n\n      <ion-col col-4 class="col-video" *ngIf="videos[1]">\n        <video class="video" (click)="onPlayVideo(videos[1])" src="{{videos[1]}}"></video>\n      </ion-col>\n\n      <ion-col col-4 class="col-video" *ngIf="pictures[2]">\n        <video class="video" (click)="onPlayVideo(videos[2])" src="{{videos[2]}}"></video>\n      </ion-col>\n    </ion-row>\n  </ion-grid>\n  <br>\n  <br>\n</ion-content>\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\attachment\attachment.html"*/
+        selector: 'page-attachment',template:/*ion-inline-start:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\attachment\attachment.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-attachment">\n\n  <button ion-item icon-left>\n\n    <ion-icon name="camera"></ion-icon>\n\n    照片\n\n  </button>\n\n\n\n  <ion-grid style="width: 100%; height: 100px;">\n\n    <ion-row>\n\n      <ion-col col-4 class="col-img" *ngIf="pictures[0]">\n\n        <img class="picture" src="{{pictures[0]}}"/>\n\n      </ion-col>\n\n\n\n      <ion-col col-4 class="col-img" *ngIf="pictures[1]">\n\n        <img class="picture" src="{{pictures[1]}}"/>\n\n      </ion-col>\n\n\n\n      <ion-col col-4 class="col-img" *ngIf="pictures[2]">\n\n        <img class="picture" src="{{pictures[2]}}"/>\n\n      </ion-col>\n\n    </ion-row>\n\n  </ion-grid>\n\n\n\n  <ion-grid style="width: 100%; height: 100px;">\n\n    <ion-row>\n\n      <ion-col col-4 class="col-img" *ngIf="pictures[0]">\n\n        <img class="picture" src="{{pictures[3]}}"/>\n\n      </ion-col>\n\n\n\n      <ion-col col-4 class="col-img" *ngIf="pictures[1]">\n\n        <img class="picture" src="{{pictures[4]}}"/>\n\n      </ion-col>\n\n\n\n      <ion-col col-4 class="col-img" *ngIf="pictures[2]">\n\n        <img class="picture" src="{{pictures[5]}}"/>\n\n      </ion-col>\n\n    </ion-row>\n\n  </ion-grid>\n\n  <br>\n\n  <br>\n\n\n\n  <button ion-item icon-left>\n\n    <ion-icon name="microphone"></ion-icon>\n\n    语音\n\n  </button>\n\n\n\n  <ion-grid style="width: 100%; height: 150px;">\n\n    <ion-row *ngIf="audios[0].time > 0" class="audio">\n\n      <ion-col col-6 class="audio-info">{{audios[0].time}}s</ion-col>\n\n      <ion-col col-2>\n\n        <ion-icon name="play" class="audio-btn" (click)="onPlay(audios[0])"></ion-icon>\n\n      </ion-col>\n\n      <ion-col></ion-col>\n\n    </ion-row>\n\n\n\n    <ion-row *ngIf="audios[1].time > 0" class="audio">\n\n      <ion-col col-6 class="audio-info">{{audios[1].time}}s</ion-col>\n\n      <ion-col col-2>\n\n        <ion-icon name="play" class="audio-btn" (click)="onPlay(audios[1])"></ion-icon>\n\n      </ion-col>\n\n      <ion-col></ion-col>\n\n    </ion-row>\n\n\n\n    <ion-row *ngIf="audios[2].time > 0" class="audio">\n\n      <ion-col col-6 class="audio-info">{{audios[2].time}}s</ion-col>\n\n      <ion-col col-2>\n\n        <ion-icon name="play" class="audio-btn" (click)="onPlay(audios[2])"></ion-icon>\n\n      </ion-col>\n\n      <ion-col></ion-col>\n\n    </ion-row>\n\n  </ion-grid>\n\n\n\n  <br>\n\n  <br>\n\n  <button ion-item icon-left>\n\n    <ion-icon name="videocam"></ion-icon>\n\n    视频\n\n  </button>\n\n\n\n  <ion-grid style="width: 100%; height: 100px;">\n\n    <ion-row>\n\n      <ion-col col-4 class="col-video" *ngIf="videos[0]">\n\n        <video class="video" (click)="onPlayVideo(videos[0])" src="{{videos[0]}}"></video>\n\n      </ion-col>\n\n\n\n      <ion-col col-4 class="col-video" *ngIf="videos[1]">\n\n        <video class="video" (click)="onPlayVideo(videos[1])" src="{{videos[1]}}"></video>\n\n      </ion-col>\n\n\n\n      <ion-col col-4 class="col-video" *ngIf="pictures[2]">\n\n        <video class="video" (click)="onPlayVideo(videos[2])" src="{{videos[2]}}"></video>\n\n      </ion-col>\n\n    </ion-row>\n\n  </ion-grid>\n\n  <br>\n\n  <br>\n\n</ion-content>\n\n'/*ion-inline-end:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\attachment\attachment.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_2__providers_DataService__["a" /* DataService */],
@@ -5172,7 +5266,7 @@ var SearchResultPage = (function () {
 }());
 SearchResultPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-searchresult',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\searchresult\searchresult.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-searchresult">\n\n  <ion-grid no-padding>\n\n    <ion-row>\n\n      <ion-col>\n\n        <div class="allTasks">总共单:{{totalTaskCount}}</div>\n\n      </ion-col>\n\n      <ion-col>\n\n        <div class="finishedTasks">已完成:{{completedTaskCount}}</div>\n\n      </ion-col>\n\n      <ion-col>\n\n        <div class="unFinishedTasks">未完成:{{unCompletedTaskCount}}</div>\n\n      </ion-col>\n\n    </ion-row>\n\n  </ion-grid>\n\n  <!--总工单-->\n\n  <ion-list>\n\n    <ion-card *ngFor="let item of items">\n\n      <ion-item>\n\n        <ion-avatar item-start>\n\n          <img src="assets/img/ic_mywork_avatar.png">\n\n        </ion-avatar>\n\n        <div><h2 class="card-header-label-hint">客服编号</h2>\n\n          <h2 class="card-header-label-content">{{item.customerId}}</h2></div>\n\n        <div><h2 class="card-header-label-hint">任务编号</h2>\n\n          <h2 class="card-header-label-content">{{item.taskId}}</h2></div>\n\n      </ion-item>\n\n\n\n      <ion-list>\n\n        <ion-item *ngFor="let content of item.contents">\n\n          <ion-label fixed class="label-name">{{content.name}}</ion-label>\n\n          <div item-content>{{content.value}}</div>\n\n        </ion-item>\n\n        <ion-item (click)="onDetails(item.taskId)">\n\n          <ion-label fixed class="label-name">详细信息</ion-label>\n\n          <ion-icon name=\'arrow-forward\' item-end></ion-icon>\n\n        </ion-item>\n\n      </ion-list>\n\n    </ion-card>\n\n  </ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\searchresult\searchresult.html"*/
+        selector: 'page-searchresult',template:/*ion-inline-start:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\searchresult\searchresult.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-searchresult">\n\n  <ion-grid no-padding>\n\n    <ion-row>\n\n      <ion-col>\n\n        <div class="allTasks">总共单:{{totalTaskCount}}</div>\n\n      </ion-col>\n\n      <ion-col>\n\n        <div class="finishedTasks">已完成:{{completedTaskCount}}</div>\n\n      </ion-col>\n\n      <ion-col>\n\n        <div class="unFinishedTasks">未完成:{{unCompletedTaskCount}}</div>\n\n      </ion-col>\n\n    </ion-row>\n\n  </ion-grid>\n\n  <!--总工单-->\n\n  <ion-list>\n\n    <ion-card *ngFor="let item of items">\n\n      <ion-item>\n\n        <ion-avatar item-start>\n\n          <img src="assets/img/ic_mywork_avatar.png">\n\n        </ion-avatar>\n\n        <div><h2 class="card-header-label-hint">客服编号</h2>\n\n          <h2 class="card-header-label-content">{{item.customerId}}</h2></div>\n\n        <div><h2 class="card-header-label-hint">任务编号</h2>\n\n          <h2 class="card-header-label-content">{{item.taskId}}</h2></div>\n\n      </ion-item>\n\n\n\n      <ion-list>\n\n        <ion-item *ngFor="let content of item.contents">\n\n          <ion-label fixed class="label-name">{{content.name}}</ion-label>\n\n          <div item-content>{{content.value}}</div>\n\n        </ion-item>\n\n        <ion-item (click)="onDetails(item.taskId)">\n\n          <ion-label fixed class="label-name">详细信息</ion-label>\n\n          <ion-icon name=\'arrow-forward\' item-end></ion-icon>\n\n        </ion-item>\n\n      </ion-list>\n\n    </ion-card>\n\n  </ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\searchresult\searchresult.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* NavParams */],
@@ -5358,7 +5452,7 @@ var SearchDetailsPage = (function () {
 }());
 SearchDetailsPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-searchdetails',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\searchdetail\searchdetails.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n  </ion-navbar>\n\n\n\n  <ion-segment [(ngModel)]="segmentName">\n\n    <ion-segment-button value="basicInfo">\n\n      基本信息\n\n    </ion-segment-button>\n\n    <ion-segment-button value="taskState">\n\n      任务状态\n\n    </ion-segment-button>\n\n  </ion-segment>\n\n</ion-header>\n\n\n\n<ion-content class="page-searchdetails">\n\n\n\n\n\n  <div [ngSwitch]="segmentName">\n\n    <!--基本信息-->\n\n    <ion-list *ngSwitchCase="\'basicInfo\'">\n\n      <ion-item *ngFor="let detail of details">\n\n        <ion-label fixed class="label-name">\n\n          {{detail.name}}\n\n        </ion-label>\n\n        <div item-content>\n\n          {{detail.value}}\n\n        </div>\n\n      </ion-item>\n\n    </ion-list>\n\n\n\n\n\n    <!--任务状态-->\n\n    <ion-list *ngSwitchCase="\'taskState\'">\n\n      <ul class="list">\n\n        <li *ngFor="let state of states" [ngClass]="{\'current\':state==states[0]}">{{state.state}}<br/>{{state.time}}\n\n          <div class="circle"><b class="circle"></b></div>\n\n        </li>\n\n      </ul>\n\n    </ion-list>\n\n\n\n  </div>\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\searchdetail\searchdetails.html"*/
+        selector: 'page-searchdetails',template:/*ion-inline-start:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\searchdetail\searchdetails.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n  </ion-navbar>\n\n\n\n  <ion-segment [(ngModel)]="segmentName">\n\n    <ion-segment-button value="basicInfo">\n\n      基本信息\n\n    </ion-segment-button>\n\n    <ion-segment-button value="taskState">\n\n      任务状态\n\n    </ion-segment-button>\n\n  </ion-segment>\n\n</ion-header>\n\n\n\n<ion-content class="page-searchdetails">\n\n\n\n\n\n  <div [ngSwitch]="segmentName">\n\n    <!--基本信息-->\n\n    <ion-list *ngSwitchCase="\'basicInfo\'">\n\n      <ion-item *ngFor="let detail of details">\n\n        <ion-label fixed class="label-name">\n\n          {{detail.name}}\n\n        </ion-label>\n\n        <div item-content>\n\n          {{detail.value}}\n\n        </div>\n\n      </ion-item>\n\n    </ion-list>\n\n\n\n\n\n    <!--任务状态-->\n\n    <ion-list *ngSwitchCase="\'taskState\'">\n\n      <ul class="list">\n\n        <li *ngFor="let state of states" [ngClass]="{\'current\':state==states[0]}">{{state.state}}<br/>{{state.time}}\n\n          <div class="circle"><b class="circle"></b></div>\n\n        </li>\n\n      </ul>\n\n    </ion-list>\n\n\n\n  </div>\n\n</ion-content>\n\n'/*ion-inline-end:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\searchdetail\searchdetails.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* NavParams */],
@@ -5621,7 +5715,7 @@ var WorkInfoPage = (function () {
 }());
 WorkInfoPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-workinfo',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\workinfo\workinfo.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n\n\n    <ion-buttons end>\n\n      <button ion-button icon-only color="white" (click)="onDispatch($event)">\n\n        <ion-icon name="checkmark-circle"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n\n\n  <ion-toolbar no-border-top>\n\n    <ion-segment [(ngModel)]="segmentName" (ionChange)="segmentChanged($event)">\n\n      <ion-segment-button value="detailInfo">\n\n        基本信息\n\n      </ion-segment-button>\n\n      <ion-segment-button value="dispatchInfo">\n\n        派工信息\n\n      </ion-segment-button>\n\n    </ion-segment>\n\n  </ion-toolbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-workinfo">\n\n\n\n  <div [ngSwitch]="segmentName">\n\n    <ion-list *ngSwitchCase="\'detailInfo\'">\n\n      <ion-item *ngFor="let detail of details">\n\n        <ion-label fixed class="label-name">\n\n          {{detail.name}}\n\n        </ion-label>\n\n        <div item-content>\n\n          {{detail.value}}\n\n        </div>\n\n      </ion-item>\n\n    </ion-list>\n\n\n\n    <ion-list *ngSwitchCase="\'dispatchInfo\'">\n\n      <ion-item *ngFor="let dispatch of dispatches" class="dispatch-item" (click)="itemSelected(dispatch)">\n\n        <ion-label fixed class="label-name">\n\n          {{dispatch.name}}\n\n        </ion-label>\n\n        <div item-content *ngIf="!dispatch.isDate&&!dispatch.isTime">\n\n          {{dispatch.value}}\n\n        </div>\n\n        <ion-datetime *ngIf="dispatch.isDate" style="padding-left: 0px;"\n\n                      cancelText=\'取消\' doneText=\'确定\' displayFormat="YYYY-MM-DD"\n\n                      pickerFormat="YYYY-MM-DD" [(ngModel)]="dispatch.value"></ion-datetime>\n\n        <ion-datetime *ngIf="dispatch.isTime" style="padding-left: 0px;"\n\n                      cancelText=\'取消\' doneText=\'确定\' displayFormat="HH:mm:ss"\n\n                      pickerFormat="HH:mm:ss" [(ngModel)]="dispatch.value"></ion-datetime>\n\n        <ion-icon name="ios-arrow-forward" item-end *ngIf="dispatch.isActive"></ion-icon>\n\n      </ion-item>\n\n    </ion-list>\n\n  </div>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\workinfo\workinfo.html"*/
+        selector: 'page-workinfo',template:/*ion-inline-start:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\workinfo\workinfo.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n\n\n    <ion-buttons end>\n\n      <button ion-button icon-only color="white" (click)="onDispatch($event)">\n\n        <ion-icon name="checkmark-circle"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n\n\n  <ion-toolbar no-border-top>\n\n    <ion-segment [(ngModel)]="segmentName" (ionChange)="segmentChanged($event)">\n\n      <ion-segment-button value="detailInfo">\n\n        基本信息\n\n      </ion-segment-button>\n\n      <ion-segment-button value="dispatchInfo">\n\n        派工信息\n\n      </ion-segment-button>\n\n    </ion-segment>\n\n  </ion-toolbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-workinfo">\n\n\n\n  <div [ngSwitch]="segmentName">\n\n    <ion-list *ngSwitchCase="\'detailInfo\'">\n\n      <ion-item *ngFor="let detail of details">\n\n        <ion-label fixed class="label-name">\n\n          {{detail.name}}\n\n        </ion-label>\n\n        <div item-content>\n\n          {{detail.value}}\n\n        </div>\n\n      </ion-item>\n\n    </ion-list>\n\n\n\n    <ion-list *ngSwitchCase="\'dispatchInfo\'">\n\n      <ion-item *ngFor="let dispatch of dispatches" class="dispatch-item" (click)="itemSelected(dispatch)">\n\n        <ion-label fixed class="label-name">\n\n          {{dispatch.name}}\n\n        </ion-label>\n\n        <div item-content *ngIf="!dispatch.isDate&&!dispatch.isTime">\n\n          {{dispatch.value}}\n\n        </div>\n\n        <ion-datetime *ngIf="dispatch.isDate" style="padding-left: 0px;"\n\n                      cancelText=\'取消\' doneText=\'确定\' displayFormat="YYYY-MM-DD"\n\n                      pickerFormat="YYYY-MM-DD" [(ngModel)]="dispatch.value"></ion-datetime>\n\n        <ion-datetime *ngIf="dispatch.isTime" style="padding-left: 0px;"\n\n                      cancelText=\'取消\' doneText=\'确定\' displayFormat="HH:mm:ss"\n\n                      pickerFormat="HH:mm:ss" [(ngModel)]="dispatch.value"></ion-datetime>\n\n        <ion-icon name="ios-arrow-forward" item-end *ngIf="dispatch.isActive"></ion-icon>\n\n      </ion-item>\n\n    </ion-list>\n\n  </div>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\workinfo\workinfo.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* NavParams */],
@@ -5666,7 +5760,7 @@ var NewsDetailsPage = (function () {
 }());
 NewsDetailsPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-newsdetails',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\newsdetails\newsdetails.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-newsdetails">\n\n\n\n  <h2>{{newsTitle}}</h2>\n\n  <h3>{{newsTime}}</h3>\n\n  <p>{{newsContent}}</p>\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\newsdetails\newsdetails.html"*/
+        selector: 'page-newsdetails',template:/*ion-inline-start:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\newsdetails\newsdetails.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-newsdetails">\n\n\n\n  <h2>{{newsTitle}}</h2>\n\n  <h3>{{newsTime}}</h3>\n\n  <p>{{newsContent}}</p>\n\n</ion-content>\n\n'/*ion-inline-end:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\newsdetails\newsdetails.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* NavParams */]])
@@ -5991,7 +6085,7 @@ var MaterialsAddPage = (function () {
 }());
 MaterialsAddPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-materialsadd',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\materialsadd\materialsadd.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content>\n\n\n\n  <ion-list>\n\n\n\n    <ion-item>\n\n      <ion-label>材料类别：</ion-label>\n\n      <ion-select okText="确定" cancelText="取消" [(ngModel)]="materialLBID" (ionChange)="selectMaterialLB()">\n\n        <ion-option *ngFor="let type of optMaterialsLB" value={{type.id}}>{{type.name}}</ion-option>\n\n      </ion-select>\n\n    </ion-item>\n\n\n\n\n\n    <ion-item>\n\n      <ion-label>材料型号：</ion-label>\n\n      <ion-select okText="确定" cancelText="取消" [(ngModel)]="materialXHID" (ionChange)="selectMaterialXH()">\n\n        <ion-option *ngFor="let type of optMaterialsXH" value={{type.id}}>{{type.name}}</ion-option>\n\n      </ion-select>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label>材料规格：</ion-label>\n\n      <ion-select okText="确定" cancelText="取消" [(ngModel)]="materialGGID" (ionChange)="selectMaterialGG()">\n\n        <ion-option *ngFor="let type of optMaterialsGG" value={{type.id}}>{{type.name}}</ion-option>\n\n      </ion-select>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label>生产厂家：</ion-label>\n\n      <ion-select okText="确定" cancelText="取消" [(ngModel)]="materialCJID">\n\n        <ion-option *ngFor="let type of optMaterialsCJ" value={{type.id}}>{{type.name}}</ion-option>\n\n      </ion-select>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label>单位：</ion-label>\n\n      <ion-select okText="确定" cancelText="取消" [(ngModel)]="unitID" (ionChange)="selectMaterialUnit()">\n\n        <ion-option *ngFor="let type of materialsUnits" value={{type.id}}>{{type.text}}</ion-option>\n\n      </ion-select>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <button item-left ion-button color="primary" clear icon-only (click)="reduceAccount()">\n\n        <ion-icon name=\'remove-circle\' is-active="false"></ion-icon>\n\n      </button>\n\n      <ion-label class="account">{{count}}</ion-label>\n\n      <button item-right ion-button color="primary" clear icon-only (click)="addAccount()">\n\n        <ion-icon name=\'add-circle\' is-active="false"></ion-icon>\n\n      </button>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label>备注：</ion-label>\n\n      <ion-input type="text" [(ngModel)]="remark"></ion-input>\n\n    </ion-item>\n\n  </ion-list>\n\n\n\n  <ion-row>\n\n    <ion-col>\n\n      <div class="add-button">\n\n        <button ion-button [disabled]="!materialLBID||!materialXHID||!materialGGID||!materialCJID||!unitID||count==0"\n\n                type="submit" block (click)="addClick()">{{buttonStr}}\n\n        </button>\n\n      </div>\n\n    </ion-col>\n\n  </ion-row>\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\materialsadd\materialsadd.html"*/
+        selector: 'page-materialsadd',template:/*ion-inline-start:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\materialsadd\materialsadd.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content>\n\n\n\n  <ion-list>\n\n\n\n    <ion-item>\n\n      <ion-label>材料类别：</ion-label>\n\n      <ion-select okText="确定" cancelText="取消" [(ngModel)]="materialLBID" (ionChange)="selectMaterialLB()">\n\n        <ion-option *ngFor="let type of optMaterialsLB" value={{type.id}}>{{type.name}}</ion-option>\n\n      </ion-select>\n\n    </ion-item>\n\n\n\n\n\n    <ion-item>\n\n      <ion-label>材料型号：</ion-label>\n\n      <ion-select okText="确定" cancelText="取消" [(ngModel)]="materialXHID" (ionChange)="selectMaterialXH()">\n\n        <ion-option *ngFor="let type of optMaterialsXH" value={{type.id}}>{{type.name}}</ion-option>\n\n      </ion-select>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label>材料规格：</ion-label>\n\n      <ion-select okText="确定" cancelText="取消" [(ngModel)]="materialGGID" (ionChange)="selectMaterialGG()">\n\n        <ion-option *ngFor="let type of optMaterialsGG" value={{type.id}}>{{type.name}}</ion-option>\n\n      </ion-select>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label>生产厂家：</ion-label>\n\n      <ion-select okText="确定" cancelText="取消" [(ngModel)]="materialCJID">\n\n        <ion-option *ngFor="let type of optMaterialsCJ" value={{type.id}}>{{type.name}}</ion-option>\n\n      </ion-select>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label>单位：</ion-label>\n\n      <ion-select okText="确定" cancelText="取消" [(ngModel)]="unitID" (ionChange)="selectMaterialUnit()">\n\n        <ion-option *ngFor="let type of materialsUnits" value={{type.id}}>{{type.text}}</ion-option>\n\n      </ion-select>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <button item-left ion-button color="primary" clear icon-only (click)="reduceAccount()">\n\n        <ion-icon name=\'remove-circle\' is-active="false"></ion-icon>\n\n      </button>\n\n      <ion-label class="account">{{count}}</ion-label>\n\n      <button item-right ion-button color="primary" clear icon-only (click)="addAccount()">\n\n        <ion-icon name=\'add-circle\' is-active="false"></ion-icon>\n\n      </button>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label>备注：</ion-label>\n\n      <ion-input type="text" [(ngModel)]="remark"></ion-input>\n\n    </ion-item>\n\n  </ion-list>\n\n\n\n  <ion-row>\n\n    <ion-col>\n\n      <div class="add-button">\n\n        <button ion-button [disabled]="!materialLBID||!materialXHID||!materialGGID||!materialCJID||!unitID||count==0"\n\n                type="submit" block (click)="addClick()">{{buttonStr}}\n\n        </button>\n\n      </div>\n\n    </ion-col>\n\n  </ion-row>\n\n</ion-content>\n\n'/*ion-inline-end:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\materialsadd\materialsadd.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_2__providers_GlobalService__["a" /* GlobalService */],
@@ -6090,7 +6184,6 @@ var NetworkSetPage = (function () {
         this.configService = configService;
         this.toastCtrl = toastCtrl;
         this.viewCtrl = viewCtrl;
-        this.tag = "[NetworkSetPage]";
     }
     NetworkSetPage.prototype.ngOnInit = function () {
         var _this = this;
@@ -6573,7 +6666,7 @@ var LoginPage = (function () {
 }());
 LoginPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-login',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\login\login.html"*/'<ion-header>\n\n</ion-header>\n\n\n\n<ion-content>\n\n  <div class="login-logo">\n\n    <img src="assets/img/login_logo.png">\n\n  </div>\n\n\n\n  <ion-row>\n\n    <ion-col>\n\n      <ion-list>\n\n        <form [formGroup]="loginForm">\n\n          <ion-item>\n\n            <ion-icon name="person" item-start></ion-icon>\n\n            <ion-input type="text" formControlName="LoginID" clearInput></ion-input>\n\n          </ion-item>\n\n          <p *ngIf="!loginForm.controls.LoginID.valid && loginForm.controls.LoginID.touched" color="danger">请输入有效的用户名.</p>\n\n\n\n          <ion-item>\n\n            <ion-icon name="lock" item-start></ion-icon>\n\n            <ion-input type="password" formControlName="LoginPwd" clearInput></ion-input>\n\n          </ion-item>\n\n          <p *ngIf="!loginForm.controls.LoginPwd.valid && loginForm.controls.LoginPwd.touched" color="danger">请输入有效的密码.</p>\n\n\n\n          <ion-item>\n\n            <ion-label>选择人员</ion-label>\n\n            <ion-select okText="确定" cancelText="取消" formControlName="LoginSelect">\n\n              <ion-option value="worker">外勤人员</ion-option>\n\n              <ion-option value="manager">管理人员</ion-option>\n\n            </ion-select>\n\n          </ion-item>\n\n          <p *ngIf="!loginForm.controls.LoginSelect.valid && loginForm.controls.LoginSelect.touched" color="danger">请选择人员.</p>\n\n        </form>\n\n      </ion-list>\n\n    </ion-col>\n\n  </ion-row>\n\n\n\n  <ion-row>\n\n    <ion-col>\n\n      <div class="login-button">\n\n        <button ion-button type="submit" [disabled]="!loginForm.valid" block (click)="loginClick(loginForm.value)">登录</button>\n\n      </div>\n\n    </ion-col>\n\n  </ion-row>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\login\login.html"*/,
+        selector: 'page-login',template:/*ion-inline-start:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\login\login.html"*/'<ion-header>\n\n</ion-header>\n\n\n\n<ion-content>\n\n  <div class="login-logo">\n\n    <img src="assets/img/login_logo.png">\n\n  </div>\n\n\n\n  <ion-row>\n\n    <ion-col>\n\n      <ion-list>\n\n        <form [formGroup]="loginForm">\n\n          <ion-item>\n\n            <ion-icon name="person" item-start></ion-icon>\n\n            <ion-input type="text" formControlName="LoginID" clearInput></ion-input>\n\n          </ion-item>\n\n          <p *ngIf="!loginForm.controls.LoginID.valid && loginForm.controls.LoginID.touched" color="danger">请输入有效的用户名.</p>\n\n\n\n          <ion-item>\n\n            <ion-icon name="lock" item-start></ion-icon>\n\n            <ion-input type="password" formControlName="LoginPwd" clearInput></ion-input>\n\n          </ion-item>\n\n          <p *ngIf="!loginForm.controls.LoginPwd.valid && loginForm.controls.LoginPwd.touched" color="danger">请输入有效的密码.</p>\n\n\n\n          <ion-item>\n\n            <ion-label>选择人员</ion-label>\n\n            <ion-select okText="确定" cancelText="取消" formControlName="LoginSelect">\n\n              <ion-option value="worker">外勤人员</ion-option>\n\n              <ion-option value="manager">管理人员</ion-option>\n\n            </ion-select>\n\n          </ion-item>\n\n          <p *ngIf="!loginForm.controls.LoginSelect.valid && loginForm.controls.LoginSelect.touched" color="danger">请选择人员.</p>\n\n        </form>\n\n      </ion-list>\n\n    </ion-col>\n\n  </ion-row>\n\n\n\n  <ion-row>\n\n    <ion-col>\n\n      <div class="login-button">\n\n        <button ion-button type="submit" [disabled]="!loginForm.valid" block (click)="loginClick(loginForm.value)">登录</button>\n\n      </div>\n\n    </ion-col>\n\n  </ion-row>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\login\login.html"*/,
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */],
@@ -6598,17 +6691,17 @@ LoginPage = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mywork_mywork__ = __webpack_require__(49);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__news_news__ = __webpack_require__(66);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__stationwork_stationwork__ = __webpack_require__(65);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__search_search__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__news_news__ = __webpack_require__(65);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__stationwork_stationwork__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__search_search__ = __webpack_require__(63);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__providers_DataService__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__setting_setting__ = __webpack_require__(68);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__history_myhistory__ = __webpack_require__(62);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__setting_setting__ = __webpack_require__(67);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__history_myhistory__ = __webpack_require__(61);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__providers_ConfigService__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__map_map__ = __webpack_require__(37);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__model_MapParam__ = __webpack_require__(48);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__materials_materials__ = __webpack_require__(67);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__materials_materials__ = __webpack_require__(66);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -6862,7 +6955,7 @@ var MainPage = (function () {
 }());
 MainPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-main',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\main\main.html"*/'<ion-header>\n\n  <ion-toolbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n    <ion-buttons end>\n\n      <button ion-button icon-only color="white" (click)="selectSettings($event)">\n\n        <ion-icon name="settings"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-toolbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-main">\n\n  <!--grid style-->\n\n  <ion-grid *ngIf="gridStyle">\n\n    <ion-row *ngFor="let item of gridItems">\n\n      <ion-col col-4 (click)="itemSelected(item[0].id)" *ngIf="item[0] && item[0].active">\n\n        <img src="{{item[0].src}}" width="{{imgWidth}}" height="{{imgHeight}}"/>\n\n        <ion-badge color="danger" class="grid-item-badge" *ngIf="item[0].count>0">{{item[0].count}}</ion-badge>\n\n        <ion-label>{{item[0].name}}</ion-label>\n\n      </ion-col>\n\n      <ion-col col-4 (click)="itemSelected(item[1].id)" *ngIf="item[1] && item[1].active">\n\n        <img src="{{item[1].src}}" width="{{imgWidth}}" height="{{imgHeight}}"/>\n\n        <ion-badge color="danger" class="grid-item-badge" *ngIf="item[1].count>0">{{item[1].count}}</ion-badge>\n\n        <ion-label>{{item[1].name}}</ion-label>\n\n      </ion-col>\n\n      <ion-col col-4 (click)="itemSelected(item[2].id)" *ngIf="item[2] && item[2].active">\n\n        <img src="{{item[2].src}}" width="{{imgWidth}}" height="{{imgHeight}}"/>\n\n        <ion-badge color="danger" class="grid-item-badge" *ngIf="item[2].count>0">{{item[2].count}}</ion-badge>\n\n        <ion-label>{{item[2].name}}</ion-label>\n\n      </ion-col>\n\n    </ion-row>\n\n  </ion-grid>\n\n\n\n  <!--list style-->\n\n  <ion-list *ngIf="!gridStyle">\n\n    <ion-item *ngFor="let item of listItems">\n\n      <div class="list-item" *ngIf="item.active" (click)="itemSelected(item.id)">\n\n        <img src="{{item.src}}" width="{{imgWidth}}" height="imgHeight" class="item-img"/>\n\n        <p class="item-name">{{item.name}}</p>\n\n        <ion-badge color="danger" class="list-item-badge" *ngIf="item.count>0">{{item.count}}</ion-badge>\n\n      </div>\n\n    </ion-item>\n\n  </ion-list>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\main\main.html"*/
+        selector: 'page-main',template:/*ion-inline-start:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\main\main.html"*/'<ion-header>\n\n  <ion-toolbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n    <ion-buttons end>\n\n      <button ion-button icon-only color="white" (click)="selectSettings($event)">\n\n        <ion-icon name="settings"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-toolbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-main">\n\n  <!--grid style-->\n\n  <ion-grid *ngIf="gridStyle">\n\n    <ion-row *ngFor="let item of gridItems">\n\n      <ion-col col-4 (click)="itemSelected(item[0].id)" *ngIf="item[0] && item[0].active">\n\n        <img src="{{item[0].src}}" width="{{imgWidth}}" height="{{imgHeight}}"/>\n\n        <ion-badge color="danger" class="grid-item-badge" *ngIf="item[0].count>0">{{item[0].count}}</ion-badge>\n\n        <ion-label>{{item[0].name}}</ion-label>\n\n      </ion-col>\n\n      <ion-col col-4 (click)="itemSelected(item[1].id)" *ngIf="item[1] && item[1].active">\n\n        <img src="{{item[1].src}}" width="{{imgWidth}}" height="{{imgHeight}}"/>\n\n        <ion-badge color="danger" class="grid-item-badge" *ngIf="item[1].count>0">{{item[1].count}}</ion-badge>\n\n        <ion-label>{{item[1].name}}</ion-label>\n\n      </ion-col>\n\n      <ion-col col-4 (click)="itemSelected(item[2].id)" *ngIf="item[2] && item[2].active">\n\n        <img src="{{item[2].src}}" width="{{imgWidth}}" height="{{imgHeight}}"/>\n\n        <ion-badge color="danger" class="grid-item-badge" *ngIf="item[2].count>0">{{item[2].count}}</ion-badge>\n\n        <ion-label>{{item[2].name}}</ion-label>\n\n      </ion-col>\n\n    </ion-row>\n\n  </ion-grid>\n\n\n\n  <!--list style-->\n\n  <ion-list *ngIf="!gridStyle">\n\n    <ion-item *ngFor="let item of listItems">\n\n      <div class="list-item" *ngIf="item.active" (click)="itemSelected(item.id)">\n\n        <img src="{{item.src}}" width="{{imgWidth}}" height="imgHeight" class="item-img"/>\n\n        <p class="item-name">{{item.name}}</p>\n\n        <ion-badge color="danger" class="list-item-badge" *ngIf="item.count>0">{{item.count}}</ion-badge>\n\n      </div>\n\n    </ion-item>\n\n  </ion-list>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\main\main.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* Events */],
@@ -6919,8 +7012,8 @@ HttpInterceptor = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_GlobalService__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__setting_setting__ = __webpack_require__(68);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__news_news__ = __webpack_require__(66);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__setting_setting__ = __webpack_require__(67);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__news_news__ = __webpack_require__(65);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -6996,7 +7089,7 @@ var MorePage = (function () {
 }());
 MorePage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-main',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\more\more.html"*/'<ion-header>\n\n  <ion-toolbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n  </ion-toolbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-main">\n\n  <!--list style-->\n\n  <ion-list>\n\n    <ion-item *ngFor="let item of listItems">\n\n      <div class="list-item" *ngIf="item.active" (click)="itemSelected(item.id)">\n\n        <img src="{{item.src}}" width="{{imgWidth}}" height="{{imgHeight}}" class="item-img"/>\n\n        <p class="item-name">{{item.name}}</p>\n\n        <ion-badge color="danger" class="list-item-badge" *ngIf="item.count>0">{{item.count}}</ion-badge>\n\n      </div>\n\n    </ion-item>\n\n  </ion-list>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\more\more.html"*/
+        selector: 'page-main',template:/*ion-inline-start:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\more\more.html"*/'<ion-header>\n\n  <ion-toolbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n  </ion-toolbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-main">\n\n  <!--list style-->\n\n  <ion-list>\n\n    <ion-item *ngFor="let item of listItems">\n\n      <div class="list-item" *ngIf="item.active" (click)="itemSelected(item.id)">\n\n        <img src="{{item.src}}" width="{{imgWidth}}" height="{{imgHeight}}" class="item-img"/>\n\n        <p class="item-name">{{item.name}}</p>\n\n        <ion-badge color="danger" class="list-item-badge" *ngIf="item.count>0">{{item.count}}</ion-badge>\n\n      </div>\n\n    </ion-item>\n\n  </ion-list>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\more\more.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_2__providers_GlobalService__["a" /* GlobalService */]])
@@ -7036,12 +7129,12 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_login_login__ = __webpack_require__(241);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_main_main__ = __webpack_require__(242);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__pages_mywork_mywork__ = __webpack_require__(49);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pages_news_news__ = __webpack_require__(66);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pages_news_news__ = __webpack_require__(65);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__pages_workdetail_workdetail__ = __webpack_require__(129);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__pages_stationwork_stationwork__ = __webpack_require__(65);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__pages_stationwork_stationwork__ = __webpack_require__(64);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__pages_workinfo_workinfo__ = __webpack_require__(235);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__pages_history_myhistory__ = __webpack_require__(62);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__ionic_native_file__ = __webpack_require__(61);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__pages_history_myhistory__ = __webpack_require__(61);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__ionic_native_file__ = __webpack_require__(120);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__providers_FileService__ = __webpack_require__(23);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__ionic_native_transfer__ = __webpack_require__(222);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__providers_StorageService__ = __webpack_require__(238);
@@ -7055,32 +7148,32 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_27__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_28__providers_UploadService__ = __webpack_require__(125);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_29__ionic_native_network__ = __webpack_require__(244);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_30__pages_search_search__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_30__pages_search_search__ = __webpack_require__(63);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_31__ionic_native_app_preferences__ = __webpack_require__(243);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_32__pages_searchresult_searchresult__ = __webpack_require__(233);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_33__pages_searchdetail_searchdetails__ = __webpack_require__(234);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_34__pages_newsdetails_newsdetails__ = __webpack_require__(236);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_35__pages_setting_setting__ = __webpack_require__(68);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_35__pages_setting_setting__ = __webpack_require__(67);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_36__providers_HttpInterceptorBackend__ = __webpack_require__(330);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_37__providers_HttpInterceptor__ = __webpack_require__(247);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_38__ionic_native_sqlite__ = __webpack_require__(225);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_39__ionic_native_sqlite_porter__ = __webpack_require__(226);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_40__providers_DbService__ = __webpack_require__(63);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_40__providers_DbService__ = __webpack_require__(62);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_41__ionic_storage__ = __webpack_require__(60);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_42__ionic_native_device__ = __webpack_require__(245);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_43__pipes_ValueValidPipe__ = __webpack_require__(331);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_44__ionic_native_camera__ = __webpack_require__(227);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_45__ionic_native_media_capture__ = __webpack_require__(229);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_46__ionic_native_video_player__ = __webpack_require__(230);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_47__ionic_native_android_permissions__ = __webpack_require__(119);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_47__ionic_native_android_permissions__ = __webpack_require__(118);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_48__ionic_native_media__ = __webpack_require__(228);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_49__providers_MediaService__ = __webpack_require__(127);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_50__pages_record_PopoverRecordPage__ = __webpack_require__(231);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_51__ionic_native_file_transfer__ = __webpack_require__(124);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_52__pages_map_map__ = __webpack_require__(37);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_53__pages_materials_materials__ = __webpack_require__(67);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_53__pages_materials_materials__ = __webpack_require__(66);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_54__pages_materialsadd_materialsadd__ = __webpack_require__(237);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_55__ionic_native_my_plugin__ = __webpack_require__(120);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_55__ionic_native_my_plugin__ = __webpack_require__(119);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_56__pages_tabs_tabs__ = __webpack_require__(332);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_57__pages_more_more__ = __webpack_require__(248);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_58__pages_setting_networkset__ = __webpack_require__(239);
@@ -7335,7 +7428,7 @@ var MyApp = (function () {
     return MyApp;
 }());
 MyApp = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\app\app.html"*/'<ion-nav [root]="rootPage"></ion-nav>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\app\app.html"*/,
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({template:/*ion-inline-start:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\app\app.html"*/'<ion-nav [root]="rootPage"></ion-nav>\n\n'/*ion-inline-end:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\app\app.html"*/,
         providers: [__WEBPACK_IMPORTED_MODULE_4__app_component_service__["a" /* AppComponentService */]]
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["l" /* Platform */],
@@ -7355,17 +7448,17 @@ MyApp = __decorate([
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppComponentService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ionic_native_android_permissions__ = __webpack_require__(119);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ionic_native_android_permissions__ = __webpack_require__(118);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_FileService__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_my_plugin__ = __webpack_require__(120);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_history_myhistory__ = __webpack_require__(62);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_my_plugin__ = __webpack_require__(119);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_history_myhistory__ = __webpack_require__(61);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_map_map__ = __webpack_require__(37);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_search_search__ = __webpack_require__(64);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_stationwork_stationwork__ = __webpack_require__(65);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_news_news__ = __webpack_require__(66);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__pages_materials_materials__ = __webpack_require__(67);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pages_setting_setting__ = __webpack_require__(68);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_search_search__ = __webpack_require__(63);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_stationwork_stationwork__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_news_news__ = __webpack_require__(65);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__pages_materials_materials__ = __webpack_require__(66);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pages_setting_setting__ = __webpack_require__(67);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__pages_mywork_mywork__ = __webpack_require__(49);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__providers_DataService__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__providers_ConfigService__ = __webpack_require__(16);
@@ -7620,7 +7713,7 @@ AppComponentService = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__model_Task__ = __webpack_require__(36);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__DbService__ = __webpack_require__(63);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__DbService__ = __webpack_require__(62);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__MediaService__ = __webpack_require__(127);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__ConfigService__ = __webpack_require__(16);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -8239,7 +8332,7 @@ var SyncService = (function () {
                         mediaNames[i] = mediaNames[i].replace(/#\d*/, '');
                     }
                     _this.dbService.getMediaList(_this.globalService.userId, history_2.taskId, mediaNames, [_this.globalService.uploadedFlagForLocal, _this.globalService.uploadedFlagForUploading])
-                        .then(function (mediaList) { return _this.uploadMediaList(mediaList); })
+                        .then(function (mediaList) { return _this.uploadMediaListV2(mediaList); })
                         .catch(function (error) { return console.error(error); })
                         .then(function () { return _this.events.publish(_this.uploadMediaEvent, msgType, histories); });
                 }
@@ -8321,18 +8414,18 @@ var SyncService = (function () {
         }
     };
     /**
-     * 上传每个任务下的多媒体信息
+     * 上传每个任务下的多媒体信息V2
      * @param mediaList
      * @returns {any}
      */
-    SyncService.prototype.uploadMediaList = function (mediaList) {
+    SyncService.prototype.uploadMediaListV2 = function (mediaList) {
         var _this = this;
         if (mediaList && mediaList.length > 0) {
-            var promises = mediaList.map(function (media) { return _this.uploadOneMedia(media); });
+            var promises = mediaList.map(function (media) { return _this.uploadOneMediaV2(media); });
             return Promise.all(promises)
                 .then(function (result) {
-                var files = mediaList.map(function (media) { return media.fileId; });
-                return _this.uploadService.uploadMediaIds(mediaList[0].taskId.split('#')[0], files.join(','));
+                var files = mediaList.map(function (media) { return media.extendedInfo; });
+                return _this.uploadService.uploadMediaIdsV2(mediaList[0].taskId.split('#')[0], _this.globalService.userId, files);
             })
                 .then(function (result) {
                 for (var _i = 0, mediaList_1 = mediaList; _i < mediaList_1.length; _i++) {
@@ -8347,6 +8440,54 @@ var SyncService = (function () {
         else {
             return Promise.resolve(true);
         }
+    };
+    /**
+     * 上传每个任务下的多媒体信息
+     * @param mediaList
+     * @returns {any}
+     */
+    SyncService.prototype.uploadMediaList = function (mediaList) {
+        var _this = this;
+        if (mediaList && mediaList.length > 0) {
+            var promises = mediaList.map(function (media) { return _this.uploadOneMedia(media); });
+            return Promise.all(promises)
+                .then(function (result) {
+                var files = mediaList.map(function (media) { return media.fileId; });
+                return _this.uploadService.uploadMediaIds(mediaList[0].taskId.split('#')[0], files.join(','));
+            })
+                .then(function (result) {
+                for (var _i = 0, mediaList_2 = mediaList; _i < mediaList_2.length; _i++) {
+                    var media = mediaList_2[_i];
+                    media.uploadedFlag = result ? _this.globalService.uploadedFlagForUploaded : _this.globalService.uploadedFlagForLocal;
+                }
+                var promises = mediaList.map(function (media) { return _this.dbService.saveMedia(media); });
+                return Promise.all(promises)
+                    .then(function (results) { return true; });
+            });
+        }
+        else {
+            return Promise.resolve(true);
+        }
+    };
+    /**
+     * 上传V2
+     * @param media
+     * @returns {Promise<boolean>}
+     */
+    SyncService.prototype.uploadOneMediaV2 = function (media) {
+        var _this = this;
+        return media.fileId && media.fileId !== 'null' && media.fileId !== 'undefined'
+            ? Promise.resolve(true)
+            : this.uploadService.uploadMediaV2(media)
+                .then(function (fileId) {
+                if (fileId) {
+                    media.fileId = fileId;
+                    return _this.dbService.saveMedia(media);
+                }
+                else {
+                    return Promise.reject('fileId is error');
+                }
+            });
     };
     /**
      * 上传
@@ -8566,7 +8707,7 @@ var HomePage = (function () {
 }());
 HomePage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-home',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\home\home.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <ion-title>\n\n      Ionic Blank\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n  The world is your oyster.\n\n  <p>\n\n    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.\n\n  </p>\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\home\home.html"*/
+        selector: 'page-home',template:/*ion-inline-start:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\home\home.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <ion-title>\n\n      Ionic Blank\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n  The world is your oyster.\n\n  <p>\n\n    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.\n\n  </p>\n\n</ion-content>\n\n'/*ion-inline-end:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\home\home.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */]])
 ], HomePage);
@@ -8587,7 +8728,7 @@ HomePage = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_app_version__ = __webpack_require__(246);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__providers_DataService__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__ionic_native_android_permissions__ = __webpack_require__(119);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__ionic_native_android_permissions__ = __webpack_require__(118);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8755,7 +8896,7 @@ var WelcomePage = (function () {
 }());
 WelcomePage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-welcome',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\welcome\welcome.html"*/'<ion-header>\n\n</ion-header>\n\n\n\n<ion-content class="page-content">\n\n  <div class="welcome-logo">\n\n    <img src="assets/img/splash_logo.png">\n\n  </div>\n\n\n\n\n\n  <div class="welcome-info">\n\n    <p>\n\n      Copyright@2017 ShangHai 3H Ver:{{version}}\n\n    </p>\n\n  </div>\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\welcome\welcome.html"*/
+        selector: 'page-welcome',template:/*ion-inline-start:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\welcome\welcome.html"*/'<ion-header>\n\n</ion-header>\n\n\n\n<ion-content class="page-content">\n\n  <div class="welcome-logo">\n\n    <img src="assets/img/splash_logo.png">\n\n  </div>\n\n\n\n\n\n  <div class="welcome-info">\n\n    <p>\n\n      Copyright@2017 ShangHai 3H Ver:{{version}}\n\n    </p>\n\n  </div>\n\n</ion-content>\n\n'/*ion-inline-end:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\welcome\welcome.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* LoadingController */],
@@ -8876,10 +9017,10 @@ ValueValidPipe = __decorate([
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TabsPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mywork_mywork__ = __webpack_require__(49);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__history_myhistory__ = __webpack_require__(62);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__history_myhistory__ = __webpack_require__(61);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__map_map__ = __webpack_require__(37);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__search_search__ = __webpack_require__(64);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__stationwork_stationwork__ = __webpack_require__(65);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__search_search__ = __webpack_require__(63);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__stationwork_stationwork__ = __webpack_require__(64);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__more_more__ = __webpack_require__(248);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__providers_ConfigService__ = __webpack_require__(16);
@@ -8946,7 +9087,7 @@ var TabsPage = (function () {
     return TabsPage;
 }());
 TabsPage = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\tabs\tabs.html"*/'<ion-tabs>\n\n  <ion-tab [root]="tabsInfo[0].page" tabTitle="{{tabsInfo[0].title}}" tabIcon="{{tabsInfo[0].icon}}"></ion-tab>\n\n  <ion-tab [root]="tabsInfo[1].page" tabTitle="{{tabsInfo[1].title}}" tabIcon="{{tabsInfo[1].icon}}"></ion-tab>\n\n  <ion-tab [root]="tabsInfo[2].page" tabTitle="{{tabsInfo[2].title}}" tabIcon="{{tabsInfo[2].icon}}"></ion-tab>\n\n  <ion-tab [root]="tabsInfo[3].page" tabTitle="{{tabsInfo[3].title}}" tabIcon="{{tabsInfo[3].icon}}"></ion-tab>\n\n</ion-tabs>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\tabs\tabs.html"*/
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({template:/*ion-inline-start:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\tabs\tabs.html"*/'<ion-tabs>\n\n  <ion-tab [root]="tabsInfo[0].page" tabTitle="{{tabsInfo[0].title}}" tabIcon="{{tabsInfo[0].icon}}"></ion-tab>\n\n  <ion-tab [root]="tabsInfo[1].page" tabTitle="{{tabsInfo[1].title}}" tabIcon="{{tabsInfo[1].icon}}"></ion-tab>\n\n  <ion-tab [root]="tabsInfo[2].page" tabTitle="{{tabsInfo[2].title}}" tabIcon="{{tabsInfo[2].icon}}"></ion-tab>\n\n  <ion-tab [root]="tabsInfo[3].page" tabTitle="{{tabsInfo[3].title}}" tabIcon="{{tabsInfo[3].icon}}"></ion-tab>\n\n</ion-tabs>\n\n'/*ion-inline-end:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\tabs\tabs.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_7__providers_GlobalService__["a" /* GlobalService */],
         __WEBPACK_IMPORTED_MODULE_8__providers_ConfigService__["a" /* ConfigService */]])
@@ -8982,7 +9123,7 @@ var AboutPage = (function () {
 }());
 AboutPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-about',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\about\about.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <ion-title>\n\n      About\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\about\about.html"*/
+        selector: 'page-about',template:/*ion-inline-start:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\about\about.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <ion-title>\n\n      About\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\about\about.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */]])
 ], AboutPage);
@@ -9017,7 +9158,7 @@ var ContactPage = (function () {
 }());
 ContactPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-contact',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\contact\contact.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <ion-title>\n\n      Contact\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content>\n\n  <ion-list>\n\n    <ion-list-header>Follow us on Twitter</ion-list-header>\n\n    <ion-item>\n\n      <ion-icon name="ionic" item-start></ion-icon>\n\n      @ionicframework\n\n    </ion-item>\n\n  </ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\contact\contact.html"*/
+        selector: 'page-contact',template:/*ion-inline-start:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\contact\contact.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <ion-title>\n\n      Contact\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content>\n\n  <ion-list>\n\n    <ion-list-header>Follow us on Twitter</ion-list-header>\n\n    <ion-item>\n\n      <ion-icon name="ionic" item-start></ion-icon>\n\n      @ionicframework\n\n    </ion-item>\n\n  </ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\contact\contact.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */]])
 ], ContactPage);
@@ -9499,7 +9640,6 @@ var MapStatus;
 var MapPage = (function () {
     function MapPage(navCtrl, navParams, globalService) {
         this.navCtrl = navCtrl;
-        this.navParams = navParams;
         this.globalService = globalService;
         this.ZoomMaxLevel = 16;
         if (navParams.data instanceof __WEBPACK_IMPORTED_MODULE_3__model_MapParam__["a" /* MapParam */]) {
@@ -9677,7 +9817,7 @@ __decorate([
 ], MapPage.prototype, "mapElement", void 0);
 MapPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-map',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\map\map.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>地图</ion-title>\n\n\n\n    <ion-buttons end>\n\n      <button ion-button icon-only color="white" (click)="getCurrentLocation($event)">\n\n        <ion-icon name="locate"></ion-icon>\n\n      </button>\n\n\n\n      <button ion-button *ngIf="isMark" icon-only color="white" (click)="markLocation($event)">\n\n        <ion-icon name="checkmark"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content>\n\n  <div id="map" #map>\n\n    <div class="markMap">\n\n      <ion-icon name="add" color="danger"></ion-icon>\n\n    </div>\n\n  </div>\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\map\map.html"*/
+        selector: 'page-map',template:/*ion-inline-start:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\map\map.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>地图</ion-title>\n\n\n\n    <ion-buttons end>\n\n      <button ion-button icon-only color="white" (click)="getCurrentLocation($event)">\n\n        <ion-icon name="locate"></ion-icon>\n\n      </button>\n\n\n\n      <button ion-button *ngIf="isMark" icon-only color="white" (click)="markLocation($event)">\n\n        <ion-icon name="checkmark"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content>\n\n  <div id="map" #map>\n\n    <div class="markMap">\n\n      <ion-icon name="add" color="danger"></ion-icon>\n\n    </div>\n\n  </div>\n\n</ion-content>\n\n'/*ion-inline-end:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\map\map.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* NavParams */],
@@ -9734,7 +9874,7 @@ var MapParam = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__map_map__ = __webpack_require__(37);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__model_MapParam__ = __webpack_require__(48);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__materials_materials__ = __webpack_require__(67);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__materials_materials__ = __webpack_require__(66);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__providers_ConfigService__ = __webpack_require__(16);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -9752,6 +9892,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+//import {CancelInfo} from "../../model/CancelInfo";
 
 
 
@@ -10053,7 +10194,7 @@ var MyWorkPage = (function () {
                  } catch (err) {
                  console.error(err);
                  }
-
+      
                  return Promise.resolve(result);
                  });*/
             }
@@ -10560,49 +10701,51 @@ var MyWorkPage = (function () {
      * @param taskEx
      * @param location
      */
-    MyWorkPage.prototype.cancel = function (taskEx, location) {
-        var _this = this;
-        var processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]();
-        if (!Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(taskEx, processEx)) {
-            return;
-        }
-        if (!processEx.cancel.done) {
-            var time_5 = new Date();
-            var cancelExtend = processEx.cancel.extend;
-            var cancelInfo = {
-                destroyTime: time_5.getTime(),
-                destroyRemark: cancelExtend.remark,
-                location: location,
-                taskId: taskEx.id,
-                userId: this.globalService.userId
-            };
-            var task = Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["d" /* transform2Task */])(cancelInfo, taskEx, processEx);
-            var output_6 = {
-                uploadedFlag: this.globalService.uploadedFlagForLocal
-            };
-            this.dataService.cancel(cancelInfo, task, output_6)
-                .then(function (data) {
-                var uploadedFlag = output_6.uploadedFlag === _this.globalService.uploadedFlagForUploaded;
-                processEx.cancel.time = time_5;
-                processEx.cancel.color = __WEBPACK_IMPORTED_MODULE_5__model_Process__["a" /* DisableColor */];
-                processEx.cancel.done = true;
-                processEx.cancel.isUploaded = uploadedFlag;
-                processEx.go.show = processEx.go.done;
-                processEx.arrive.show = processEx.arrive.done;
-                processEx.reply.show = processEx.reply.done;
-                processEx.reject.show = processEx.reject.done;
-                processEx.delay.show = processEx.delay.done;
-                taskEx.lastProcess = 'cancel';
-                taskEx.state = __WEBPACK_IMPORTED_MODULE_4__model_Task__["b" /* TaskState */].Cancel;
-                taskEx.isUploaded = taskEx.isUploaded && uploadedFlag;
-                _this.events.publish(_this.globalService.myWorkUpdateEvent, { type: 'cancel' });
-            })
-                .catch(function (error) {
-                console.error(_this.tag + error);
-                _this.globalService.showToast(error);
-            });
-        }
-    };
+    // private cancel(taskEx: TaskEx, location: Location): void {
+    //   let processEx: ProcessEx = new ProcessEx();
+    //   if (!transform2ProcessEx(taskEx, processEx)) {
+    //     return;
+    //   }
+    //
+    //   if (!processEx.cancel.done) {
+    //     let time = new Date();
+    //     let cancelExtend: CancelExtend = processEx.cancel.extend as CancelExtend;
+    //     let cancelInfo: CancelInfo = {
+    //       destroyTime: time.getTime(),
+    //       destroyRemark: cancelExtend.remark,
+    //       location,
+    //       taskId: taskEx.id,
+    //       userId: this.globalService.userId
+    //     };
+    //     let task: Task = transform2Task(cancelInfo, taskEx, processEx);
+    //     let output: any = {
+    //       uploadedFlag: this.globalService.uploadedFlagForLocal
+    //     };
+    //     this.dataService.cancel(cancelInfo, task, output)
+    //       .then(data => {
+    //         let uploadedFlag: boolean = output.uploadedFlag === this.globalService.uploadedFlagForUploaded;
+    //         processEx.cancel.time = time;
+    //         processEx.cancel.color = DisableColor;
+    //         processEx.cancel.done = true;
+    //         processEx.cancel.isUploaded = uploadedFlag;
+    //
+    //         processEx.go.show = processEx.go.done;
+    //         processEx.arrive.show = processEx.arrive.done;
+    //         processEx.reply.show = processEx.reply.done;
+    //         processEx.reject.show = processEx.reject.done;
+    //         processEx.delay.show = processEx.delay.done;
+    //         taskEx.lastProcess = 'cancel';
+    //         taskEx.state = TaskState.Cancel;
+    //         taskEx.isUploaded = taskEx.isUploaded && uploadedFlag;
+    //
+    //         this.events.publish(this.globalService.myWorkUpdateEvent, {type: 'cancel'});
+    //       })
+    //       .catch(error => {
+    //         console.error(this.tag + error);
+    //         this.globalService.showToast(error);
+    //       });
+    //   }
+    // }
     /**
      * 处理步骤数组转对象
      * @param taskEx
@@ -10848,44 +10991,46 @@ var MyWorkPage = (function () {
      * @param taskEx
      * @param location
      */
-    MyWorkPage.prototype.cancelPrompt = function (taskEx, location) {
-        var _this = this;
-        var processEx = new __WEBPACK_IMPORTED_MODULE_5__model_Process__["c" /* ProcessEx */]();
-        if (!Object(__WEBPACK_IMPORTED_MODULE_4__model_Task__["c" /* transform2ProcessEx */])(taskEx, processEx) || processEx.cancel.done) {
-            return;
-        }
-        var prompt = this.alertCtrl.create({
-            title: '销单申请',
-            message: "请填写销单信息!",
-            inputs: [
-                {
-                    name: 'remark',
-                    placeholder: '备注'
-                }
-            ],
-            buttons: [
-                {
-                    text: '取消',
-                    handler: function (data) {
-                    }
-                },
-                {
-                    text: '确定',
-                    handler: function (data) {
-                        console.log(_this.tag, data);
-                        if (!data.remark) {
-                            return _this.globalService.showToast("请填写备注!");
-                        }
-                        processEx.cancel.extend = {
-                            remark: data.remark
-                        };
-                        _this.cancel(taskEx, location);
-                    }
-                }
-            ]
-        });
-        prompt.present();
-    };
+    // private cancelPrompt(taskEx: TaskEx, location: Location): void {
+    //   let processEx: ProcessEx = new ProcessEx();
+    //   if (!transform2ProcessEx(taskEx, processEx) || processEx.cancel.done) {
+    //     return;
+    //   }
+    //
+    //   let prompt = this.alertCtrl.create({
+    //     title: '销单申请',
+    //     message: "请填写销单信息!",
+    //     inputs: [
+    //       {
+    //         name: 'remark',
+    //         placeholder: '备注'
+    //       }
+    //     ],
+    //     buttons: [
+    //       {
+    //         text: '取消',
+    //         handler: data => {
+    //         }
+    //       },
+    //       {
+    //         text: '确定',
+    //         handler: data => {
+    //           console.log(this.tag, data);
+    //           if (!data.remark) {
+    //             return this.globalService.showToast("请填写备注!");
+    //           }
+    //
+    //           processEx.cancel.extend = {
+    //             remark: data.remark
+    //           };
+    //
+    //           this.cancel(taskEx, location);
+    //         }
+    //       }
+    //     ]
+    //   });
+    //   prompt.present();
+    // }
     /**
      * 订阅事件
      * @param events
@@ -10996,7 +11141,7 @@ __decorate([
 ], MyWorkPage.prototype, "infiniteScroll", void 0);
 MyWorkPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-mywork',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\mywork\mywork.html"*/'<ion-header>\n  <ion-navbar color="primary">\n    <ion-title>\n      {{title}}\n    </ion-title>\n    <ion-buttons end>\n      <button ion-button icon-only color="white" (click)="toggleToolbar($event)">\n        <ion-icon name="search"></ion-icon>\n      </button>\n    </ion-buttons>\n  </ion-navbar>\n\n  <ion-toolbar color="primary" *ngIf="showToolbar">\n    <ion-searchbar [(ngModel)]="key" (ionInput)="onInput($event)" (ionCancel)="onCancel($event)"></ion-searchbar>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content class="page-mywork">\n\n  <!--refresher on the top-->\n  <ion-refresher (ionRefresh)="doRefresh($event)">\n    <ion-refresher-content\n      pullingIcon="arrow-dropdown"\n      pullingText="Pull to refresh"\n      refreshingSpinner="circles"\n      refreshingText="Refreshing...">\n    </ion-refresher-content>\n  </ion-refresher>\n\n  <!--list content-->\n  <ion-list>\n    <ion-card *ngFor="let item of items">\n      <ion-item (click)="onDelete(item)">\n        <ion-avatar item-start>\n          <img src="assets/img/ic_mywork_avatar.png">\n        </ion-avatar>\n        <div><h2 class="card-header-label-hint">任务编号 </h2><h2 class="card-header-label-content">{{item.id.split(\'#\')[0] | valueValid}}</h2></div>\n        <div><h2 class="card-header-label-hint">任务类型 </h2><h2 class="card-header-label-content">{{item.type | valueValid}}</h2></div>\n        <ion-icon name=\'cloud-upload\' item-end *ngIf="!item.isUploaded"></ion-icon>\n        <ion-icon name="timer" item-end color="{{\'danger\'}}" *ngIf="item.isOverdueArrivedLine || item.isOverdueReplyLine"></ion-icon>\n      </ion-item>\n\n      <ion-list>\n        <ion-list-header>\n          <ion-row>\n            <ion-col col-auto>任务描述</ion-col>\n            <ion-col>{{item.describe | valueValid}}</ion-col>\n          </ion-row>\n        </ion-list-header>\n\n        <!--创建时间-->\n        <button ion-item [style.color]="item.processes[0].color" *ngIf="item.processes[0].show">\n          <ion-icon name=\'icon-vline\'item-start></ion-icon>\n          {{item.processes[0].name}} {{item.processes[0].time | date:\'y-MM-dd HH:mm:ss\'}}\n          <!--<ion-icon name=\'ios-arrow-forward\' item-end></ion-icon>-->\n        </button>\n\n        <!--派发时间-->\n        <button ion-item [style.color]="item.processes[1].color" *ngIf="item.processes[1].show">\n          <ion-icon name=\'icon-vline\'item-start></ion-icon>\n          {{item.processes[1].name}} {{item.processes[1].time | date:\'y-MM-dd HH:mm:ss\'}}\n          <!--<ion-icon name=\'ios-arrow-forward\' item-end></ion-icon>-->\n        </button>\n\n        <!--接单时间-->\n        <button ion-item [style.color]="item.processes[2].color" *ngIf="item.processes[2].show" (click)="itemSelected(item, 2)">\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[2].color}}"></ion-icon>\n          {{item.processes[2].name}} {{item.processes[2].time | date:\'y-MM-dd HH:mm:ss\'}}\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[2].done" color="{{item.processes[2].color}}"></ion-icon>\n        </button>\n\n        <!--出发时间-->\n        <button ion-item [style.color]="item.processes[3].color" *ngIf="item.processes[3].show" (click)="itemSelected(item, 3)">\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[3].color}}"></ion-icon>\n          {{item.processes[3].name}} {{item.processes[3].time | date:\'y-MM-dd HH:mm:ss\'}}\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[3].done" color="{{item.processes[3].color}}"></ion-icon>\n        </button>\n\n        <!--到场时间-->\n        <button ion-item [style.color]="item.processes[4].color" *ngIf="item.processes[4].show" (click)="itemSelected(item, 4)">\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[4].color}}"></ion-icon>\n          {{item.processes[4].name}} {{item.processes[4].time | date:\'y-MM-dd HH:mm:ss\'}}\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[4].done" color="{{item.processes[4].color}}"></ion-icon>\n        </button>\n\n        <!--回复时间-->\n        <button ion-item [style.color]="item.processes[5].color" *ngIf="item.processes[5].show" (click)="itemSelected(item, 5)">\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[5].color}}"></ion-icon>\n          {{item.processes[5].name}} {{item.processes[5].time | date:\'y-MM-dd HH:mm:ss\'}}\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[5].done" color="{{item.processes[5].color}}"></ion-icon>\n        </button>\n\n        <!--退单时间-->\n        <button ion-item [style.color]="item.processes[6].color" *ngIf="item.processes[6].show" (click)="itemSelected(item, 6)">\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[6].color}}"></ion-icon>\n          {{item.processes[6].name}} {{item.processes[6].time | date:\'y-MM-dd HH:mm:ss\'}}\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[6].done" color="{{item.processes[6].color}}"></ion-icon>\n        </button>\n\n        <!--延迟时间-->\n        <button ion-item [style.color]="item.processes[7].color" *ngIf="item.processes[7].show" (click)="itemSelected(item, 7)">\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[7].color}}"></ion-icon>\n          {{item.processes[7].name}} {{item.processes[7].time | date:\'y-MM-dd HH:mm:ss\'}}\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[7].done" color="{{item.processes[7].color}}"></ion-icon>\n        </button>\n\n        <!--销单时间-->\n        <!--<button ion-item [style.color]="item.processes[8].color" *ngIf="item.processes[8].show" (click)="itemSelected(item, 8)">-->\n          <!--<ion-icon name=\'icon-vline\'item-start color="{{item.processes[8].color}}"></ion-icon>-->\n          <!--{{item.processes[8].name}} {{item.processes[8].time | date:\'y-MM-dd HH:mm:ss\'}}-->\n          <!--<ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[8].done" color="{{item.processes[8].color}}"></ion-icon>-->\n        <!--</button>-->\n      </ion-list>\n\n      <ion-row>\n        <ion-col class="card-bottom-btn" *ngIf="false">\n          <button ion-button icon-left clear small color="gray">\n            <ion-icon name="images"></ion-icon>\n            <div>{{item.photoCount}}</div>\n          </button>\n        </ion-col>\n\n        <ion-col class="card-bottom-btn" *ngIf="false">\n          <button ion-button icon-left clear small color="gray">\n            <ion-icon name="musical-notes"></ion-icon>\n            <div>{{item.audioCount}}</div>\n          </button>\n        </ion-col>\n\n        <ion-col class="card-bottom-btn" *ngIf="false">\n          <button ion-button icon-left clear small color="gray">\n            <ion-icon name="videocam"></ion-icon>\n            <div>{{item.videoCount}}</div>\n          </button>\n        </ion-col>\n\n        <ion-col class="card-bottom-btn" *ngIf="item.isLocationValid">\n          <button ion-button icon-left clear small (click)="onLocate(item)">\n            <ion-icon name="map"></ion-icon>\n            <div>地图</div>\n          </button>\n        </ion-col>\n\n        <ion-col class="card-bottom-btn">\n          <button ion-button icon-left clear small (click)="onPreview(item)">\n            <ion-icon name="information-circle"></ion-icon>\n            <div>详细</div>\n          </button>\n        </ion-col>\n\n        <ion-col class="card-bottom-btn" *ngIf="showMaterial">\n          <button ion-button icon-left clear small (click)="onMaterials(item)">\n            <ion-icon name="information-circle"></ion-icon>\n            <div>材料</div>\n          </button>\n        </ion-col>\n      </ion-row>\n\n      <!--<ion-row>-->\n        <!--<ion-item>-->\n          <!--<button item-right ion-button icon-left clear (click)="onMaterials(item)">-->\n            <!--<ion-icon name="clipboard"></ion-icon>-->\n            <!--<div>材料登记</div>-->\n          <!--</button>-->\n        <!--</ion-item>-->\n      <!--</ion-row>-->\n    </ion-card>\n  </ion-list>\n\n  <!--infinite scroll-->\n  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">\n    <ion-infinite-scroll-content></ion-infinite-scroll-content>\n  </ion-infinite-scroll>\n\n  <!--fab-->\n  <ion-fab right bottom *ngIf="showFab">\n    <button ion-fab color="primary" (click)="doScroll2Top($event)">\n      <ion-icon name="arrow-dropup"></ion-icon>\n    </button>\n  </ion-fab>\n\n</ion-content>\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\mywork\mywork.html"*/
+        selector: 'page-mywork',template:/*ion-inline-start:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\mywork\mywork.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n    <ion-buttons end>\n\n      <button ion-button icon-only color="white" (click)="toggleToolbar($event)">\n\n        <ion-icon name="search"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n\n\n  <ion-toolbar color="primary" *ngIf="showToolbar">\n\n    <ion-searchbar [(ngModel)]="key" (ionInput)="onInput($event)" (ionCancel)="onCancel($event)"></ion-searchbar>\n\n  </ion-toolbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-mywork">\n\n\n\n  <!--refresher on the top-->\n\n  <ion-refresher (ionRefresh)="doRefresh($event)">\n\n    <ion-refresher-content\n\n      pullingIcon="arrow-dropdown"\n\n      pullingText="Pull to refresh"\n\n      refreshingSpinner="circles"\n\n      refreshingText="Refreshing...">\n\n    </ion-refresher-content>\n\n  </ion-refresher>\n\n\n\n  <!--list content-->\n\n  <ion-list>\n\n    <ion-card *ngFor="let item of items">\n\n      <ion-item (click)="onDelete(item)">\n\n        <ion-avatar item-start>\n\n          <img src="assets/img/ic_mywork_avatar.png">\n\n        </ion-avatar>\n\n        <div><h2 class="card-header-label-hint">任务编号 </h2><h2 class="card-header-label-content">{{item.id.split(\'#\')[0] | valueValid}}</h2></div>\n\n        <div><h2 class="card-header-label-hint">任务类型 </h2><h2 class="card-header-label-content">{{item.type | valueValid}}</h2></div>\n\n        <ion-icon name=\'cloud-upload\' item-end *ngIf="!item.isUploaded"></ion-icon>\n\n        <ion-icon name="timer" item-end color="{{\'danger\'}}" *ngIf="item.isOverdueArrivedLine || item.isOverdueReplyLine"></ion-icon>\n\n      </ion-item>\n\n\n\n      <ion-list>\n\n        <ion-list-header>\n\n          <ion-row>\n\n            <ion-col col-auto>任务描述</ion-col>\n\n            <ion-col>{{item.describe | valueValid}}</ion-col>\n\n          </ion-row>\n\n        </ion-list-header>\n\n\n\n        <!--创建时间-->\n\n        <button ion-item [style.color]="item.processes[0].color" *ngIf="item.processes[0].show">\n\n          <ion-icon name=\'icon-vline\'item-start></ion-icon>\n\n          {{item.processes[0].name}} {{item.processes[0].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <!--<ion-icon name=\'ios-arrow-forward\' item-end></ion-icon>-->\n\n        </button>\n\n\n\n        <!--派发时间-->\n\n        <button ion-item [style.color]="item.processes[1].color" *ngIf="item.processes[1].show">\n\n          <ion-icon name=\'icon-vline\'item-start></ion-icon>\n\n          {{item.processes[1].name}} {{item.processes[1].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <!--<ion-icon name=\'ios-arrow-forward\' item-end></ion-icon>-->\n\n        </button>\n\n\n\n        <!--接单时间-->\n\n        <button ion-item [style.color]="item.processes[2].color" *ngIf="item.processes[2].show" (click)="itemSelected(item, 2)">\n\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[2].color}}"></ion-icon>\n\n          {{item.processes[2].name}} {{item.processes[2].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[2].done" color="{{item.processes[2].color}}"></ion-icon>\n\n        </button>\n\n\n\n        <!--出发时间-->\n\n        <button ion-item [style.color]="item.processes[3].color" *ngIf="item.processes[3].show" (click)="itemSelected(item, 3)">\n\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[3].color}}"></ion-icon>\n\n          {{item.processes[3].name}} {{item.processes[3].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[3].done" color="{{item.processes[3].color}}"></ion-icon>\n\n        </button>\n\n\n\n        <!--到场时间-->\n\n        <button ion-item [style.color]="item.processes[4].color" *ngIf="item.processes[4].show" (click)="itemSelected(item, 4)">\n\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[4].color}}"></ion-icon>\n\n          {{item.processes[4].name}} {{item.processes[4].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[4].done" color="{{item.processes[4].color}}"></ion-icon>\n\n        </button>\n\n\n\n        <!--回复时间-->\n\n        <button ion-item [style.color]="item.processes[5].color" *ngIf="item.processes[5].show" (click)="itemSelected(item, 5)">\n\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[5].color}}"></ion-icon>\n\n          {{item.processes[5].name}} {{item.processes[5].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[5].done" color="{{item.processes[5].color}}"></ion-icon>\n\n        </button>\n\n\n\n        <!--退单时间-->\n\n        <button ion-item [style.color]="item.processes[6].color" *ngIf="item.processes[6].show" (click)="itemSelected(item, 6)">\n\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[6].color}}"></ion-icon>\n\n          {{item.processes[6].name}} {{item.processes[6].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[6].done" color="{{item.processes[6].color}}"></ion-icon>\n\n        </button>\n\n\n\n        <!--延迟时间-->\n\n        <button ion-item [style.color]="item.processes[7].color" *ngIf="item.processes[7].show" (click)="itemSelected(item, 7)">\n\n          <ion-icon name=\'icon-vline\'item-start color="{{item.processes[7].color}}"></ion-icon>\n\n          {{item.processes[7].name}} {{item.processes[7].time | date:\'y-MM-dd HH:mm:ss\'}}\n\n          <ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[7].done" color="{{item.processes[7].color}}"></ion-icon>\n\n        </button>\n\n\n\n        <!--销单时间-->\n\n        <!--<button ion-item [style.color]="item.processes[8].color" *ngIf="item.processes[8].show" (click)="itemSelected(item, 8)">-->\n\n          <!--<ion-icon name=\'icon-vline\'item-start color="{{item.processes[8].color}}"></ion-icon>-->\n\n          <!--{{item.processes[8].name}} {{item.processes[8].time | date:\'y-MM-dd HH:mm:ss\'}}-->\n\n          <!--<ion-icon name=\'ios-arrow-forward\' item-end *ngIf="!item.processes[8].done" color="{{item.processes[8].color}}"></ion-icon>-->\n\n        <!--</button>-->\n\n      </ion-list>\n\n\n\n      <ion-row>\n\n        <ion-col class="card-bottom-btn" *ngIf="false">\n\n          <button ion-button icon-left clear small color="gray">\n\n            <ion-icon name="images"></ion-icon>\n\n            <div>{{item.photoCount}}</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn" *ngIf="false">\n\n          <button ion-button icon-left clear small color="gray">\n\n            <ion-icon name="musical-notes"></ion-icon>\n\n            <div>{{item.audioCount}}</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn" *ngIf="false">\n\n          <button ion-button icon-left clear small color="gray">\n\n            <ion-icon name="videocam"></ion-icon>\n\n            <div>{{item.videoCount}}</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn" *ngIf="item.isLocationValid">\n\n          <button ion-button icon-left clear small (click)="onLocate(item)">\n\n            <ion-icon name="map"></ion-icon>\n\n            <div>地图</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn">\n\n          <button ion-button icon-left clear small (click)="onPreview(item)">\n\n            <ion-icon name="information-circle"></ion-icon>\n\n            <div>详细</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn" *ngIf="showMaterial">\n\n          <button ion-button icon-left clear small (click)="onMaterials(item)">\n\n            <ion-icon name="information-circle"></ion-icon>\n\n            <div>材料</div>\n\n          </button>\n\n        </ion-col>\n\n      </ion-row>\n\n\n\n      <!--<ion-row>-->\n\n        <!--<ion-item>-->\n\n          <!--<button item-right ion-button icon-left clear (click)="onMaterials(item)">-->\n\n            <!--<ion-icon name="clipboard"></ion-icon>-->\n\n            <!--<div>材料登记</div>-->\n\n          <!--</button>-->\n\n        <!--</ion-item>-->\n\n      <!--</ion-row>-->\n\n    </ion-card>\n\n  </ion-list>\n\n\n\n  <!--infinite scroll-->\n\n  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">\n\n    <ion-infinite-scroll-content></ion-infinite-scroll-content>\n\n  </ion-infinite-scroll>\n\n\n\n  <!--fab-->\n\n  <ion-fab right bottom *ngIf="showFab">\n\n    <button ion-fab color="primary" (click)="doScroll2Top($event)">\n\n      <ion-icon name="arrow-dropup"></ion-icon>\n\n    </button>\n\n  </ion-fab>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\mywork\mywork.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_3__providers_DataService__["a" /* DataService */],
@@ -11010,7 +11155,7 @@ MyWorkPage = __decorate([
 
 /***/ }),
 
-/***/ 62:
+/***/ 61:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11298,7 +11443,7 @@ __decorate([
 ], MyHistory.prototype, "infiniteScroll", void 0);
 MyHistory = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-myhistory',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\history\myhistory.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n    <ion-buttons end>\n\n      <button ion-button icon-only color="white" (click)="toggleToolbar($event)" *ngIf="showToolbar">\n\n        <ion-icon name="search"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n  <ion-toolbar color="primary" *ngIf="showToolbar">\n\n    <ion-searchbar (input)="onInput($event)" (ionCancel)="onCancel($event)"></ion-searchbar>\n\n  </ion-toolbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-myhistory">\n\n\n\n  <ion-refresher (ionRefresh)="doRefresh($event)">\n\n    <ion-refresher-content\n\n      pullingIcon="arrow_dropdown"\n\n      pullingText="Pull to refresh"\n\n      refreshingSpinner="circles"\n\n      refreshingText="Refreshing...">\n\n    </ion-refresher-content>\n\n  </ion-refresher>\n\n\n\n  <ion-list>\n\n    <ion-card *ngFor="let item of items">\n\n      <ion-item (click)="onDelete(item)">\n\n        <ion-avatar item-start>\n\n          <img src="assets/img/ic_mywork_avatar.png">\n\n        </ion-avatar>\n\n        <div><h2 class="card-header-label-hint">任务编号 </h2>\n\n          <h2 class="card-header-label-content">{{item.taskId.split(\'#\')[0] | valueValid}}</h2></div>\n\n        <div><h2 class="card-header-label-hint">任务类型 </h2>\n\n          <h2 class="card-header-label-content">{{item.task.taskType | valueValid}}</h2></div>\n\n        <ion-icon name=\'cloud-upload\' item-end *ngIf="item.uploadedFlag !== onServerFlag"></ion-icon>\n\n      </ion-item>\n\n\n\n      <ion-list>\n\n        <ion-list-header>\n\n          <ion-row>\n\n            <ion-col col-auto>任务描述</ion-col>\n\n            <ion-col>{{item.task.desc| valueValid}}</ion-col>\n\n          </ion-row>\n\n        </ion-list-header>\n\n\n\n        <!--创建时间-->\n\n        <button ion-item class="gray-text">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          创建时间 {{item.task.createTime| date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--派发时间-->\n\n        <button ion-item class="gray-text">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          派发时间 {{item.task.assignTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--接单时间 -->\n\n        <button ion-item class="gray-text">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          接单时间 {{item.task.acceptTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--延迟时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.delayBeyond === \'accept\'" (click)="onDelay(item)">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          延迟时间 {{item.delayTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--出发时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.task.goTime">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          出发时间 {{item.task.goTime| date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--延迟时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.delayBeyond === \'go\'" (click)="onDelay(item)">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          延迟时间 {{item.delayTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--到场时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.task.arrivedTime">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          到场时间 {{item.task.arrivedTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--延迟时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.delayBeyond === \'arrived\'" (click)="onDelay(item)">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          延迟时间 {{item.delayTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--回复时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.task.replyTime" (click)="onReply(item)">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          回复时间 {{item.task.replyTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--退单时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.isRejected" (click)="onReject(item)">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          退单时间 {{ toRejectedInfo(item.reply).rejectTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--销单时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.isCanceled">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          销单时间 {{toReplyInfo(item.reply).destroyTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n      </ion-list>\n\n      <ion-row>\n\n        <ion-col class="card-bottom-btn">\n\n          <button ion-button icon-left clear small color="gray">\n\n            <ion-icon name="images"></ion-icon>\n\n            <div>{{item.photoCount}}</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn">\n\n          <button ion-button icon-left clear small color="gray">\n\n            <ion-icon name="musical-notes"></ion-icon>\n\n            <div>{{item.audioCount}}</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <!-- <ion-col>\n\n           <button ion-button icon-left clear small color="gray">\n\n             <ion-icon name="videocam"></ion-icon>\n\n             <div>{{item.videoCount}}</div>\n\n           </button>\n\n         </ion-col>-->\n\n\n\n        <ion-col class="card-bottom-btn" *ngIf="item.isLocationValid">\n\n          <button ion-button icon-left clear small (click)="onLocate(item)">\n\n            <ion-icon name="map"></ion-icon>\n\n            <div>地图</div>\n\n          </button>\n\n        </ion-col>\n\n      </ion-row>\n\n    </ion-card>\n\n  </ion-list>\n\n\n\n  <!--infinite scroll-->\n\n  <ion-infinite-scroll (ionInfinite)="doInfinite($event)" immediate-check="false" distance=1%>\n\n    <ion-infinite-scroll-content></ion-infinite-scroll-content>\n\n  </ion-infinite-scroll>\n\n\n\n  <!--fab-->\n\n  <ion-fab right bottom *ngIf="showFab">\n\n    <button ion-fab color="primary" (click)="doScroll2Top($event)">\n\n      <ion-icon name="arrow-dropup"></ion-icon>\n\n    </button>\n\n  </ion-fab>\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\history\myhistory.html"*/
+        selector: 'page-myhistory',template:/*ion-inline-start:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\history\myhistory.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n    <ion-buttons end>\n\n      <button ion-button icon-only color="white" (click)="toggleToolbar($event)" *ngIf="showToolbar">\n\n        <ion-icon name="search"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n  <ion-toolbar color="primary" *ngIf="showToolbar">\n\n    <ion-searchbar (input)="onInput($event)" (ionCancel)="onCancel($event)"></ion-searchbar>\n\n  </ion-toolbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-myhistory">\n\n\n\n  <ion-refresher (ionRefresh)="doRefresh($event)">\n\n    <ion-refresher-content\n\n      pullingIcon="arrow_dropdown"\n\n      pullingText="Pull to refresh"\n\n      refreshingSpinner="circles"\n\n      refreshingText="Refreshing...">\n\n    </ion-refresher-content>\n\n  </ion-refresher>\n\n\n\n  <ion-list>\n\n    <ion-card *ngFor="let item of items">\n\n      <ion-item (click)="onDelete(item)">\n\n        <ion-avatar item-start>\n\n          <img src="assets/img/ic_mywork_avatar.png">\n\n        </ion-avatar>\n\n        <div><h2 class="card-header-label-hint">任务编号 </h2>\n\n          <h2 class="card-header-label-content">{{item.taskId.split(\'#\')[0] | valueValid}}</h2></div>\n\n        <div><h2 class="card-header-label-hint">任务类型 </h2>\n\n          <h2 class="card-header-label-content">{{item.task.taskType | valueValid}}</h2></div>\n\n        <ion-icon name=\'cloud-upload\' item-end *ngIf="item.uploadedFlag !== onServerFlag"></ion-icon>\n\n      </ion-item>\n\n\n\n      <ion-list>\n\n        <ion-list-header>\n\n          <ion-row>\n\n            <ion-col col-auto>任务描述</ion-col>\n\n            <ion-col>{{item.task.desc| valueValid}}</ion-col>\n\n          </ion-row>\n\n        </ion-list-header>\n\n\n\n        <!--创建时间-->\n\n        <button ion-item class="gray-text">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          创建时间 {{item.task.createTime| date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--派发时间-->\n\n        <button ion-item class="gray-text">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          派发时间 {{item.task.assignTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--接单时间 -->\n\n        <button ion-item class="gray-text">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          接单时间 {{item.task.acceptTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--延迟时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.delayBeyond === \'accept\'" (click)="onDelay(item)">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          延迟时间 {{item.delayTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--出发时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.task.goTime">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          出发时间 {{item.task.goTime| date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--延迟时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.delayBeyond === \'go\'" (click)="onDelay(item)">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          延迟时间 {{item.delayTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--到场时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.task.arrivedTime">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          到场时间 {{item.task.arrivedTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--延迟时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.delayBeyond === \'arrived\'" (click)="onDelay(item)">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          延迟时间 {{item.delayTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--回复时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.task.replyTime" (click)="onReply(item)">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          回复时间 {{item.task.replyTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--退单时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.isRejected" (click)="onReject(item)">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          退单时间 {{ toRejectedInfo(item.reply).rejectTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--销单时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.isCanceled">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          销单时间 {{toReplyInfo(item.reply).destroyTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n      </ion-list>\n\n      <ion-row>\n\n        <ion-col class="card-bottom-btn">\n\n          <button ion-button icon-left clear small color="gray">\n\n            <ion-icon name="images"></ion-icon>\n\n            <div>{{item.photoCount}}</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn">\n\n          <button ion-button icon-left clear small color="gray">\n\n            <ion-icon name="musical-notes"></ion-icon>\n\n            <div>{{item.audioCount}}</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <!-- <ion-col>\n\n           <button ion-button icon-left clear small color="gray">\n\n             <ion-icon name="videocam"></ion-icon>\n\n             <div>{{item.videoCount}}</div>\n\n           </button>\n\n         </ion-col>-->\n\n\n\n        <ion-col class="card-bottom-btn" *ngIf="item.isLocationValid">\n\n          <button ion-button icon-left clear small (click)="onLocate(item)">\n\n            <ion-icon name="map"></ion-icon>\n\n            <div>地图</div>\n\n          </button>\n\n        </ion-col>\n\n      </ion-row>\n\n    </ion-card>\n\n  </ion-list>\n\n\n\n  <!--infinite scroll-->\n\n  <ion-infinite-scroll (ionInfinite)="doInfinite($event)" immediate-check="false" distance=1%>\n\n    <ion-infinite-scroll-content></ion-infinite-scroll-content>\n\n  </ion-infinite-scroll>\n\n\n\n  <!--fab-->\n\n  <ion-fab right bottom *ngIf="showFab">\n\n    <button ion-fab color="primary" (click)="doScroll2Top($event)">\n\n      <ion-icon name="arrow-dropup"></ion-icon>\n\n    </button>\n\n  </ion-fab>\n\n</ion-content>\n\n'/*ion-inline-end:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\history\myhistory.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_2__providers_DataService__["a" /* DataService */],
@@ -11311,7 +11456,7 @@ MyHistory = __decorate([
 
 /***/ }),
 
-/***/ 63:
+/***/ 62:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12716,7 +12861,7 @@ var DbService = (function () {
                 sql += ", S_FILEID = '" + media.fileId + "'";
             }
             if (media.extendedInfo) {
-                sql += ", S_EXTENDEDINFO = '" + media.extendedInfo + "'";
+                sql += ", S_EXTENDEDINFO ='" + JSON.stringify(media.extendedInfo) + "'";
             }
             sql += " WHERE ID = " + localMedia.ID + ";";
             return sql;
@@ -12797,7 +12942,7 @@ DbService = __decorate([
 
 /***/ }),
 
-/***/ 64:
+/***/ 63:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -13013,7 +13158,7 @@ var SearchPage = (function () {
 }());
 SearchPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-search',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\search\search.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n\n\n    <ion-buttons end>\n\n      <button ion-button icon-only color="white" (click)="onReset($event)">\n\n        <ion-icon name="close"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-search">\n\n\n\n  <ion-list>\n\n    <form [formGroup]="searchForm">\n\n      <ion-item>\n\n        <ion-label color="label">发生地址</ion-label>\n\n        <ion-input formControlName="address" type="text" clearInput></ion-input>\n\n      </ion-item>\n\n\n\n      <ion-item>\n\n        <ion-label color="label">联系电话</ion-label>\n\n        <ion-input formControlName="telephone" type="number" clearInput></ion-input>\n\n      </ion-item>\n\n\n\n      <ion-item>\n\n        <ion-label color="label">客服编号</ion-label>\n\n        <ion-input formControlName="customerNum" type="text" clearInput></ion-input>\n\n      </ion-item>\n\n\n\n      <ion-item>\n\n        <ion-label color="label">任务编号</ion-label>\n\n        <ion-input formControlName="taskNum" type="text" clearInput></ion-input>\n\n      </ion-item>\n\n\n\n      <ion-item (click)="showTaskType()">\n\n        <ion-label class="label-content" color="label">任务状态</ion-label>\n\n        <ion-label>{{searchForm.value[\'taskState\']}}</ion-label>\n\n      </ion-item>\n\n\n\n      <ion-item (click)="showReflectType()">\n\n        <ion-label color="label">反映类别</ion-label>\n\n        <ion-label>{{searchForm.value[\'reflectType\']}}</ion-label>\n\n      </ion-item>\n\n\n\n      <ion-item>\n\n        <ion-label color="label">反映人员</ion-label>\n\n        <ion-input formControlName="reflectPerson" type="text" clearInput></ion-input>\n\n      </ion-item>\n\n\n\n      <ion-item>\n\n        <ion-label color="label">派遣时间</ion-label>\n\n        <ion-datetime cancelText=\'取消\' doneText=\'确定\' displayFormat="YYYY-MM-DD HH:mm"\n\n                      pickerFormat="YYYY-MM-DD HH:mm" formControlName="dispatchTime"\n\n                      [(ngModel)]="myDate"  clearInput></ion-datetime>\n\n      </ion-item>\n\n    </form>\n\n  </ion-list>\n\n\n\n  <ion-row>\n\n    <ion-col>\n\n      <div class="login-button">\n\n        <button ion-button type="submit" block (click)="onSearchClick(searchForm.value)">查询</button>\n\n      </div>\n\n    </ion-col>\n\n  </ion-row>\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\search\search.html"*/
+        selector: 'page-search',template:/*ion-inline-start:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\search\search.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n\n\n    <ion-buttons end>\n\n      <button ion-button icon-only color="white" (click)="onReset($event)">\n\n        <ion-icon name="close"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-search">\n\n\n\n  <ion-list>\n\n    <form [formGroup]="searchForm">\n\n      <ion-item>\n\n        <ion-label color="label">发生地址</ion-label>\n\n        <ion-input formControlName="address" type="text" clearInput></ion-input>\n\n      </ion-item>\n\n\n\n      <ion-item>\n\n        <ion-label color="label">联系电话</ion-label>\n\n        <ion-input formControlName="telephone" type="number" clearInput></ion-input>\n\n      </ion-item>\n\n\n\n      <ion-item>\n\n        <ion-label color="label">客服编号</ion-label>\n\n        <ion-input formControlName="customerNum" type="text" clearInput></ion-input>\n\n      </ion-item>\n\n\n\n      <ion-item>\n\n        <ion-label color="label">任务编号</ion-label>\n\n        <ion-input formControlName="taskNum" type="text" clearInput></ion-input>\n\n      </ion-item>\n\n\n\n      <ion-item (click)="showTaskType()">\n\n        <ion-label class="label-content" color="label">任务状态</ion-label>\n\n        <ion-label>{{searchForm.value[\'taskState\']}}</ion-label>\n\n      </ion-item>\n\n\n\n      <ion-item (click)="showReflectType()">\n\n        <ion-label color="label">反映类别</ion-label>\n\n        <ion-label>{{searchForm.value[\'reflectType\']}}</ion-label>\n\n      </ion-item>\n\n\n\n      <ion-item>\n\n        <ion-label color="label">反映人员</ion-label>\n\n        <ion-input formControlName="reflectPerson" type="text" clearInput></ion-input>\n\n      </ion-item>\n\n\n\n      <ion-item>\n\n        <ion-label color="label">派遣时间</ion-label>\n\n        <ion-datetime cancelText=\'取消\' doneText=\'确定\' displayFormat="YYYY-MM-DD HH:mm"\n\n                      pickerFormat="YYYY-MM-DD HH:mm" formControlName="dispatchTime"\n\n                      [(ngModel)]="myDate"  clearInput></ion-datetime>\n\n      </ion-item>\n\n    </form>\n\n  </ion-list>\n\n\n\n  <ion-row>\n\n    <ion-col>\n\n      <div class="login-button">\n\n        <button ion-button type="submit" block (click)="onSearchClick(searchForm.value)">查询</button>\n\n      </div>\n\n    </ion-col>\n\n  </ion-row>\n\n</ion-content>\n\n'/*ion-inline-end:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\search\search.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */],
@@ -13025,7 +13170,7 @@ SearchPage = __decorate([
 
 /***/ }),
 
-/***/ 65:
+/***/ 64:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -13455,7 +13600,7 @@ __decorate([
 ], StationWorkPage.prototype, "content", void 0);
 StationWorkPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-stationwork',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\stationwork\stationwork.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}-{{subTitle}}\n\n    </ion-title>\n\n\n\n    <ion-buttons end>\n\n      <button ion-button icon-only color="white" (click)="onSearch($event)">\n\n        <ion-icon name="search"></ion-icon>\n\n      </button>\n\n\n\n      <button ion-button icon-only color="white" (click)="onFilter($event)">\n\n        <ion-icon name="funnel"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n\n\n  <ion-toolbar color="primary" *ngIf="showToolbar">\n\n    <ion-searchbar (input)="getItems($event)"></ion-searchbar>\n\n  </ion-toolbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-stationwork">\n\n\n\n  <ion-refresher (ionRefresh)="doRefresh($event)">\n\n    <ion-refresher-content\n\n      pullingIcon="arrow-dropdown"\n\n      pullingText="Pull to refresh"\n\n      refreshingSpinner="circles"\n\n      refreshingText="Refreshing...">\n\n    </ion-refresher-content>\n\n  </ion-refresher>\n\n\n\n  <ion-list>\n\n    <ion-card *ngFor="let item of items">\n\n      <ion-item>\n\n        <ion-avatar item-start>\n\n          <img src="assets/img/ic_mywork_avatar.png">\n\n        </ion-avatar>\n\n        <div><h2 class="card-header-label-hint">客服编号 </h2><h2 class="card-header-label-content">{{item.serialNo}}</h2></div>\n\n        <div><h2 class="card-header-label-hint">任务编号 </h2><h2 class="card-header-label-content">{{item.taskNo}}</h2></div>\n\n      </ion-item>\n\n\n\n      <ion-list>\n\n        <ion-item *ngFor="let content of item.contents">\n\n          <ion-label fixed class="label-name">\n\n            {{content.name}}\n\n          </ion-label>\n\n          <div item-content>\n\n            {{content.value}}\n\n          </div>\n\n        </ion-item>\n\n      </ion-list>\n\n\n\n      <ion-row *ngIf="isUnDispatchedMode">\n\n        <ion-col class="card-bottom-btn" *ngIf="!item.isAccepted">\n\n          <button ion-button icon-left clear small (click)="onAccept(item)">\n\n            <ion-icon name="done-all"></ion-icon>\n\n            <div>接单</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn" *ngIf="item.isAccepted">\n\n          <button ion-button icon-left clear small (click)="onDispatch(item)">\n\n            <ion-icon name="person"></ion-icon>\n\n            <div>派工</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn" *ngIf="item.isAccepted">\n\n          <button ion-button icon-left clear small (click)="onCancel(item)">\n\n            <ion-icon name="close"></ion-icon>\n\n            <div>销单</div>\n\n          </button>\n\n        </ion-col>\n\n      </ion-row>\n\n    </ion-card>\n\n  </ion-list>\n\n\n\n  <!--infinite scroll-->\n\n  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">\n\n    <ion-infinite-scroll-content></ion-infinite-scroll-content>\n\n  </ion-infinite-scroll>\n\n\n\n  <!--fab-->\n\n  <ion-fab right bottom *ngIf="showFab">\n\n    <button ion-fab color="primary" (click)="doScroll2Top($event)">\n\n      <ion-icon name="arrow-dropup"></ion-icon>\n\n    </button>\n\n  </ion-fab>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\stationwork\stationwork.html"*/
+        selector: 'page-stationwork',template:/*ion-inline-start:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\stationwork\stationwork.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}-{{subTitle}}\n\n    </ion-title>\n\n\n\n    <ion-buttons end>\n\n      <button ion-button icon-only color="white" (click)="onSearch($event)">\n\n        <ion-icon name="search"></ion-icon>\n\n      </button>\n\n\n\n      <button ion-button icon-only color="white" (click)="onFilter($event)">\n\n        <ion-icon name="funnel"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n\n\n  <ion-toolbar color="primary" *ngIf="showToolbar">\n\n    <ion-searchbar (input)="getItems($event)"></ion-searchbar>\n\n  </ion-toolbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-stationwork">\n\n\n\n  <ion-refresher (ionRefresh)="doRefresh($event)">\n\n    <ion-refresher-content\n\n      pullingIcon="arrow-dropdown"\n\n      pullingText="Pull to refresh"\n\n      refreshingSpinner="circles"\n\n      refreshingText="Refreshing...">\n\n    </ion-refresher-content>\n\n  </ion-refresher>\n\n\n\n  <ion-list>\n\n    <ion-card *ngFor="let item of items">\n\n      <ion-item>\n\n        <ion-avatar item-start>\n\n          <img src="assets/img/ic_mywork_avatar.png">\n\n        </ion-avatar>\n\n        <div><h2 class="card-header-label-hint">客服编号 </h2><h2 class="card-header-label-content">{{item.serialNo}}</h2></div>\n\n        <div><h2 class="card-header-label-hint">任务编号 </h2><h2 class="card-header-label-content">{{item.taskNo}}</h2></div>\n\n      </ion-item>\n\n\n\n      <ion-list>\n\n        <ion-item *ngFor="let content of item.contents">\n\n          <ion-label fixed class="label-name">\n\n            {{content.name}}\n\n          </ion-label>\n\n          <div item-content>\n\n            {{content.value}}\n\n          </div>\n\n        </ion-item>\n\n      </ion-list>\n\n\n\n      <ion-row *ngIf="isUnDispatchedMode">\n\n        <ion-col class="card-bottom-btn" *ngIf="!item.isAccepted">\n\n          <button ion-button icon-left clear small (click)="onAccept(item)">\n\n            <ion-icon name="done-all"></ion-icon>\n\n            <div>接单</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn" *ngIf="item.isAccepted">\n\n          <button ion-button icon-left clear small (click)="onDispatch(item)">\n\n            <ion-icon name="person"></ion-icon>\n\n            <div>派工</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn" *ngIf="item.isAccepted">\n\n          <button ion-button icon-left clear small (click)="onCancel(item)">\n\n            <ion-icon name="close"></ion-icon>\n\n            <div>销单</div>\n\n          </button>\n\n        </ion-col>\n\n      </ion-row>\n\n    </ion-card>\n\n  </ion-list>\n\n\n\n  <!--infinite scroll-->\n\n  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">\n\n    <ion-infinite-scroll-content></ion-infinite-scroll-content>\n\n  </ion-infinite-scroll>\n\n\n\n  <!--fab-->\n\n  <ion-fab right bottom *ngIf="showFab">\n\n    <button ion-fab color="primary" (click)="doScroll2Top($event)">\n\n      <ion-icon name="arrow-dropup"></ion-icon>\n\n    </button>\n\n  </ion-fab>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\stationwork\stationwork.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */],
@@ -13469,7 +13614,7 @@ StationWorkPage = __decorate([
 
 /***/ }),
 
-/***/ 66:
+/***/ 65:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -13632,7 +13777,7 @@ var NewsPage = (function () {
 }());
 NewsPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-news',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\news\news.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n\n\n    <ion-buttons end>\n\n      <button ion-button icon-only color="white" *ngIf="isShow" (click)="onDeleteAll($event)">\n\n        <ion-icon name="trash"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-news">\n\n  <ion-list>\n\n    <ion-card *ngFor="let item of items" (click)="onJumpDetails(item)">\n\n      <ion-list>\n\n        <ion-item-sliding #slidingItem>\n\n          <ion-item>\n\n            <div><h2 class="card-header-label-hint">温馨提示</h2>\n\n              <h2 class="card-header-label-content">{{item.newsDate}}</h2></div>\n\n            <br>\n\n            <div class="card-news-content">{{item.newsContent}}</div>\n\n          </ion-item>\n\n          <ion-item-options>\n\n            <button  ion-button color="danger" (click)="removeItem($event,item,slidingItem)">\n\n              <ion-icon name="trash"></ion-icon>\n\n              删除\n\n            </button>\n\n          </ion-item-options>\n\n        </ion-item-sliding>\n\n      </ion-list>\n\n    </ion-card>\n\n  </ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\news\news.html"*/
+        selector: 'page-news',template:/*ion-inline-start:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\news\news.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n\n\n    <ion-buttons end>\n\n      <button ion-button icon-only color="white" *ngIf="isShow" (click)="onDeleteAll($event)">\n\n        <ion-icon name="trash"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-news">\n\n  <ion-list>\n\n    <ion-card *ngFor="let item of items" (click)="onJumpDetails(item)">\n\n      <ion-list>\n\n        <ion-item-sliding #slidingItem>\n\n          <ion-item>\n\n            <div><h2 class="card-header-label-hint">温馨提示</h2>\n\n              <h2 class="card-header-label-content">{{item.newsDate}}</h2></div>\n\n            <br>\n\n            <div class="card-news-content">{{item.newsContent}}</div>\n\n          </ion-item>\n\n          <ion-item-options>\n\n            <button  ion-button color="danger" (click)="removeItem($event,item,slidingItem)">\n\n              <ion-icon name="trash"></ion-icon>\n\n              删除\n\n            </button>\n\n          </ion-item-options>\n\n        </ion-item-sliding>\n\n      </ion-list>\n\n    </ion-card>\n\n  </ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\news\news.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */],
@@ -13643,7 +13788,7 @@ NewsPage = __decorate([
 
 /***/ }),
 
-/***/ 67:
+/***/ 66:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -13861,7 +14006,7 @@ var MaterialsPage = (function () {
 }());
 MaterialsPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-materials',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\materials\materials.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n    <ion-buttons end  *ngIf="isShowButtons">\n\n      <button ion-button icon-only color="white" (click)="addMaterials()">\n\n        <ion-icon name="add-circle"></ion-icon>\n\n      </button>\n\n      <button ion-button icon-only color="white" (click)="saveMaterials()">\n\n        <ion-icon name="checkmark-circle"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n\n\n  <ion-segment [(ngModel)]="segmentName">\n\n    <ion-segment-button value="basicInfo">\n\n      基本信息\n\n    </ion-segment-button>\n\n    <ion-segment-button value="materialsList">\n\n      材料清单\n\n    </ion-segment-button>\n\n  </ion-segment>\n\n</ion-header>hammer\n\n\n\n<ion-content>\n\n  <div [ngSwitch]="segmentName">\n\n    <!--基本信息-->\n\n\n\n    <ion-list *ngSwitchCase="\'basicInfo\'">\n\n      <ion-item>\n\n        <ion-label fixed class="label-name">工单编号：</ion-label>\n\n        <div item-content>{{taskId}}</div>\n\n      </ion-item>\n\n\n\n      <ion-item *ngFor="let detail of details">\n\n        <ion-label fixed class="label-name">\n\n          {{detail.name}}\n\n        </ion-label>\n\n        <div item-content>\n\n          {{detail.value}}\n\n        </div>\n\n      </ion-item>\n\n    </ion-list>\n\n\n\n    <!--材料清单-->\n\n    <ion-list *ngSwitchCase="\'materialsList\'">\n\n      <ion-card *ngFor="let item of items">\n\n\n\n        <ion-item>\n\n          <ion-label fixed class="label-name">\n\n            材料类别：\n\n          </ion-label>\n\n          <div item-content>\n\n            {{item.category.name}}\n\n          </div>\n\n        </ion-item>\n\n\n\n        <ion-item>\n\n          <ion-label fixed class="label-name">\n\n            材料型号：\n\n          </ion-label>\n\n          <div item-content>\n\n            {{item.type.name}}\n\n          </div>\n\n        </ion-item>\n\n\n\n        <ion-item>\n\n          <ion-label fixed class="label-name">\n\n            材料规格：\n\n          </ion-label>\n\n          <div item-content>\n\n            {{item.size.name}}\n\n          </div>\n\n        </ion-item>\n\n\n\n        <ion-item>\n\n          <ion-label fixed class="label-name">\n\n            生产厂家：\n\n          </ion-label>\n\n          <div item-content>\n\n            {{item.productor.name}}\n\n          </div>\n\n        </ion-item>\n\n\n\n        <ion-item>\n\n          <ion-label fixed class="label-name">\n\n            单位：\n\n          </ion-label>\n\n          <div item-content>\n\n            {{item.unit.text}}\n\n          </div>\n\n        </ion-item>\n\n\n\n        <ion-item>\n\n          <ion-label fixed class="label-name">\n\n            数量：\n\n          </ion-label>\n\n          <div item-content>\n\n            {{item.count}}\n\n          </div>\n\n        </ion-item>\n\n\n\n        <ion-item>\n\n          <ion-label fixed class="label-name">\n\n            备注：\n\n          </ion-label>\n\n          <div item-content>\n\n            {{item.remark}}\n\n          </div>\n\n        </ion-item>\n\n\n\n        <ion-item  *ngIf="isShowButtons">\n\n          <button item-right ion-button icon-left clear small color="danger" (click)="deleteMaterials(item)">\n\n            <ion-icon name="trash"></ion-icon>\n\n            <div>删除</div>\n\n          </button>\n\n          <button item-right ion-button icon-left clear small (click)="editMaterials(item)">\n\n            <ion-icon name="create"></ion-icon>\n\n            <div>修改</div>\n\n          </button>\n\n        </ion-item>\n\n      </ion-card>\n\n    </ion-list>\n\n  </div>\n\n</ion-content>\n\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\materials\materials.html"*/
+        selector: 'page-materials',template:/*ion-inline-start:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\materials\materials.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n    <ion-buttons end  *ngIf="isShowButtons">\n\n      <button ion-button icon-only color="white" (click)="addMaterials()">\n\n        <ion-icon name="add-circle"></ion-icon>\n\n      </button>\n\n      <button ion-button icon-only color="white" (click)="saveMaterials()">\n\n        <ion-icon name="checkmark-circle"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n\n\n  <ion-segment [(ngModel)]="segmentName">\n\n    <ion-segment-button value="basicInfo">\n\n      基本信息\n\n    </ion-segment-button>\n\n    <ion-segment-button value="materialsList">\n\n      材料清单\n\n    </ion-segment-button>\n\n  </ion-segment>\n\n</ion-header>hammer\n\n\n\n<ion-content>\n\n  <div [ngSwitch]="segmentName">\n\n    <!--基本信息-->\n\n\n\n    <ion-list *ngSwitchCase="\'basicInfo\'">\n\n      <ion-item>\n\n        <ion-label fixed class="label-name">工单编号：</ion-label>\n\n        <div item-content>{{taskId}}</div>\n\n      </ion-item>\n\n\n\n      <ion-item *ngFor="let detail of details">\n\n        <ion-label fixed class="label-name">\n\n          {{detail.name}}\n\n        </ion-label>\n\n        <div item-content>\n\n          {{detail.value}}\n\n        </div>\n\n      </ion-item>\n\n    </ion-list>\n\n\n\n    <!--材料清单-->\n\n    <ion-list *ngSwitchCase="\'materialsList\'">\n\n      <ion-card *ngFor="let item of items">\n\n\n\n        <ion-item>\n\n          <ion-label fixed class="label-name">\n\n            材料类别：\n\n          </ion-label>\n\n          <div item-content>\n\n            {{item.category.name}}\n\n          </div>\n\n        </ion-item>\n\n\n\n        <ion-item>\n\n          <ion-label fixed class="label-name">\n\n            材料型号：\n\n          </ion-label>\n\n          <div item-content>\n\n            {{item.type.name}}\n\n          </div>\n\n        </ion-item>\n\n\n\n        <ion-item>\n\n          <ion-label fixed class="label-name">\n\n            材料规格：\n\n          </ion-label>\n\n          <div item-content>\n\n            {{item.size.name}}\n\n          </div>\n\n        </ion-item>\n\n\n\n        <ion-item>\n\n          <ion-label fixed class="label-name">\n\n            生产厂家：\n\n          </ion-label>\n\n          <div item-content>\n\n            {{item.productor.name}}\n\n          </div>\n\n        </ion-item>\n\n\n\n        <ion-item>\n\n          <ion-label fixed class="label-name">\n\n            单位：\n\n          </ion-label>\n\n          <div item-content>\n\n            {{item.unit.text}}\n\n          </div>\n\n        </ion-item>\n\n\n\n        <ion-item>\n\n          <ion-label fixed class="label-name">\n\n            数量：\n\n          </ion-label>\n\n          <div item-content>\n\n            {{item.count}}\n\n          </div>\n\n        </ion-item>\n\n\n\n        <ion-item>\n\n          <ion-label fixed class="label-name">\n\n            备注：\n\n          </ion-label>\n\n          <div item-content>\n\n            {{item.remark}}\n\n          </div>\n\n        </ion-item>\n\n\n\n        <ion-item  *ngIf="isShowButtons">\n\n          <button item-right ion-button icon-left clear small color="danger" (click)="deleteMaterials(item)">\n\n            <ion-icon name="trash"></ion-icon>\n\n            <div>删除</div>\n\n          </button>\n\n          <button item-right ion-button icon-left clear small (click)="editMaterials(item)">\n\n            <ion-icon name="create"></ion-icon>\n\n            <div>修改</div>\n\n          </button>\n\n        </ion-item>\n\n      </ion-card>\n\n    </ion-list>\n\n  </div>\n\n</ion-content>\n\n'/*ion-inline-end:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\materials\materials.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* NavParams */],
@@ -13876,7 +14021,7 @@ MaterialsPage = __decorate([
 
 /***/ }),
 
-/***/ 68:
+/***/ 67:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -14337,7 +14482,7 @@ var SettingPage = (function () {
 }());
 SettingPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-setting',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\setting\setting.html"*/'<ion-header>\n  <ion-navbar color="primary">\n    <ion-title>\n      {{title}}\n    </ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content class="page-setting">\n  <ion-list>\n    <ion-item *ngIf="isShow">\n      <ion-toggle [(ngModel)]="isGrid" (ionChange)="notifyIsGrid()"></ion-toggle>\n      <ion-label>是否切换九宫格</ion-label>\n      <ion-icon name=\'grid\' item-start color="{{\'primary\'}}"></ion-icon>\n    </ion-item>\n\n    <ion-item *ngIf="isShow">\n      <ion-toggle [(ngModel)]="isOuterNet" (ionChange)="notifyIsOutNet()"></ion-toggle>\n      <ion-label>是否使用外网</ion-label>\n      <ion-icon name=\'md-wifi\' item-start color="{{\'primary\'}}"></ion-icon>\n    </ion-item>\n\n    <ion-item (click)="showNetwork()">\n      <ion-icon name=\'git-network\' item-start color="{{\'primary\'}}"></ion-icon>\n      <ion-label>网络设置</ion-label>\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n    </ion-item>\n\n    <ion-item (click)="showOverdueTime()">\n      <ion-icon name=\'time\' item-start color="{{\'primary\'}}"></ion-icon>\n      <ion-label>超期设置</ion-label>\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n    </ion-item>\n\n    <ion-item (click)="showDownloadWords()">\n      <ion-icon name=\'download\' item-start color="{{\'primary\'}}"></ion-icon>\n      <ion-label>更新词语</ion-label>\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n    </ion-item>\n\n    <ion-item *ngIf="isShow" (click)="showHeartSetting()">\n      <ion-icon name=\'heart-outline\' item-start color="{{\'primary\'}}"></ion-icon>\n      <ion-label>心跳频率</ion-label>\n      <ion-label class="label-right">{{keepAlive+\'毫秒\'}}</ion-label>\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n    </ion-item>\n\n    <ion-item *ngIf="isShow" (click)="showAlermType()">\n      <ion-icon name=\'alarm\' item-start color="{{\'primary\'}}"></ion-icon>\n      <ion-label>提醒方式</ion-label>\n      <ion-label class="label-right">{{alermStyle}}</ion-label>\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n    </ion-item>\n\n    <ion-item *ngIf="isShow" (click)="showRevertSetting()">\n      <ion-icon name=\'redo\' item-start color="{{\'primary\'}}"></ion-icon>\n      <ion-label>恢复出厂设置</ion-label>\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n    </ion-item>\n\n    <ion-item (click)="onExit()">\n      <ion-icon name=\'exit\' item-start color="{{\'primary\'}}"></ion-icon>\n      <ion-label>退出</ion-label>\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n    </ion-item>\n  </ion-list>\n</ion-content>\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\setting\setting.html"*/
+        selector: 'page-setting',template:/*ion-inline-start:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\setting\setting.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-setting">\n\n  <ion-list>\n\n    <ion-item *ngIf="isShow">\n\n      <ion-toggle [(ngModel)]="isGrid" (ionChange)="notifyIsGrid()"></ion-toggle>\n\n      <ion-label>是否切换九宫格</ion-label>\n\n      <ion-icon name=\'grid\' item-start color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item *ngIf="isShow">\n\n      <ion-toggle [(ngModel)]="isOuterNet" (ionChange)="notifyIsOutNet()"></ion-toggle>\n\n      <ion-label>是否使用外网</ion-label>\n\n      <ion-icon name=\'md-wifi\' item-start color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item (click)="showNetwork()">\n\n      <ion-icon name=\'git-network\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>网络设置</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item (click)="showOverdueTime()">\n\n      <ion-icon name=\'time\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>超期设置</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item (click)="showDownloadWords()">\n\n      <ion-icon name=\'download\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>更新词语</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item *ngIf="isShow" (click)="showHeartSetting()">\n\n      <ion-icon name=\'heart-outline\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>心跳频率</ion-label>\n\n      <ion-label class="label-right">{{keepAlive+\'毫秒\'}}</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item *ngIf="isShow" (click)="showAlermType()">\n\n      <ion-icon name=\'alarm\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>提醒方式</ion-label>\n\n      <ion-label class="label-right">{{alermStyle}}</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item *ngIf="isShow" (click)="showRevertSetting()">\n\n      <ion-icon name=\'redo\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>恢复出厂设置</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item (click)="onExit()">\n\n      <ion-icon name=\'exit\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>退出</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n  </ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\setting\setting.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */],
@@ -14366,7 +14511,7 @@ SettingPage = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_storage__ = __webpack_require__(60);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_my_plugin__ = __webpack_require__(120);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_my_plugin__ = __webpack_require__(119);
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||

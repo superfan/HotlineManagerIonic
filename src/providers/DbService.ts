@@ -1624,7 +1624,7 @@ export class DbService {
         sql += `, S_FILEID = '${media.fileId}'`;
       }
       if (media.extendedInfo) {
-        sql += `, S_EXTENDEDINFO = '${media.extendedInfo}'`;
+        sql += `, S_EXTENDEDINFO ='${JSON.stringify(media.extendedInfo)}'`;
       }
       sql += ` WHERE ID = ${localMedia.ID};`;
       return sql;

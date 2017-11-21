@@ -23,7 +23,7 @@ export class MyPluginMock extends MyPlugin {
   public static pageIntent: PageIntent = {
     account: 'wqry',
     password: '0000',
-    userId: 797789,
+    userId: 10,
     userName: 'ss1',
     departmentAndId: '上水#1',
     roles: 'worker',

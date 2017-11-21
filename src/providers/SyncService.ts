@@ -14,7 +14,7 @@ import {DelayInfo} from "../model/DelayInfo";
 import {CancelInfo} from "../model/CancelInfo";
 import {History} from "../model/History";
 import {DbService} from "./DbService";
-import {Media} from "../model/Media";
+import {Media, MediaExtendedInfo} from "../model/Media";
 import {MediaService} from "./MediaService";
 import {ConfigService} from "./ConfigService";
 import {DataMaterialInfo} from "../model/MaterialsInfo";
@@ -616,7 +616,7 @@ export abstract class SyncService {
 
           this.dbService.getMediaList(this.globalService.userId, history.taskId, mediaNames,
             [this.globalService.uploadedFlagForLocal, this.globalService.uploadedFlagForUploading])
-            .then(mediaList => this.uploadMediaList(mediaList))
+            .then(mediaList => this.uploadMediaListV2(mediaList))
             .catch(error => console.error(error))
             .then(() => this.events.publish(this.uploadMediaEvent, msgType, histories));
         } else {
@@ -693,6 +693,32 @@ export abstract class SyncService {
         .then(histories => this.events.publish(this.uploadMediaEvent, msgType, histories));
     }
   }
+  /**
+   * 上传每个任务下的多媒体信息V2
+   * @param mediaList
+   * @returns {any}
+   */
+  private uploadMediaListV2(mediaList: Array<Media>): Promise<boolean> {
+    if (mediaList && mediaList.length > 0) {
+      let promises: Array<Promise<boolean>> = mediaList.map(media => this.uploadOneMediaV2(media));
+      return Promise.all(promises)
+        .then(result => {
+          let files: Array<MediaExtendedInfo> = mediaList.map(media => media.extendedInfo);
+          return this.uploadService.uploadMediaIdsV2(mediaList[0].taskId.split('#')[0], this.globalService.userId, files);
+        })
+        .then(result => {
+          for (let media of mediaList) {
+            media.uploadedFlag = result ? this.globalService.uploadedFlagForUploaded : this.globalService.uploadedFlagForLocal;
+          }
+          let promises: Array<Promise<boolean>> = mediaList.map(media => this.dbService.saveMedia(media));
+          return Promise.all(promises)
+            .then(results => true);
+        })
+    } else {
+      return Promise.resolve(true);
+    }
+  }
+
 
   /**
    * 上传每个任务下的多媒体信息
@@ -718,6 +744,25 @@ export abstract class SyncService {
     } else {
       return Promise.resolve(true);
     }
+  }
+
+  /**
+   * 上传V2
+   * @param media
+   * @returns {Promise<boolean>}
+   */
+  private uploadOneMediaV2(media: Media): Promise<boolean> {
+    return media.fileId && media.fileId !== 'null' && media.fileId !== 'undefined'
+      ? Promise.resolve(true)
+      : this.uploadService.uploadMediaV2(media)
+        .then(fileId => {
+          if (fileId) {
+            media.fileId = fileId;
+            return this.dbService.saveMedia(media);
+          } else {
+            return Promise.reject('fileId is error');
+          }
+        });
   }
 
   /**
