@@ -699,6 +699,8 @@ export class DbService {
                     } else if (task.extendedInfo.replyDeadLine && task.extendedInfo.replyDeadLine < replyTime) {
                       task.extendedInfo.arrivedDeadLine = undefined;
                       task.extendedInfo.delayReplyDeadLine = undefined;
+                    } else {
+                      continue;
                     }
                     tasks.push(task);
                   }

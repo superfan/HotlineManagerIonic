@@ -160,6 +160,7 @@ export class MyHistory implements OnInit, OnDestroy {
                       let mediaNames = history.mediaNames;
                       historyEx.photoCount = mediaNames.filter(name => name.lastIndexOf(this.globalService.photoSuffix) !== -1).length;
                       historyEx.audioCount = mediaNames.filter(name => name.lastIndexOf(this.globalService.audioSuffix) !== -1).length;
+                      historyEx.videoCount = mediaNames.filter(name => name.lastIndexOf(this.globalService.videoSuffix) !== -1).length;
                     }
                   }
                 });

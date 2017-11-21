@@ -33,6 +33,7 @@ export class HistoryEx {
   isCanceled: boolean;  //是否销单
   photoCount: number;
   audioCount: number;
+  videoCount: number;
   isLocationValid: boolean;
   delayTime?: number;
   delayBeyond?: string;
@@ -50,6 +51,7 @@ export class HistoryEx {
     this.isCanceled = history.state === TaskState.Cancel;
     this.photoCount = 0;
     this.audioCount = 0;  //todo 录音的数量
+    this.videoCount = 0;
     this.isLocationValid = TaskEx.checkLocation(this.task.location);
     if (this.task.extendedInfo && this.task.extendedInfo.delayTime > 0) {
       this.delayTime = this.task.extendedInfo.delayTime;

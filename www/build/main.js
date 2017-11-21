@@ -11993,6 +11993,9 @@ var DbService = (function () {
                                     task.extendedInfo.arrivedDeadLine = undefined;
                                     task.extendedInfo.delayReplyDeadLine = undefined;
                                 }
+                                else {
+                                    continue;
+                                }
                                 tasks.push(task);
                             }
                         }
