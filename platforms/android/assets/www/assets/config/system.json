@@ -1,13 +1,8 @@
 {
   "server.outer.baseuri": "http://128.1.3.66:8174/api/",
   "server.inner.baseuri": "http://128.1.3.66:8174/api/",
-<<<<<<< HEAD
-  "server.file.outer.baseuri": "196",
-  "server.file.inner.baseuri": "184",
-=======
   "server.file.outer.baseuri": "http://128.1.3.66:8083/api/",
   "server.file.inner.baseuri": "http://128.1.3.66:8083/api/",
->>>>>>> a11ddbd9409730374ef2d56ed81905ad1508eb1b
   "server.materials.outer.baseuri": "http://128.1.2.184:8175/api/",
   "server.materials.inner.baseuri": "http://128.1.2.184:8175/api/",
   "sys.connect.outer.network": true,

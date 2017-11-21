@@ -1382,10 +1382,10 @@ export class DbService {
         sql += `D_REPLYTIME = ${serverTask.replyTime}, `;
       }
 
-      // TBD
-      // if (serverTask.state > localTask.I_STATE) {
-      //   sql += `SET I_STATE = ${serverTask.state}, `;
-      // }
+      // modify: 2017.11.21
+      if (serverTask.state > localTask.I_STATE) {
+        sql += `I_STATE = ${serverTask.state}, `;
+      }
     } else {
       if (serverTask.acceptTime > 0) {
         sql += `D_ACCEPTTIME = ${serverTask.acceptTime}, `;
