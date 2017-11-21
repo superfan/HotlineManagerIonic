@@ -64,6 +64,7 @@ import {AboutPage} from "../pages/about/about";
 import {ContactPage} from "../pages/contact/contact";
 import {OverdueTimePage} from "../pages/setting/overdueTimePage";
 import {AttachmentPage} from "../pages/attachment/attachment";
+import {PhotoViewer} from "@ionic-native/photo-viewer";
 
 
 @NgModule({
@@ -169,6 +170,7 @@ import {AttachmentPage} from "../pages/attachment/attachment";
     MediaService,
     FileTransfer,
     MyPlugin,
+    PhotoViewer,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     //{provide: Http, useFactory: httpFactory, deps: [HttpInterceptorBackend, RequestOptions]},
   ]

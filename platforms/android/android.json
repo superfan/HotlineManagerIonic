@@ -95,6 +95,10 @@
             {
               "xml": "<feature name=\"VideoPlayer\"><param name=\"android-package\" value=\"com.moust.cordova.videoplayer.VideoPlayer\" /></feature>",
               "count": 1
+            },
+            {
+              "xml": "<feature name=\"PhotoViewer\"><param name=\"android-package\" value=\"com.sarriaroman.PhotoViewer.PhotoViewer\" /></feature>",
+              "count": 1
             }
           ],
           "/widget": [
@@ -114,6 +118,10 @@
             },
             {
               "xml": "<provider android:authorities=\"${applicationId}.opener.provider\" android:exported=\"false\" android:grantUriPermissions=\"true\" android:name=\"io.github.pwlin.cordova.plugins.fileopener2.FileProvider\"><meta-data android:name=\"android.support.FILE_PROVIDER_PATHS\" android:resource=\"@xml/opener_paths\" /></provider>",
+              "count": 1
+            },
+            {
+              "xml": "<activity android:name=\"com.sarriaroman.PhotoViewer.PhotoActivity\" android:theme=\"@android:style/Theme.Holo.NoActionBar.Fullscreen\" />",
               "count": 1
             }
           ],
@@ -178,6 +186,20 @@
           "application": [
             {
               "xml": "<provider android:authorities=\"${applicationId}.provider\" android:exported=\"false\" android:grantUriPermissions=\"true\" android:name=\"android.support.v4.content.FileProvider\"><meta-data android:name=\"android.support.FILE_PROVIDER_PATHS\" android:resource=\"@xml/provider_paths\" /></provider>",
+              "count": 1
+            }
+          ],
+          "/manifest": [
+            {
+              "xml": "<uses-permission android:name=\"android.permission.INTERNET\" />",
+              "count": 1
+            },
+            {
+              "xml": "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\" />",
+              "count": 1
+            },
+            {
+              "xml": "<uses-permission android:name=\"android.permission.READ_EXTERNAL_STORAGE\" />",
               "count": 1
             }
           ]
@@ -259,6 +281,9 @@
       "PACKAGE_NAME": "io.ionic.starter"
     },
     "cordova-plugin-console": {
+      "PACKAGE_NAME": "io.ionic.starter"
+    },
+    "com-sarriaroman-photoviewer": {
       "PACKAGE_NAME": "io.ionic.starter"
     }
   },
@@ -727,6 +752,14 @@
       "clobbers": [
         "VideoPlayer"
       ]
+    },
+    {
+      "id": "com-sarriaroman-photoviewer.PhotoViewer",
+      "file": "plugins/com-sarriaroman-photoviewer/www/PhotoViewer.js",
+      "pluginId": "com-sarriaroman-photoviewer",
+      "clobbers": [
+        "PhotoViewer"
+      ]
     }
   ],
   "plugin_metadata": {
@@ -754,6 +787,7 @@
     "cordova-plugin-statusbar": "2.2.3",
     "cordova.plugin.MyPlugin": "0.0.1",
     "com.moust.cordova.videoplayer": "1.0.1",
-    "cordova-plugin-console": "1.1.0"
+    "cordova-plugin-console": "1.1.0",
+    "com-sarriaroman-photoviewer": "1.1.11"
   }
 }

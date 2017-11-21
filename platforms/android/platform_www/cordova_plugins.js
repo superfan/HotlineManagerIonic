@@ -463,6 +463,14 @@ module.exports = [
     "clobbers": [
       "VideoPlayer"
     ]
+  },
+  {
+    "id": "com-sarriaroman-photoviewer.PhotoViewer",
+    "file": "plugins/com-sarriaroman-photoviewer/www/PhotoViewer.js",
+    "pluginId": "com-sarriaroman-photoviewer",
+    "clobbers": [
+      "PhotoViewer"
+    ]
   }
 ];
 module.exports.metadata = 
@@ -492,7 +500,8 @@ module.exports.metadata =
   "cordova-plugin-statusbar": "2.2.3",
   "cordova.plugin.MyPlugin": "0.0.1",
   "com.moust.cordova.videoplayer": "1.0.1",
-  "cordova-plugin-console": "1.1.0"
+  "cordova-plugin-console": "1.1.0",
+  "com-sarriaroman-photoviewer": "1.1.11"
 };
 // BOTTOM OF METADATA
 });

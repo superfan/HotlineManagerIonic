@@ -13,9 +13,10 @@ import {MapParam, MapType} from "../../model/MapParam";
 import {History} from "../../model/History";
 import {FileService} from "../../providers/FileService";
 //import {Personnel} from "../../model/Personnel";
-import {ConfigService} from "../../providers/ConfigService";
+//import {ConfigService} from "../../providers/ConfigService";
 import {OverdueTime} from "../../model/OverdueTime";
 import {AttachmentPage} from "../attachment/attachment";
+import {PhotoViewer} from "@ionic-native/photo-viewer";
 
 interface Detail {
   name: string;
@@ -147,7 +148,7 @@ export class WorkDetailPage implements OnInit, OnDestroy {
               private globalService: GlobalService,
               private popoverCtrl: PopoverController,
               private fileService: FileService,
-              public configService: ConfigService,) {
+              private photoViewer: PhotoViewer) {
     [this.taskEx, this.history, this.overdueTime, this.isLocked] = this.navParams.data;
     this.isPreview = this.taskEx.isPreview;
     this.isLocationValid = this.taskEx.isLocationValid;
@@ -397,6 +398,9 @@ export class WorkDetailPage implements OnInit, OnDestroy {
 
   onPreviewPicture(name: string): void {
     console.log(name);
+    if (!this.globalService.isChrome && name) {
+      this.photoViewer.show(name);
+    }
   }
 
   onDeletePicture(name: string): void {

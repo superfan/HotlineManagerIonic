@@ -69,6 +69,9 @@
     <feature name="VideoPlayer">
         <param name="android-package" value="com.moust.cordova.videoplayer.VideoPlayer" />
     </feature>
+    <feature name="PhotoViewer">
+        <param name="android-package" value="com.sarriaroman.PhotoViewer.PhotoViewer" />
+    </feature>
     <feature name="Zip">
         <param name="android-package" value="org.apache.cordova.Zip" />
     </feature>

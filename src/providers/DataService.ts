@@ -737,13 +737,15 @@ export class DataService extends SyncService {
    * @returns {Promise<boolean|boolean>}
    */
   public downloadPersonnels(): Promise<boolean> {
-    return this.downloadService.getPersonnels(this.globalService.userId)
-      .then(personnels => this.dbService.savePersonnels(personnels))
-      .catch(error => {
-        console.error(error);
-        this.globalService.showToast(error);
-        return Promise.resolve(false);
-      });
+    return this.globalService.isWorker
+      ? Promise.resolve(true)
+      : this.downloadService.getPersonnels(this.globalService.userId)
+        .then(personnels => this.dbService.savePersonnels(personnels))
+        .catch(error => {
+          console.error(error);
+          this.globalService.showToast(error);
+          return Promise.resolve(false);
+        });
   }
 
   /**
