@@ -395,6 +395,10 @@ export class WorkDetailPage implements OnInit, OnDestroy {
       });
   }
 
+  onPreviewPicture(name: string): void {
+    console.log(name);
+  }
+
   onDeletePicture(name: string): void {
     if (this.globalService.isChrome || this.isPreview || !name || this.isLocked) {
       return;

@@ -95,7 +95,7 @@ public class MyPlugin extends CordovaPlugin {
       } else {
         account = "wqry";
         password = "0000";
-        userId = 797789;
+        userId = 10;
         userName = "wqry";
         department = "客服热线部";
         departmentId = 1;

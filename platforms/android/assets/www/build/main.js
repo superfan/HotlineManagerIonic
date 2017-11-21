@@ -2161,6 +2161,9 @@ var WorkDetailPage = (function () {
             console.log(data);
         });
     };
+    WorkDetailPage.prototype.onPreviewPicture = function (name) {
+        console.log(name);
+    };
     WorkDetailPage.prototype.onDeletePicture = function (name) {
         var _this = this;
         if (this.globalService.isChrome || this.isPreview || !name || this.isLocked) {
@@ -2705,7 +2708,7 @@ var WorkDetailPage = (function () {
 }());
 WorkDetailPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-workdetail',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\workdetail\workdetail.html"*/'<ion-header>\n  <ion-navbar color="primary">\n    <ion-title>\n      {{title}}\n    </ion-title>\n\n    <ion-buttons end *ngIf="!isPreview && !isLocked">\n      <button ion-button icon-only color="white" *ngIf="isLocationValid" (click)="onLocate($event)">\n        <ion-icon name="map"></ion-icon>\n      </button>\n\n      <button ion-button icon-only color="white" (click)="onReply($event)">\n        <ion-icon name="checkmark-circle"></ion-icon>\n      </button>\n    </ion-buttons>\n  </ion-navbar>\n\n  <ion-toolbar no-border-top>\n    <ion-segment [(ngModel)]="segmentName" (ionChange)="segmentChanged($event)" color="{{segmentColor}}">\n      <ion-segment-button value="detailInfo">\n        基本信息\n      </ion-segment-button>\n      <ion-segment-button value="replyInfo" *ngIf="!isPreview">\n        回填信息\n      </ion-segment-button>\n      <ion-segment-button value="mediaInfo" *ngIf="!isPreview">\n        多媒体\n      </ion-segment-button>\n    </ion-segment>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content class="page-workdetail">\n\n  <div [ngSwitch]="segmentName">\n    <!--基本信息-->\n    <ion-list *ngSwitchCase="\'detailInfo\'">\n      <ion-item *ngFor="let item of detail" (click)="detailItemSelected(item)">\n        <ion-label fixed class="label-name">\n          {{item.name}}\n        </ion-label>\n        <div item-content *ngIf="item.isTime">\n          {{item.value | date:\'y-MM-dd HH:mm:ss\'}}\n        </div>\n        <div item-content *ngIf="!item.isTime">\n          {{item.value}}\n        </div>\n        <ion-icon name="ios-arrow-forward" item-end *ngIf="item.isActive"></ion-icon>\n      </ion-item>\n    </ion-list>\n\n    <!--回填信息-->\n    <ion-list *ngSwitchCase="\'replyInfo\'">\n      <ion-item *ngFor="let item of reply" class="reply-item" (click)="itemSelected(item)">\n        <ion-label fixed class="label-name">\n          {{item.name}}\n        </ion-label>\n        <div item-content>\n          {{item.value}}\n        </div>\n        <ion-icon name="ios-arrow-forward" item-end *ngIf="item.isActive"></ion-icon>\n      </ion-item>\n\n      <!--<ion-row>-->\n      <!--<ion-col class="col-button">-->\n      <!--<button ion-button icon-left>-->\n      <!--<ion-icon name="camera"></ion-icon>-->\n      <!--拍照-->\n      <!--</button>-->\n      <!--</ion-col>-->\n      <!--<ion-col class="col-button">-->\n      <!--<button ion-button icon-left>-->\n      <!--<ion-icon name="microphone"></ion-icon>-->\n      <!--录音-->\n      <!--</button>-->\n      <!--</ion-col>-->\n      <!--<ion-col class="col-button">-->\n      <!--<button ion-button icon-left>-->\n      <!--<ion-icon name="videocam"></ion-icon>-->\n      <!--视频-->\n      <!--</button>-->\n      <!--</ion-col>-->\n      <!--</ion-row>-->\n    </ion-list>\n\n    <!--多媒体-->\n    <div *ngSwitchCase="\'mediaInfo\'">\n      <button ion-item icon-left (click)="onTakePicture($event)">\n        <ion-icon name="camera"></ion-icon>\n        拍照\n      </button>\n\n      <ion-grid style="width: 100%; height: 100px;">\n        <ion-row>\n          <ion-col col-4 class="col-img" *ngIf="pictures[0]">\n            <img class="picture" src="{{pictures[0]}}"/>\n            <ion-icon name="close" (click)="onDeletePicture(pictures[0])"></ion-icon>\n          </ion-col>\n\n          <ion-col col-4 class="col-img" *ngIf="pictures[1]">\n            <img class="picture" src="{{pictures[1]}}"/>\n            <ion-icon name="close" (click)="onDeletePicture(pictures[1])"></ion-icon>\n          </ion-col>\n\n          <ion-col col-4 class="col-img" *ngIf="pictures[2]">\n            <img class="picture" src="{{pictures[2]}}"/>\n            <ion-icon name="close" (click)="onDeletePicture(pictures[2])"></ion-icon>\n          </ion-col>\n        </ion-row>\n      </ion-grid>\n\n      <br>\n      <br>\n\n      <button ion-item icon-left (click)="onRecordAudio($event)">\n        <ion-icon name="microphone"></ion-icon>\n        录音\n      </button>\n\n      <ion-grid style="width: 100%; height: 100px;">\n        <ion-row *ngIf="audios[0].time > 0" class="audio">\n          <ion-col col-6 class="audio-info">{{audios[0].time}}s</ion-col>\n          <ion-col col-2><ion-icon name="play" class="audio-btn" (click)="onPlay(audios[0])"></ion-icon></ion-col>\n          <ion-col col-1><ion-icon name="close" class="audio-btn" (click)="onDeleteAudio(audios[0])"></ion-icon></ion-col>\n          <ion-col></ion-col>\n        </ion-row>\n\n        <ion-row *ngIf="audios[1].time > 0" class="audio">\n          <ion-col col-6 class="audio-info">{{audios[1].time}}s</ion-col>\n          <ion-col col-2><ion-icon name="play" class="audio-btn" (click)="onPlay(audios[1])"></ion-icon></ion-col>\n          <ion-col col-1><ion-icon name="close" class="audio-btn" (click)="onDeleteAudio(audios[1])"></ion-icon></ion-col>\n          <ion-col></ion-col>\n        </ion-row>\n\n        <ion-row *ngIf="audios[2].time > 0" class="audio">\n          <ion-col col-6 class="audio-info">{{audios[2].time}}s</ion-col>\n          <ion-col col-2><ion-icon name="play" class="audio-btn" (click)="onPlay(audios[2])"></ion-icon></ion-col>\n          <ion-col col-1><ion-icon name="close" class="audio-btn" (click)="onDeleteAudio(audios[2])"></ion-icon></ion-col>\n          <ion-col></ion-col>\n        </ion-row>\n      </ion-grid>\n\n      <br>\n      <br>\n      <button ion-item icon-left (click)="onTakeVideo($event)">\n      <ion-icon name="videocam"></ion-icon>\n      视频\n      </button>\n\n      <ion-grid style="width: 100%; height: 100px;">\n        <ion-row>\n          <ion-col col-4 class="col-video" *ngIf="videos[0]">\n            <video class="video" (click)="onPlayVideo(videos[0])"></video>\n            <ion-icon name="close" (click)="onDeleteVideo(videos[0])"></ion-icon>\n          </ion-col>\n\n          <ion-col col-4 class="col-video" *ngIf="videos[1]">\n            <video class="video" (click)="onPlayVideo(videos[1])"></video>\n            <ion-icon name="close" (click)="onDeleteVideo(videos[1])"></ion-icon>\n          </ion-col>\n\n          <ion-col col-4 class="col-video" *ngIf="pictures[2]">\n            <video class="video" (click)="onPlayVideo(videos[2])"></video>\n            <ion-icon name="close" (click)="onDeleteVideo(videos[2])"></ion-icon>\n          </ion-col>\n        </ion-row>\n      </ion-grid>\n      <br>\n      <br>\n      <!--<ion-row>-->\n      <!--<ion-col class="col-img">-->\n      <!--<img width="80" height="80" src="assets/img/ic_video_default.png"/>-->\n      <!--</ion-col>-->\n\n      <!--<ion-col class="col-img">-->\n      <!--<img width="80" height="80" src="assets/img/ic_video_default.png"/>-->\n      <!--</ion-col>-->\n\n      <!--<ion-col class="col-img">-->\n      <!--<img width="80" height="80" src="assets/img/ic_video_default.png"/>-->\n      <!--</ion-col>-->\n      <!--</ion-row>-->\n    </div>\n  </div>\n\n</ion-content>\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\workdetail\workdetail.html"*/
+        selector: 'page-workdetail',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\workdetail\workdetail.html"*/'<ion-header>\n  <ion-navbar color="primary">\n    <ion-title>\n      {{title}}\n    </ion-title>\n\n    <ion-buttons end *ngIf="!isPreview && !isLocked">\n      <button ion-button icon-only color="white" *ngIf="isLocationValid" (click)="onLocate($event)">\n        <ion-icon name="map"></ion-icon>\n      </button>\n\n      <button ion-button icon-only color="white" (click)="onReply($event)">\n        <ion-icon name="checkmark-circle"></ion-icon>\n      </button>\n    </ion-buttons>\n  </ion-navbar>\n\n  <ion-toolbar no-border-top>\n    <ion-segment [(ngModel)]="segmentName" (ionChange)="segmentChanged($event)" color="{{segmentColor}}">\n      <ion-segment-button value="detailInfo">\n        基本信息\n      </ion-segment-button>\n      <ion-segment-button value="replyInfo" *ngIf="!isPreview">\n        回填信息\n      </ion-segment-button>\n      <ion-segment-button value="mediaInfo" *ngIf="!isPreview">\n        多媒体\n      </ion-segment-button>\n    </ion-segment>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content class="page-workdetail">\n\n  <div [ngSwitch]="segmentName">\n    <!--基本信息-->\n    <ion-list *ngSwitchCase="\'detailInfo\'">\n      <ion-item *ngFor="let item of detail" (click)="detailItemSelected(item)">\n        <ion-label fixed class="label-name">\n          {{item.name}}\n        </ion-label>\n        <div item-content *ngIf="item.isTime">\n          {{item.value | date:\'y-MM-dd HH:mm:ss\'}}\n        </div>\n        <div item-content *ngIf="!item.isTime">\n          {{item.value}}\n        </div>\n        <ion-icon name="ios-arrow-forward" item-end *ngIf="item.isActive"></ion-icon>\n      </ion-item>\n    </ion-list>\n\n    <!--回填信息-->\n    <ion-list *ngSwitchCase="\'replyInfo\'">\n      <ion-item *ngFor="let item of reply" class="reply-item" (click)="itemSelected(item)">\n        <ion-label fixed class="label-name">\n          {{item.name}}\n        </ion-label>\n        <div item-content>\n          {{item.value}}\n        </div>\n        <ion-icon name="ios-arrow-forward" item-end *ngIf="item.isActive"></ion-icon>\n      </ion-item>\n\n      <!--<ion-row>-->\n      <!--<ion-col class="col-button">-->\n      <!--<button ion-button icon-left>-->\n      <!--<ion-icon name="camera"></ion-icon>-->\n      <!--拍照-->\n      <!--</button>-->\n      <!--</ion-col>-->\n      <!--<ion-col class="col-button">-->\n      <!--<button ion-button icon-left>-->\n      <!--<ion-icon name="microphone"></ion-icon>-->\n      <!--录音-->\n      <!--</button>-->\n      <!--</ion-col>-->\n      <!--<ion-col class="col-button">-->\n      <!--<button ion-button icon-left>-->\n      <!--<ion-icon name="videocam"></ion-icon>-->\n      <!--视频-->\n      <!--</button>-->\n      <!--</ion-col>-->\n      <!--</ion-row>-->\n    </ion-list>\n\n    <!--多媒体-->\n    <div *ngSwitchCase="\'mediaInfo\'">\n      <button ion-item icon-left (click)="onTakePicture($event)">\n        <ion-icon name="camera"></ion-icon>\n        拍照\n      </button>\n\n      <ion-grid style="width: 100%; height: 100px;">\n        <ion-row>\n          <ion-col col-4 class="col-img" *ngIf="pictures[0]">\n            <img class="picture" src="{{pictures[0]}}" (click)="onPreviewPicture(pictures[0])"/>\n            <ion-icon name="close" (click)="onDeletePicture(pictures[0])"></ion-icon>\n          </ion-col>\n\n          <ion-col col-4 class="col-img" *ngIf="pictures[1]">\n            <img class="picture" src="{{pictures[1]}}" (click)="onPreviewPicture(pictures[1])"/>\n            <ion-icon name="close" (click)="onDeletePicture(pictures[1])"></ion-icon>\n          </ion-col>\n\n          <ion-col col-4 class="col-img" *ngIf="pictures[2]">\n            <img class="picture" src="{{pictures[2]}}" (click)="onPreviewPicture(pictures[2])"/>\n            <ion-icon name="close" (click)="onDeletePicture(pictures[2])"></ion-icon>\n          </ion-col>\n        </ion-row>\n      </ion-grid>\n\n      <br>\n      <br>\n\n      <button ion-item icon-left (click)="onRecordAudio($event)">\n        <ion-icon name="microphone"></ion-icon>\n        录音\n      </button>\n\n      <ion-grid style="width: 100%; height: 100px;">\n        <ion-row *ngIf="audios[0].time > 0" class="audio">\n          <ion-col col-6 class="audio-info">{{audios[0].time}}s</ion-col>\n          <ion-col col-2>\n            <ion-icon name="play" class="audio-btn" (click)="onPlay(audios[0])"></ion-icon>\n          </ion-col>\n          <ion-col col-1>\n            <ion-icon name="close" class="audio-btn" (click)="onDeleteAudio(audios[0])"></ion-icon>\n          </ion-col>\n          <ion-col></ion-col>\n        </ion-row>\n\n        <ion-row *ngIf="audios[1].time > 0" class="audio">\n          <ion-col col-6 class="audio-info">{{audios[1].time}}s</ion-col>\n          <ion-col col-2>\n            <ion-icon name="play" class="audio-btn" (click)="onPlay(audios[1])"></ion-icon>\n          </ion-col>\n          <ion-col col-1>\n            <ion-icon name="close" class="audio-btn" (click)="onDeleteAudio(audios[1])"></ion-icon>\n          </ion-col>\n          <ion-col></ion-col>\n        </ion-row>\n\n        <ion-row *ngIf="audios[2].time > 0" class="audio">\n          <ion-col col-6 class="audio-info">{{audios[2].time}}s</ion-col>\n          <ion-col col-2>\n            <ion-icon name="play" class="audio-btn" (click)="onPlay(audios[2])"></ion-icon>\n          </ion-col>\n          <ion-col col-1>\n            <ion-icon name="close" class="audio-btn" (click)="onDeleteAudio(audios[2])"></ion-icon>\n          </ion-col>\n          <ion-col></ion-col>\n        </ion-row>\n      </ion-grid>\n\n      <br>\n      <br>\n      <button ion-item icon-left (click)="onTakeVideo($event)">\n        <ion-icon name="videocam"></ion-icon>\n        视频\n      </button>\n\n      <ion-grid style="width: 100%; height: 100px;">\n        <ion-row>\n          <ion-col col-4 class="col-video" *ngIf="videos[0]">\n            <video class="video" (click)="onPlayVideo(videos[0])"></video>\n            <ion-icon name="close" (click)="onDeleteVideo(videos[0])"></ion-icon>\n          </ion-col>\n\n          <ion-col col-4 class="col-video" *ngIf="videos[1]">\n            <video class="video" (click)="onPlayVideo(videos[1])"></video>\n            <ion-icon name="close" (click)="onDeleteVideo(videos[1])"></ion-icon>\n          </ion-col>\n\n          <ion-col col-4 class="col-video" *ngIf="pictures[2]">\n            <video class="video" (click)="onPlayVideo(videos[2])"></video>\n            <ion-icon name="close" (click)="onDeleteVideo(videos[2])"></ion-icon>\n          </ion-col>\n        </ion-row>\n      </ion-grid>\n      <br>\n      <br>\n      <!--<ion-row>-->\n      <!--<ion-col class="col-img">-->\n      <!--<img width="80" height="80" src="assets/img/ic_video_default.png"/>-->\n      <!--</ion-col>-->\n\n      <!--<ion-col class="col-img">-->\n      <!--<img width="80" height="80" src="assets/img/ic_video_default.png"/>-->\n      <!--</ion-col>-->\n\n      <!--<ion-col class="col-img">-->\n      <!--<img width="80" height="80" src="assets/img/ic_video_default.png"/>-->\n      <!--</ion-col>-->\n      <!--</ion-row>-->\n    </div>\n  </div>\n\n</ion-content>\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\workdetail\workdetail.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* NavParams */],
@@ -5153,10 +5156,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 var AttachmentPage = (function () {
-    function AttachmentPage(navCtrl, dataService, globalService) {
+    function AttachmentPage(navCtrl, dataService, globalService, alertCtrl) {
         this.navCtrl = navCtrl;
         this.dataService = dataService;
         this.globalService = globalService;
+        this.alertCtrl = alertCtrl;
         this.title = "附件";
         this.pictures = [
             'assets/img/ic_add_materials.png',
@@ -5177,12 +5181,45 @@ var AttachmentPage = (function () {
             'http://128.1.3.60:38001/api/update/SVID_20171113_131106.mp4'
         ];
     }
-    AttachmentPage.prototype.onPlayVideo = function (path) {
-        if (!this.globalService.isChrome && path) {
-            this.dataService.playCachedVideo(path, "SVID_20171113_131106.mp4")
-                .then(function (data) { return console.log(data); })
-                .catch(function (error) { return console.error(error); });
+    AttachmentPage.prototype.onPlay = function (audio) {
+        /*if (!audio.name) {
+          return;
         }
+
+        let names: string[] = audio.name.split('#');
+        if (!names || names.length !== 2) {
+          return;
+        }
+
+        this.dataService.playAudio(names[0])
+          .then(file => {
+            if (file) {
+              let prompt = this.alertCtrl.create({
+                title: '提示',
+                message: "结束播放语音",
+                enableBackdropDismiss: false,
+                buttons: [
+                  {
+                    text: '确定',
+                    handler: data => {
+                      console.log('Saved clicked');
+                      this.dataService.stopAudio(file)
+                        .catch(err => console.error(err));
+                    }
+                  }
+                ]
+              });
+              prompt.present();
+            }
+          })
+          .catch(err => console.error(err));*/
+    };
+    AttachmentPage.prototype.onPlayVideo = function (path) {
+        /*if (!this.globalService.isChrome && path) {
+          this.dataService.playCachedVideo(path, "SVID_20171113_131106.mp4")
+            .then(data => console.log(data))
+            .catch(error => console.error(error));
+        }*/
     };
     return AttachmentPage;
 }());
@@ -5192,7 +5229,8 @@ AttachmentPage = __decorate([
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_2__providers_DataService__["a" /* DataService */],
-        __WEBPACK_IMPORTED_MODULE_3__providers_GlobalService__["a" /* GlobalService */]])
+        __WEBPACK_IMPORTED_MODULE_3__providers_GlobalService__["a" /* GlobalService */],
+        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */]])
 ], AttachmentPage);
 
 //# sourceMappingURL=attachment.js.map
@@ -14306,7 +14344,7 @@ var MyPluginMock = (function (_super) {
 MyPluginMock.pageIntent = {
     account: 'wqry',
     password: '0000',
-    userId: 797789,
+    userId: 10,
     userName: 'ss1',
     departmentAndId: '客服热线部#1',
     roles: 'worker',
