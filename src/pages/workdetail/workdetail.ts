@@ -219,8 +219,8 @@ export class WorkDetailPage implements OnInit, OnDestroy {
       || !this.replyInfo.opContent
       || !this.replyInfo.reason
       || !this.replyInfo.solution
-      || !this.replyInfo.result
-      || !this.replyInfo.opPerson) {
+      || !this.replyInfo.result) {
+      // || !this.replyInfo.opPerson) {
       return this.globalService.showToast("数据填写不完整!");
     }
 

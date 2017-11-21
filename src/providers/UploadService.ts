@@ -12,7 +12,7 @@ import {ReplyInfo} from "../model/ReplyInfo";
 import {CancelInfo, CancelExInfo} from "../model/CancelInfo";
 import {DispatchInfo} from "../model/DispatchInfo";
 import {FileTransfer, FileUploadOptions, FileTransferObject} from '@ionic-native/file-transfer';
-import {Media, MediaType} from "../model/Media";
+import {Media, MediaExtendedInfo, MediaType} from "../model/Media";
 import {FileService} from "./FileService";
 import {UploadMaterials} from "../model/MaterialsInfo";
 
@@ -350,6 +350,69 @@ export class UploadService extends BaseService {
   }
 
   /**
+   * 上传多媒体文件2.0
+   * @param media
+   * @returns {Promise<T>}
+   */
+  public uploadMediaV2(media: Media): Promise<string> {
+    return new Promise((resolve, reject) => {
+      this.configService.getFileBaseUri()
+        .then(data => {
+          let url: string = data + `wap/v2/fs/upload`;
+          let fileUrl: string;
+          let fileType: string;
+          switch (media.fileType) {
+            case MediaType.Picture:
+              fileUrl = this.fileService.getImagesDir();
+              fileType = 'IMAGE';
+              break;
+            case MediaType.Audio:
+              fileUrl = this.fileService.getSoundsDir();
+              fileType = 'SOUND';
+              break;
+            case MediaType.Vedio:
+              fileUrl = this.fileService.getVideosDir();
+              fileType = 'video/mp4';
+              break;
+            default:
+              return reject('type is error');
+          }
+          fileUrl = `${fileUrl}/${media.fileName}`;
+
+          const fileTransfer: FileTransferObject = this.transfer.create();
+          let options: FileUploadOptions = {
+            fileKey: 'file',
+            fileName: `${media.fileName}`,
+            params: {
+              userId: media.userId,
+              fileType,
+              fileName: media.fileName
+            }
+          };
+
+          fileTransfer.upload(fileUrl, url, options)
+            .then((data) => {
+              // success
+              console.log(data);
+              let body = JSON.parse(data.response);
+              if (body.fileId && body.url && body.downloadUrl && body.fileType
+                && body.fileHash && body.originFileName) {
+                media.extendedInfo = body;
+                resolve(body.fileId);
+              } else {
+                reject(body.Message ? body.Message : "failure to uploadMedia");
+              }
+            }, (err) => {
+              // error
+              console.error(err);
+              reject(err);
+            });
+        })
+        .catch(error => reject(error));
+    });
+  }
+
+  /**
    * 上传多媒体文件
    * @param media
    * @returns {Promise<T>}
@@ -411,6 +474,41 @@ export class UploadService extends BaseService {
   }
 
   /**
+   * 上传文件关联 V2.0
+   * @param taskId
+   * @param files
+   * @returns {Promise<T>}
+   */
+  public uploadMediaIdsV2(taskId: string, userId: number, files: Array<MediaExtendedInfo>): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this.configService.getServerBaseUri()
+        .then(data => {
+          let url = data + "wap/v1/mobile/task/" + taskId + "/files/wap/upload";
+          let content = {
+            taskId,
+            userId,
+            files
+          };
+          return this.put(url, JSON.stringify(content), this.getOptions())
+            .toPromise()
+            .then(data => {
+              let body = data.json();
+              if (body.Code === this.globalService.httpCode
+                && body.StatusCode === this.globalService.httpSuccessStatusCode
+                && body.Data) {
+                resolve(body.Data);
+              } else {
+                reject(body.Message ? body.Message : "failure to uploadMediaIds");
+              }
+            })
+            .catch(this.handleError);
+        })
+        .catch(error => reject(error));
+    });
+  }
+
+
+  /**
    * 上传文件关联
    * @param taskId
    * @param files
@@ -448,25 +546,25 @@ export class UploadService extends BaseService {
    * @param materialArr
    * @returns {Promise<T>}
    */
-  public uploadMaterialsAdd(materialArr:Array<UploadMaterials>):Promise<boolean>{
-    return new Promise((resolve,reject)=>{
+  public uploadMaterialsAdd(materialArr: Array<UploadMaterials>): Promise<boolean> {
+    return new Promise((resolve, reject) => {
       this.configService.getMaterialsBaseUri()
-        .then(data=>{
-          let url=`${data}api/wap/v1/materialusage/batch`;
-          return this.post(url,JSON.stringify(materialArr),this.getOptions())
+        .then(data => {
+          let url = `${data}api/wap/v1/materialusage/batch`;
+          return this.post(url, JSON.stringify(materialArr), this.getOptions())
             .toPromise()
-            .then(data=>{
-              let body=data.json();
+            .then(data => {
+              let body = data.json();
               if (body.status == this.globalService.httpSuccessStatusCode
-                && body.message=='OK') {
+                && body.message == 'OK') {
                 resolve(true);
-              }else{
+              } else {
                 resolve(body.message ? body.message : "failure to uploadMaterials")
               }
             })
             .catch(this.handleError);
         })
-        .catch(error=>reject(error));
+        .catch(error => reject(error));
     })
   }
 }
