@@ -30,7 +30,7 @@ export class MyApp {
         splashScreen.hide();
         return this.appComponentService.init();
       })
-      .then(page => this.rootPage = MainPage)
+      .then(page => this.rootPage = page)
       .catch(error => {
         console.error(error);
         this.globalService.showToast(error);

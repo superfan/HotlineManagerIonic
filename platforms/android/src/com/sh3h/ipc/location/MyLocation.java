@@ -10,6 +10,8 @@ public class MyLocation implements Parcelable {
     private double mLatitude;
     private float mDirection;
     private float mAccuracy;
+    private double mLocalLongitude;
+    private double mLocalLatitude;
 
     public MyLocation() {
         mIsGpsLocated = false;
@@ -23,12 +25,16 @@ public class MyLocation implements Parcelable {
                       double longitude,
                       double latitude,
                       float direction,
-                      float accuracy) {
+                      float accuracy,
+                      double localLongitude,
+                      double localLatitude) {
         mIsGpsLocated = isGpsLocated;
         mLongitude = longitude;
         mLatitude = latitude;
         mDirection = direction;
         mAccuracy = accuracy;
+        mLocalLongitude = localLongitude;
+        mLocalLatitude = localLatitude;
     }
 
     public boolean isGpsLocated() {
@@ -71,6 +77,22 @@ public class MyLocation implements Parcelable {
         return mAccuracy;
     }
 
+    public double getLocalLongitude() {
+        return mLocalLongitude;
+    }
+
+    public void setLocalLongitude(double mLocalLongitude) {
+        this.mLocalLongitude = mLocalLongitude;
+    }
+
+    public double getmLocalLatitude() {
+        return mLocalLatitude;
+    }
+
+    public void setmLocalLatitude(double mLocalLatitude) {
+        this.mLocalLatitude = mLocalLatitude;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -83,16 +105,19 @@ public class MyLocation implements Parcelable {
         dest.writeDouble(mLatitude);
         dest.writeFloat(mDirection);
         dest.writeFloat(mAccuracy);
+        dest.writeDouble(mLocalLongitude);
+        dest.writeDouble(mLocalLatitude);
     }
 
     //添加一个静态成员,名为CREATOR,该对象实现了Parcelable.Creator接口
-    public static final Creator<MyLocation> CREATOR = new Creator<MyLocation>() {
+    public static final Parcelable.Creator<MyLocation> CREATOR = new Parcelable.Creator<MyLocation>() {
         @Override
         public MyLocation createFromParcel(Parcel source) {//从Parcel中读取数据，返回person对象
             boolean[] val = new boolean[1];
             source.readBooleanArray(val);
             return new MyLocation(val[0], source.readDouble(), source.readDouble(),
-                    source.readFloat(), source.readFloat());
+                    source.readFloat(), source.readFloat(),
+                    source.readDouble(), source.readDouble());
         }
 
         @Override

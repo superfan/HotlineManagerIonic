@@ -93,14 +93,14 @@ public class MyPlugin extends CordovaPlugin {
         accessToken = getString(bundle.getString(ACCESS_TOKEN));
         extendedInfo = getString(bundle.getString(EXTENDED_INFO));
       } else {
-        account = "wqry";
-        password = "0000";
-        userId = 10;
-        userName = "wqry";
+        account = "wqry1";
+        password = "00001";
+        userId = 1011;
+        userName = "wqry1";
         department = "客服热线部";
         departmentId = 1;
         roles = "worker";
-        params = "MyHistory";
+        params = "MyWorkPage";
         accessToken = getUUID(mainApplication);
         extendedInfo = "";
       }

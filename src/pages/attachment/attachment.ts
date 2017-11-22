@@ -11,24 +11,24 @@ export class AttachmentPage {
   title: string = "附件";
 
   pictures: string[] = [
-    'assets/img/ic_add_materials.png',
-    'assets/img/ic_add_materials.png',
-    'assets/img/ic_add_materials.png',
-    'assets/img/ic_add_materials.png',
-    'assets/img/ic_add_materials.png',
-    'assets/img/ic_add_materials.png'
+    // 'assets/img/ic_add_materials.png',
+    // 'assets/img/ic_add_materials.png',
+    // 'assets/img/ic_add_materials.png',
+    // 'assets/img/ic_add_materials.png',
+    // 'assets/img/ic_add_materials.png',
+    // 'assets/img/ic_add_materials.png'
   ];
 
   audios: {name: string, time: number}[] = [
-    {name: '1', time: 10},
-    {name: '2', time: 20},
-    {name: '3', time: 30}
+    // {name: '1', time: 10},
+    // {name: '2', time: 20},
+    // {name: '3', time: 30}
   ];
 
   videos: string[] = [
-    'http://128.1.3.60:38001/api/update/SVID_20171113_131106.mp4',
-    'http://128.1.3.60:38001/api/update/SVID_20171113_131106.mp4',
-    'http://128.1.3.60:38001/api/update/SVID_20171113_131106.mp4'
+    // 'http://128.1.3.60:38001/api/update/SVID_20171113_131106.mp4',
+    // 'http://128.1.3.60:38001/api/update/SVID_20171113_131106.mp4',
+    // 'http://128.1.3.60:38001/api/update/SVID_20171113_131106.mp4'
   ];
 
   constructor(public navCtrl: NavController,

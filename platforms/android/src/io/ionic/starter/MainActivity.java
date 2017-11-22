@@ -64,6 +64,7 @@ public class MainActivity extends CordovaActivity implements MainApplication.OnA
 
     mainApplication.bindHostService();
     mainApplication.registerOnAidlListener(this);
+    mainApplication.addActivity(this);
   }
 
   @Override
@@ -86,6 +87,7 @@ public class MainActivity extends CordovaActivity implements MainApplication.OnA
     super.onDestroy();
     MainApplication mainApplication = ((MainApplication)getApplication());
     mainApplication.unregisterOnAidlListener(this);
+    mainApplication.removeActivity(this);
   }
 
   public void handlePushMessage(String message) {
