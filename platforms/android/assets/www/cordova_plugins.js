@@ -449,14 +449,6 @@ module.exports = [
     ]
   },
   {
-    "id": "cordova.plugin.MyPlugin.MyPlugin",
-    "file": "plugins/cordova.plugin.MyPlugin/www/MyPlugin.js",
-    "pluginId": "cordova.plugin.MyPlugin",
-    "clobbers": [
-      "cordova.plugins.MyPlugin"
-    ]
-  },
-  {
     "id": "com.moust.cordova.videoplayer.VideoPlayer",
     "file": "plugins/com.moust.cordova.videoplayer/www/videoplayer.js",
     "pluginId": "com.moust.cordova.videoplayer",
@@ -470,6 +462,14 @@ module.exports = [
     "pluginId": "com-sarriaroman-photoviewer",
     "clobbers": [
       "PhotoViewer"
+    ]
+  },
+  {
+    "id": "cordova.plugin.MyPlugin.MyPlugin",
+    "file": "plugins/cordova.plugin.MyPlugin/www/MyPlugin.js",
+    "pluginId": "cordova.plugin.MyPlugin",
+    "clobbers": [
+      "cordova.plugins.MyPlugin"
     ]
   }
 ];
@@ -498,10 +498,10 @@ module.exports.metadata =
   "cordova-sqlite-storage": "2.1.0",
   "uk.co.workingedge.cordova.plugin.sqliteporter": "1.0.2",
   "cordova-plugin-statusbar": "2.2.3",
-  "cordova.plugin.MyPlugin": "0.0.1",
   "com.moust.cordova.videoplayer": "1.0.1",
   "cordova-plugin-console": "1.1.0",
-  "com-sarriaroman-photoviewer": "1.1.11"
+  "com-sarriaroman-photoviewer": "1.1.11",
+  "cordova.plugin.MyPlugin": "0.0.1"
 };
 // BOTTOM OF METADATA
 });
