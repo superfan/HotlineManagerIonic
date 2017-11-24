@@ -5182,12 +5182,12 @@ var AttachmentPage = (function () {
         /*if (!audio.name) {
           return;
         }
-
+    
         let names: string[] = audio.name.split('#');
         if (!names || names.length !== 2) {
           return;
         }
-
+    
         this.dataService.playAudio(names[0])
           .then(file => {
             if (file) {
@@ -6858,7 +6858,7 @@ var ItemId;
     ItemId[ItemId["Materials"] = 6] = "Materials";
 })(ItemId || (ItemId = {}));
 var MainPage = (function () {
-    function MainPage(navCtrl,
+    function MainPage(navCtrl, 
         //private events: Events,
         //private dataService: DataService,
         globalService) {
@@ -9058,7 +9058,7 @@ var ValueValidPipe = (function () {
     return ValueValidPipe;
 }());
 ValueValidPipe = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["V" /* Pipe */])({ name: 'valueValid' })
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["W" /* Pipe */])({ name: 'valueValid' })
 ], ValueValidPipe);
 
 //# sourceMappingURL=ValueValidPipe.js.map
@@ -9868,7 +9868,7 @@ var MapPage = (function () {
     return MapPage;
 }());
 __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])('map'),
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_14" /* ViewChild */])('map'),
     __metadata("design:type", __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */])
 ], MapPage.prototype, "mapElement", void 0);
 MapPage = __decorate([
@@ -10250,7 +10250,7 @@ var MyWorkPage = (function () {
                  } catch (err) {
                  console.error(err);
                  }
-
+      
                  return Promise.resolve(result);
                  });*/
             }
@@ -11184,15 +11184,15 @@ var MyWorkPage = (function () {
     return MyWorkPage;
 }());
 __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["n" /* Refresher */]),
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_14" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["n" /* Refresher */]),
     __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["n" /* Refresher */])
 ], MyWorkPage.prototype, "refresher", void 0);
 __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["c" /* Content */]),
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_14" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["c" /* Content */]),
     __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["c" /* Content */])
 ], MyWorkPage.prototype, "content", void 0);
 __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* InfiniteScroll */]),
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_14" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* InfiniteScroll */]),
     __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* InfiniteScroll */])
 ], MyWorkPage.prototype, "infiniteScroll", void 0);
 MyWorkPage = __decorate([
@@ -11487,15 +11487,15 @@ var MyHistory = (function () {
     return MyHistory;
 }());
 __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["n" /* Refresher */]),
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_14" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["n" /* Refresher */]),
     __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["n" /* Refresher */])
 ], MyHistory.prototype, "refresher", void 0);
 __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["c" /* Content */]),
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_14" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["c" /* Content */]),
     __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["c" /* Content */])
 ], MyHistory.prototype, "content", void 0);
 __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* InfiniteScroll */]),
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_14" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* InfiniteScroll */]),
     __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* InfiniteScroll */])
 ], MyHistory.prototype, "infiniteScroll", void 0);
 MyHistory = __decorate([
@@ -13655,7 +13655,7 @@ var StationWorkPage = (function () {
     return StationWorkPage;
 }());
 __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["c" /* Content */]),
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_14" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["c" /* Content */]),
     __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["c" /* Content */])
 ], StationWorkPage.prototype, "content", void 0);
 StationWorkPage = __decorate([

@@ -11,3 +11,5 @@ npm run build
 npm install
 
 ionic cordova plugin rm cordova.plugin.MyPlugin
+
+$ ionic cordova build android --prod --release -- -- --keystore=filename.keystore --alias=myalias
