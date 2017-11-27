@@ -127,12 +127,12 @@
           </button>
         </ion-col>
 
-        <!-- <ion-col>
+        <ion-col class="card-bottom-btn">
            <button ion-button icon-left clear small color="gray">
              <ion-icon name="videocam"></ion-icon>
              <div>{{item.videoCount}}</div>
            </button>
-         </ion-col>-->
+         </ion-col>
 
         <ion-col class="card-bottom-btn" *ngIf="item.isLocationValid">
           <button ion-button icon-left clear small (click)="onLocate(item)">

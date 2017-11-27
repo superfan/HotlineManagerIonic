@@ -8,7 +8,7 @@ webpackJsonp([0],{
 /* unused harmony export MyLocation */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MyPlugin; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ionic_native_core__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ionic_native_core__ = __webpack_require__(11);
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -169,7 +169,7 @@ MyPlugin = __decorate([
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DownloadService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(35);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ConfigService__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ConfigService__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__model_Task__ = __webpack_require__(36);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__BaseService__ = __webpack_require__(123);
@@ -947,7 +947,7 @@ BaseService = __decorate([
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return UploadService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(35);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ConfigService__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ConfigService__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__BaseService__ = __webpack_require__(123);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_file_transfer__ = __webpack_require__(124);
@@ -1924,8 +1924,8 @@ var MaterialInfoEx = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__map_map__ = __webpack_require__(37);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__model_MapParam__ = __webpack_require__(48);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__providers_FileService__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__providers_ConfigService__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__attachment_attachment__ = __webpack_require__(232);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__attachment_attachment__ = __webpack_require__(232);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__ionic_native_photo_viewer__ = __webpack_require__(233);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1945,11 +1945,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-//import {Personnel} from "../../model/Personnel";
 
 
 var WorkDetailPage = (function () {
-    function WorkDetailPage(navCtrl, navParams, alertCtrl, events, dataService, globalService, popoverCtrl, fileService, configService) {
+    function WorkDetailPage(navCtrl, navParams, alertCtrl, events, dataService, globalService, popoverCtrl, fileService, photoViewer) {
         this.navCtrl = navCtrl;
         this.navParams = navParams;
         this.alertCtrl = alertCtrl;
@@ -1958,7 +1957,7 @@ var WorkDetailPage = (function () {
         this.globalService = globalService;
         this.popoverCtrl = popoverCtrl;
         this.fileService = fileService;
-        this.configService = configService;
+        this.photoViewer = photoViewer;
         this.tag = "[WorkDetailPage]";
         this.disableColor = '#808080';
         this.enableColor = '#5d81c1';
@@ -2198,7 +2197,7 @@ var WorkDetailPage = (function () {
     WorkDetailPage.prototype.detailItemSelected = function (item) {
         if (item.key && item.key === "attachments") {
             console.log("attachments");
-            this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_11__attachment_attachment__["a" /* AttachmentPage */]);
+            this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_10__attachment_attachment__["a" /* AttachmentPage */]);
         }
     };
     /**
@@ -2260,6 +2259,9 @@ var WorkDetailPage = (function () {
     };
     WorkDetailPage.prototype.onPreviewPicture = function (name) {
         console.log(name);
+        if (!this.globalService.isChrome && name) {
+            this.photoViewer.show(name);
+        }
     };
     WorkDetailPage.prototype.onDeletePicture = function (name) {
         var _this = this;
@@ -2805,7 +2807,7 @@ var WorkDetailPage = (function () {
 }());
 WorkDetailPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-workdetail',template:/*ion-inline-start:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\workdetail\workdetail.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n\n\n    <ion-buttons end *ngIf="!isPreview && !isLocked">\n\n      <button ion-button icon-only color="white" *ngIf="isLocationValid" (click)="onLocate($event)">\n\n        <ion-icon name="map"></ion-icon>\n\n      </button>\n\n\n\n      <button ion-button icon-only color="white" (click)="onReply($event)">\n\n        <ion-icon name="checkmark-circle"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n\n\n  <ion-toolbar no-border-top>\n\n    <ion-segment [(ngModel)]="segmentName" (ionChange)="segmentChanged($event)" color="{{segmentColor}}">\n\n      <ion-segment-button value="detailInfo">\n\n        基本信息\n\n      </ion-segment-button>\n\n      <ion-segment-button value="replyInfo" *ngIf="!isPreview">\n\n        回填信息\n\n      </ion-segment-button>\n\n      <ion-segment-button value="mediaInfo" *ngIf="!isPreview">\n\n        多媒体\n\n      </ion-segment-button>\n\n    </ion-segment>\n\n  </ion-toolbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-workdetail">\n\n\n\n  <div [ngSwitch]="segmentName">\n\n    <!--基本信息-->\n\n    <ion-list *ngSwitchCase="\'detailInfo\'">\n\n      <ion-item *ngFor="let item of detail" (click)="detailItemSelected(item)">\n\n        <ion-label fixed class="label-name">\n\n          {{item.name}}\n\n        </ion-label>\n\n        <div item-content *ngIf="item.isTime">\n\n          {{item.value | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </div>\n\n        <div item-content *ngIf="!item.isTime">\n\n          {{item.value}}\n\n        </div>\n\n        <ion-icon name="ios-arrow-forward" item-end *ngIf="item.isActive"></ion-icon>\n\n      </ion-item>\n\n    </ion-list>\n\n\n\n    <!--回填信息-->\n\n    <ion-list *ngSwitchCase="\'replyInfo\'">\n\n      <ion-item *ngFor="let item of reply" class="reply-item" (click)="itemSelected(item)">\n\n        <ion-label fixed class="label-name">\n\n          {{item.name}}\n\n        </ion-label>\n\n        <div item-content>\n\n          {{item.value}}\n\n        </div>\n\n        <ion-icon name="ios-arrow-forward" item-end *ngIf="item.isActive"></ion-icon>\n\n      </ion-item>\n\n\n\n      <!--<ion-row>-->\n\n      <!--<ion-col class="col-button">-->\n\n      <!--<button ion-button icon-left>-->\n\n      <!--<ion-icon name="camera"></ion-icon>-->\n\n      <!--拍照-->\n\n      <!--</button>-->\n\n      <!--</ion-col>-->\n\n      <!--<ion-col class="col-button">-->\n\n      <!--<button ion-button icon-left>-->\n\n      <!--<ion-icon name="microphone"></ion-icon>-->\n\n      <!--录音-->\n\n      <!--</button>-->\n\n      <!--</ion-col>-->\n\n      <!--<ion-col class="col-button">-->\n\n      <!--<button ion-button icon-left>-->\n\n      <!--<ion-icon name="videocam"></ion-icon>-->\n\n      <!--视频-->\n\n      <!--</button>-->\n\n      <!--</ion-col>-->\n\n      <!--</ion-row>-->\n\n    </ion-list>\n\n\n\n    <!--多媒体-->\n\n    <div *ngSwitchCase="\'mediaInfo\'">\n\n      <button ion-item icon-left (click)="onTakePicture($event)">\n\n        <ion-icon name="camera"></ion-icon>\n\n        拍照\n\n      </button>\n\n\n\n      <ion-grid style="width: 100%; height: 100px;">\n\n        <ion-row>\n\n          <ion-col col-4 class="col-img" *ngIf="pictures[0]">\n\n            <img class="picture" src="{{pictures[0]}}" (click)="onPreviewPicture(pictures[0])"/>\n\n            <ion-icon name="close" (click)="onDeletePicture(pictures[0])"></ion-icon>\n\n          </ion-col>\n\n\n\n          <ion-col col-4 class="col-img" *ngIf="pictures[1]">\n\n            <img class="picture" src="{{pictures[1]}}" (click)="onPreviewPicture(pictures[1])"/>\n\n            <ion-icon name="close" (click)="onDeletePicture(pictures[1])"></ion-icon>\n\n          </ion-col>\n\n\n\n          <ion-col col-4 class="col-img" *ngIf="pictures[2]">\n\n            <img class="picture" src="{{pictures[2]}}" (click)="onPreviewPicture(pictures[2])"/>\n\n            <ion-icon name="close" (click)="onDeletePicture(pictures[2])"></ion-icon>\n\n          </ion-col>\n\n        </ion-row>\n\n      </ion-grid>\n\n\n\n      <br>\n\n      <br>\n\n\n\n      <button ion-item icon-left (click)="onRecordAudio($event)">\n\n        <ion-icon name="microphone"></ion-icon>\n\n        录音\n\n      </button>\n\n\n\n      <ion-grid style="width: 100%; height: 100px;">\n\n        <ion-row *ngIf="audios[0].time > 0" class="audio">\n\n          <ion-col col-6 class="audio-info">{{audios[0].time}}s</ion-col>\n\n          <ion-col col-2>\n\n            <ion-icon name="play" class="audio-btn" (click)="onPlay(audios[0])"></ion-icon>\n\n          </ion-col>\n\n          <ion-col col-1>\n\n            <ion-icon name="close" class="audio-btn" (click)="onDeleteAudio(audios[0])"></ion-icon>\n\n          </ion-col>\n\n          <ion-col></ion-col>\n\n        </ion-row>\n\n\n\n        <ion-row *ngIf="audios[1].time > 0" class="audio">\n\n          <ion-col col-6 class="audio-info">{{audios[1].time}}s</ion-col>\n\n          <ion-col col-2>\n\n            <ion-icon name="play" class="audio-btn" (click)="onPlay(audios[1])"></ion-icon>\n\n          </ion-col>\n\n          <ion-col col-1>\n\n            <ion-icon name="close" class="audio-btn" (click)="onDeleteAudio(audios[1])"></ion-icon>\n\n          </ion-col>\n\n          <ion-col></ion-col>\n\n        </ion-row>\n\n\n\n        <ion-row *ngIf="audios[2].time > 0" class="audio">\n\n          <ion-col col-6 class="audio-info">{{audios[2].time}}s</ion-col>\n\n          <ion-col col-2>\n\n            <ion-icon name="play" class="audio-btn" (click)="onPlay(audios[2])"></ion-icon>\n\n          </ion-col>\n\n          <ion-col col-1>\n\n            <ion-icon name="close" class="audio-btn" (click)="onDeleteAudio(audios[2])"></ion-icon>\n\n          </ion-col>\n\n          <ion-col></ion-col>\n\n        </ion-row>\n\n      </ion-grid>\n\n\n\n      <br>\n\n      <br>\n\n      <button ion-item icon-left (click)="onTakeVideo($event)">\n\n        <ion-icon name="videocam"></ion-icon>\n\n        视频\n\n      </button>\n\n\n\n      <ion-grid style="width: 100%; height: 100px;">\n\n        <ion-row>\n\n          <ion-col col-4 class="col-video" *ngIf="videos[0]">\n\n            <video class="video" (click)="onPlayVideo(videos[0])"></video>\n\n            <ion-icon name="close" (click)="onDeleteVideo(videos[0])"></ion-icon>\n\n          </ion-col>\n\n\n\n          <ion-col col-4 class="col-video" *ngIf="videos[1]">\n\n            <video class="video" (click)="onPlayVideo(videos[1])"></video>\n\n            <ion-icon name="close" (click)="onDeleteVideo(videos[1])"></ion-icon>\n\n          </ion-col>\n\n\n\n          <ion-col col-4 class="col-video" *ngIf="pictures[2]">\n\n            <video class="video" (click)="onPlayVideo(videos[2])"></video>\n\n            <ion-icon name="close" (click)="onDeleteVideo(videos[2])"></ion-icon>\n\n          </ion-col>\n\n        </ion-row>\n\n      </ion-grid>\n\n      <br>\n\n      <br>\n\n      <!--<ion-row>-->\n\n      <!--<ion-col class="col-img">-->\n\n      <!--<img width="80" height="80" src="assets/img/ic_video_default.png"/>-->\n\n      <!--</ion-col>-->\n\n\n\n      <!--<ion-col class="col-img">-->\n\n      <!--<img width="80" height="80" src="assets/img/ic_video_default.png"/>-->\n\n      <!--</ion-col>-->\n\n\n\n      <!--<ion-col class="col-img">-->\n\n      <!--<img width="80" height="80" src="assets/img/ic_video_default.png"/>-->\n\n      <!--</ion-col>-->\n\n      <!--</ion-row>-->\n\n    </div>\n\n  </div>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\workdetail\workdetail.html"*/
+        selector: 'page-workdetail',template:/*ion-inline-start:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\workdetail\workdetail.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n\n\n    <ion-buttons end *ngIf="!isPreview && !isLocked">\n\n      <button ion-button icon-only color="white" *ngIf="isLocationValid" (click)="onLocate($event)">\n\n        <ion-icon name="map"></ion-icon>\n\n      </button>\n\n\n\n      <button ion-button icon-only color="white" (click)="onReply($event)">\n\n        <ion-icon name="checkmark-circle"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n\n\n  <ion-toolbar no-border-top>\n\n    <ion-segment [(ngModel)]="segmentName" (ionChange)="segmentChanged($event)" color="{{segmentColor}}">\n\n      <ion-segment-button value="detailInfo">\n\n        基本信息\n\n      </ion-segment-button>\n\n      <ion-segment-button value="replyInfo" *ngIf="!isPreview">\n\n        回填信息\n\n      </ion-segment-button>\n\n      <ion-segment-button value="mediaInfo" *ngIf="!isPreview">\n\n        多媒体\n\n      </ion-segment-button>\n\n    </ion-segment>\n\n  </ion-toolbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-workdetail">\n\n\n\n  <div [ngSwitch]="segmentName">\n\n    <!--基本信息-->\n\n    <ion-list *ngSwitchCase="\'detailInfo\'">\n\n      <ion-item *ngFor="let item of detail" (click)="detailItemSelected(item)">\n\n        <ion-label fixed class="label-name">\n\n          {{item.name}}\n\n        </ion-label>\n\n        <div item-content *ngIf="item.isTime">\n\n          {{item.value | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </div>\n\n        <div item-content *ngIf="!item.isTime">\n\n          {{item.value}}\n\n        </div>\n\n        <ion-icon name="ios-arrow-forward" item-end *ngIf="item.isActive"></ion-icon>\n\n      </ion-item>\n\n    </ion-list>\n\n\n\n    <!--回填信息-->\n\n    <ion-list *ngSwitchCase="\'replyInfo\'">\n\n      <ion-item *ngFor="let item of reply" class="reply-item" (click)="itemSelected(item)">\n\n        <ion-label fixed class="label-name">\n\n          {{item.name}}\n\n        </ion-label>\n\n        <div item-content>\n\n          {{item.value}}\n\n        </div>\n\n        <ion-icon name="ios-arrow-forward" item-end *ngIf="item.isActive"></ion-icon>\n\n      </ion-item>\n\n\n\n      <!--<ion-row>-->\n\n      <!--<ion-col class="col-button">-->\n\n      <!--<button ion-button icon-left>-->\n\n      <!--<ion-icon name="camera"></ion-icon>-->\n\n      <!--拍照-->\n\n      <!--</button>-->\n\n      <!--</ion-col>-->\n\n      <!--<ion-col class="col-button">-->\n\n      <!--<button ion-button icon-left>-->\n\n      <!--<ion-icon name="microphone"></ion-icon>-->\n\n      <!--录音-->\n\n      <!--</button>-->\n\n      <!--</ion-col>-->\n\n      <!--<ion-col class="col-button">-->\n\n      <!--<button ion-button icon-left>-->\n\n      <!--<ion-icon name="videocam"></ion-icon>-->\n\n      <!--视频-->\n\n      <!--</button>-->\n\n      <!--</ion-col>-->\n\n      <!--</ion-row>-->\n\n    </ion-list>\n\n\n\n    <!--多媒体-->\n\n    <div *ngSwitchCase="\'mediaInfo\'">\n\n      <button ion-item icon-left (click)="onTakePicture($event)">\n\n        <ion-icon name="camera"></ion-icon>\n\n        拍照\n\n      </button>\n\n\n\n      <ion-grid style="width: 100%; height: 100px;">\n\n        <ion-row>\n\n          <ion-col col-4 class="col-img" *ngIf="pictures[0]">\n\n            <img class="picture" src="{{pictures[0]}}" (click)="onPreviewPicture(pictures[0])"/>\n\n            <ion-icon name="close" (click)="onDeletePicture(pictures[0])" *ngIf="!isLocked"></ion-icon>\n\n          </ion-col>\n\n\n\n          <ion-col col-4 class="col-img" *ngIf="pictures[1]">\n\n            <img class="picture" src="{{pictures[1]}}" (click)="onPreviewPicture(pictures[1])"/>\n\n            <ion-icon name="close" (click)="onDeletePicture(pictures[1])" *ngIf="!isLocked"></ion-icon>\n\n          </ion-col>\n\n\n\n          <ion-col col-4 class="col-img" *ngIf="pictures[2]">\n\n            <img class="picture" src="{{pictures[2]}}" (click)="onPreviewPicture(pictures[2])"/>\n\n            <ion-icon name="close" (click)="onDeletePicture(pictures[2])" *ngIf="!isLocked"></ion-icon>\n\n          </ion-col>\n\n        </ion-row>\n\n      </ion-grid>\n\n\n\n      <br>\n\n      <br>\n\n\n\n      <button ion-item icon-left (click)="onRecordAudio($event)">\n\n        <ion-icon name="microphone"></ion-icon>\n\n        录音\n\n      </button>\n\n\n\n      <ion-grid style="width: 100%; height: 150px;">\n\n        <ion-row *ngIf="audios[0].time > 0" class="audio">\n\n          <ion-col col-6 class="audio-info">{{audios[0].time}}s</ion-col>\n\n          <ion-col col-2>\n\n            <ion-icon name="play" class="audio-btn" (click)="onPlay(audios[0])"></ion-icon>\n\n          </ion-col>\n\n          <ion-col col-1 *ngIf="!isLocked">\n\n            <ion-icon name="close" class="audio-btn" (click)="onDeleteAudio(audios[0])"></ion-icon>\n\n          </ion-col>\n\n          <ion-col></ion-col>\n\n        </ion-row>\n\n\n\n        <ion-row *ngIf="audios[1].time > 0" class="audio">\n\n          <ion-col col-6 class="audio-info">{{audios[1].time}}s</ion-col>\n\n          <ion-col col-2>\n\n            <ion-icon name="play" class="audio-btn" (click)="onPlay(audios[1])"></ion-icon>\n\n          </ion-col>\n\n          <ion-col col-1 *ngIf="!isLocked">\n\n            <ion-icon name="close" class="audio-btn" (click)="onDeleteAudio(audios[1])"></ion-icon>\n\n          </ion-col>\n\n          <ion-col></ion-col>\n\n        </ion-row>\n\n\n\n        <ion-row *ngIf="audios[2].time > 0" class="audio">\n\n          <ion-col col-6 class="audio-info">{{audios[2].time}}s</ion-col>\n\n          <ion-col col-2>\n\n            <ion-icon name="play" class="audio-btn" (click)="onPlay(audios[2])"></ion-icon>\n\n          </ion-col>\n\n          <ion-col col-1 *ngIf="!isLocked">\n\n            <ion-icon name="close" class="audio-btn" (click)="onDeleteAudio(audios[2])"></ion-icon>\n\n          </ion-col>\n\n          <ion-col></ion-col>\n\n        </ion-row>\n\n      </ion-grid>\n\n\n\n      <br>\n\n      <br>\n\n      <button ion-item icon-left (click)="onTakeVideo($event)">\n\n        <ion-icon name="videocam"></ion-icon>\n\n        视频\n\n      </button>\n\n\n\n      <ion-grid style="width: 100%; height: 100px;">\n\n        <ion-row>\n\n          <ion-col col-4 class="col-video" *ngIf="videos[0]">\n\n            <video class="video" (click)="onPlayVideo(videos[0])"></video>\n\n            <ion-icon name="close" (click)="onDeleteVideo(videos[0])" *ngIf="!isLocked"></ion-icon>\n\n          </ion-col>\n\n\n\n          <ion-col col-4 class="col-video" *ngIf="videos[1]">\n\n            <video class="video" (click)="onPlayVideo(videos[1])"></video>\n\n            <ion-icon name="close" (click)="onDeleteVideo(videos[1])" *ngIf="!isLocked"></ion-icon>\n\n          </ion-col>\n\n\n\n          <ion-col col-4 class="col-video" *ngIf="pictures[2]">\n\n            <video class="video" (click)="onPlayVideo(videos[2])"></video>\n\n            <ion-icon name="close" (click)="onDeleteVideo(videos[2])" *ngIf="!isLocked"></ion-icon>\n\n          </ion-col>\n\n        </ion-row>\n\n      </ion-grid>\n\n      <br>\n\n      <br>\n\n      <!--<ion-row>-->\n\n      <!--<ion-col class="col-img">-->\n\n      <!--<img width="80" height="80" src="assets/img/ic_video_default.png"/>-->\n\n      <!--</ion-col>-->\n\n\n\n      <!--<ion-col class="col-img">-->\n\n      <!--<img width="80" height="80" src="assets/img/ic_video_default.png"/>-->\n\n      <!--</ion-col>-->\n\n\n\n      <!--<ion-col class="col-img">-->\n\n      <!--<img width="80" height="80" src="assets/img/ic_video_default.png"/>-->\n\n      <!--</ion-col>-->\n\n      <!--</ion-row>-->\n\n    </div>\n\n  </div>\n\n\n\n</ion-content>\n\n'/*ion-inline-end:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\workdetail\workdetail.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* NavParams */],
@@ -2815,7 +2817,7 @@ WorkDetailPage = __decorate([
         __WEBPACK_IMPORTED_MODULE_4__providers_GlobalService__["a" /* GlobalService */],
         __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["m" /* PopoverController */],
         __WEBPACK_IMPORTED_MODULE_9__providers_FileService__["a" /* FileService */],
-        __WEBPACK_IMPORTED_MODULE_10__providers_ConfigService__["a" /* ConfigService */]])
+        __WEBPACK_IMPORTED_MODULE_11__ionic_native_photo_viewer__["a" /* PhotoViewer */]])
 ], WorkDetailPage);
 
 //# sourceMappingURL=workdetail.js.map
@@ -2835,10 +2837,10 @@ WorkDetailPage = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__DbService__ = __webpack_require__(62);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__MediaService__ = __webpack_require__(127);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__model_Media__ = __webpack_require__(126);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__SyncService__ = __webpack_require__(323);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__SyncService__ = __webpack_require__(324);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__model_MaterialsInfo__ = __webpack_require__(128);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__ConfigService__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__ConfigService__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__FileService__ = __webpack_require__(23);
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -3547,13 +3549,15 @@ var DataService = (function (_super) {
      */
     DataService.prototype.downloadPersonnels = function () {
         var _this = this;
-        return this.downloadService.getPersonnels(this.globalService.userId)
-            .then(function (personnels) { return _this.dbService.savePersonnels(personnels); })
-            .catch(function (error) {
-            console.error(error);
-            _this.globalService.showToast(error);
-            return Promise.resolve(false);
-        });
+        return this.globalService.isWorker
+            ? Promise.resolve(true)
+            : this.downloadService.getPersonnels(this.globalService.userId)
+                .then(function (personnels) { return _this.dbService.savePersonnels(personnels); })
+                .catch(function (error) {
+                console.error(error);
+                _this.globalService.showToast(error);
+                return Promise.resolve(false);
+            });
     };
     /**
      *
@@ -3865,7 +3869,24 @@ webpackEmptyAsyncContext.id = 138;
 
 /***/ }),
 
-/***/ 16:
+/***/ 179:
+/***/ (function(module, exports) {
+
+function webpackEmptyAsyncContext(req) {
+	// Here Promise.resolve().then() is used instead of new Promise() to prevent
+	// uncatched exception popping up in devtools
+	return Promise.resolve().then(function() {
+		throw new Error("Cannot find module '" + req + "'.");
+	});
+}
+webpackEmptyAsyncContext.keys = function() { return []; };
+webpackEmptyAsyncContext.resolve = webpackEmptyAsyncContext;
+module.exports = webpackEmptyAsyncContext;
+webpackEmptyAsyncContext.id = 179;
+
+/***/ }),
+
+/***/ 18:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3875,7 +3896,7 @@ webpackEmptyAsyncContext.id = 138;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_storage__ = __webpack_require__(60);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_file__ = __webpack_require__(120);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_toPromise__ = __webpack_require__(321);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_toPromise__ = __webpack_require__(322);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_toPromise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_toPromise__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__FileService__ = __webpack_require__(23);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -4681,23 +4702,6 @@ var ConfigService_1;
 
 /***/ }),
 
-/***/ 179:
-/***/ (function(module, exports) {
-
-function webpackEmptyAsyncContext(req) {
-	// Here Promise.resolve().then() is used instead of new Promise() to prevent
-	// uncatched exception popping up in devtools
-	return Promise.resolve().then(function() {
-		throw new Error("Cannot find module '" + req + "'.");
-	});
-}
-webpackEmptyAsyncContext.keys = function() { return []; };
-webpackEmptyAsyncContext.resolve = webpackEmptyAsyncContext;
-module.exports = webpackEmptyAsyncContext;
-webpackEmptyAsyncContext.id = 179;
-
-/***/ }),
-
 /***/ 23:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -5245,14 +5249,14 @@ AttachmentPage = __decorate([
 
 /***/ }),
 
-/***/ 233:
+/***/ 234:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SearchResultPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__searchdetail_searchdetails__ = __webpack_require__(234);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__searchdetail_searchdetails__ = __webpack_require__(235);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_DataService__ = __webpack_require__(13);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -5409,7 +5413,7 @@ SearchResultPage = __decorate([
 
 /***/ }),
 
-/***/ 234:
+/***/ 235:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5593,7 +5597,7 @@ SearchDetailsPage = __decorate([
 
 /***/ }),
 
-/***/ 235:
+/***/ 236:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5859,7 +5863,7 @@ WorkInfoPage = __decorate([
 
 /***/ }),
 
-/***/ 236:
+/***/ 237:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5900,7 +5904,7 @@ NewsDetailsPage = __decorate([
 
 /***/ }),
 
-/***/ 237:
+/***/ 238:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5910,7 +5914,7 @@ NewsDetailsPage = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__model_MaterialsInfo__ = __webpack_require__(128);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_DataService__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_ConfigService__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_ConfigService__ = __webpack_require__(18);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -6230,7 +6234,7 @@ MaterialsAddPage = __decorate([
 
 /***/ }),
 
-/***/ 238:
+/***/ 239:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6285,14 +6289,14 @@ StorageService = __decorate([
 
 /***/ }),
 
-/***/ 239:
+/***/ 240:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return NetworkSetPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_ConfigService__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_ConfigService__ = __webpack_require__(18);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -6455,14 +6459,14 @@ NetworkSetPage = __decorate([
 
 /***/ }),
 
-/***/ 240:
+/***/ 241:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return OverdueTimePage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_ConfigService__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_ConfigService__ = __webpack_require__(18);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -6566,21 +6570,21 @@ OverdueTimePage = __decorate([
 
 /***/ }),
 
-/***/ 241:
+/***/ 242:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoginPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__main_main__ = __webpack_require__(242);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_forms__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_app_preferences__ = __webpack_require__(243);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_network__ = __webpack_require__(244);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__main_main__ = __webpack_require__(243);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_forms__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_app_preferences__ = __webpack_require__(244);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_network__ = __webpack_require__(245);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__providers_GlobalService__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__model_UserInfo__ = __webpack_require__(329);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__model_UserInfo__ = __webpack_require__(330);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__providers_DataService__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__ionic_native_device__ = __webpack_require__(245);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__ionic_native_device__ = __webpack_require__(246);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -6818,7 +6822,7 @@ LoginPage = __decorate([
 
 /***/ }),
 
-/***/ 242:
+/***/ 243:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7030,7 +7034,7 @@ MainPage = __decorate([
 
 /***/ }),
 
-/***/ 247:
+/***/ 248:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7066,7 +7070,7 @@ HttpInterceptor = __decorate([
 
 /***/ }),
 
-/***/ 248:
+/***/ 249:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7161,13 +7165,13 @@ MorePage = __decorate([
 
 /***/ }),
 
-/***/ 249:
+/***/ 250:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(250);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(267);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(251);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(268);
 
 
 Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* platformBrowserDynamic */])().bootstrapModule(__WEBPACK_IMPORTED_MODULE_1__app_module__["a" /* AppModule */]);
@@ -7175,7 +7179,7 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 
 /***/ }),
 
-/***/ 267:
+/***/ 268:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7185,45 +7189,45 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__ = __webpack_require__(219);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_status_bar__ = __webpack_require__(221);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__app_component__ = __webpack_require__(316);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_home_home__ = __webpack_require__(326);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_welcome_welcome__ = __webpack_require__(327);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_login_login__ = __webpack_require__(241);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_main_main__ = __webpack_require__(242);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__app_component__ = __webpack_require__(317);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_home_home__ = __webpack_require__(327);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_welcome_welcome__ = __webpack_require__(328);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_login_login__ = __webpack_require__(242);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_main_main__ = __webpack_require__(243);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__pages_mywork_mywork__ = __webpack_require__(49);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pages_news_news__ = __webpack_require__(65);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__pages_workdetail_workdetail__ = __webpack_require__(129);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__pages_stationwork_stationwork__ = __webpack_require__(64);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__pages_workinfo_workinfo__ = __webpack_require__(235);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__pages_workinfo_workinfo__ = __webpack_require__(236);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__pages_history_myhistory__ = __webpack_require__(61);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__ionic_native_file__ = __webpack_require__(120);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__providers_FileService__ = __webpack_require__(23);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__ionic_native_transfer__ = __webpack_require__(222);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__providers_StorageService__ = __webpack_require__(238);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__providers_StorageService__ = __webpack_require__(239);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__angular_http__ = __webpack_require__(35);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__ionic_native_app_version__ = __webpack_require__(246);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__ionic_native_app_version__ = __webpack_require__(247);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__ionic_native_zip__ = __webpack_require__(223);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__providers_ConfigService__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__providers_ConfigService__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__ionic_native_file_opener__ = __webpack_require__(224);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_25__providers_DataService__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_26__providers_DownloadService__ = __webpack_require__(121);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_27__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_28__providers_UploadService__ = __webpack_require__(125);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_29__ionic_native_network__ = __webpack_require__(244);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_29__ionic_native_network__ = __webpack_require__(245);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_30__pages_search_search__ = __webpack_require__(63);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_31__ionic_native_app_preferences__ = __webpack_require__(243);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_32__pages_searchresult_searchresult__ = __webpack_require__(233);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_33__pages_searchdetail_searchdetails__ = __webpack_require__(234);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_34__pages_newsdetails_newsdetails__ = __webpack_require__(236);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_31__ionic_native_app_preferences__ = __webpack_require__(244);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_32__pages_searchresult_searchresult__ = __webpack_require__(234);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_33__pages_searchdetail_searchdetails__ = __webpack_require__(235);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_34__pages_newsdetails_newsdetails__ = __webpack_require__(237);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_35__pages_setting_setting__ = __webpack_require__(67);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_36__providers_HttpInterceptorBackend__ = __webpack_require__(330);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_37__providers_HttpInterceptor__ = __webpack_require__(247);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_36__providers_HttpInterceptorBackend__ = __webpack_require__(331);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_37__providers_HttpInterceptor__ = __webpack_require__(248);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_38__ionic_native_sqlite__ = __webpack_require__(225);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_39__ionic_native_sqlite_porter__ = __webpack_require__(226);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_40__providers_DbService__ = __webpack_require__(62);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_41__ionic_storage__ = __webpack_require__(60);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_42__ionic_native_device__ = __webpack_require__(245);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_43__pipes_ValueValidPipe__ = __webpack_require__(331);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_42__ionic_native_device__ = __webpack_require__(246);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_43__pipes_ValueValidPipe__ = __webpack_require__(332);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_44__ionic_native_camera__ = __webpack_require__(227);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_45__ionic_native_media_capture__ = __webpack_require__(229);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_46__ionic_native_video_player__ = __webpack_require__(230);
@@ -7234,15 +7238,16 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_51__ionic_native_file_transfer__ = __webpack_require__(124);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_52__pages_map_map__ = __webpack_require__(37);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_53__pages_materials_materials__ = __webpack_require__(66);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_54__pages_materialsadd_materialsadd__ = __webpack_require__(237);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_54__pages_materialsadd_materialsadd__ = __webpack_require__(238);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_55__ionic_native_my_plugin__ = __webpack_require__(119);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_56__pages_tabs_tabs__ = __webpack_require__(332);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_57__pages_more_more__ = __webpack_require__(248);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_58__pages_setting_networkset__ = __webpack_require__(239);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_59__pages_about_about__ = __webpack_require__(333);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_60__pages_contact_contact__ = __webpack_require__(334);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_61__pages_setting_overdueTimePage__ = __webpack_require__(240);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_56__pages_tabs_tabs__ = __webpack_require__(333);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_57__pages_more_more__ = __webpack_require__(249);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_58__pages_setting_networkset__ = __webpack_require__(240);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_59__pages_about_about__ = __webpack_require__(334);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_60__pages_contact_contact__ = __webpack_require__(335);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_61__pages_setting_overdueTimePage__ = __webpack_require__(241);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_62__pages_attachment_attachment__ = __webpack_require__(232);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_63__ionic_native_photo_viewer__ = __webpack_require__(233);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7288,6 +7293,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 //import {httpFactory} from "../providers/httpFactory";
+
 
 
 
@@ -7424,6 +7430,7 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_49__providers_MediaService__["a" /* MediaService */],
             __WEBPACK_IMPORTED_MODULE_51__ionic_native_file_transfer__["a" /* FileTransfer */],
             __WEBPACK_IMPORTED_MODULE_55__ionic_native_my_plugin__["a" /* MyPlugin */],
+            __WEBPACK_IMPORTED_MODULE_63__ionic_native_photo_viewer__["a" /* PhotoViewer */],
             { provide: __WEBPACK_IMPORTED_MODULE_1__angular_core__["v" /* ErrorHandler */], useClass: __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["g" /* IonicErrorHandler */] },
         ]
     })
@@ -7433,7 +7440,7 @@ AppModule = __decorate([
 
 /***/ }),
 
-/***/ 316:
+/***/ 317:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7442,7 +7449,7 @@ AppModule = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__ = __webpack_require__(221);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__ = __webpack_require__(219);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__app_component_service__ = __webpack_require__(317);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__app_component_service__ = __webpack_require__(318);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_mywork_mywork__ = __webpack_require__(49);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -7504,7 +7511,7 @@ MyApp = __decorate([
 
 /***/ }),
 
-/***/ 317:
+/***/ 318:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7523,7 +7530,7 @@ MyApp = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pages_setting_setting__ = __webpack_require__(67);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__pages_mywork_mywork__ = __webpack_require__(49);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__providers_DataService__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__providers_ConfigService__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__providers_ConfigService__ = __webpack_require__(18);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7763,7 +7770,7 @@ AppComponentService = __decorate([
 
 /***/ }),
 
-/***/ 323:
+/***/ 324:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7777,7 +7784,7 @@ AppComponentService = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__model_Task__ = __webpack_require__(36);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__DbService__ = __webpack_require__(62);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__MediaService__ = __webpack_require__(127);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__ConfigService__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__ConfigService__ = __webpack_require__(18);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8676,7 +8683,7 @@ SyncService = __decorate([
 
 /***/ }),
 
-/***/ 324:
+/***/ 325:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8697,6 +8704,7 @@ var HistoryEx = (function () {
         this.isCanceled = history.state === __WEBPACK_IMPORTED_MODULE_0__Task__["b" /* TaskState */].Cancel;
         this.photoCount = 0;
         this.audioCount = 0; //todo 录音的数量
+        this.videoCount = 0;
         this.isLocationValid = __WEBPACK_IMPORTED_MODULE_0__Task__["a" /* TaskEx */].checkLocation(this.task.location);
         if (this.task.extendedInfo && this.task.extendedInfo.delayTime > 0) {
             this.delayTime = this.task.extendedInfo.delayTime;
@@ -8724,7 +8732,7 @@ var HistoryEx = (function () {
 
 /***/ }),
 
-/***/ 325:
+/***/ 326:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8743,7 +8751,7 @@ var SearchTaskRequest = (function () {
 
 /***/ }),
 
-/***/ 326:
+/***/ 327:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8778,16 +8786,16 @@ HomePage = __decorate([
 
 /***/ }),
 
-/***/ 327:
+/***/ 328:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return WelcomePage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__login_login__ = __webpack_require__(241);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__login_login__ = __webpack_require__(242);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_FileService__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_app_version__ = __webpack_require__(246);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_app_version__ = __webpack_require__(247);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__providers_DataService__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__ionic_native_android_permissions__ = __webpack_require__(118);
@@ -8974,7 +8982,7 @@ WelcomePage = __decorate([
 
 /***/ }),
 
-/***/ 329:
+/***/ 330:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8992,14 +9000,14 @@ var UserInfo = (function () {
 
 /***/ }),
 
-/***/ 330:
+/***/ 331:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HttpInterceptorBackend; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(35);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__HttpInterceptor__ = __webpack_require__(247);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__HttpInterceptor__ = __webpack_require__(248);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -9035,7 +9043,7 @@ HttpInterceptorBackend = __decorate([
 
 /***/ }),
 
-/***/ 331:
+/***/ 332:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9072,7 +9080,7 @@ ValueValidPipe = __decorate([
 
 /***/ }),
 
-/***/ 332:
+/***/ 333:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9083,9 +9091,9 @@ ValueValidPipe = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__map_map__ = __webpack_require__(37);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__search_search__ = __webpack_require__(63);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__stationwork_stationwork__ = __webpack_require__(64);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__more_more__ = __webpack_require__(248);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__more_more__ = __webpack_require__(249);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__providers_GlobalService__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__providers_ConfigService__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__providers_ConfigService__ = __webpack_require__(18);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -9159,7 +9167,7 @@ TabsPage = __decorate([
 
 /***/ }),
 
-/***/ 333:
+/***/ 334:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9194,7 +9202,7 @@ AboutPage = __decorate([
 
 /***/ }),
 
-/***/ 334:
+/***/ 335:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9938,7 +9946,7 @@ var MapParam = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__map_map__ = __webpack_require__(37);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__model_MapParam__ = __webpack_require__(48);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__materials_materials__ = __webpack_require__(66);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__providers_ConfigService__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__providers_ConfigService__ = __webpack_require__(18);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -11226,7 +11234,7 @@ MyWorkPage = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_DataService__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__model_History__ = __webpack_require__(324);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__model_History__ = __webpack_require__(325);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__workdetail_workdetail__ = __webpack_require__(129);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__model_Task__ = __webpack_require__(36);
@@ -11384,6 +11392,7 @@ var MyHistory = (function () {
                                     var mediaNames = history.mediaNames;
                                     historyEx.photoCount = mediaNames.filter(function (name) { return name.lastIndexOf(_this.globalService.photoSuffix) !== -1; }).length;
                                     historyEx.audioCount = mediaNames.filter(function (name) { return name.lastIndexOf(_this.globalService.audioSuffix) !== -1; }).length;
+                                    historyEx.videoCount = mediaNames.filter(function (name) { return name.lastIndexOf(_this.globalService.videoSuffix) !== -1; }).length;
                                 }
                             }
                         });
@@ -11506,7 +11515,7 @@ __decorate([
 ], MyHistory.prototype, "infiniteScroll", void 0);
 MyHistory = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-myhistory',template:/*ion-inline-start:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\history\myhistory.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n    <ion-buttons end>\n\n      <button ion-button icon-only color="white" (click)="toggleToolbar($event)" *ngIf="showToolbar">\n\n        <ion-icon name="search"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n  <ion-toolbar color="primary" *ngIf="showToolbar">\n\n    <ion-searchbar (input)="onInput($event)" (ionCancel)="onCancel($event)"></ion-searchbar>\n\n  </ion-toolbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-myhistory">\n\n\n\n  <ion-refresher (ionRefresh)="doRefresh($event)">\n\n    <ion-refresher-content\n\n      pullingIcon="arrow_dropdown"\n\n      pullingText="Pull to refresh"\n\n      refreshingSpinner="circles"\n\n      refreshingText="Refreshing...">\n\n    </ion-refresher-content>\n\n  </ion-refresher>\n\n\n\n  <ion-list>\n\n    <ion-card *ngFor="let item of items">\n\n      <ion-item (click)="onDelete(item)">\n\n        <ion-avatar item-start>\n\n          <img src="assets/img/ic_mywork_avatar.png">\n\n        </ion-avatar>\n\n        <div><h2 class="card-header-label-hint">任务编号 </h2>\n\n          <h2 class="card-header-label-content">{{item.taskId.split(\'#\')[0] | valueValid}}</h2></div>\n\n        <div><h2 class="card-header-label-hint">任务类型 </h2>\n\n          <h2 class="card-header-label-content">{{item.task.taskType | valueValid}}</h2></div>\n\n        <ion-icon name=\'cloud-upload\' item-end *ngIf="item.uploadedFlag !== onServerFlag"></ion-icon>\n\n      </ion-item>\n\n\n\n      <ion-list>\n\n        <ion-list-header>\n\n          <ion-row>\n\n            <ion-col col-auto>任务描述</ion-col>\n\n            <ion-col>{{item.task.desc| valueValid}}</ion-col>\n\n          </ion-row>\n\n        </ion-list-header>\n\n\n\n        <!--创建时间-->\n\n        <button ion-item class="gray-text">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          创建时间 {{item.task.createTime| date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--派发时间-->\n\n        <button ion-item class="gray-text">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          派发时间 {{item.task.assignTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--接单时间 -->\n\n        <button ion-item class="gray-text">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          接单时间 {{item.task.acceptTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--延迟时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.delayBeyond === \'accept\'" (click)="onDelay(item)">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          延迟时间 {{item.delayTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--出发时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.task.goTime">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          出发时间 {{item.task.goTime| date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--延迟时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.delayBeyond === \'go\'" (click)="onDelay(item)">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          延迟时间 {{item.delayTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--到场时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.task.arrivedTime">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          到场时间 {{item.task.arrivedTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--延迟时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.delayBeyond === \'arrived\'" (click)="onDelay(item)">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          延迟时间 {{item.delayTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--回复时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.task.replyTime" (click)="onReply(item)">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          回复时间 {{item.task.replyTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--退单时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.isRejected" (click)="onReject(item)">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          退单时间 {{ toRejectedInfo(item.reply).rejectTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--销单时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.isCanceled">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          销单时间 {{toReplyInfo(item.reply).destroyTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n      </ion-list>\n\n      <ion-row>\n\n        <ion-col class="card-bottom-btn">\n\n          <button ion-button icon-left clear small color="gray">\n\n            <ion-icon name="images"></ion-icon>\n\n            <div>{{item.photoCount}}</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn">\n\n          <button ion-button icon-left clear small color="gray">\n\n            <ion-icon name="musical-notes"></ion-icon>\n\n            <div>{{item.audioCount}}</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <!-- <ion-col>\n\n           <button ion-button icon-left clear small color="gray">\n\n             <ion-icon name="videocam"></ion-icon>\n\n             <div>{{item.videoCount}}</div>\n\n           </button>\n\n         </ion-col>-->\n\n\n\n        <ion-col class="card-bottom-btn" *ngIf="item.isLocationValid">\n\n          <button ion-button icon-left clear small (click)="onLocate(item)">\n\n            <ion-icon name="map"></ion-icon>\n\n            <div>地图</div>\n\n          </button>\n\n        </ion-col>\n\n      </ion-row>\n\n    </ion-card>\n\n  </ion-list>\n\n\n\n  <!--infinite scroll-->\n\n  <ion-infinite-scroll (ionInfinite)="doInfinite($event)" immediate-check="false" distance=1%>\n\n    <ion-infinite-scroll-content></ion-infinite-scroll-content>\n\n  </ion-infinite-scroll>\n\n\n\n  <!--fab-->\n\n  <ion-fab right bottom *ngIf="showFab">\n\n    <button ion-fab color="primary" (click)="doScroll2Top($event)">\n\n      <ion-icon name="arrow-dropup"></ion-icon>\n\n    </button>\n\n  </ion-fab>\n\n</ion-content>\n\n'/*ion-inline-end:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\history\myhistory.html"*/
+        selector: 'page-myhistory',template:/*ion-inline-start:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\history\myhistory.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n    <ion-buttons end>\n\n      <button ion-button icon-only color="white" (click)="toggleToolbar($event)" *ngIf="showToolbar">\n\n        <ion-icon name="search"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n  <ion-toolbar color="primary" *ngIf="showToolbar">\n\n    <ion-searchbar (input)="onInput($event)" (ionCancel)="onCancel($event)"></ion-searchbar>\n\n  </ion-toolbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-myhistory">\n\n\n\n  <ion-refresher (ionRefresh)="doRefresh($event)">\n\n    <ion-refresher-content\n\n      pullingIcon="arrow_dropdown"\n\n      pullingText="Pull to refresh"\n\n      refreshingSpinner="circles"\n\n      refreshingText="Refreshing...">\n\n    </ion-refresher-content>\n\n  </ion-refresher>\n\n\n\n  <ion-list>\n\n    <ion-card *ngFor="let item of items">\n\n      <ion-item (click)="onDelete(item)">\n\n        <ion-avatar item-start>\n\n          <img src="assets/img/ic_mywork_avatar.png">\n\n        </ion-avatar>\n\n        <div><h2 class="card-header-label-hint">任务编号 </h2>\n\n          <h2 class="card-header-label-content">{{item.taskId.split(\'#\')[0] | valueValid}}</h2></div>\n\n        <div><h2 class="card-header-label-hint">任务类型 </h2>\n\n          <h2 class="card-header-label-content">{{item.task.taskType | valueValid}}</h2></div>\n\n        <ion-icon name=\'cloud-upload\' item-end *ngIf="item.uploadedFlag !== onServerFlag"></ion-icon>\n\n      </ion-item>\n\n\n\n      <ion-list>\n\n        <ion-list-header>\n\n          <ion-row>\n\n            <ion-col col-auto>任务描述</ion-col>\n\n            <ion-col>{{item.task.desc| valueValid}}</ion-col>\n\n          </ion-row>\n\n        </ion-list-header>\n\n\n\n        <!--创建时间-->\n\n        <button ion-item class="gray-text">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          创建时间 {{item.task.createTime| date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--派发时间-->\n\n        <button ion-item class="gray-text">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          派发时间 {{item.task.assignTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--接单时间 -->\n\n        <button ion-item class="gray-text">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          接单时间 {{item.task.acceptTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--延迟时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.delayBeyond === \'accept\'" (click)="onDelay(item)">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          延迟时间 {{item.delayTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--出发时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.task.goTime">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          出发时间 {{item.task.goTime| date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--延迟时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.delayBeyond === \'go\'" (click)="onDelay(item)">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          延迟时间 {{item.delayTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--到场时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.task.arrivedTime">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          到场时间 {{item.task.arrivedTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--延迟时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.delayBeyond === \'arrived\'" (click)="onDelay(item)">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          延迟时间 {{item.delayTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--回复时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.task.replyTime" (click)="onReply(item)">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          回复时间 {{item.task.replyTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--退单时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.isRejected" (click)="onReject(item)">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          退单时间 {{ toRejectedInfo(item.reply).rejectTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n\n\n        <!--销单时间-->\n\n        <button ion-item class="gray-text" *ngIf="item.isCanceled">\n\n          <ion-icon name=\'icon-vline\' item-start></ion-icon>\n\n          销单时间 {{toReplyInfo(item.reply).destroyTime | date:\'y-MM-dd HH:mm:ss\'}}\n\n        </button>\n\n      </ion-list>\n\n      <ion-row>\n\n        <ion-col class="card-bottom-btn">\n\n          <button ion-button icon-left clear small color="gray">\n\n            <ion-icon name="images"></ion-icon>\n\n            <div>{{item.photoCount}}</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn">\n\n          <button ion-button icon-left clear small color="gray">\n\n            <ion-icon name="musical-notes"></ion-icon>\n\n            <div>{{item.audioCount}}</div>\n\n          </button>\n\n        </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn">\n\n           <button ion-button icon-left clear small color="gray">\n\n             <ion-icon name="videocam"></ion-icon>\n\n             <div>{{item.videoCount}}</div>\n\n           </button>\n\n         </ion-col>\n\n\n\n        <ion-col class="card-bottom-btn" *ngIf="item.isLocationValid">\n\n          <button ion-button icon-left clear small (click)="onLocate(item)">\n\n            <ion-icon name="map"></ion-icon>\n\n            <div>地图</div>\n\n          </button>\n\n        </ion-col>\n\n      </ion-row>\n\n    </ion-card>\n\n  </ion-list>\n\n\n\n  <!--infinite scroll-->\n\n  <ion-infinite-scroll (ionInfinite)="doInfinite($event)" immediate-check="false" distance=1%>\n\n    <ion-infinite-scroll-content></ion-infinite-scroll-content>\n\n  </ion-infinite-scroll>\n\n\n\n  <!--fab-->\n\n  <ion-fab right bottom *ngIf="showFab">\n\n    <button ion-fab color="primary" (click)="doScroll2Top($event)">\n\n      <ion-icon name="arrow-dropup"></ion-icon>\n\n    </button>\n\n  </ion-fab>\n\n</ion-content>\n\n'/*ion-inline-end:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\history\myhistory.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_2__providers_DataService__["a" /* DataService */],
@@ -12136,6 +12145,9 @@ var DbService = (function () {
                                     task.extendedInfo.arrivedDeadLine = undefined;
                                     task.extendedInfo.delayReplyDeadLine = undefined;
                                 }
+                                else {
+                                    continue;
+                                }
                                 tasks.push(task);
                             }
                         }
@@ -12700,10 +12712,10 @@ var DbService = (function () {
             if (serverTask.replyTime > localTask.D_REPLYTIME) {
                 sql += "D_REPLYTIME = " + serverTask.replyTime + ", ";
             }
-            // TBD
-            // if (serverTask.state > localTask.I_STATE) {
-            //   sql += `SET I_STATE = ${serverTask.state}, `;
-            // }
+            // modify: 2017.11.21
+            if (serverTask.state > localTask.I_STATE) {
+                sql += "I_STATE = " + serverTask.state + ", ";
+            }
         }
         else {
             if (serverTask.acceptTime > 0) {
@@ -13012,9 +13024,9 @@ DbService = __decorate([
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SearchPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_forms__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__searchresult_searchresult__ = __webpack_require__(233);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__model_SearchTaskRequest__ = __webpack_require__(325);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_forms__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__searchresult_searchresult__ = __webpack_require__(234);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__model_SearchTaskRequest__ = __webpack_require__(326);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_DataService__ = __webpack_require__(13);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -13240,7 +13252,7 @@ SearchPage = __decorate([
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return StationWorkPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__workinfo_workinfo__ = __webpack_require__(235);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__workinfo_workinfo__ = __webpack_require__(236);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_DataService__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_GlobalService__ = __webpack_require__(7);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -13684,7 +13696,7 @@ StationWorkPage = __decorate([
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return NewsPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__newsdetails_newsdetails__ = __webpack_require__(236);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__newsdetails_newsdetails__ = __webpack_require__(237);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_DataService__ = __webpack_require__(13);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -13858,7 +13870,7 @@ NewsPage = __decorate([
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MaterialsPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__materialsadd_materialsadd__ = __webpack_require__(237);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__materialsadd_materialsadd__ = __webpack_require__(238);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__model_MaterialsInfo__ = __webpack_require__(128);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_DataService__ = __webpack_require__(13);
@@ -14091,14 +14103,14 @@ MaterialsPage = __decorate([
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SettingPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_ConfigService__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_ConfigService__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_GlobalService__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_StorageService__ = __webpack_require__(238);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_StorageService__ = __webpack_require__(239);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_FileService__ = __webpack_require__(23);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ionic_storage__ = __webpack_require__(60);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__networkset__ = __webpack_require__(239);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__networkset__ = __webpack_require__(240);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__providers_DataService__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__overdueTimePage__ = __webpack_require__(240);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__overdueTimePage__ = __webpack_require__(241);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -14831,5 +14843,5 @@ GlobalService = __decorate([
 
 /***/ })
 
-},[249]);
+},[250]);
 //# sourceMappingURL=main.js.map
