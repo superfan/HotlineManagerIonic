@@ -1,54 +1,97 @@
-import {Component} from "@angular/core";
-import {NavController, AlertController} from "ionic-angular";
+import {Component, OnInit} from "@angular/core";
+import {NavController, AlertController, NavParams} from "ionic-angular";
 import {DataService} from "../../providers/DataService";
 import {GlobalService} from "../../providers/GlobalService";
+import {Attachment} from "../../model/Attachment";
+import {PhotoViewer} from "@ionic-native/photo-viewer";
 
 @Component({
   selector: 'page-attachment',
   templateUrl: 'attachment.html'
 })
-export class AttachmentPage {
+export class AttachmentPage implements OnInit {
   title: string = "附件";
+  private pictureMaxCount: number = 6;
+  private audioMaxCount: number = 3;
+  private videoMaxCount: number = 3;
 
-  pictures: string[] = [
-    'assets/img/ic_add_materials.png',
-    'assets/img/ic_add_materials.png',
-    'assets/img/ic_add_materials.png',
-    'assets/img/ic_add_materials.png',
-    'assets/img/ic_add_materials.png',
-    'assets/img/ic_add_materials.png'
-  ];
+  pictures: string[] = [];
 
-  audios: {name: string, time: number}[] = [
-    {name: '1', time: 10},
-    {name: '2', time: 20},
-    {name: '3', time: 30}
-  ];
+  audios: {url: string, name: string, alias: string}[] = [];
 
-  videos: string[] = [
-    'http://128.1.3.60:38001/api/update/SVID_20171113_131106.mp4',
-    'http://128.1.3.60:38001/api/update/SVID_20171113_131106.mp4',
-    'http://128.1.3.60:38001/api/update/SVID_20171113_131106.mp4'
-  ];
+  videos: {url: string, name: string}[] = [];
+
+  private taskId: string;
+  private pictureCount: number = 0;
+  private audioCount: number = 0;
+  private videoCount: number = 0;
 
   constructor(public navCtrl: NavController,
               private dataService: DataService,
               private globalService: GlobalService,
-              private alertCtrl: AlertController) {
-
+              private navParams: NavParams,
+              private alertCtrl: AlertController,
+              private photoViewer: PhotoViewer) {
+    this.taskId = this.navParams.data;
   }
 
-  onPlay(audio: {name: string, time: number}): void {
-    /*if (!audio.name) {
+  ngOnInit(): void {
+    this.dataService.getAttachments(this.taskId)
+      .then(attachments => this.parseAttachments(attachments))
+      .catch(error => console.error(error));
+  }
+
+  private parseAttachments(attachments: Attachment[]): void {
+    if (!attachments || attachments.length <= 0) {
       return;
     }
 
-    let names: string[] = audio.name.split('#');
-    if (!names || names.length !== 2) {
+    attachments.forEach(attachment => {
+      let fileType: string = attachment.fileType;
+      if (!fileType) {
+      } else if ("image/jpeg" === fileType) {
+        if (this.pictureCount < this.pictureMaxCount && attachment.url) {
+          this.pictures[this.pictureCount++] = attachment.url;
+        }
+      } else if ("audio/mp3" === fileType) {
+        if (this.audioCount < this.audioMaxCount && attachment.downloadUrl && attachment.originFileName) {
+          this.audios[this.audioCount++] = {
+            url: attachment.downloadUrl,
+            name: attachment.originFileName,
+            alias: `语音${this.audioCount}`
+          };
+        }
+      } else if ("video/mp4" === fileType) {
+        if (this.videoCount < this.videoMaxCount && attachment.downloadUrl && attachment.originFileName) {
+          this.videos[this.videoCount++] = {
+            url: attachment.downloadUrl,
+            name: attachment.originFileName
+          };
+        }
+      }
+    });
+  }
+
+  /**
+   * 浏览图片
+   * @param name
+   */
+  onPreviewPicture(name: string): void {
+    if (!this.globalService.isChrome && name) {
+      this.photoViewer.show(name);
+    }
+  }
+
+  /**
+   * 播放语音
+   * @param audio
+   */
+  onPlay(audio: {url: string, name: string, alias: number}): void {
+    if (this.globalService.isChrome || !audio.url || !audio.name || !audio.alias) {
       return;
     }
 
-    this.dataService.playAudio(names[0])
+    this.dataService.playCachedAudio(audio.url, audio.name)
       .then(file => {
         if (file) {
           let prompt = this.alertCtrl.create({
@@ -69,14 +112,18 @@ export class AttachmentPage {
           prompt.present();
         }
       })
-      .catch(err => console.error(err));*/
+      .catch(err => console.error(err));
   }
 
-  onPlayVideo(path: string): void {
-    /*if (!this.globalService.isChrome && path) {
-      this.dataService.playCachedVideo(path, "SVID_20171113_131106.mp4")
+  /**
+   * 播放视频
+   * @param video
+   */
+  onPlayVideo(video: {url: string, name: string}): void {
+    if (!this.globalService.isChrome && video.url && video.name) {
+      this.dataService.playCachedVideo(video.url, video.name)
         .then(data => console.log(data))
         .catch(error => console.error(error));
-    }*/
+    }
   }
 }

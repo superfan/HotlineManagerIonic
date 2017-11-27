@@ -96,11 +96,11 @@ public class MyPlugin extends CordovaPlugin {
         account = "wqry";
         password = "0000";
         userId = 10;
-        userName = "wqry";
+        userName = "ss1";
         department = "客服热线部";
         departmentId = 1;
         roles = "worker";
-        params = "MyHistory";
+        params = "MyWorkPage";
         accessToken = getUUID(mainApplication);
         extendedInfo = "";
       }

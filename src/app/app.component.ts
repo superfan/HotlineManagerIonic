@@ -5,7 +5,7 @@ import {SplashScreen} from '@ionic-native/splash-screen';
 import {AppComponentService} from "./app.component.service";
 import {GlobalService} from "../providers/GlobalService";
 import {MyWorkPage} from "../pages/mywork/mywork";
-import {MainPage} from "../pages/main/main";
+//import {MainPage} from "../pages/main/main";
 //import {TabsPage} from "../pages/tabs/tabs";
 
 @Component({

@@ -20,6 +20,7 @@ import {VersionInfo} from "../model/VersionInfo";
 import {Material} from "../model/Material";
 import {MaintainInfo} from "../model/MaintainInfo";
 import {FileTransfer, FileTransferObject} from "@ionic-native/file-transfer";
+import {Attachment} from "../model/Attachment";
 
 @Injectable()
 export class DownloadService extends BaseService {
@@ -527,7 +528,7 @@ export class DownloadService extends BaseService {
    * @param serialNumber
    * @returns {Promise<T>}
    */
-  public getMaintainInfo(serialNumber:string):Promise<MaintainInfo>{
+  public getMaintainInfo(serialNumber: string): Promise<MaintainInfo> {
     return new Promise((resolve, reject) => {
       this.configService.getMaterialsBaseUri()
         .then(data => {
@@ -569,4 +570,33 @@ export class DownloadService extends BaseService {
         });
     });
   }
+
+  /**
+   * 获取附件
+   * @param taskId
+   * @returns {Promise<T>}
+   */
+  public getAttachments(taskId: string): Promise<Array<Attachment>> {
+    return new Promise((resolve, reject) => {
+      this.configService.getServerBaseUri()
+        .then(data => {
+          let url = `${data}wap/v1/mobile/task/${taskId}/files`;
+          return this.get(url, this.getOptions())
+            .toPromise()
+            .then(data => {
+              let body = data.json();
+              if (body.Code === this.globalService.httpCode
+                && body.StatusCode === this.globalService.httpSuccessStatusCode
+                && body.Data instanceof Array) {
+                resolve(body.Data);
+              } else {
+                reject(body.Message ? body.Message : "failure to get attachments");
+              }
+            })
+            .catch(this.handleError);
+        })
+        .catch(error => reject(error));
+    });
+  }
+
 }

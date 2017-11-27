@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="io.ionic.starter" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="15" id="io.ionic.starter" version="1.0.2" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <feature name="Keyboard">
         <param name="android-package" value="io.ionic.keyboard.IonicKeyboard" />
         <param name="onload" value="true" />
@@ -63,14 +63,14 @@
         <param name="android-package" value="org.apache.cordova.statusbar.StatusBar" />
         <param name="onload" value="true" />
     </feature>
-    <feature name="MyPlugin">
-        <param name="android-package" value="cordova.plugin.MyPlugin.MyPlugin" />
-    </feature>
     <feature name="VideoPlayer">
         <param name="android-package" value="com.moust.cordova.videoplayer.VideoPlayer" />
     </feature>
     <feature name="PhotoViewer">
         <param name="android-package" value="com.sarriaroman.PhotoViewer.PhotoViewer" />
+    </feature>
+    <feature name="MyPlugin">
+        <param name="android-package" value="cordova.plugin.MyPlugin.MyPlugin" />
     </feature>
     <feature name="Zip">
         <param name="android-package" value="org.apache.cordova.Zip" />

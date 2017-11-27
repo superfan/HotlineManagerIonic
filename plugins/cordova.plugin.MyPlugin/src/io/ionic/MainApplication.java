@@ -1,6 +1,7 @@
 package io.ionic;
 
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
@@ -27,6 +28,7 @@ import com.sh3h.ipc.IMainService;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -49,6 +51,7 @@ public class MainApplication extends Application {
   private MyLocation mMyLocation;
   private Bundle mBundle;
   private OnAidlListener mOnAidlListener;
+  private List<Activity> mActivityList;
 
   @Override
   public void onCreate() {
@@ -56,6 +59,8 @@ public class MainApplication extends Application {
 
     CrashHandler crashHandler = CrashHandler.getInstance();
     crashHandler.init(this);
+
+    mActivityList = new ArrayList<Activity>();
   }
 
   public void setBundle(Bundle bundle) {
@@ -132,6 +137,18 @@ public class MainApplication extends Application {
 
   public double getLatitude() {
     return mMyLocation != null ? mMyLocation.getLatitude() : 0;
+  }
+
+  public void addActivity(Activity activity) {
+    if (mActivityList != null) {
+      mActivityList.add(activity);
+    }
+  }
+
+  public void removeActivity(Activity activity) {
+    if (mActivityList != null) {
+      mActivityList.remove(activity);
+    }
   }
 
   private ServiceConnection mainConnection = new ServiceConnection() {
@@ -214,7 +231,9 @@ public class MainApplication extends Application {
               myLocation.getLongitude(),
               myLocation.getLatitude(),
               myLocation.getDirection(),
-              myLocation.getAccuracy());
+              myLocation.getAccuracy(),
+              myLocation.getLocalLongitude(),
+              myLocation.getmLocalLatitude());
           }
           break;
         case MY_MSG_MODULE:
@@ -270,6 +289,10 @@ public class MainApplication extends Application {
             handlePhotoQuality(str);
           } else if (str.startsWith(MyModule.OUTER_NETWORK)) {
             handleOuterNetwork(str);
+          } if (str.startsWith(MyModule.GPS_NOT_OPENED)) {
+
+          } else if (str.startsWith(MyModule.LOGOUT_SUB_SYSTEM)) {
+            logoutSubSystem();
           }
         }
       } catch (Exception e) {
@@ -343,6 +366,29 @@ public class MainApplication extends Application {
     private void handleOuterNetwork(String info) {
       if (mMainApplication.mOnAidlListener != null && !isNullOrEmpty(info)) {
         mMainApplication.mOnAidlListener.handleOuterNetwork(info);
+      }
+    }
+
+    private void logoutSubSystem() {
+      try {
+        Log.i(TAG, "logoutSubSystem");
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(MyModule.PACKAGE_NAME, mMainApplication.getPackageName());
+        jsonObject.put(MyModule.ACTIVITY_NAME, mMainApplication.getPackageName());
+
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.put(MyModule.LOGOUT_MAIN_SYSTEM);
+        jsonObject.put(MyModule.DATA, jsonArray);
+
+        mMainApplication.mainService.setMyModule(new MyModule(jsonObject.toString()));
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+
+      if (mMainApplication.mActivityList != null) {
+        for (Activity activity : mMainApplication.mActivityList) {
+          activity.finish();
+        }
       }
     }
   }

@@ -767,6 +767,35 @@ var DownloadService = (function (_super) {
             });
         });
     };
+    /**
+     * 获取附件
+     * @param taskId
+     * @returns {Promise<T>}
+     */
+    DownloadService.prototype.getAttachments = function (taskId) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.configService.getServerBaseUri()
+                .then(function (data) {
+                var url = data + "wap/v1/mobile/task/" + taskId + "/files";
+                return _this.get(url, _this.getOptions())
+                    .toPromise()
+                    .then(function (data) {
+                    var body = data.json();
+                    if (body.Code === _this.globalService.httpCode
+                        && body.StatusCode === _this.globalService.httpSuccessStatusCode
+                        && body.Data instanceof Array) {
+                        resolve(body.Data);
+                    }
+                    else {
+                        reject(body.Message ? body.Message : "failure to get attachments");
+                    }
+                })
+                    .catch(_this.handleError);
+            })
+                .catch(function (error) { return reject(error); });
+        });
+    };
     return DownloadService;
 }(__WEBPACK_IMPORTED_MODULE_5__BaseService__["a" /* BaseService */]));
 DownloadService = __decorate([
@@ -1581,10 +1610,10 @@ var MediaType;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__DbService__ = __webpack_require__(62);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__FileService__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_camera__ = __webpack_require__(227);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ionic_native_media__ = __webpack_require__(228);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__ionic_native_media_capture__ = __webpack_require__(229);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__ionic_native_video_player__ = __webpack_require__(230);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_camera__ = __webpack_require__(228);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ionic_native_media__ = __webpack_require__(229);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__ionic_native_media_capture__ = __webpack_require__(230);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__ionic_native_video_player__ = __webpack_require__(231);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__model_Media__ = __webpack_require__(126);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__angular_http__ = __webpack_require__(35);
 var __extends = (this && this.__extends) || (function () {
@@ -1769,7 +1798,7 @@ var MediaService = (function (_super) {
             return Promise.reject('file is error');
         }
     };
-    MediaService.prototype.playAudio = function (name) {
+    MediaService.prototype.playAudio = function (name, isCached) {
         var _this = this;
         var error = 'failure to play audio';
         return new Promise(function (resolve, reject) {
@@ -1777,7 +1806,12 @@ var MediaService = (function (_super) {
             try {
                 // Create a Media instance.  Expects path to file or url as argument
                 // We can optionally pass a second argument to track the status of the media
-                file = _this.media.create(_this.fileService.getSoundsDir() + "/" + name);
+                if (isCached) {
+                    file = _this.media.create("" + name);
+                }
+                else {
+                    file = _this.media.create(_this.fileService.getSoundsDir() + "/" + name);
+                }
                 if (!file) {
                     return reject(error);
                 }
@@ -1920,12 +1954,12 @@ var MaterialInfoEx = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_DataService__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__model_Process__ = __webpack_require__(122);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__record_PopoverRecordPage__ = __webpack_require__(231);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__record_PopoverRecordPage__ = __webpack_require__(232);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__map_map__ = __webpack_require__(37);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__model_MapParam__ = __webpack_require__(48);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__providers_FileService__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__attachment_attachment__ = __webpack_require__(232);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__ionic_native_photo_viewer__ = __webpack_require__(233);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__attachment_attachment__ = __webpack_require__(233);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__ionic_native_photo_viewer__ = __webpack_require__(130);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -2197,7 +2231,7 @@ var WorkDetailPage = (function () {
     WorkDetailPage.prototype.detailItemSelected = function (item) {
         if (item.key && item.key === "attachments") {
             console.log("attachments");
-            this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_10__attachment_attachment__["a" /* AttachmentPage */]);
+            this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_10__attachment_attachment__["a" /* AttachmentPage */], this.taskEx.id.split('#')[0]);
         }
     };
     /**
@@ -3820,6 +3854,32 @@ var DataService = (function (_super) {
     DataService.prototype.uploadNotUploadMaterialInfos = function () {
         _super.prototype.sendMsg.call(this, { msgType: __WEBPACK_IMPORTED_MODULE_8__SyncService__["a" /* MsgType */].UploadMaterialInfos });
     };
+    /**
+     *
+     * @param url
+     * @param name
+     * @returns {Promise<TResult>}
+     */
+    DataService.prototype.playCachedAudio = function (url, name) {
+        var _this = this;
+        return this.fileService.checkFile(this.fileService.getCacheDir() + "/", name)
+            .then(function (result) {
+            var path = _this.fileService.getCacheDir() + "/" + name;
+            if (result) {
+                return Promise.resolve(path);
+            }
+            else {
+                return _this.downloadService.downloadFile(url, path);
+            }
+        })
+            .then(function (path) { return path && _this.mediaService.playAudio(path, true); });
+    };
+    /**
+     * 播放缓存视频
+     * @param url
+     * @param name
+     * @returns {Promise<TResult>}
+     */
     DataService.prototype.playCachedVideo = function (url, name) {
         var _this = this;
         return this.fileService.checkFile(this.fileService.getCacheDir() + "/", name)
@@ -3833,6 +3893,14 @@ var DataService = (function (_super) {
             }
         })
             .then(function (path) { return path && _this.playVideo(path); });
+    };
+    /**
+     * 获取附件
+     * @param taskId
+     * @returns {Promise<Array<Attachment>>}
+     */
+    DataService.prototype.getAttachments = function (taskId) {
+        return this.downloadService.getAttachments(taskId);
     };
     return DataService;
 }(__WEBPACK_IMPORTED_MODULE_8__SyncService__["b" /* SyncService */]));
@@ -3852,7 +3920,7 @@ DataService = __decorate([
 
 /***/ }),
 
-/***/ 138:
+/***/ 139:
 /***/ (function(module, exports) {
 
 function webpackEmptyAsyncContext(req) {
@@ -3865,24 +3933,7 @@ function webpackEmptyAsyncContext(req) {
 webpackEmptyAsyncContext.keys = function() { return []; };
 webpackEmptyAsyncContext.resolve = webpackEmptyAsyncContext;
 module.exports = webpackEmptyAsyncContext;
-webpackEmptyAsyncContext.id = 138;
-
-/***/ }),
-
-/***/ 179:
-/***/ (function(module, exports) {
-
-function webpackEmptyAsyncContext(req) {
-	// Here Promise.resolve().then() is used instead of new Promise() to prevent
-	// uncatched exception popping up in devtools
-	return Promise.resolve().then(function() {
-		throw new Error("Cannot find module '" + req + "'.");
-	});
-}
-webpackEmptyAsyncContext.keys = function() { return []; };
-webpackEmptyAsyncContext.resolve = webpackEmptyAsyncContext;
-module.exports = webpackEmptyAsyncContext;
-webpackEmptyAsyncContext.id = 179;
+webpackEmptyAsyncContext.id = 139;
 
 /***/ }),
 
@@ -4702,6 +4753,23 @@ var ConfigService_1;
 
 /***/ }),
 
+/***/ 180:
+/***/ (function(module, exports) {
+
+function webpackEmptyAsyncContext(req) {
+	// Here Promise.resolve().then() is used instead of new Promise() to prevent
+	// uncatched exception popping up in devtools
+	return Promise.resolve().then(function() {
+		throw new Error("Cannot find module '" + req + "'.");
+	});
+}
+webpackEmptyAsyncContext.keys = function() { return []; };
+webpackEmptyAsyncContext.resolve = webpackEmptyAsyncContext;
+module.exports = webpackEmptyAsyncContext;
+webpackEmptyAsyncContext.id = 180;
+
+/***/ }),
+
 /***/ 23:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -4709,10 +4777,10 @@ var ConfigService_1;
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return FileService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ionic_native_file__ = __webpack_require__(120);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_transfer__ = __webpack_require__(222);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_transfer__ = __webpack_require__(223);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ionic_angular__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_zip__ = __webpack_require__(223);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_file_opener__ = __webpack_require__(224);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_zip__ = __webpack_require__(224);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_file_opener__ = __webpack_require__(225);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -5035,7 +5103,7 @@ FileService = __decorate([
 
 /***/ }),
 
-/***/ 231:
+/***/ 232:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5145,7 +5213,7 @@ PopoverRecordPage = __decorate([
 
 /***/ }),
 
-/***/ 232:
+/***/ 233:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5154,6 +5222,7 @@ PopoverRecordPage = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_DataService__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_GlobalService__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_photo_viewer__ = __webpack_require__(130);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -5167,82 +5236,130 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var AttachmentPage = (function () {
-    function AttachmentPage(navCtrl, dataService, globalService, alertCtrl) {
+    function AttachmentPage(navCtrl, dataService, globalService, navParams, alertCtrl, photoViewer) {
         this.navCtrl = navCtrl;
         this.dataService = dataService;
         this.globalService = globalService;
+        this.navParams = navParams;
         this.alertCtrl = alertCtrl;
+        this.photoViewer = photoViewer;
         this.title = "附件";
-        this.pictures = [
-            'assets/img/ic_add_materials.png',
-            'assets/img/ic_add_materials.png',
-            'assets/img/ic_add_materials.png',
-            'assets/img/ic_add_materials.png',
-            'assets/img/ic_add_materials.png',
-            'assets/img/ic_add_materials.png'
-        ];
-        this.audios = [
-            { name: '1', time: 10 },
-            { name: '2', time: 20 },
-            { name: '3', time: 30 }
-        ];
-        this.videos = [
-            'http://128.1.3.60:38001/api/update/SVID_20171113_131106.mp4',
-            'http://128.1.3.60:38001/api/update/SVID_20171113_131106.mp4',
-            'http://128.1.3.60:38001/api/update/SVID_20171113_131106.mp4'
-        ];
+        this.pictureMaxCount = 6;
+        this.audioMaxCount = 3;
+        this.videoMaxCount = 3;
+        this.pictures = [];
+        this.audios = [];
+        this.videos = [];
+        this.pictureCount = 0;
+        this.audioCount = 0;
+        this.videoCount = 0;
+        this.taskId = this.navParams.data;
     }
-    AttachmentPage.prototype.onPlay = function (audio) {
-        /*if (!audio.name) {
-          return;
-        }
-    
-        let names: string[] = audio.name.split('#');
-        if (!names || names.length !== 2) {
-          return;
-        }
-    
-        this.dataService.playAudio(names[0])
-          .then(file => {
-            if (file) {
-              let prompt = this.alertCtrl.create({
-                title: '提示',
-                message: "结束播放语音",
-                enableBackdropDismiss: false,
-                buttons: [
-                  {
-                    text: '确定',
-                    handler: data => {
-                      console.log('Saved clicked');
-                      this.dataService.stopAudio(file)
-                        .catch(err => console.error(err));
-                    }
-                  }
-                ]
-              });
-              prompt.present();
-            }
-          })
-          .catch(err => console.error(err));*/
+    AttachmentPage.prototype.ngOnInit = function () {
+        var _this = this;
+        this.dataService.getAttachments(this.taskId)
+            .then(function (attachments) { return _this.parseAttachments(attachments); })
+            .catch(function (error) { return console.error(error); });
     };
-    AttachmentPage.prototype.onPlayVideo = function (path) {
-        /*if (!this.globalService.isChrome && path) {
-          this.dataService.playCachedVideo(path, "SVID_20171113_131106.mp4")
-            .then(data => console.log(data))
-            .catch(error => console.error(error));
-        }*/
+    AttachmentPage.prototype.parseAttachments = function (attachments) {
+        var _this = this;
+        if (!attachments || attachments.length <= 0) {
+            return;
+        }
+        attachments.forEach(function (attachment) {
+            var fileType = attachment.fileType;
+            if (!fileType) {
+            }
+            else if ("image/jpeg" === fileType) {
+                if (_this.pictureCount < _this.pictureMaxCount && attachment.url) {
+                    _this.pictures[_this.pictureCount++] = attachment.url;
+                }
+            }
+            else if ("audio/mp3" === fileType) {
+                if (_this.audioCount < _this.audioMaxCount && attachment.downloadUrl && attachment.originFileName) {
+                    _this.audios[_this.audioCount++] = {
+                        url: attachment.downloadUrl,
+                        name: attachment.originFileName,
+                        alias: "\u8BED\u97F3" + _this.audioCount
+                    };
+                }
+            }
+            else if ("video/mp4" === fileType) {
+                if (_this.videoCount < _this.videoMaxCount && attachment.downloadUrl && attachment.originFileName) {
+                    _this.videos[_this.videoCount++] = {
+                        url: attachment.downloadUrl,
+                        name: attachment.originFileName
+                    };
+                }
+            }
+        });
+    };
+    /**
+     * 浏览图片
+     * @param name
+     */
+    AttachmentPage.prototype.onPreviewPicture = function (name) {
+        if (!this.globalService.isChrome && name) {
+            this.photoViewer.show(name);
+        }
+    };
+    /**
+     * 播放语音
+     * @param audio
+     */
+    AttachmentPage.prototype.onPlay = function (audio) {
+        var _this = this;
+        if (this.globalService.isChrome || !audio.url || !audio.name || !audio.alias) {
+            return;
+        }
+        this.dataService.playCachedAudio(audio.url, audio.name)
+            .then(function (file) {
+            if (file) {
+                var prompt_1 = _this.alertCtrl.create({
+                    title: '提示',
+                    message: "结束播放语音",
+                    enableBackdropDismiss: false,
+                    buttons: [
+                        {
+                            text: '确定',
+                            handler: function (data) {
+                                console.log('Saved clicked');
+                                _this.dataService.stopAudio(file)
+                                    .catch(function (err) { return console.error(err); });
+                            }
+                        }
+                    ]
+                });
+                prompt_1.present();
+            }
+        })
+            .catch(function (err) { return console.error(err); });
+    };
+    /**
+     * 播放视频
+     * @param video
+     */
+    AttachmentPage.prototype.onPlayVideo = function (video) {
+        if (!this.globalService.isChrome && video.url && video.name) {
+            this.dataService.playCachedVideo(video.url, video.name)
+                .then(function (data) { return console.log(data); })
+                .catch(function (error) { return console.error(error); });
+        }
     };
     return AttachmentPage;
 }());
 AttachmentPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-attachment',template:/*ion-inline-start:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\attachment\attachment.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-attachment">\n\n  <button ion-item icon-left>\n\n    <ion-icon name="camera"></ion-icon>\n\n    照片\n\n  </button>\n\n\n\n  <ion-grid style="width: 100%; height: 100px;">\n\n    <ion-row>\n\n      <ion-col col-4 class="col-img" *ngIf="pictures[0]">\n\n        <img class="picture" src="{{pictures[0]}}"/>\n\n      </ion-col>\n\n\n\n      <ion-col col-4 class="col-img" *ngIf="pictures[1]">\n\n        <img class="picture" src="{{pictures[1]}}"/>\n\n      </ion-col>\n\n\n\n      <ion-col col-4 class="col-img" *ngIf="pictures[2]">\n\n        <img class="picture" src="{{pictures[2]}}"/>\n\n      </ion-col>\n\n    </ion-row>\n\n  </ion-grid>\n\n\n\n  <ion-grid style="width: 100%; height: 100px;">\n\n    <ion-row>\n\n      <ion-col col-4 class="col-img" *ngIf="pictures[0]">\n\n        <img class="picture" src="{{pictures[3]}}"/>\n\n      </ion-col>\n\n\n\n      <ion-col col-4 class="col-img" *ngIf="pictures[1]">\n\n        <img class="picture" src="{{pictures[4]}}"/>\n\n      </ion-col>\n\n\n\n      <ion-col col-4 class="col-img" *ngIf="pictures[2]">\n\n        <img class="picture" src="{{pictures[5]}}"/>\n\n      </ion-col>\n\n    </ion-row>\n\n  </ion-grid>\n\n  <br>\n\n  <br>\n\n\n\n  <button ion-item icon-left>\n\n    <ion-icon name="microphone"></ion-icon>\n\n    语音\n\n  </button>\n\n\n\n  <ion-grid style="width: 100%; height: 150px;">\n\n    <ion-row *ngIf="audios[0].time > 0" class="audio">\n\n      <ion-col col-6 class="audio-info">{{audios[0].time}}s</ion-col>\n\n      <ion-col col-2>\n\n        <ion-icon name="play" class="audio-btn" (click)="onPlay(audios[0])"></ion-icon>\n\n      </ion-col>\n\n      <ion-col></ion-col>\n\n    </ion-row>\n\n\n\n    <ion-row *ngIf="audios[1].time > 0" class="audio">\n\n      <ion-col col-6 class="audio-info">{{audios[1].time}}s</ion-col>\n\n      <ion-col col-2>\n\n        <ion-icon name="play" class="audio-btn" (click)="onPlay(audios[1])"></ion-icon>\n\n      </ion-col>\n\n      <ion-col></ion-col>\n\n    </ion-row>\n\n\n\n    <ion-row *ngIf="audios[2].time > 0" class="audio">\n\n      <ion-col col-6 class="audio-info">{{audios[2].time}}s</ion-col>\n\n      <ion-col col-2>\n\n        <ion-icon name="play" class="audio-btn" (click)="onPlay(audios[2])"></ion-icon>\n\n      </ion-col>\n\n      <ion-col></ion-col>\n\n    </ion-row>\n\n  </ion-grid>\n\n\n\n  <br>\n\n  <br>\n\n  <button ion-item icon-left>\n\n    <ion-icon name="videocam"></ion-icon>\n\n    视频\n\n  </button>\n\n\n\n  <ion-grid style="width: 100%; height: 100px;">\n\n    <ion-row>\n\n      <ion-col col-4 class="col-video" *ngIf="videos[0]">\n\n        <video class="video" (click)="onPlayVideo(videos[0])" src="{{videos[0]}}"></video>\n\n      </ion-col>\n\n\n\n      <ion-col col-4 class="col-video" *ngIf="videos[1]">\n\n        <video class="video" (click)="onPlayVideo(videos[1])" src="{{videos[1]}}"></video>\n\n      </ion-col>\n\n\n\n      <ion-col col-4 class="col-video" *ngIf="pictures[2]">\n\n        <video class="video" (click)="onPlayVideo(videos[2])" src="{{videos[2]}}"></video>\n\n      </ion-col>\n\n    </ion-row>\n\n  </ion-grid>\n\n  <br>\n\n  <br>\n\n</ion-content>\n\n'/*ion-inline-end:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\attachment\attachment.html"*/
+        selector: 'page-attachment',template:/*ion-inline-start:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\attachment\attachment.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-attachment">\n\n  <button ion-item icon-left>\n\n    <ion-icon name="camera"></ion-icon>\n\n    照片\n\n  </button>\n\n\n\n  <ion-grid style="width: 100%; height: 100px;">\n\n    <ion-row>\n\n      <ion-col col-4 class="col-img" *ngIf="pictures[0]">\n\n        <img class="picture" src="{{pictures[0]}}" (click)="onPreviewPicture(pictures[0])"/>\n\n      </ion-col>\n\n\n\n      <ion-col col-4 class="col-img" *ngIf="pictures[1]">\n\n        <img class="picture" src="{{pictures[1]}}" (click)="onPreviewPicture(pictures[1])"/>\n\n      </ion-col>\n\n\n\n      <ion-col col-4 class="col-img" *ngIf="pictures[2]">\n\n        <img class="picture" src="{{pictures[2]}}" (click)="onPreviewPicture(pictures[2])"/>\n\n      </ion-col>\n\n    </ion-row>\n\n  </ion-grid>\n\n\n\n  <ion-grid style="width: 100%; height: 100px;" *ngIf="pictureCount > 3">\n\n    <ion-row>\n\n      <ion-col col-4 class="col-img" *ngIf="pictures[0]">\n\n        <img class="picture" src="{{pictures[3]}}" (click)="onPreviewPicture(pictures[3])"/>\n\n      </ion-col>\n\n\n\n      <ion-col col-4 class="col-img" *ngIf="pictures[1]">\n\n        <img class="picture" src="{{pictures[4]}}" (click)="onPreviewPicture(pictures[4])"/>\n\n      </ion-col>\n\n\n\n      <ion-col col-4 class="col-img" *ngIf="pictures[2]">\n\n        <img class="picture" src="{{pictures[5]}}" (click)="onPreviewPicture(pictures[5])"/>\n\n      </ion-col>\n\n    </ion-row>\n\n  </ion-grid>\n\n  <br>\n\n  <br>\n\n\n\n  <button ion-item icon-left>\n\n    <ion-icon name="microphone"></ion-icon>\n\n    语音\n\n  </button>\n\n\n\n  <ion-grid style="width: 100%; height: 150px;">\n\n    <ion-row *ngIf="audios[0]" class="audio">\n\n      <ion-col col-6 class="audio-info">{{audios[0].alias}}</ion-col>\n\n      <ion-col col-2>\n\n        <ion-icon name="play" class="audio-btn" (click)="onPlay(audios[0])"></ion-icon>\n\n      </ion-col>\n\n      <ion-col></ion-col>\n\n    </ion-row>\n\n\n\n    <ion-row *ngIf="audios[1]" class="audio">\n\n      <ion-col col-6 class="audio-info">{{audios[1].alias}}</ion-col>\n\n      <ion-col col-2>\n\n        <ion-icon name="play" class="audio-btn" (click)="onPlay(audios[1])"></ion-icon>\n\n      </ion-col>\n\n      <ion-col></ion-col>\n\n    </ion-row>\n\n\n\n    <ion-row *ngIf="audios[2]" class="audio">\n\n      <ion-col col-6 class="audio-info">{{audios[2].alias}}</ion-col>\n\n      <ion-col col-2>\n\n        <ion-icon name="play" class="audio-btn" (click)="onPlay(audios[2])"></ion-icon>\n\n      </ion-col>\n\n      <ion-col></ion-col>\n\n    </ion-row>\n\n  </ion-grid>\n\n\n\n  <br>\n\n  <br>\n\n  <button ion-item icon-left>\n\n    <ion-icon name="videocam"></ion-icon>\n\n    视频\n\n  </button>\n\n\n\n  <ion-grid style="width: 100%; height: 100px;">\n\n    <ion-row>\n\n      <ion-col col-4 class="col-video" *ngIf="videos[0]">\n\n        <video class="video" (click)="onPlayVideo(videos[0])" src="{{videos[0].url}}"></video>\n\n      </ion-col>\n\n\n\n      <ion-col col-4 class="col-video" *ngIf="videos[1]">\n\n        <video class="video" (click)="onPlayVideo(videos[1])" src="{{videos[1].url}}"></video>\n\n      </ion-col>\n\n\n\n      <ion-col col-4 class="col-video" *ngIf="pictures[2]">\n\n        <video class="video" (click)="onPlayVideo(videos[2])" src="{{videos[2].url}}"></video>\n\n      </ion-col>\n\n    </ion-row>\n\n  </ion-grid>\n\n  <br>\n\n  <br>\n\n</ion-content>\n\n'/*ion-inline-end:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\attachment\attachment.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_2__providers_DataService__["a" /* DataService */],
         __WEBPACK_IMPORTED_MODULE_3__providers_GlobalService__["a" /* GlobalService */],
-        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */]])
+        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* NavParams */],
+        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */],
+        __WEBPACK_IMPORTED_MODULE_4__ionic_native_photo_viewer__["a" /* PhotoViewer */]])
 ], AttachmentPage);
 
 //# sourceMappingURL=attachment.js.map
@@ -7187,8 +7304,8 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__ = __webpack_require__(32);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__ = __webpack_require__(219);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_status_bar__ = __webpack_require__(221);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__ = __webpack_require__(220);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_status_bar__ = __webpack_require__(222);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__app_component__ = __webpack_require__(317);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_home_home__ = __webpack_require__(327);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_welcome_welcome__ = __webpack_require__(328);
@@ -7202,13 +7319,13 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__pages_history_myhistory__ = __webpack_require__(61);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__ionic_native_file__ = __webpack_require__(120);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__providers_FileService__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__ionic_native_transfer__ = __webpack_require__(222);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__ionic_native_transfer__ = __webpack_require__(223);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__providers_StorageService__ = __webpack_require__(239);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__angular_http__ = __webpack_require__(35);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__ionic_native_app_version__ = __webpack_require__(247);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__ionic_native_zip__ = __webpack_require__(223);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__ionic_native_zip__ = __webpack_require__(224);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__providers_ConfigService__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__ionic_native_file_opener__ = __webpack_require__(224);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__ionic_native_file_opener__ = __webpack_require__(225);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_25__providers_DataService__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_26__providers_DownloadService__ = __webpack_require__(121);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_27__providers_GlobalService__ = __webpack_require__(7);
@@ -7222,19 +7339,19 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_35__pages_setting_setting__ = __webpack_require__(67);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_36__providers_HttpInterceptorBackend__ = __webpack_require__(331);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_37__providers_HttpInterceptor__ = __webpack_require__(248);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_38__ionic_native_sqlite__ = __webpack_require__(225);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_39__ionic_native_sqlite_porter__ = __webpack_require__(226);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_38__ionic_native_sqlite__ = __webpack_require__(226);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_39__ionic_native_sqlite_porter__ = __webpack_require__(227);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_40__providers_DbService__ = __webpack_require__(62);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_41__ionic_storage__ = __webpack_require__(60);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_42__ionic_native_device__ = __webpack_require__(246);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_43__pipes_ValueValidPipe__ = __webpack_require__(332);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_44__ionic_native_camera__ = __webpack_require__(227);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_45__ionic_native_media_capture__ = __webpack_require__(229);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_46__ionic_native_video_player__ = __webpack_require__(230);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_44__ionic_native_camera__ = __webpack_require__(228);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_45__ionic_native_media_capture__ = __webpack_require__(230);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_46__ionic_native_video_player__ = __webpack_require__(231);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_47__ionic_native_android_permissions__ = __webpack_require__(118);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_48__ionic_native_media__ = __webpack_require__(228);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_48__ionic_native_media__ = __webpack_require__(229);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_49__providers_MediaService__ = __webpack_require__(127);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_50__pages_record_PopoverRecordPage__ = __webpack_require__(231);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_50__pages_record_PopoverRecordPage__ = __webpack_require__(232);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_51__ionic_native_file_transfer__ = __webpack_require__(124);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_52__pages_map_map__ = __webpack_require__(37);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_53__pages_materials_materials__ = __webpack_require__(66);
@@ -7246,8 +7363,8 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_59__pages_about_about__ = __webpack_require__(334);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_60__pages_contact_contact__ = __webpack_require__(335);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_61__pages_setting_overdueTimePage__ = __webpack_require__(241);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_62__pages_attachment_attachment__ = __webpack_require__(232);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_63__ionic_native_photo_viewer__ = __webpack_require__(233);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_62__pages_attachment_attachment__ = __webpack_require__(233);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_63__ionic_native_photo_viewer__ = __webpack_require__(130);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7447,8 +7564,8 @@ AppModule = __decorate([
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MyApp; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__ = __webpack_require__(221);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__ = __webpack_require__(219);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__ = __webpack_require__(222);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__ = __webpack_require__(220);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__app_component_service__ = __webpack_require__(318);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_mywork_mywork__ = __webpack_require__(49);
@@ -7468,6 +7585,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+//import {MainPage} from "../pages/main/main";
 //import {TabsPage} from "../pages/tabs/tabs";
 var MyApp = (function () {
     function MyApp(platform, statusBar, splashScreen, appComponentService, globalService) {
@@ -11534,8 +11652,8 @@ MyHistory = __decorate([
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DbService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ionic_native_sqlite__ = __webpack_require__(225);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_sqlite_porter__ = __webpack_require__(226);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ionic_native_sqlite__ = __webpack_require__(226);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_sqlite_porter__ = __webpack_require__(227);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__GlobalService__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__FileService__ = __webpack_require__(23);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -14557,7 +14675,7 @@ var SettingPage = (function () {
 }());
 SettingPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-setting',template:/*ion-inline-start:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\setting\setting.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-setting">\n\n  <ion-list>\n\n    <ion-item *ngIf="isShow">\n\n      <ion-toggle [(ngModel)]="isGrid" (ionChange)="notifyIsGrid()"></ion-toggle>\n\n      <ion-label>是否切换九宫格</ion-label>\n\n      <ion-icon name=\'grid\' item-start color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item *ngIf="isShow">\n\n      <ion-toggle [(ngModel)]="isOuterNet" (ionChange)="notifyIsOutNet()"></ion-toggle>\n\n      <ion-label>是否使用外网</ion-label>\n\n      <ion-icon name=\'md-wifi\' item-start color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item (click)="showNetwork()">\n\n      <ion-icon name=\'git-network\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>网络设置</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item (click)="showOverdueTime()">\n\n      <ion-icon name=\'time\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>超期设置</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item (click)="showDownloadWords()">\n\n      <ion-icon name=\'download\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>更新词语</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item *ngIf="isShow" (click)="showHeartSetting()">\n\n      <ion-icon name=\'heart-outline\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>心跳频率</ion-label>\n\n      <ion-label class="label-right">{{keepAlive+\'毫秒\'}}</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item *ngIf="isShow" (click)="showAlermType()">\n\n      <ion-icon name=\'alarm\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>提醒方式</ion-label>\n\n      <ion-label class="label-right">{{alermStyle}}</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item *ngIf="isShow" (click)="showRevertSetting()">\n\n      <ion-icon name=\'redo\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>恢复出厂设置</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item (click)="onExit()">\n\n      <ion-icon name=\'exit\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>退出</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n  </ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\setting\setting.html"*/
+        selector: 'page-setting',template:/*ion-inline-start:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\setting\setting.html"*/'<ion-header>\n\n  <ion-navbar color="primary">\n\n    <ion-title>\n\n      {{title}}\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content class="page-setting">\n\n  <ion-list>\n\n    <ion-item *ngIf="isShow">\n\n      <ion-toggle [(ngModel)]="isGrid" (ionChange)="notifyIsGrid()"></ion-toggle>\n\n      <ion-label>是否切换九宫格</ion-label>\n\n      <ion-icon name=\'grid\' item-start color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item *ngIf="isShow">\n\n      <ion-toggle [(ngModel)]="isOuterNet" (ionChange)="notifyIsOutNet()"></ion-toggle>\n\n      <ion-label>是否使用外网</ion-label>\n\n      <ion-icon name=\'md-wifi\' item-start color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item (click)="showNetwork()">\n\n      <ion-icon name=\'git-network\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>网络设置</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item (click)="showOverdueTime()">\n\n      <ion-icon name=\'time\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>超期设置</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item (click)="showDownloadWords()">\n\n      <ion-icon name=\'download\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>更新词语</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item *ngIf="isShow" (click)="showHeartSetting()">\n\n      <ion-icon name=\'heart-outline\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>心跳频率</ion-label>\n\n      <ion-label class="label-right">{{keepAlive+\'毫秒\'}}</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item *ngIf="isShow" (click)="showAlermType()">\n\n      <ion-icon name=\'alarm\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>提醒方式</ion-label>\n\n      <ion-label class="label-right">{{alermStyle}}</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item *ngIf="isShow" (click)="showRevertSetting()">\n\n      <ion-icon name=\'redo\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>恢复出厂设置</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n\n\n    <ion-item *ngIf="isShow" (click)="onExit()">\n\n      <ion-icon name=\'exit\' item-start color="{{\'primary\'}}"></ion-icon>\n\n      <ion-label>退出</ion-label>\n\n      <ion-icon name=\'arrow-dropright\' item-end color="{{\'primary\'}}"></ion-icon>\n\n    </ion-item>\n\n  </ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"E:\git_HotlineManagerIonic_new\HotlineManagerIonic\src\pages\setting\setting.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */],
