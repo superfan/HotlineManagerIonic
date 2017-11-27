@@ -28,6 +28,7 @@ import {DataMaterialInfo, MaterialInfoEx, MaterialsInfo, UploadMaterials} from "
 import {ConfigService} from "./ConfigService";
 import {OverdueTime} from "../model/OverdueTime";
 import {FileService} from "./FileService";
+import {Attachment} from "../model/Attachment";
 
 @Injectable()
 export class DataService extends SyncService {
@@ -1017,6 +1018,31 @@ export class DataService extends SyncService {
     super.sendMsg({msgType: MsgType.UploadMaterialInfos});
   }
 
+  /**
+   *
+   * @param url
+   * @param name
+   * @returns {Promise<TResult>}
+   */
+  public playCachedAudio(url: string, name: string): Promise<any> {
+    return this.fileService.checkFile(`${this.fileService.getCacheDir()}/`, name)
+      .then(result => {
+        let path: string = `${this.fileService.getCacheDir()}/${name}`;
+        if (result) {
+          return Promise.resolve(path);
+        } else {
+          return this.downloadService.downloadFile(url, path);
+        }
+      })
+      .then(path => path && this.mediaService.playAudio(path, true));
+  }
+
+  /**
+   * 播放缓存视频
+   * @param url
+   * @param name
+   * @returns {Promise<TResult>}
+   */
   public playCachedVideo(url: string, name: string): Promise<any> {
     return this.fileService.checkFile(`${this.fileService.getCacheDir()}/`, name)
       .then(result => {
@@ -1028,6 +1054,14 @@ export class DataService extends SyncService {
         }
       })
       .then(path => path && this.playVideo(path));
+  }
 
+  /**
+   * 获取附件
+   * @param taskId
+   * @returns {Promise<Array<Attachment>>}
+   */
+  public getAttachments(taskId: string): Promise<Array<Attachment>> {
+    return this.downloadService.getAttachments(taskId);
   }
 }

@@ -329,7 +329,7 @@ export class WorkDetailPage implements OnInit, OnDestroy {
   detailItemSelected(item: Detail): void {
     if (item.key && item.key === "attachments") {
       console.log("attachments");
-      this.navCtrl.push(AttachmentPage);
+      this.navCtrl.push(AttachmentPage, this.taskEx.id.split('#')[0]);
     }
   }
 
