@@ -97,7 +97,7 @@ public class MyPlugin extends CordovaPlugin {
         password = "0000";
         userId = 3;
         userName = "ss1";
-        department = "上水";
+        department = "客服热线部";
         departmentId = 1;
         roles = "worker";
         params = "MyWorkPage";
