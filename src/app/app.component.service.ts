@@ -91,6 +91,9 @@ export class AppComponentService {
           pageIntent.roles = this.globalService.worker;
         }
 
+        // TBD
+        pageIntent.departmentAndId = `${this.globalService.department}#${this.globalService.departmentId}`;
+
         if (!pageIntent.account
           || !pageIntent.userName
           || !pageIntent.departmentAndId
