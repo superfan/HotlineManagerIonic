@@ -395,10 +395,10 @@ export class UploadService extends BaseService {
               // success
               console.log(data);
               let body = JSON.parse(data.response);
-              if (body.fileId && body.url && body.downloadUrl && body.fileType
-                && body.fileHash && body.originFileName) {
-                media.extendedInfo = body;
-                resolve(body.fileId);
+              if (body[0].fileId && body[0].url && body[0].downloadUrl && body[0].fileType
+                && body[0].fileHash && body[0].originFileName) {
+                media.extendedInfo = body[0];
+                resolve(body[0].fileId);
               } else {
                 reject(body.Message ? body.Message : "failure to uploadMedia");
               }
