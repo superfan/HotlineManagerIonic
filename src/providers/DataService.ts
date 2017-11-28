@@ -1064,4 +1064,43 @@ export class DataService extends SyncService {
   public getAttachments(taskId: string): Promise<Array<Attachment>> {
     return this.downloadService.getAttachments(taskId);
   }
+
+  /**
+   * 保存消息
+   * @param data
+   * @returns {any}
+   */
+  public savePushMessage(data: any): Promise<any> {
+    try {
+      if (!data) {
+        return Promise.resolve(false);
+      }
+
+      let message: any = JSON.parse(data);
+      if (!message
+        || !message.hasOwnProperty('type')
+        || message['type'] !== 201
+        || !message.hasOwnProperty('content')
+        || !(message['content'] instanceof Array)) {
+        return Promise.resolve(false);
+      }
+
+      //let type: number = message['type'];
+      let tasks: Task[] = message['content'];
+      for (let task of tasks) {
+        task.taskId += `#${task.assignTime}`; // modify for the rejected task
+      }
+
+      return this.dbService.saveTasks(this.globalService.userId, tasks)
+        .then(result => {
+          if (result) {
+            super.sendMsg({msgType: MsgType.DownloadDetailsOfTasks});
+          }
+          return result;
+        });
+    } catch (err) {
+      console.error(err);
+      return Promise.reject(err);
+    }
+  }
 }

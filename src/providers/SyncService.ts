@@ -21,7 +21,7 @@ import {DataMaterialInfo} from "../model/MaterialsInfo";
 
 export enum MsgType {
   DownloadTasksAndDetails,
-    //DownloadDetailOfTask,
+  DownloadDetailsOfTasks,
   UploadMediasOfHistory,
   UploadHistoriesAndMedias, //
   UploadMaterialInfos,
@@ -459,6 +459,9 @@ export abstract class SyncService {
         switch (syncMsg.msgType) {
           case MsgType.DownloadTasksAndDetails:
             this.downloadTasks(syncMsg.msgType);
+            break;
+          case MsgType.DownloadDetailsOfTasks:
+            this.downloadDetails(syncMsg.msgType);
             break;
           case MsgType.UploadMediasOfHistory:
             this.uploadMedias(syncMsg.msgType, syncMsg.taskId);
