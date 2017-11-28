@@ -5,8 +5,10 @@ import {SplashScreen} from '@ionic-native/splash-screen';
 import {AppComponentService} from "./app.component.service";
 import {GlobalService} from "../providers/GlobalService";
 import {MyWorkPage} from "../pages/mywork/mywork";
+import {DataService} from "../providers/DataService";
 //import {MainPage} from "../pages/main/main";
 //import {TabsPage} from "../pages/tabs/tabs";
+declare let cordova: any;
 
 @Component({
   templateUrl: 'app.html',
@@ -19,7 +21,8 @@ export class MyApp {
               statusBar: StatusBar,
               splashScreen: SplashScreen,
               private appComponentService: AppComponentService,
-              private globalService: GlobalService) {
+              private globalService: GlobalService,
+              private dataService: DataService) {
     this.rootPage = undefined;
     this.globalService.showLoading();
     platform.ready()
@@ -38,7 +41,27 @@ export class MyApp {
       })
       .then(() => this.appComponentService.downloadConstantData())
       .catch(error => console.error(error))
-      .then(() => this.globalService.hideLoading());
+      .then(() => this.globalService.hideLoading())
+      .then(() => this.handleOthers());
+  }
+
+  private handleOthers(): void {
+    if (this.globalService.isChrome) {
+      return;
+    }
+
+    let dataService: DataService = this.dataService;
+    cordova.plugins.MyPlugin.getPushMessage(
+      function (data) {
+        console.log(data);
+        dataService.savePushMessage(data)
+          .then(result => console.log(result))
+          .catch(err => console.error(err));
+      },
+      function (error) {
+        console.error(error);
+      }
+    );
   }
 }
 
