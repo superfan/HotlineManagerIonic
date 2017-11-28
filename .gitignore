@@ -26,6 +26,7 @@ hooks/
 plugins/ios.json
 #www/
 $RECYCLE.BIN/
+www/build/
 
 .DS_Store
 Thumbs.db
