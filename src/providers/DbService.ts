@@ -871,7 +871,7 @@ export class DbService {
           }
 
           if (since !== undefined && since !== null && count !== undefined && count !== null) {
-            sql += ` ORDER BY ID LIMIT ${count} OFFSET ${since};`;
+            sql += ` ORDER BY ID DESC LIMIT ${count} OFFSET ${since};`;
           } else {
             sql += ' ORDER BY ID;';
           }
@@ -1342,7 +1342,7 @@ export class DbService {
    * @returns {string}
    */
   private toTaskInsertSql(task: Task): string {
-    return `INSERT INTO GD_TASKS VALUES (null, ${this.globalService.userId}, '${task.taskId}', '${task.taskType}', '${task.desc}', '${task.source}', ${task.createTime}, ${task.assignTime}, ${task.acceptTime}, ${task.goTime}, ${task.arrivedTime}, ${task.replyTime}, ${task.compltedTime}, ${task.state}, ${task.location.type}, ${task.location.lng}, ${task.location.lat}, null);`;
+    return `INSERT INTO GD_TASKS VALUES (null, ${this.globalService.userId}, '${task.taskId}', '${task.taskType}', '${task.desc}', '${task.source}', ${task.createTime}, ${task.assignTime}, ${task.acceptTime}, ${task.goTime}, ${task.arrivedTime}, ${task.replyTime}, ${task.compltedTime}, ${task.state}, '${task.location.type}', '${task.location.lng}', '${task.location.lat}', null);`;
   }
 
   /**

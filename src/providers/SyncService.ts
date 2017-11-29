@@ -96,7 +96,7 @@ export abstract class SyncService {
    * @returns {any}
    */
   public accept(acceptInfo: AcceptInfo, task: Task,
-                output: { uploadedFlag: number } = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
+                output: {uploadedFlag: number} = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
     if (this.configService.isDebugMode()) {
       debugger;
     }
@@ -146,7 +146,7 @@ export abstract class SyncService {
    * @returns {any}
    */
   public go(goInfo: GoInfo, task: Task,
-            output: { uploadedFlag: number } = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
+            output: {uploadedFlag: number} = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
     if (this.configService.isDebugMode()) {
       debugger;
     }
@@ -196,7 +196,7 @@ export abstract class SyncService {
    * @returns {any}
    */
   public arrive(arriveInfo: ArriveInfo, task: Task,
-                output: { uploadedFlag: number } = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
+                output: {uploadedFlag: number} = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
     if (this.configService.isDebugMode()) {
       debugger;
     }
@@ -248,7 +248,7 @@ export abstract class SyncService {
    * @returns {any}
    */
   public reply(replyInfo: ReplyInfo, task: Task, taskDetail: TaskDetail, mediaNames: Array<string>,
-               output: { uploadedFlag: number } = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
+               output: {uploadedFlag: number} = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
     if (this.configService.isDebugMode()) {
       debugger;
     }
@@ -302,7 +302,7 @@ export abstract class SyncService {
    * @returns {any}
    */
   public reject(rejectInfo: RejectInfo, task: Task,
-                output: { uploadedFlag: number } = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
+                output: {uploadedFlag: number} = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
     if (this.configService.isDebugMode()) {
       debugger;
     }
@@ -352,7 +352,7 @@ export abstract class SyncService {
    * @returns {any}
    */
   public delay(delayInfo: DelayInfo, task: Task,
-               output: { uploadedFlag: number } = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
+               output: {uploadedFlag: number} = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
     if (this.configService.isDebugMode()) {
       debugger;
     }
@@ -402,7 +402,7 @@ export abstract class SyncService {
    * @returns {any}
    */
   public cancel(cancelInfo: CancelInfo, task: Task,
-                output: { uploadedFlag: number } = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
+                output: {uploadedFlag: number} = {uploadedFlag: this.globalService.uploadedFlagForLocal}): Promise<boolean> {
     if (this.configService.isDebugMode()) {
       debugger;
     }
@@ -707,7 +707,9 @@ export abstract class SyncService {
       let promises: Array<Promise<boolean>> = mediaList.map(media => this.uploadOneMediaV2(media));
       return Promise.all(promises)
         .then(result => {
-          let files: Array<MediaExtendedInfo> = mediaList.map(media => media.extendedInfo);
+          let files: Array<MediaExtendedInfo> =
+            mediaList.filter(media => media.extendedInfo && media.extendedInfo instanceof Array && media.extendedInfo.length > 0)
+              .map(media => media.extendedInfo[0]);
           return this.uploadService.uploadMediaIdsV2(mediaList[0].taskId.split('#')[0], this.globalService.userId, files);
         })
         .then(result => {
