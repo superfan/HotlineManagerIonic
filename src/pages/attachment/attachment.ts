@@ -4,6 +4,7 @@ import {DataService} from "../../providers/DataService";
 import {GlobalService} from "../../providers/GlobalService";
 import {Attachment} from "../../model/Attachment";
 import {PhotoViewer} from "@ionic-native/photo-viewer";
+import {ConfigService} from "../../providers/ConfigService";
 
 @Component({
   selector: 'page-attachment',
@@ -25,18 +26,22 @@ export class AttachmentPage implements OnInit {
   private pictureCount: number = 0;
   private audioCount: number = 0;
   private videoCount: number = 0;
+  private baseUri: string;
 
   constructor(public navCtrl: NavController,
               private dataService: DataService,
               private globalService: GlobalService,
               private navParams: NavParams,
               private alertCtrl: AlertController,
-              private photoViewer: PhotoViewer) {
+              private photoViewer: PhotoViewer,
+              private configService: ConfigService) {
     this.taskId = this.navParams.data;
   }
 
   ngOnInit(): void {
-    this.dataService.getAttachments(this.taskId)
+    this.configService.getFileBaseUri()
+      .then(uri => this.baseUri = uri)
+      .then(() => this.dataService.getAttachments(this.taskId))
       .then(attachments => this.parseAttachments(attachments))
       .catch(error => console.error(error));
   }
@@ -51,12 +56,12 @@ export class AttachmentPage implements OnInit {
       if (!fileType) {
       } else if ("image/jpeg" === fileType) {
         if (this.pictureCount < this.pictureMaxCount && attachment.url) {
-          this.pictures[this.pictureCount++] = attachment.url;
+          this.pictures[this.pictureCount++] = this.replaceUrl(attachment.url);
         }
       } else if ("audio/mp3" === fileType) {
         if (this.audioCount < this.audioMaxCount && attachment.downloadUrl && attachment.originFileName) {
           this.audios[this.audioCount++] = {
-            url: attachment.downloadUrl,
+            url: this.replaceUrl(attachment.downloadUrl),
             name: attachment.originFileName,
             alias: `语音${this.audioCount}`
           };
@@ -64,12 +69,25 @@ export class AttachmentPage implements OnInit {
       } else if ("video/mp4" === fileType) {
         if (this.videoCount < this.videoMaxCount && attachment.downloadUrl && attachment.originFileName) {
           this.videos[this.videoCount++] = {
-            url: attachment.downloadUrl,
+            url: this.replaceUrl(attachment.downloadUrl),
             name: attachment.originFileName
           };
         }
       }
     });
+  }
+
+  private replaceUrl(srcUrl: string): string {
+    let desUrl: string;
+    if (this.baseUri && srcUrl) {
+      let regexp = /\d+\.\d+\.\d+.\d+:\d+/;
+      let matches: string[] = this.baseUri.match(regexp);
+      if (matches && matches.length > 0) {
+        let match: string = matches[0];
+        desUrl = srcUrl.replace(regexp, match);
+      }
+    }
+    return desUrl ? desUrl : srcUrl;
   }
 
   /**

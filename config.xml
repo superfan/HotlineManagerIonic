@@ -100,8 +100,8 @@
     <plugin name="cordova-sqlite-storage" spec="^2.1.0" />
     <plugin name="uk.co.workingedge.cordova.plugin.sqliteporter" spec="^1.0.2" />
     <plugin name="cordova-plugin-statusbar" spec="^2.2.3" />
-    <plugin name="cordova.plugin.MyPlugin" spec=".\3hplugins\MyPlugin" />
     <plugin name="com.moust.cordova.videoplayer" spec="~1.0.1" />
     <plugin name="cordova-plugin-console" spec="^1.1.0" />
     <plugin name="com-sarriaroman-photoviewer" spec="^1.1.11" />
+    <plugin name="cordova.plugin.MyPlugin" spec=".\3hplugins\MyPlugin" />
 </widget>
