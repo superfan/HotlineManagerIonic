@@ -93,9 +93,9 @@ public class MyPlugin extends CordovaPlugin {
         accessToken = getString(bundle.getString(ACCESS_TOKEN));
         extendedInfo = getString(bundle.getString(EXTENDED_INFO));
       } else {
-        account = "ss1";
+        account = "wqry";
         password = "0000";
-        userId = 3;
+        userId = 10;
         userName = "ss1";
         department = "客服热线部";
         departmentId = 1;
@@ -165,10 +165,14 @@ public class MyPlugin extends CordovaPlugin {
     try {
       PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, message);
       pluginResult.setKeepCallback(true);
-      pushMessageCallbackContext.sendPluginResult(pluginResult);
+      if (pushMessageCallbackContext != null) {
+        pushMessageCallbackContext.sendPluginResult(pluginResult);
+      }
     } catch (Exception e) {
       e.printStackTrace();
-      pushMessageCallbackContext.error(e.getMessage());
+      if (pushMessageCallbackContext != null) {
+        pushMessageCallbackContext.error(e.getMessage());
+      }
     }
   }
 
@@ -176,10 +180,14 @@ public class MyPlugin extends CordovaPlugin {
     try {
       PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, info);
       pluginResult.setKeepCallback(true);
-      changedInfoCallbackContext.sendPluginResult(pluginResult);
+      if (changedInfoCallbackContext != null) {
+        changedInfoCallbackContext.sendPluginResult(pluginResult);
+      }
     } catch (Exception e) {
       e.printStackTrace();
-      changedInfoCallbackContext.error(e.getMessage());
+      if (changedInfoCallbackContext != null) {
+        changedInfoCallbackContext.error(e.getMessage());
+      }
     }
   }
 
