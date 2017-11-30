@@ -46,6 +46,17 @@ public class MainApplication extends Application {
   private static final String HOST_SERVICE_NAME = "com.sh3h.mainshell.service.HostService";
   private static final String BINDING_NAME = "bindingName";
 
+  public static final String ACCOUNT = "account";
+  public static final String PASSWORD = "password";
+  public static final String USER_ID = "userId";
+  public static final String USER_NAME = "userName";
+  public static final String DEPARTMENT = "department";
+  public static final String DEPARTMENT_ID = "departmentId";
+  public static final String ROLES = "roles";
+  public static final String PARAMS = "params";
+  public static final String ACCESS_TOKEN = "accessToken";
+  public static final String EXTENDED_INFO = "extendedInfo";
+
   private IMainService mainService;
   private boolean mIsGpsLocated;
   private MyLocation mMyLocation;
