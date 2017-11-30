@@ -54,11 +54,11 @@ export class AttachmentPage implements OnInit {
     attachments.forEach(attachment => {
       let fileType: string = attachment.fileType;
       if (!fileType) {
-      } else if ("image/jpeg" === fileType) {
+      } else if (fileType.startsWith('image/') || fileType.startsWith('png') || fileType.startsWith('jpg')) {
         if (this.pictureCount < this.pictureMaxCount && attachment.url) {
           this.pictures[this.pictureCount++] = this.replaceUrl(attachment.url);
         }
-      } else if ("audio/mp3" === fileType) {
+      } else if (fileType.startsWith('audio/') || fileType.startsWith('mp3')) {
         if (this.audioCount < this.audioMaxCount && attachment.downloadUrl && attachment.originFileName) {
           this.audios[this.audioCount++] = {
             url: this.replaceUrl(attachment.downloadUrl),
@@ -66,7 +66,7 @@ export class AttachmentPage implements OnInit {
             alias: `语音${this.audioCount}`
           };
         }
-      } else if ("video/mp4" === fileType) {
+      } else if (fileType.startsWith('video/') || fileType.startsWith('mp4')) {
         if (this.videoCount < this.videoMaxCount && attachment.downloadUrl && attachment.originFileName) {
           this.videos[this.videoCount++] = {
             url: this.replaceUrl(attachment.downloadUrl),

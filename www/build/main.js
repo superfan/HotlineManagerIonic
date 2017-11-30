@@ -1367,15 +1367,15 @@ var UploadService = (function (_super) {
                 switch (media.fileType) {
                     case __WEBPACK_IMPORTED_MODULE_6__model_Media__["a" /* MediaType */].Picture:
                         fileUrl = _this.fileService.getImagesDir();
-                        fileType = 'IMAGE';
+                        fileType = 'image';
                         break;
                     case __WEBPACK_IMPORTED_MODULE_6__model_Media__["a" /* MediaType */].Audio:
                         fileUrl = _this.fileService.getSoundsDir();
-                        fileType = 'SOUND';
+                        fileType = 'sound';
                         break;
                     case __WEBPACK_IMPORTED_MODULE_6__model_Media__["a" /* MediaType */].Vedio:
                         fileUrl = _this.fileService.getVideosDir();
-                        fileType = 'video/mp4';
+                        fileType = 'video';
                         break;
                     default:
                         return reject('type is error');
@@ -5321,12 +5321,12 @@ var AttachmentPage = (function () {
             var fileType = attachment.fileType;
             if (!fileType) {
             }
-            else if ("image/jpeg" === fileType) {
+            else if (fileType.startsWith('image/') || fileType.startsWith('png') || fileType.startsWith('jpg')) {
                 if (_this.pictureCount < _this.pictureMaxCount && attachment.url) {
                     _this.pictures[_this.pictureCount++] = _this.replaceUrl(attachment.url);
                 }
             }
-            else if ("audio/mp3" === fileType) {
+            else if (fileType.startsWith('audio/') || fileType.startsWith('mp3')) {
                 if (_this.audioCount < _this.audioMaxCount && attachment.downloadUrl && attachment.originFileName) {
                     _this.audios[_this.audioCount++] = {
                         url: _this.replaceUrl(attachment.downloadUrl),
@@ -5335,7 +5335,7 @@ var AttachmentPage = (function () {
                     };
                 }
             }
-            else if ("video/mp4" === fileType) {
+            else if (fileType.startsWith('video/') || fileType.startsWith('mp4')) {
                 if (_this.videoCount < _this.videoMaxCount && attachment.downloadUrl && attachment.originFileName) {
                     _this.videos[_this.videoCount++] = {
                         url: _this.replaceUrl(attachment.downloadUrl),
@@ -5413,7 +5413,7 @@ var AttachmentPage = (function () {
 }());
 AttachmentPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-attachment',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\attachment\attachment.html"*/'<ion-header>\n  <ion-navbar color="primary">\n    <ion-title>\n      {{title}}\n    </ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content class="page-attachment">\n  <button ion-item icon-left>\n    <ion-icon name="camera"></ion-icon>\n    照片\n  </button>\n\n  <ion-grid style="width: 100%; height: 100px;">\n    <ion-row>\n      <ion-col col-4 class="col-img" *ngIf="pictures[0]">\n        <img class="picture" src="{{pictures[0]}}" (click)="onPreviewPicture(pictures[0])"/>\n      </ion-col>\n\n      <ion-col col-4 class="col-img" *ngIf="pictures[1]">\n        <img class="picture" src="{{pictures[1]}}" (click)="onPreviewPicture(pictures[1])"/>\n      </ion-col>\n\n      <ion-col col-4 class="col-img" *ngIf="pictures[2]">\n        <img class="picture" src="{{pictures[2]}}" (click)="onPreviewPicture(pictures[2])"/>\n      </ion-col>\n    </ion-row>\n  </ion-grid>\n\n  <ion-grid style="width: 100%; height: 100px;" *ngIf="pictureCount > 3">\n    <ion-row>\n      <ion-col col-4 class="col-img" *ngIf="pictures[0]">\n        <img class="picture" src="{{pictures[3]}}" (click)="onPreviewPicture(pictures[3])"/>\n      </ion-col>\n\n      <ion-col col-4 class="col-img" *ngIf="pictures[1]">\n        <img class="picture" src="{{pictures[4]}}" (click)="onPreviewPicture(pictures[4])"/>\n      </ion-col>\n\n      <ion-col col-4 class="col-img" *ngIf="pictures[2]">\n        <img class="picture" src="{{pictures[5]}}" (click)="onPreviewPicture(pictures[5])"/>\n      </ion-col>\n    </ion-row>\n  </ion-grid>\n  <br>\n  <br>\n\n  <button ion-item icon-left>\n    <ion-icon name="microphone"></ion-icon>\n    语音\n  </button>\n\n  <ion-grid style="width: 100%; height: 150px;">\n    <ion-row *ngIf="audios[0]" class="audio">\n      <ion-col col-6 class="audio-info">{{audios[0].alias}}</ion-col>\n      <ion-col col-2>\n        <ion-icon name="play" class="audio-btn" (click)="onPlay(audios[0])"></ion-icon>\n      </ion-col>\n      <ion-col></ion-col>\n    </ion-row>\n\n    <ion-row *ngIf="audios[1]" class="audio">\n      <ion-col col-6 class="audio-info">{{audios[1].alias}}</ion-col>\n      <ion-col col-2>\n        <ion-icon name="play" class="audio-btn" (click)="onPlay(audios[1])"></ion-icon>\n      </ion-col>\n      <ion-col></ion-col>\n    </ion-row>\n\n    <ion-row *ngIf="audios[2]" class="audio">\n      <ion-col col-6 class="audio-info">{{audios[2].alias}}</ion-col>\n      <ion-col col-2>\n        <ion-icon name="play" class="audio-btn" (click)="onPlay(audios[2])"></ion-icon>\n      </ion-col>\n      <ion-col></ion-col>\n    </ion-row>\n  </ion-grid>\n\n  <br>\n  <br>\n  <button ion-item icon-left>\n    <ion-icon name="videocam"></ion-icon>\n    视频\n  </button>\n\n  <ion-grid style="width: 100%; height: 100px;">\n    <ion-row>\n      <ion-col col-4 class="col-video" *ngIf="videos[0]">\n        <video class="video" (click)="onPlayVideo(videos[0])" src="{{videos[0].url}}"></video>\n      </ion-col>\n\n      <ion-col col-4 class="col-video" *ngIf="videos[1]">\n        <video class="video" (click)="onPlayVideo(videos[1])" src="{{videos[1].url}}"></video>\n      </ion-col>\n\n      <ion-col col-4 class="col-video" *ngIf="pictures[2]">\n        <video class="video" (click)="onPlayVideo(videos[2])" src="{{videos[2].url}}"></video>\n      </ion-col>\n    </ion-row>\n  </ion-grid>\n  <br>\n  <br>\n</ion-content>\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\attachment\attachment.html"*/
+        selector: 'page-attachment',template:/*ion-inline-start:"D:\work\git\HotlineManagerIonic\src\pages\attachment\attachment.html"*/'<ion-header>\n  <ion-navbar color="primary">\n    <ion-title>\n      {{title}}\n    </ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content class="page-attachment">\n  <button ion-item icon-left>\n    <ion-icon name="camera"></ion-icon>\n    照片\n  </button>\n\n  <ion-grid style="width: 100%; height: 100px;">\n    <ion-row>\n      <ion-col col-4 class="col-img" *ngIf="pictures[0]">\n        <img class="picture" src="{{pictures[0]}}" (click)="onPreviewPicture(pictures[0])"/>\n      </ion-col>\n\n      <ion-col col-4 class="col-img" *ngIf="pictures[1]">\n        <img class="picture" src="{{pictures[1]}}" (click)="onPreviewPicture(pictures[1])"/>\n      </ion-col>\n\n      <ion-col col-4 class="col-img" *ngIf="pictures[2]">\n        <img class="picture" src="{{pictures[2]}}" (click)="onPreviewPicture(pictures[2])"/>\n      </ion-col>\n    </ion-row>\n  </ion-grid>\n\n  <ion-grid style="width: 100%; height: 100px;" *ngIf="pictureCount > 3">\n    <ion-row>\n      <ion-col col-4 class="col-img" *ngIf="pictures[0]">\n        <img class="picture" src="{{pictures[3]}}" (click)="onPreviewPicture(pictures[3])"/>\n      </ion-col>\n\n      <ion-col col-4 class="col-img" *ngIf="pictures[1]">\n        <img class="picture" src="{{pictures[4]}}" (click)="onPreviewPicture(pictures[4])"/>\n      </ion-col>\n\n      <ion-col col-4 class="col-img" *ngIf="pictures[2]">\n        <img class="picture" src="{{pictures[5]}}" (click)="onPreviewPicture(pictures[5])"/>\n      </ion-col>\n    </ion-row>\n  </ion-grid>\n  <br>\n  <br>\n\n  <button ion-item icon-left>\n    <ion-icon name="microphone"></ion-icon>\n    语音\n  </button>\n\n  <ion-grid style="width: 100%; height: 150px;">\n    <ion-row *ngIf="audios[0]" class="audio">\n      <ion-col col-6 class="audio-info">{{audios[0].alias}}</ion-col>\n      <ion-col col-2>\n        <ion-icon name="play" class="audio-btn" (click)="onPlay(audios[0])"></ion-icon>\n      </ion-col>\n      <ion-col></ion-col>\n    </ion-row>\n\n    <ion-row *ngIf="audios[1]" class="audio">\n      <ion-col col-6 class="audio-info">{{audios[1].alias}}</ion-col>\n      <ion-col col-2>\n        <ion-icon name="play" class="audio-btn" (click)="onPlay(audios[1])"></ion-icon>\n      </ion-col>\n      <ion-col></ion-col>\n    </ion-row>\n\n    <ion-row *ngIf="audios[2]" class="audio">\n      <ion-col col-6 class="audio-info">{{audios[2].alias}}</ion-col>\n      <ion-col col-2>\n        <ion-icon name="play" class="audio-btn" (click)="onPlay(audios[2])"></ion-icon>\n      </ion-col>\n      <ion-col></ion-col>\n    </ion-row>\n  </ion-grid>\n\n  <br>\n  <br>\n  <button ion-item icon-left>\n    <ion-icon name="videocam"></ion-icon>\n    视频\n  </button>\n\n  <ion-grid style="width: 100%; height: 100px;">\n    <ion-row>\n      <ion-col col-4 class="col-video" *ngIf="videos[0]">\n        <video class="video" (click)="onPlayVideo(videos[0])" src="{{videos[0].url}}"></video>\n      </ion-col>\n\n      <ion-col col-4 class="col-video" *ngIf="videos[1]">\n        <video class="video" (click)="onPlayVideo(videos[1])" src="{{videos[1].url}}"></video>\n      </ion-col>\n\n      <ion-col col-4 class="col-video" *ngIf="videos[2]">\n        <video class="video" (click)="onPlayVideo(videos[2])" src="{{videos[2].url}}"></video>\n      </ion-col>\n    </ion-row>\n  </ion-grid>\n  <br>\n  <br>\n</ion-content>\n'/*ion-inline-end:"D:\work\git\HotlineManagerIonic\src\pages\attachment\attachment.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_2__providers_DataService__["a" /* DataService */],

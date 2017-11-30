@@ -17,6 +17,17 @@ import cordova.plugin.MyPlugin.PageIntent;
 import cordova.plugin.MyPlugin.MyLocation;
 import io.ionic.MainApplication;
 
+import static io.ionic.MainApplication.ACCESS_TOKEN;
+import static io.ionic.MainApplication.ACCOUNT;
+import static io.ionic.MainApplication.DEPARTMENT;
+import static io.ionic.MainApplication.DEPARTMENT_ID;
+import static io.ionic.MainApplication.EXTENDED_INFO;
+import static io.ionic.MainApplication.PARAMS;
+import static io.ionic.MainApplication.PASSWORD;
+import static io.ionic.MainApplication.ROLES;
+import static io.ionic.MainApplication.USER_ID;
+import static io.ionic.MainApplication.USER_NAME;
+
 /**
  * This class echoes a string called from JavaScript.
  */
@@ -26,17 +37,6 @@ public class MyPlugin extends CordovaPlugin {
   private static final String ACTION_QUIT = "quit";
   private static final String ACTION_GET_PUSH_MESSAGE = "getPushMessage";
   private static final String ACTION_GET_CHANGED_INFO = "getChangedInfo";
-
-  private static final String ACCOUNT = "account";
-  private static final String PASSWORD = "password";
-  private static final String USER_ID = "userId";
-  private static final String USER_NAME = "userName";
-  private static final String DEPARTMENT = "department";
-  private static final String DEPARTMENT_ID = "departmentId";
-  private static final String ROLES = "roles";
-  private static final String PARAMS = "params";
-  private static final String ACCESS_TOKEN = "accessToken";
-  private static final String EXTENDED_INFO = "extendedInfo";
 
   private CallbackContext pushMessageCallbackContext;
   private CallbackContext changedInfoCallbackContext;

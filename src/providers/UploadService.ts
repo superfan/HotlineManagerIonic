@@ -364,15 +364,15 @@ export class UploadService extends BaseService {
           switch (media.fileType) {
             case MediaType.Picture:
               fileUrl = this.fileService.getImagesDir();
-              fileType = 'IMAGE';
+              fileType = 'image';
               break;
             case MediaType.Audio:
               fileUrl = this.fileService.getSoundsDir();
-              fileType = 'SOUND';
+              fileType = 'sound';
               break;
             case MediaType.Vedio:
               fileUrl = this.fileService.getVideosDir();
-              fileType = 'video/mp4';
+              fileType = 'video';
               break;
             default:
               return reject('type is error');

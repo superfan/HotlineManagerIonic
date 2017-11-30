@@ -34,6 +34,17 @@ import java.lang.reflect.Method;
 import cordova.plugin.MyPlugin.MyPlugin;
 import io.ionic.MainApplication;
 
+import static io.ionic.MainApplication.ACCESS_TOKEN;
+import static io.ionic.MainApplication.ACCOUNT;
+import static io.ionic.MainApplication.DEPARTMENT;
+import static io.ionic.MainApplication.DEPARTMENT_ID;
+import static io.ionic.MainApplication.EXTENDED_INFO;
+import static io.ionic.MainApplication.PARAMS;
+import static io.ionic.MainApplication.PASSWORD;
+import static io.ionic.MainApplication.ROLES;
+import static io.ionic.MainApplication.USER_ID;
+import static io.ionic.MainApplication.USER_NAME;
+
 
 public class MainActivity extends CordovaActivity implements MainApplication.OnAidlListener {
   @Override
@@ -79,6 +90,21 @@ public class MainActivity extends CordovaActivity implements MainApplication.OnA
   @Override
   protected void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
+    MainApplication mainApplication = ((MainApplication)getApplication());
+    Bundle bundle = mainApplication.getBundle();
+    if (bundle != null) {
+      outState.putString(ACCOUNT, bundle.getString(ACCOUNT));
+      outState.putString(PASSWORD, bundle.getString(PASSWORD));
+      outState.putInt(USER_ID, bundle.getInt(USER_ID));
+      outState.putString(USER_NAME, bundle.getString(USER_NAME));
+      outState.putString(DEPARTMENT, bundle.getString(DEPARTMENT));
+      outState.putInt(DEPARTMENT_ID, bundle.getInt(DEPARTMENT_ID));
+      outState.putString(ROLES, bundle.getString(ROLES));
+      outState.putString(PARAMS, bundle.getString(PARAMS));
+      outState.putString(ACCESS_TOKEN, bundle.getString(ACCESS_TOKEN));
+      outState.putString(EXTENDED_INFO, bundle.getString(EXTENDED_INFO));
+    }
+
     Log.i(TAG, "---onSaveInstanceState---");
   }
 
