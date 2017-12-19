@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {Platform} from 'ionic-angular';
+import {AlertController, Platform} from 'ionic-angular';
 import {StatusBar} from '@ionic-native/status-bar';
 import {SplashScreen} from '@ionic-native/splash-screen';
 import {AppComponentService} from "./app.component.service";
@@ -22,7 +22,8 @@ export class MyApp {
               splashScreen: SplashScreen,
               private appComponentService: AppComponentService,
               private globalService: GlobalService,
-              private dataService: DataService) {
+              private dataService: DataService,
+              private alertCtrl: AlertController) {
     this.rootPage = undefined;
     this.globalService.showLoading();
     platform.ready()
@@ -50,13 +51,41 @@ export class MyApp {
       return;
     }
 
+    let alertCtrl: AlertController = this.alertCtrl;
+    let alert: any;
     let dataService: DataService = this.dataService;
     cordova.plugins.MyPlugin.getPushMessage(
       function (data) {
         console.log(data);
-        dataService.savePushMessage(data)
-          .then(result => console.log(result))
-          .catch(err => console.error(err));
+        if (alert) {
+          return;
+        }
+
+        alert = alertCtrl.create({
+          title: '提示',
+          message: '您有新工单，是否下载?',
+          buttons: [
+            {
+              text: '取消',
+              role: 'cancel',
+              handler: () => {
+                alert = undefined;
+                console.log('Cancel clicked');
+              }
+            },
+            {
+              text: '确定',
+              handler: () => {
+                alert = undefined;
+                console.log('Ok clicked');
+                dataService.parsePushMessage(data)
+                  .then(result => console.log(result))
+                  .catch(err => console.error(err));
+              }
+            }
+          ]
+        });
+        alert.present();
       },
       function (error) {
         console.error(error);

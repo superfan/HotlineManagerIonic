@@ -1103,4 +1103,32 @@ export class DataService extends SyncService {
       return Promise.reject(err);
     }
   }
+
+  /**
+   * 解析消息
+   * @param data
+   * @returns {Promise<any>}
+   */
+  public parsePushMessage(data: any): Promise<any> {
+    try {
+      if (!data) {
+        return Promise.resolve(false);
+      }
+
+      let message: any = JSON.parse(data);
+      if (!message
+        || !message.hasOwnProperty('type')
+        || message['type'] !== 201
+        || !message.hasOwnProperty('content')
+        || !(message['content'] instanceof Array)) {
+        return Promise.resolve(false);
+      }
+
+      this.downloadTasksAndDetails();
+      return Promise.resolve(true);
+    } catch (err) {
+      console.error(err);
+      return Promise.reject(err);
+    }
+  }
 }
