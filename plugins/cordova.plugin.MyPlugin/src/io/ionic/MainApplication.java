@@ -31,6 +31,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 
 public class MainApplication extends Application {
@@ -289,9 +290,9 @@ public class MainApplication extends Application {
 
         for (int i = 0; i < dataArray.length(); i++) {
           String str = dataArray.getString(i);
-          if (str.startsWith(MyModule.MQTT) && str.contains(MyModule.SEPARATOR)) {
+          if (str.startsWith(MyModule.PUSH_MESSAGE) && str.contains(MyModule.SEPARATOR)) {
             int index = str.indexOf(MyModule.SEPARATOR);
-            parseMqtt(str.substring(index + 1));
+            parsePushMessage(str.substring(index + 1));
           } else if (str.startsWith(MyModule.CLEAR_CACHE)) {
             clearCache();
           } else if (str.startsWith(MyModule.RESTORE_FACTORY)) {
@@ -311,7 +312,7 @@ public class MainApplication extends Application {
       }
     }
 
-    private void parseMqtt(String info) throws Exception {
+    private void parsePushMessage(String info) throws Exception {
       if (isNullOrEmpty(info)) {
         return;
       }
@@ -329,6 +330,21 @@ public class MainApplication extends Application {
       if (mMainApplication.mOnAidlListener != null) {
         mMainApplication.mOnAidlListener.handlePushMessage(info);
       }
+
+      try {
+        JSONObject jsObject = new JSONObject();
+        jsObject.put(MyModule.PACKAGE_NAME, mMainApplication.getPackageName());
+        jsObject.put(MyModule.ACTIVITY_NAME, mMainApplication.getPackageName());
+
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.put(String.format(Locale.CHINESE, "%s%s%s", MyModule.POPUP_MESSAGE, MyModule.SEPARATOR, info));
+        jsObject.put(MyModule.DATA, jsonArray);
+
+        mMainApplication.mainService.setMyModule(new MyModule(jsObject.toString()));
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+
       //int type = jsonObject.optInt(messageType);
       //JSONArray jsonArray = jsonObject.optJSONArray(messageContent);
 //      Observable<Boolean> observable =
