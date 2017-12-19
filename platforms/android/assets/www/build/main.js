@@ -7078,7 +7078,7 @@ var ItemId;
     ItemId[ItemId["Materials"] = 6] = "Materials";
 })(ItemId || (ItemId = {}));
 var MainPage = (function () {
-    function MainPage(navCtrl,
+    function MainPage(navCtrl, 
         //private events: Events,
         //private dataService: DataService,
         globalService) {
@@ -10523,7 +10523,7 @@ var MyWorkPage = (function () {
                  } catch (err) {
                  console.error(err);
                  }
-
+      
                  return Promise.resolve(result);
                  });*/
             }
@@ -14903,7 +14903,7 @@ var GlobalService = (function () {
         this.loadingCtrl = loadingCtrl;
         this.storage = storage;
         this.myPlugin = myPlugin;
-        this.isChrome = false;
+        this.isChrome = true;
         this.httpCode = 0;
         this.httpSuccessStatusCode = 200;
         this.taskSinceDefault = 0;
