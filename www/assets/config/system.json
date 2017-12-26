@@ -15,7 +15,7 @@
     "delayReply": 1800000,
     "checkInterval": 60000
   },
-  "sys.region": "shanghai",
+  "sys.region": "fushun",
   "sys.new.file.service": false,
   "sys.material.unit": [
     {

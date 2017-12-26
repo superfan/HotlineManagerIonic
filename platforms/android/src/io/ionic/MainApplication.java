@@ -37,9 +37,13 @@ import java.util.Locale;
 public class MainApplication extends Application {
   public interface OnAidlListener {
     void handlePushMessage(String message);
+
     void clearCache();
+
     void restoreFactory();
+
     void handlePhotoQuality(String info);
+
     void handleOuterNetwork(String info);
   }
 
@@ -301,7 +305,8 @@ public class MainApplication extends Application {
             handlePhotoQuality(str);
           } else if (str.startsWith(MyModule.OUTER_NETWORK)) {
             handleOuterNetwork(str);
-          } if (str.startsWith(MyModule.GPS_NOT_OPENED)) {
+          }
+          if (str.startsWith(MyModule.GPS_NOT_OPENED)) {
 
           } else if (str.startsWith(MyModule.LOGOUT_SUB_SYSTEM)) {
             logoutSubSystem();
@@ -323,7 +328,9 @@ public class MainApplication extends Application {
       final int updateTaskState = 202;
 
       JSONObject jsonObject = new JSONObject(info);
-      if (jsonObject.isNull(messageType) || jsonObject.isNull(messageContent)) {
+      if (jsonObject.isNull(messageType)
+        || jsonObject.isNull(messageContent)
+        || jsonObject.getInt(messageType) != newTask) {
         return;
       }
 

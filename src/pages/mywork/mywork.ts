@@ -397,7 +397,9 @@ export class MyWorkPage implements OnInit, OnDestroy {
     return this.configService.getSysRegion()
       .then(region => {
         if (region && region === ConfigService.fushunRegion) {
-          this.showMaterial = true;
+          setTimeout(() => {
+            this.showMaterial = true;
+          }, 100);
         }
       })
       .catch(error => console.error(error))

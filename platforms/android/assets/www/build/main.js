@@ -10277,7 +10277,6 @@ var MyWorkPage = (function () {
             .then(function (data) {
             _this.infiniteScroll.enable(data);
             _this.getTaskCount();
-            debugger;
             if (_this.globalService.needDownloadTasks) {
                 _this.globalService.needDownloadTasks = false;
                 _this.doRefresh(undefined);
@@ -10584,7 +10583,9 @@ var MyWorkPage = (function () {
         return this.configService.getSysRegion()
             .then(function (region) {
             if (region && region === __WEBPACK_IMPORTED_MODULE_10__providers_ConfigService__["a" /* ConfigService */].fushunRegion) {
-                _this.showMaterial = true;
+                setTimeout(function () {
+                    _this.showMaterial = true;
+                }, 100);
             }
         })
             .catch(function (error) { return console.error(error); })

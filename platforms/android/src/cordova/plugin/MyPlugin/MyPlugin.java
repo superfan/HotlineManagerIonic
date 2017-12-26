@@ -245,6 +245,7 @@ public class MyPlugin extends CordovaPlugin {
       if (!pageIntent.getParams().contains(DEFAULT_PAGE)) {
         return false;
       }
+
       JSONObject jsonObject = new JSONObject(message);
       if (jsonObject.isNull(messageType)
         || jsonObject.isNull(messageContent)
