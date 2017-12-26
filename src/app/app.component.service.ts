@@ -109,6 +109,9 @@ export class AppComponentService {
               && extendedInfo.hasOwnProperty("network")
               && extendedInfo['network'] !== undefined
               && extendedInfo['network'] !== null) {
+              if (extendedInfo.hasOwnProperty('pushMessage')) {
+                this.globalService.needDownloadTasks = extendedInfo['pushMessage'];
+              }
               return this.configService.setIsOuterNet(extendedInfo['network']);
             } else {
               return Promise.resolve(true);

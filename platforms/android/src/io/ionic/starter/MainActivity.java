@@ -114,6 +114,7 @@ public class MainActivity extends CordovaActivity implements MainApplication.OnA
     MainApplication mainApplication = ((MainApplication)getApplication());
     mainApplication.unregisterOnAidlListener(this);
     mainApplication.removeActivity(this);
+    mainApplication.onDestroy();
   }
 
   public void handlePushMessage(String message) {

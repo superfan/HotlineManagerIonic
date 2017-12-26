@@ -619,7 +619,7 @@ export class WorkDetailPage implements OnInit, OnDestroy {
     }
     this.reply[0].value = this.globalService.getFormatTime(new Date(this.replyInfo.opTime));
     // department
-    this.reply[1].value = this.replyInfo.opDepartment;
+    this.reply[1].value = '';//this.replyInfo.opDepartment;
     // person
     this.getOptPersons(this.replyInfo.opPerson);
     // operation type

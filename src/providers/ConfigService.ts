@@ -422,7 +422,7 @@ export class ConfigService {
             }
           })
           .catch(error => reject(error));
-      })
+      });
   }
 
   /**

@@ -80,6 +80,7 @@ export class GlobalService {
   readonly photoSuffix: string = '.jpg';
   readonly audioSuffix: string = '.mp3';
   readonly videoSuffix: string = '.mp4';
+  needDownloadTasks: boolean = false;
 
   constructor(private toastCtrl: ToastController,
               private loadingCtrl: LoadingController,

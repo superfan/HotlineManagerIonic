@@ -619,7 +619,7 @@ export abstract class SyncService {
 
           this.dbService.getMediaList(this.globalService.userId, history.taskId, mediaNames,
             [this.globalService.uploadedFlagForLocal, this.globalService.uploadedFlagForUploading])
-            .then(mediaList => this.configService.isNewFilService() ? this.uploadMediaListV2(mediaList) : this.uploadMediaList(mediaList))
+            .then(mediaList => this.configService.isNewFilService().then(result => result ? this.uploadMediaListV2(mediaList) : this.uploadMediaList(mediaList)))
             .catch(error => console.error(error))
             .then(() => this.events.publish(this.uploadMediaEvent, msgType, histories));
         } else {
@@ -735,9 +735,10 @@ export abstract class SyncService {
     if (mediaList && mediaList.length > 0) {
       let promises: Array<Promise<boolean>> = mediaList.map(media => this.uploadOneMedia(media));
       return Promise.all(promises)
+        .catch(error => console.error(error))
         .then(result => {
-          let files: Array<string> = mediaList.map(media => media.fileId);
-          return this.uploadService.uploadMediaIds(mediaList[0].taskId.split('#')[0], files.join(','));
+          let files: Array<string> = mediaList.filter(media => media.fileId !== 'null' && media.fileId !== 'undefined').map(media => media.fileId);
+          return files.length > 0 ? this.uploadService.uploadMediaIds(mediaList[0].taskId.split('#')[0], files.join(',')) : false;
         })
         .then(result => {
           for (let media of mediaList) {

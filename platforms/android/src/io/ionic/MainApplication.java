@@ -329,20 +329,20 @@ public class MainApplication extends Application {
 
       if (mMainApplication.mOnAidlListener != null) {
         mMainApplication.mOnAidlListener.handlePushMessage(info);
-      }
 
-      try {
-        JSONObject jsObject = new JSONObject();
-        jsObject.put(MyModule.PACKAGE_NAME, mMainApplication.getPackageName());
-        jsObject.put(MyModule.ACTIVITY_NAME, mMainApplication.getPackageName());
+        try {
+          JSONObject jsObject = new JSONObject();
+          jsObject.put(MyModule.PACKAGE_NAME, mMainApplication.getPackageName());
+          jsObject.put(MyModule.ACTIVITY_NAME, mMainApplication.getPackageName());
 
-        JSONArray jsonArray = new JSONArray();
-        jsonArray.put(String.format(Locale.CHINESE, "%s%s%s", MyModule.POPUP_MESSAGE, MyModule.SEPARATOR, info));
-        jsObject.put(MyModule.DATA, jsonArray);
+          JSONArray jsonArray = new JSONArray();
+          jsonArray.put(String.format(Locale.CHINESE, "%s%s%s", MyModule.POPUP_MESSAGE, MyModule.SEPARATOR, info));
+          jsObject.put(MyModule.DATA, jsonArray);
 
-        mMainApplication.mainService.setMyModule(new MyModule(jsObject.toString()));
-      } catch (Exception e) {
-        e.printStackTrace();
+          mMainApplication.mainService.setMyModule(new MyModule(jsObject.toString()));
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
       }
 
       //int type = jsonObject.optInt(messageType);

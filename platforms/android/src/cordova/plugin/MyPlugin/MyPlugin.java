@@ -1,6 +1,9 @@
 package cordova.plugin.MyPlugin;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -32,11 +35,15 @@ import static io.ionic.MainApplication.USER_NAME;
  * This class echoes a string called from JavaScript.
  */
 public class MyPlugin extends CordovaPlugin {
+  private static final String TAG = "MyPlugin";
   private static final String ACTION_GET_PAGE_INTENT = "getPageIntent";
   private static final String ACTION_GET_LOCATION = "getLocation";
   private static final String ACTION_QUIT = "quit";
   private static final String ACTION_GET_PUSH_MESSAGE = "getPushMessage";
   private static final String ACTION_GET_CHANGED_INFO = "getChangedInfo";
+  private static final String PUSH_MESSAGE = "pushMessage";
+  private static final Uri CONTENT_URI = Uri.parse("content://com.sh3h.mainshell.shared.data.provider/item");
+  private static final String DEFAULT_PAGE = "MyWorkPage";
 
   private CallbackContext pushMessageCallbackContext;
   private CallbackContext changedInfoCallbackContext;
@@ -100,17 +107,18 @@ public class MyPlugin extends CordovaPlugin {
         department = "客服热线部";
         departmentId = 1;
         roles = "worker";
-        params = "MyWorkPage";
+        params = DEFAULT_PAGE;
         accessToken = getUUID(mainApplication);
         extendedInfo = "";
       }
 
-      Log.i("MyPlugin", "account:" + account + ", userId:" + userId + ", userName:" + userName
+      Log.i(TAG, "account:" + account + ", userId:" + userId + ", userName:" + userName
         + ", department:" + department + ", roles:" + roles + ", params:" + params
         + ", bundle: " + (bundle != null) + ", extendedInfo: " + extendedInfo);
 
       PageIntent pageIntent = new PageIntent(account, password, userId, userName,
         (department != null ? department : "") + "#" + departmentId, roles, params, accessToken, extendedInfo);
+      getSharedData(pageIntent);
       callbackContext.success(pageIntent.toJson());
     } catch (Exception e) {
       e.printStackTrace();
@@ -188,6 +196,86 @@ public class MyPlugin extends CordovaPlugin {
       if (changedInfoCallbackContext != null) {
         changedInfoCallbackContext.error(e.getMessage());
       }
+    }
+  }
+
+  private void getSharedData(PageIntent pageIntent) {
+    try {
+      ContentResolver contentResolver = cordova.getActivity().getApplication().getContentResolver();
+      if (contentResolver != null) {
+        String[] projection = new String[] {
+          "sd_key",
+          "sd_value"
+        };
+
+        //Uri uri = Uri.parse("content://com.sh3h.mainshell.shared.data.provider/item");
+        //uri = uri.buildUpon().appendEncodedPath("account").build();
+        Cursor cursor = contentResolver.query(CONTENT_URI, projection,
+          null, null, null);
+        if (cursor != null) {
+          String key, value;
+          if (cursor.moveToFirst()) {
+            do {
+              key = cursor.getString(0);
+              value = cursor.getString(1);
+              if (key != null
+                && key.contains(PUSH_MESSAGE)
+                && value != null
+                && value.length() > 0
+                && setPushMessage2ExtendedInfo(pageIntent, value)) {
+                deleteSharedData(PUSH_MESSAGE + value.hashCode());
+              }
+            } while(cursor.moveToNext());
+          }
+          cursor.close();
+        }
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  private boolean setPushMessage2ExtendedInfo(PageIntent pageIntent, String message) {
+    final String messageType = "type";
+    final String messageContent = "content";
+    final int newTask = 201;
+    final int updateTaskState = 202;
+
+    try {
+      if (!pageIntent.getParams().contains(DEFAULT_PAGE)) {
+        return false;
+      }
+      JSONObject jsonObject = new JSONObject(message);
+      if (jsonObject.isNull(messageType)
+        || jsonObject.isNull(messageContent)
+        || jsonObject.getInt(messageType) != newTask) {
+        return false;
+      }
+
+      String extendedInfo = pageIntent.getExtendedInfo();
+      if (extendedInfo != null && extendedInfo.length() > 0) {
+        jsonObject = new JSONObject(extendedInfo);
+      } else {
+        jsonObject = new JSONObject();
+      }
+
+      jsonObject.put(PUSH_MESSAGE, true);
+      pageIntent.setExtendedInfo(jsonObject.toString());
+      return true;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return false;
+  }
+
+  private void deleteSharedData(String key) {
+    try {
+      ContentResolver contentResolver = cordova.getActivity().getApplication().getContentResolver();
+      Uri uri = CONTENT_URI.buildUpon().appendEncodedPath(key).build();
+      int count = contentResolver.delete(uri, null, null);
+      Log.i(TAG, "deleteSharedData " + key + ":"+ count);
+    } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 

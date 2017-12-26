@@ -440,6 +440,9 @@ export class UploadService extends BaseService {
               fileType = 'SOUND';
               break;
             case MediaType.Vedio:
+              fileUrl = this.fileService.getVideosDir();
+              fileType = 'VEDIO';
+              break;
             default:
               return reject('type is error');
           }

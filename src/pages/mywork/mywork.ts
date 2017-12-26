@@ -79,6 +79,10 @@ export class MyWorkPage implements OnInit, OnDestroy {
       .then(data => {
         this.infiniteScroll.enable(data);
         this.getTaskCount();
+        if (this.globalService.needDownloadTasks) {
+          this.globalService.needDownloadTasks = false;
+          this.doRefresh(undefined);
+        }
         this.intervalId = setInterval(() => {
           if (this.isActivePage) {
             this.checkOverdueTimeTasks();

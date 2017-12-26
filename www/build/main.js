@@ -1442,6 +1442,9 @@ var UploadService = (function (_super) {
                         fileType = 'SOUND';
                         break;
                     case __WEBPACK_IMPORTED_MODULE_6__model_Media__["a" /* MediaType */].Vedio:
+                        fileUrl = _this.fileService.getVideosDir();
+                        fileType = 'VEDIO';
+                        break;
                     default:
                         return reject('type is error');
                 }
@@ -2498,7 +2501,7 @@ var WorkDetailPage = (function () {
         }
         this.reply[0].value = this.globalService.getFormatTime(new Date(this.replyInfo.opTime));
         // department
-        this.reply[1].value = this.replyInfo.opDepartment;
+        this.reply[1].value = ''; //this.replyInfo.opDepartment;
         // person
         this.getOptPersons(this.replyInfo.opPerson);
         // operation type
@@ -7899,6 +7902,9 @@ var AppComponentService = (function () {
                     && extendedInfo.hasOwnProperty("network")
                     && extendedInfo['network'] !== undefined
                     && extendedInfo['network'] !== null) {
+                    if (extendedInfo.hasOwnProperty('pushMessage')) {
+                        _this.globalService.needDownloadTasks = extendedInfo['pushMessage'];
+                    }
                     return _this.configService.setIsOuterNet(extendedInfo['network']);
                 }
                 else {
@@ -8658,7 +8664,7 @@ var SyncService = (function () {
                         mediaNames[i] = mediaNames[i].replace(/#\d*/, '');
                     }
                     _this.dbService.getMediaList(_this.globalService.userId, history_2.taskId, mediaNames, [_this.globalService.uploadedFlagForLocal, _this.globalService.uploadedFlagForUploading])
-                        .then(function (mediaList) { return _this.configService.isNewFilService() ? _this.uploadMediaListV2(mediaList) : _this.uploadMediaList(mediaList); })
+                        .then(function (mediaList) { return _this.configService.isNewFilService().then(function (result) { return result ? _this.uploadMediaListV2(mediaList) : _this.uploadMediaList(mediaList); }); })
                         .catch(function (error) { return console.error(error); })
                         .then(function () { return _this.events.publish(_this.uploadMediaEvent, msgType, histories); });
                 }
@@ -8778,9 +8784,10 @@ var SyncService = (function () {
         if (mediaList && mediaList.length > 0) {
             var promises = mediaList.map(function (media) { return _this.uploadOneMedia(media); });
             return Promise.all(promises)
+                .catch(function (error) { return console.error(error); })
                 .then(function (result) {
-                var files = mediaList.map(function (media) { return media.fileId; });
-                return _this.uploadService.uploadMediaIds(mediaList[0].taskId.split('#')[0], files.join(','));
+                var files = mediaList.filter(function (media) { return media.fileId !== 'null' && media.fileId !== 'undefined'; }).map(function (media) { return media.fileId; });
+                return files.length > 0 ? _this.uploadService.uploadMediaIds(mediaList[0].taskId.split('#')[0], files.join(',')) : false;
             })
                 .then(function (result) {
                 for (var _i = 0, mediaList_2 = mediaList; _i < mediaList_2.length; _i++) {
@@ -10270,6 +10277,10 @@ var MyWorkPage = (function () {
             .then(function (data) {
             _this.infiniteScroll.enable(data);
             _this.getTaskCount();
+            if (_this.globalService.needDownloadTasks) {
+                _this.globalService.needDownloadTasks = false;
+                _this.doRefresh(undefined);
+            }
             _this.intervalId = setInterval(function () {
                 if (_this.isActivePage) {
                     _this.checkOverdueTimeTasks();
@@ -14933,6 +14944,7 @@ var GlobalService = (function () {
         this.photoSuffix = '.jpg';
         this.audioSuffix = '.mp3';
         this.videoSuffix = '.mp4';
+        this.needDownloadTasks = false;
     }
     GlobalService.prototype.getMyPluginMock = function () {
         return this.myPluginMock ? this.myPluginMock : this.myPluginMock = new MyPluginMock();
