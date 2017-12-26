@@ -305,8 +305,7 @@ public class MainApplication extends Application {
             handlePhotoQuality(str);
           } else if (str.startsWith(MyModule.OUTER_NETWORK)) {
             handleOuterNetwork(str);
-          }
-          if (str.startsWith(MyModule.GPS_NOT_OPENED)) {
+          } else if (str.startsWith(MyModule.GPS_NOT_OPENED)) {
 
           } else if (str.startsWith(MyModule.LOGOUT_SUB_SYSTEM)) {
             logoutSubSystem();
