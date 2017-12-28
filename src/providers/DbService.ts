@@ -1105,7 +1105,7 @@ export class DbService {
               if (rows && rows.length > 0) {
                 for (let i = 0; i < rows.length; i++) {
                   let localPersonnel: LocalPersonnel = rows.item(i) as LocalPersonnel;
-                  if (!localPersonnel) {
+                  if (!localPersonnel || !localPersonnel.S_FIELDPERSONNELNAME) {
                     continue;
                   }
                   personnels.push(this.toPersonnel(localPersonnel));

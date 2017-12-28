@@ -21,9 +21,9 @@ export interface MyWorkUpdateEvent {
 
 export class MyPluginMock extends MyPlugin {
   public static pageIntent: PageIntent = {
-    account: 'wqry',
+    account: 'sunk',
     password: '0000',
-    userId: 10,
+    userId: 186,
     userName: 'ss1',
     departmentAndId: '客服热线部#1',
     roles: 'worker',
@@ -58,10 +58,13 @@ export class GlobalService {
   readonly uploadedFlagForUploading: number = 1;
   readonly uploadedFlagForUploaded: number = 2;
   account: string = "admin";
+  password: string = "0000";
   userName: string = "admin";
   userId: number = 0;
   department: string = "客服热线部";
-  departmentId: number = 1;
+  departmentInvalidId: number = -1;
+  departmentValidId: number = 1;
+  departmentId: number = this.departmentInvalidId;
   isWorker: boolean = false;//是否是外勤人员
   readonly mainUpdateEvent: string = "main:update";
   readonly myWorkDownloadFinishEvent: string = "mywork:download:finish"; // task & detail
@@ -97,6 +100,7 @@ export class GlobalService {
       ? this.storage.set(this.userDetailInfoStorageName, JSON.stringify(userDetailInfo))
         .then(result => {
           this.account = userDetailInfo.account;
+          this.password = userDetailInfo.password;
           this.userId = userDetailInfo.userId;
           this.userName = userDetailInfo.userName;
           this.isWorker = userDetailInfo.roles === this.worker;
@@ -120,6 +124,7 @@ export class GlobalService {
           && userDetailInfo.roles
           && userDetailInfo.department) {
           this.account = userDetailInfo.account;
+          this.password = userDetailInfo.password;
           this.userId = userDetailInfo.userId;
           this.userName = userDetailInfo.userName;
           this.isWorker = userDetailInfo.roles === this.worker;

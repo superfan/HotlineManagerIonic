@@ -45,11 +45,11 @@ export class AppComponentService {
     if (this.globalService.isChrome) {
       return this.dataService.downloadWords()
       .then(result => this.dataService.downloadMaterials())
-      .then(result => this.globalService.isWorker ? true : this.dataService.downloadPersonnels());
+      .then(result => /*this.globalService.isWorker ? true : */this.dataService.downloadPersonnels());
     } else {
       return this.dataService.checkIfDownloadWords()
       .then(result => this.dataService.checkIfDownloadMaterials())
-      .then(result => this.globalService.isWorker ? true : this.dataService.checkIfDownloadPersonnels());
+      .then(result => /*this.globalService.isWorker ? true : */this.dataService.checkIfDownloadPersonnels());
     }
   }
 
@@ -103,7 +103,7 @@ export class AppComponentService {
           pageIntent = MyPluginMock.pageIntent;
         }
 
-        return this.getExtendedInfo(pageIntent.extendedInfo)
+        return AppComponentService.getExtendedInfo(pageIntent.extendedInfo)
           .then(extendedInfo => {
             if (extendedInfo
               && extendedInfo.hasOwnProperty("network")
@@ -159,58 +159,72 @@ export class AppComponentService {
    * @returns {Promise<TResult|boolean>}
    */
   private setUserDetailInfo(pageIntent: PageIntent): Promise<any> {
-    return this.globalService.saveUserDetailInfo({
-      account: pageIntent.account,
-      userId: pageIntent.userId,
-      userName: pageIntent.userName,
-      roles: pageIntent.roles,
-      department: pageIntent.departmentAndId.split('#')[0],
-      departmentId: 0
-    }).catch(error => {
-      console.error(error);
-      this.globalService.account = pageIntent.account;
-      this.globalService.userId = pageIntent.userId;
-      this.globalService.userName = pageIntent.userName;
-      this.globalService.isWorker = pageIntent.roles === this.globalService.worker;
-    });
-
-    /*return this.globalService.getUserDetailInfo()
-     .then(userDetailInfo => {
-     // userId passed from main shell is not same as saved id
-     // it will be changed in future
-     //pageIntent.userId = userDetailInfo.userId;
-     if (pageIntent.account === userDetailInfo.account
-     && pageIntent.userId === userDetailInfo.userId
-     && pageIntent.userName === userDetailInfo.userName) {
-     return Promise.resolve(true);
-     } else {
-     return Promise.reject('different user');
-     }
-     })
-     .catch(error => {
-     console.error(error);
-     return this.dataService.doLogin({
-     userName: pageIntent.account,
-     password: pageIntent.password,
-     role: pageIntent.roles
-     }).then(userResult => this.globalService.saveUserDetailInfo({
-     account: pageIntent.account,
-     userId: userResult.userId,
-     userName: pageIntent.userName,
-     roles: pageIntent.roles,
-     department: userResult.Department,
-     departmentId: 0
-     })).catch(error => {
-     console.error(error);
-     this.globalService.account = pageIntent.account;
-     this.globalService.userId = pageIntent.userId;
-     this.globalService.userName = pageIntent.userName;
-     this.globalService.isWorker = pageIntent.roles === this.globalService.worker;
-     });
-     });*/
+    debugger;
+    return this.configService.getSysRegion()
+      .catch(error => console.error(error))
+      .then(region => {
+        if (region && region === ConfigService.fushunRegion) {
+          return this.globalService.getUserDetailInfo()
+            .then(userDetailInfo => {
+              // userId passed from main shell is not same as saved id
+              // it will be changed in future
+              //pageIntent.userId = userDetailInfo.userId;
+              if (pageIntent.account === userDetailInfo.account
+                && pageIntent.userId === userDetailInfo.userId
+                && pageIntent.userName === userDetailInfo.userName) {
+                return Promise.resolve(true);
+              } else {
+                return Promise.reject('different user');
+              }
+            })
+            .catch(error => {
+              console.error(error);
+              return this.dataService.doLogin({
+                userName: pageIntent.account,
+                password: pageIntent.password,
+                role: pageIntent.roles
+              }).then(userResult => this.globalService.saveUserDetailInfo({
+                account: pageIntent.account,
+                password: pageIntent.password,
+                userId: userResult.userId,
+                userName: pageIntent.userName,
+                roles: pageIntent.roles,
+                department: userResult.Department,
+                departmentId: this.globalService.departmentValidId
+              })).catch(error => {
+                console.error(error);
+                this.globalService.account = pageIntent.account;
+                this.globalService.password = pageIntent.password;
+                this.globalService.userId = pageIntent.userId;
+                this.globalService.userName = pageIntent.userName;
+                this.globalService.isWorker = pageIntent.roles === this.globalService.worker;
+              });
+            });
+        } else {
+          let departmentAndId: string[] = pageIntent.departmentAndId.split('#');
+          let department: string = departmentAndId[0];
+          let departmentId: number = Number.parseInt(departmentAndId[1]);
+          return this.globalService.saveUserDetailInfo({
+            account: pageIntent.account,
+            password: pageIntent.password,
+            userId: pageIntent.userId,
+            userName: pageIntent.userName,
+            roles: pageIntent.roles,
+            department: department,
+            departmentId: departmentId
+          }).catch(error => {
+            console.error(error);
+            this.globalService.account = pageIntent.account;
+            this.globalService.password = pageIntent.password;
+            this.globalService.userId = pageIntent.userId;
+            this.globalService.userName = pageIntent.userName;
+            this.globalService.isWorker = pageIntent.roles === this.globalService.worker;
+          });
+        }
+      });
   }
 
-  private getExtendedInfo(extendedInfo: string): Promise<any> {
+  private static getExtendedInfo(extendedInfo: string): Promise<any> {
     let info: any;
     try {
       if (extendedInfo) {

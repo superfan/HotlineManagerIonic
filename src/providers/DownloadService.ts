@@ -356,14 +356,15 @@ export class DownloadService extends BaseService {
 
   /**
    * 获取施工人员
-   * @param userId
-   * @returns {Promise<T>}
+   * @param {number} userId
+   * @param {boolean} isWorker
+   * @returns {Promise<Array<Personnel>>}
    */
-  public getPersonnels(userId: number): Promise<Array<Personnel>> {
+  public getPersonnels(userId: number, isWorker: boolean): Promise<Array<Personnel>> {
     return new Promise((resolve, reject) => {
       this.configService.getServerBaseUri()
         .then(data => {
-          let url = `${data}wap/v1/mobile/resource/user/${userId}/getFieldPersonnel`;
+          let url = `${data}wap/v1/mobile/resource/user/${userId}/${isWorker?1:2}/getFieldPersonnel`; //
           return this.get(url, this.getOptions())
             .toPromise()
             .then(data => {

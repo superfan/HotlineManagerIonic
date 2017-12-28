@@ -726,7 +726,7 @@ export class DataService extends SyncService {
       : this.dbService.getPersonnels()
         .catch(error => {
           console.error(error);
-          return this.downloadService.getPersonnels(this.globalService.userId);
+          return this.downloadService.getPersonnels(this.globalService.userId, this.globalService.isWorker);
         })
         .then(personnels => {
           return this.personnels = personnels;
@@ -738,9 +738,7 @@ export class DataService extends SyncService {
    * @returns {Promise<boolean|boolean>}
    */
   public downloadPersonnels(): Promise<boolean> {
-    return this.globalService.isWorker
-      ? Promise.resolve(true)
-      : this.downloadService.getPersonnels(this.globalService.userId)
+    return this.downloadService.getPersonnels(this.globalService.userId, this.globalService.isWorker)
         .then(personnels => this.dbService.savePersonnels(personnels))
         .catch(error => {
           console.error(error);
@@ -757,7 +755,7 @@ export class DataService extends SyncService {
     return this.dbService.getPersonnelsCount()
       .then(count => count > 0
         ? Promise.resolve(true)
-        : this.downloadService.getPersonnels(this.globalService.userId)
+        : this.downloadService.getPersonnels(this.globalService.userId, this.globalService.isWorker)
           .then(personnels => this.dbService.savePersonnels(personnels)))
       .catch(error => {
         console.error(error);
